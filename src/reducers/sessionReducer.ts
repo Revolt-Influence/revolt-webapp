@@ -343,61 +343,6 @@ function sessionReducer(state: ISession = defaultSession, action: IAction): ISes
           updateCreditCard: rejectedRequest,
         },
       }
-    case creatorsActions.LINK_INSTAGRAM_ACCOUNT_PENDING:
-      return {
-        ...state,
-        requests: {
-          ...state.requests,
-          linkInstagramAccount: loadingRequest,
-        },
-      }
-    case creatorsActions.LINK_INSTAGRAM_ACCOUNT_FULFILLED:
-      return {
-        ...state,
-        creator: payload.body.creator,
-        requests: {
-          ...state.requests,
-          linkInstagramAccount: successfulRequest,
-        },
-      }
-    case creatorsActions.LINK_INSTAGRAM_ACCOUNT_REJECTED:
-      return {
-        ...state,
-        requests: {
-          ...state.requests,
-          linkInstagramAccount: rejectedRequest,
-        },
-      }
-    case creatorsActions.CHECK_INSTAGRAM_TOKEN_FULFILLED:
-      return {
-        ...state,
-        creator: payload.body.creator,
-      }
-    case creatorsActions.SAVE_POSTAL_ADDRESS_PENDING:
-      return {
-        ...state,
-        requests: {
-          ...state.requests,
-          savePostalAddress: loadingRequest,
-        },
-      }
-    case creatorsActions.SAVE_POSTAL_ADDRESS_FULFILLED:
-      return {
-        ...state,
-        requests: {
-          ...state.requests,
-          savePostalAddress: successfulRequest,
-        },
-      }
-    case creatorsActions.SAVE_POSTAL_ADDRESS_REJECTED:
-      return {
-        ...state,
-        creator: payload.body.creator,
-        requests: {
-          ...state.requests,
-          savePostalAddress: rejectedRequest,
-        },
-      }
     case creatorsActions.SAVE_CREATOR_PROFILE_PENDING:
       return {
         ...state,

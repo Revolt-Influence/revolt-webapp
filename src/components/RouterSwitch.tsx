@@ -173,7 +173,7 @@ const RouterSwitch: React.FC<IRouterSwitchProps> = () => {
     if (sessionType !== 'creator') {
       return <NotFound />
     }
-    if (creator.instagramIsVerified || creator.youtube != null) {
+    if (creator.youtube != null) {
       window.scrollTo(0, 0)
       return <Redirect to="/creator" />
     }
@@ -229,7 +229,7 @@ const RouterSwitch: React.FC<IRouterSwitchProps> = () => {
     if (sessionType === 'brand') {
       return <NotFound />
     }
-    const hasNoNetwork = !creator.instagramIsVerified && creator.youtube == null
+    const hasNoNetwork = creator.youtube == null
     if (hasNoNetwork && routeProps.location.pathname !== '/creator/myAccount') {
       return <Redirect to="/connectSocialAccount" />
     }

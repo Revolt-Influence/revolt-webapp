@@ -31,7 +31,7 @@ const Styles = styled(ContainerBox)`
 
 const creatorSteps = [
   "L'influenceur doit s'incrire avec votre lien",
-  "L'influenceur doit avoir au moins 5k abonnés sur Instagram ou 2k sur YouTube",
+  "L'influenceur doit avoir au moins 2k sur YouTube",
   "L'influenceur doit réaliser un partenariat sur la plateforme",
 ]
 

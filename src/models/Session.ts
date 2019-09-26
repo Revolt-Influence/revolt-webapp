@@ -32,9 +32,7 @@ export interface ISession {
     updateCreditCard: IRequestStatus
     retrieveUser: IRequestStatus
     reviewInfluencer: IRequestStatus
-    savePostalAddress: IRequestStatus
     saveCreatorProfile: IRequestStatus
-    linkInstagramAccount: IRequestStatus
     linkYoutubeChannel: IRequestStatus
     updateCreatorContact: IRequestStatus
   }
@@ -59,9 +57,7 @@ const defaultSession: ISession = {
     updateCreditCard: defaultRequestStatus,
     retrieveUser: loadingRequest,
     reviewInfluencer: defaultRequestStatus,
-    savePostalAddress: defaultRequestStatus,
     saveCreatorProfile: defaultRequestStatus,
-    linkInstagramAccount: defaultRequestStatus,
     linkYoutubeChannel: defaultRequestStatus,
     updateCreatorContact: defaultRequestStatus,
   },

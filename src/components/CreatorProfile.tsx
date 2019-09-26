@@ -1,29 +1,21 @@
 import React, { useEffect } from 'react'
 import styled from 'styled-components'
-import { Flex, Box } from '@rebass/grid'
+import { Flex } from '@rebass/grid'
 import { useSelector, useDispatch } from 'react-redux'
 import { ICreator } from '../models/Creator'
 import { palette } from '../utils/colors'
 import { shadow, setFont } from '../utils/styles'
 import { yearToAge } from '../utils/stats'
-import InstagramPreview from './InstagramPreview'
 import IState from '../models/State'
 import { IRequestStatus } from '../utils/request'
 import { getFullCreatorProfile } from '../actions/creators'
 import ErrorCard from './ErrorCard'
-import { IInfluencer } from '../models/Influencer'
 import AudienceInsights from './AudienceInsights'
-import { Dot } from '../styles/Dot'
-import { BoldText } from '../styles/Text'
-import { IBrand } from '../models/Brand'
 import { TaskFormatType } from '../models/Campaign'
 import Dropdown from './Dropdown'
 import { reviewCollabProposition } from '../actions/collabs'
 import { ICollab } from '../models/Collab'
 import YoutubePreview from './YoutubePreview'
-
-// Weird import because lodash is weird
-import uniqBy from 'lodash.uniqby'
 import { applyCloudinaryTransformations } from '../utils/images'
 import { Link } from 'react-router-dom'
 
@@ -194,9 +186,7 @@ const CreatorProfile: React.FC<Props> = ({
 
   // Destructure creator data
   const { birthYear, gender, country, name, picture } = creator
-  const instagram = creator.instagram as IInfluencer
   const { youtube } = creator
-  const hasInstagram = instagram != null
   const hasYoutube = youtube != null
 
   const showContactButton = () => (
@@ -205,35 +195,6 @@ const CreatorProfile: React.FC<Props> = ({
       <img src={contactSource} alt="Email" />
     </Link>
   )
-
-  const getAdvertisingPerformance = (): IAdvertisingPerformance => {
-    // Handle no Instagram case
-    if (creator.instagram == null) {
-      return null
-    }
-    // Compare engagement on sponsored posts and normal posts
-    const { sponsored_engagement_rate, engagement_rate } = creator.instagram
-    const performanceRatio = sponsored_engagement_rate / engagement_rate
-    if (performanceRatio > 1.1) {
-      return {
-        type: 'Bonne',
-        color: palette.green._500,
-      }
-    }
-    if (performanceRatio < 0.7) {
-      return {
-        type: 'Mauvaise',
-        color: palette.red._500,
-      }
-    }
-    // Same engagement, nothing spectacular
-    return {
-      type: 'Normale',
-      color: palette.orange._500,
-    }
-  }
-
-  const advertisingPerformance = getAdvertisingPerformance()
 
   const translateGender = (): string => {
     switch (gender) {
@@ -309,13 +270,8 @@ const CreatorProfile: React.FC<Props> = ({
         )}
       </Flex>
       {/* Networks preview */}
-      {(hasInstagram || hasYoutube) && <h2 className="section">Plateformes</h2>}
-
-      <section>
-        {hasYoutube && <YoutubePreview youtuber={youtube} />}
-        {hasInstagram && hasYoutube && <Box mt="1rem" />}
-        {hasInstagram && <InstagramPreview profile={instagram} />}
-      </section>
+      {hasYoutube && <h2 className="section">Plateformes</h2>}
+      <section>{hasYoutube && <YoutubePreview youtuber={youtube} />}</section>
       {/* Youtube analytics */}
       {hasYoutube && (
         <section>
@@ -327,60 +283,6 @@ const CreatorProfile: React.FC<Props> = ({
             </>
           )}
         </section>
-      )}
-      {/* Instagram analytics */}
-      {hasInstagram && (
-        <>
-          {instagram.audience != null && (
-            <>
-              {/* Gender chart */}
-              <h2 className="section">Audience Instagram</h2>
-              <AudienceInsights {...instagram.audience} />
-            </>
-          )}
-          {instagram.sponsored_engagement_rate > 0 && instagram.sponsored_percentage > 0 && (
-            <>
-              <h2 className="section">Performance publicitaire</h2>
-              <Flex flexDirection="row" alignItems="flex-start">
-                <Box>
-                  <Dot color={advertisingPerformance.color} />
-                </Box>
-                <p>
-                  <BoldText>{advertisingPerformance.type}</BoldText>: le taux d'engagement de @
-                  {instagram.username} sur ses posts sponsorisés est de{' '}
-                  <BoldText>
-                    {Math.trunc(instagram.sponsored_engagement_rate * 1000) / 10}%
-                  </BoldText>
-                  , alors que son taux d'engagement normal est de{' '}
-                  <BoldText>{Math.trunc(instagram.engagement_rate * 1000) / 10}%</BoldText>
-                </p>
-              </Flex>
-            </>
-          )}
-          {instagram.mentionedBrands.length > 0 && (
-            <>
-              <h2 className="section">Marques mentionnées</h2>
-
-              <ul>
-                {uniqBy(instagram.mentionedBrands as IBrand[], _brand => _brand.username).map(
-                  _brand => (
-                    <li className="mentionedBrand" key={_brand.username}>
-                      <span style={{ fontSize: 30, transform: 'translateY(-1px)' }}>&middot;</span>
-                      <a
-                        href={`https://www.instagram.com/${_brand.username}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        title={`Instagram de @${_brand.username}`}
-                      >
-                        {_brand.name}
-                      </a>
-                    </li>
-                  )
-                )}
-              </ul>
-            </>
-          )}
-        </>
       )}
     </Styles>
   )

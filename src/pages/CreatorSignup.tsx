@@ -12,7 +12,7 @@ import ErrorCard from '../components/ErrorCard'
 import { allCountries, allLanguages } from '../utils/locations'
 import { emailRegex } from '../utils/strings'
 import { palette } from '../utils/colors'
-import { Gender } from '../models/Influencer'
+import { Gender } from '../models/Creator'
 import { signupInfluencer } from '../actions/session'
 import { usePageTitle } from '../utils/hooks'
 import { IconButtonWrapper } from '../styles/Icon'
@@ -72,7 +72,6 @@ const CreatorSignup: React.FC<RouteComponentProps> = ({ location }) => {
             language,
             birthYear,
             gender,
-            instagramIsVerified: false,
             picture: null,
             name: null,
             ambassador,

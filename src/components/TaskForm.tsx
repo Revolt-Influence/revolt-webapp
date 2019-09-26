@@ -39,7 +39,7 @@ interface ITasksFormProps {
 }
 
 const TasksForm: React.FC<ITasksFormProps> = ({ task, setTask }) => {
-  const possibleFormats: TaskFormatType[] = ['Instagram post', 'Instagram story', 'Youtube video']
+  const possibleFormats: TaskFormatType[] = ['Youtube video']
   const toggleReviewFormat = (format: TaskFormatType) => {
     if (task.formats.includes(format)) {
       // Remove format if it's already there

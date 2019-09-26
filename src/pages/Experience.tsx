@@ -108,7 +108,6 @@ const Experience: React.FC<IExperienceProps> = ({ match }) => {
       return (
         <ExperienceForm
           brand={experience.settings.brand.name}
-          addressIsNeeded={experience.settings.gift.addressIsNeeded || false}
           experienceId={experience._id}
           possibleFormats={experience.settings.task.formats}
         />

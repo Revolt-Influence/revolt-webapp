@@ -13,8 +13,6 @@ import ErrorCard from './ErrorCard'
 import { submitCreatorReviews } from '../actions/collabs'
 import { ICreator } from '../models/Creator'
 import { TaskFormatType } from '../models/Campaign'
-import DropImage from './DropImage'
-import { getInstagramPostData } from '../utils/crawler'
 import { captureException } from '@sentry/core'
 
 interface ISubmitCreatorReviewsProps {
@@ -24,10 +22,6 @@ interface ISubmitCreatorReviewsProps {
 const SubmitCreatorReviews: React.FC<ISubmitCreatorReviewsProps> = ({ collab }) => {
   const [hasRespected, setHasRespected] = React.useState<boolean>(false)
 
-  const nonStoryFormats = collab.proposition.formats.filter(
-    _format => _format !== 'Instagram story'
-  )
-
   // Redux stuff
   const dispatch = useDispatch()
   const submitStatus = useSelector<IState, IRequestStatus>(
@@ -36,35 +30,19 @@ const SubmitCreatorReviews: React.FC<ISubmitCreatorReviewsProps> = ({ collab }) 
   const creator = useSelector<IState, ICreator>(state => state.session.creator)
 
   const alreadyDone = collab.status === 'done'
-  const defaultBaseReviews = collab.proposition.formats
-    .filter(_format => _format !== 'Instagram story')
-    .map(_format => ({
-      link: '',
-      format: _format,
-      creatorId: creator._id,
-    }))
+  const defaultBaseReviews = collab.proposition.formats.map(_format => ({
+    link: '',
+    format: _format,
+    creatorId: creator._id,
+  }))
 
-  // Handle story
-  const storyRequired = nonStoryFormats.length < collab.proposition.formats.length
-  const [story, setStory] = React.useState<IBaseReview>(
-    alreadyDone
-      ? {
-          ...collab.reviews.find(_review => _review.format !== 'Instagram story'),
-          creatorId: creator._id,
-        }
-      : null
-  )
-
-  // Handle non-story reviews
   // Get only base reviews from full existing reviews
-  const existingBaseReviews = collab.reviews
-    .filter(_review => _review.format !== 'Instagram story')
-    .map(_review => ({
-      ..._review,
-      link: _review.link,
-      format: _review.format,
-      creatorId: creator._id,
-    }))
+  const existingBaseReviews = collab.reviews.map(_review => ({
+    ..._review,
+    link: _review.link,
+    format: _review.format,
+    creatorId: creator._id,
+  }))
 
   const [reviews, setReviews] = React.useState<IBaseReview[]>(
     alreadyDone ? existingBaseReviews : defaultBaseReviews
@@ -76,38 +54,21 @@ const SubmitCreatorReviews: React.FC<ISubmitCreatorReviewsProps> = ({ collab }) 
       )
     )
   }
-  const allowSubmit =
-    hasRespected &&
-    reviews.every(_baseReview => _baseReview.link !== '') &&
-    (storyRequired ? story != null : true)
+  const allowSubmit = hasRespected && reviews.every(_baseReview => _baseReview.link !== '')
 
   const [postLoading, setPostLoading] = useState<boolean>(false)
   const [postError, setPostError] = useState<boolean>(false)
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (allowSubmit) {
-      // Scrape the post locally
-      const enrichedReviewsPromises = reviews.map(async _review => {
-        if (_review.format === 'Instagram post') {
-          // Srape the post
-          const postData = await getInstagramPostData(_review.link)
-          return {
-            ..._review,
-            instagramPostData: postData,
-          }
-        } else {
-          return _review
-        }
-      })
       try {
         setPostError(false)
         setPostLoading(true)
-        const enrichedReviews = await Promise.all(enrichedReviewsPromises)
         setPostLoading(false)
         dispatch(
           submitCreatorReviews({
             // Dirty hack to make sure an empty story doesn't slip in
-            baseReviews: [...enrichedReviews, ...(story != null ? [story] : [])],
+            baseReviews: reviews,
             collabId: collab._id,
           })
         )
@@ -119,10 +80,8 @@ const SubmitCreatorReviews: React.FC<ISubmitCreatorReviewsProps> = ({ collab }) 
 
   const translateFormat = (format: TaskFormatType): string => {
     switch (format) {
-      case 'Instagram post':
-        return 'post Instagram'
-      case 'Instagram story':
-        return 'story Instagram'
+      case 'Youtube video':
+        return 'Vidéo YouTube'
       default:
         return format
     }
@@ -131,32 +90,18 @@ const SubmitCreatorReviews: React.FC<ISubmitCreatorReviewsProps> = ({ collab }) 
   return (
     <SplitView title="Mes revues" ratio={3.5 / 12} noBorder>
       <form onSubmit={handleSubmit}>
-        {reviews
-          .filter(_baseReview => _baseReview.format !== 'Instagram story')
-          .map((_baseReview, _index) => (
-            <FormInputLabel key={_index}>
-              Lien de votre {translateFormat(_baseReview.format)}
-              <FormInput
-                value={_baseReview.link}
-                onChange={e => updateLink(e.target.value, _index)}
-                placeholder="https://..."
-                required
-                hasLabel
-              />
-            </FormInputLabel>
-          ))}
-        {storyRequired && (
-          <FormInputLabel>
-            Votre story
-            <DropImage
-              currentImage=""
-              handleDrop={url =>
-                setStory({ creatorId: creator._id, format: 'Instagram story', link: url })
-              }
-              preset="stories"
+        {reviews.map((_baseReview, _index) => (
+          <FormInputLabel key={_index}>
+            Lien de votre {translateFormat(_baseReview.format)}
+            <FormInput
+              value={_baseReview.link}
+              onChange={e => updateLink(e.target.value, _index)}
+              placeholder="https://..."
+              required
+              hasLabel
             />
           </FormInputLabel>
-        )}
+        ))}
         <CheckBox
           isChecked={hasRespected}
           handleClick={() => setHasRespected(!hasRespected)}

@@ -6,9 +6,9 @@ import { ICampaignTask } from '../models/Campaign'
 import TaskForm from './TaskForm'
 import SplitView from './SplitView'
 
-const mandatoryRules: string[] = ['Identifier @revolt.club sur les publications Instagram']
+const mandatoryRules: string[] = []
 
-const defaultRules = ['Les posts devront être gardés au moins 90 jours sur la page']
+const defaultRules = ['Publications must be kept online at least 90 days']
 
 interface ICampaignBriefTaskProps {
   task: ICampaignTask

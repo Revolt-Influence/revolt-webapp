@@ -117,12 +117,6 @@ function campaignsReducer(
           toggleArchiveCampaign: successfulRequest,
         },
       }
-    case creatorsActions.CHECK_INSTAGRAM_TOKEN_FULFILLED:
-      return {
-        ...state,
-        totalPages: payload.body.totalPages,
-        items: payload.body.experiences,
-      }
     case creatorsActions.LINK_YOUTUBE_CHANNEL_FULFILLED:
       return {
         ...state,

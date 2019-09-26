@@ -1,11 +1,11 @@
 import { TaskFormatType } from './Campaign'
 import { IRequestStatus, defaultRequestStatus } from '../utils/request'
-import { ICreator, IPostalAddress } from './Creator'
+import { ICreator } from './Creator'
 import { IReview } from './Review'
 
 export type DashboardAction = 'accept' | 'refuse' | 'markAsSent'
 
-export interface ICollabProposition extends IPostalAddress {
+export interface ICollabProposition {
   formats: TaskFormatType[]
   message: string
 }

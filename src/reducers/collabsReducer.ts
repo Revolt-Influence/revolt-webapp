@@ -111,17 +111,6 @@ function collabsReducer(state: ICollabState = defaultCollabState, action: IActio
           submitCreatorReviews: rejectedRequest,
         },
       }
-    case collabActions.UPDATE_INSTAGRAM_REVIEW_FULFILLED:
-      return {
-        ...state,
-        items: state.items.map(_collab => ({
-          ..._collab,
-          // Replace old review with refreshed one
-          reviews: _collab.reviews.map(_review =>
-            _review._id === payload.body.review._id ? payload.body.review : _review
-          ),
-        })),
-      }
     default:
       return state
   }

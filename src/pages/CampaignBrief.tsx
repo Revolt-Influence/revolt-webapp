@@ -72,7 +72,6 @@ const initialSettings: ICampaignSettings = {
     logo: '',
   },
   gift: {
-    addressIsNeeded: false,
     valueIsShown: false,
     name: '',
     picture: '',

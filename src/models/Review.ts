@@ -18,5 +18,4 @@ export interface IBaseReview {
   link: string
   format: TaskFormatType
   creatorId: string
-  instagramPostData?: any
 }
