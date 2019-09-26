@@ -16,7 +16,7 @@ const YoutubePreview: React.FC<IYoutubePreviewProps> = ({
 }) => (
   <SocialAccountPreview
     logo={youtubeSource}
-    network="Instagram"
+    network="YouTube"
     stats={`${approx(subscriberCount)} abonnés, ${videoCount} vidéos`}
     username={name}
   >

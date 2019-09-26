@@ -44,7 +44,7 @@ const ManagePlan: React.FC<{}> = () => {
             Votre carte actuelle finit en {last4}. Vous pouvez la remplacer par une nouvelle.
           </Details>
           <Elements>
-            <UpdateCreditCard />
+            <UpdateCreditCard stripe={stripe} />
           </Elements>
           <Divider />
           <OtherDetails>

@@ -1,14 +1,8 @@
 # Revolt App Front-End
 
->Front-end of the [app.revolt.club](https://app.revolt.club) app.
+>>[View on Github](https://github.com/remi2j/revolt-webapp)
 >
->Find the back-end on [this repo](https://github.com/Nicolas-vrcc/InfluencerzBack).
->
->View the latest changes on the [develop branch](https://github.com/Nicolas-vrcc/InfluencerzApp/tree/develop)
-
-## Roadmap
-
-View the development progress on the [App Roadmap on Notion](https://www.notion.so/revoltinfluence/924692801a0644d7b5e4d3267811bf02?v=fe0aad43c0944c70a76651abcec8c3d7).
+>Find the front-end on [this repo](https://github.com/remi2j/revolt-graphql)
 
 ## Available Scripts
 
@@ -16,23 +10,23 @@ In the project directory, you can run:
 
 ### `npm start`
 
-Runs the app in the development mode.<br>
+Runs the app in the development mode.  
 Open [http://localhost:8080](http://localhost:8080) to view it in the browser.
 
-The page will reload if you make edits.<br>
+The page will reload if you make edits.  
 You will also see any lint errors in the console.
 
 ### `npm test`
 
-Launches the test runner in the interactive watch mode.<br>
+Launches the test runner in the interactive watch mode.  
 See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
 ### `npm run build`
 
-Builds the app for production to the `build` folder.<br>
+Builds the app for production to the `build` folder.  
 It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.<br>
+The build is minified and the filenames include the hashes.  
 Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.

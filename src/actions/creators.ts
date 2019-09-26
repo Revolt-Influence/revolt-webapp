@@ -1,49 +1,29 @@
 import IAction from '../models/Action'
 import { request, backendURL } from '../utils/request'
-import { IPostalAddress, CreatorStatus } from '../models/Creator'
+import { CreatorStatus } from '../models/Creator'
 
 const creatorsActions = {
-  // Request creator profile with Youtube and Instagram data
+  // Request creator profile with linked accounts data
   GET_FULL_PROFILE: 'GET_FULL_PROFILE',
   GET_FULL_PROFILE_PENDING: 'GET_FULL_PROFILE_PENDING',
   GET_FULL_PROFILE_FULFILLED: 'GET_FULL_PROFILE_FULFILLED',
   GET_FULL_PROFILE_REJECTED: 'GET_FULL_PROFILE_REJECTED',
-  // Check Instagram token
-  CHECK_INSTAGRAM_TOKEN: 'CHECK_INSTAGRAM_TOKEN',
-  CHECK_INSTAGRAM_TOKEN_PENDING: 'CHECK_INSTAGRAM_TOKEN_PENDING',
-  CHECK_INSTAGRAM_TOKEN_FULFILLED: 'CHECK_INSTAGRAM_TOKEN_FULFILLED',
-  CHECK_INSTAGRAM_TOKEN_REJECTED: 'CHECK_INSTAGRAM_TOKEN_REJECTED',
-  // Save postal address
-  SAVE_POSTAL_ADDRESS: 'SAVE_POSTAL_ADDRESS',
-  SAVE_POSTAL_ADDRESS_PENDING: 'SAVE_POSTAL_ADDRESS_PENDING',
-  SAVE_POSTAL_ADDRESS_FULFILLED: 'SAVE_POSTAL_ADDRESS_FULFILLED',
-  SAVE_POSTAL_ADDRESS_REJECTED: 'SAVE_POSTAL_ADDRESS_REJECTED',
   // Save profile
   SAVE_CREATOR_PROFILE: 'SAVE_CREATOR_PROFILE',
   SAVE_CREATOR_PROFILE_PENDING: 'SAVE_CREATOR_PROFILE_PENDING',
   SAVE_CREATOR_PROFILE_FULFILLED: 'SAVE_CREATOR_PROFILE_FULFILLED',
   SAVE_CREATOR_PROFILE_REJECTED: 'SAVE_CREATOR_PROFILE_REJECTED',
-  // Connect Instagram to creator
-  LINK_INSTAGRAM_ACCOUNT: 'LINK_INSTAGRAM_ACCOUNT',
-  LINK_INSTAGRAM_ACCOUNT_PENDING: 'LINK_INSTAGRAM_ACCOUNT_PENDING',
-  LINK_INSTAGRAM_ACCOUNT_FULFILLED: 'LINK_INSTAGRAM_ACCOUNT_FULFILLED',
-  LINK_INSTAGRAM_ACCOUNT_REJECTED: 'LINK_INSTAGRAM_ACCOUNT_REJECTED',
   // Check your Youtube token
   LINK_YOUTUBE_CHANNEL: 'LINK_YOUTUBE_CHANNEL',
   LINK_YOUTUBE_CHANNEL_PENDING: 'LINK_YOUTUBE_CHANNEL_PENDING',
   LINK_YOUTUBE_CHANNEL_FULFILLED: 'LINK_YOUTUBE_CHANNEL_FULFILLED',
   LINK_YOUTUBE_CHANNEL_REJECTED: 'LINK_YOUTUBE_CHANNEL_REJECTED',
-  // Check your Youtube token
+  // Change creator email and phone
   UPDATE_CREATOR_CONTACT: 'UPDATE_CREATOR_CONTACT',
   UPDATE_CREATOR_CONTACT_PENDING: 'UPDATE_CREATOR_CONTACT_PENDING',
   UPDATE_CREATOR_CONTACT_FULFILLED: 'UPDATE_CREATOR_CONTACT_FULFILLED',
   UPDATE_CREATOR_CONTACT_REJECTED: 'UPDATE_CREATOR_CONTACT_REJECTED',
-  // Save instagram posts
-  SAVE_INSTAGRAM_POSTS: 'SAVE_INSTAGRAM_POSTS',
-  SAVE_INSTAGRAM_POSTS_PENDING: 'SAVE_INSTAGRAM_POSTS_PENDING',
-  SAVE_INSTAGRAM_POSTS_FULFILLED: 'SAVE_INSTAGRAM_POSTS_FULFILLED',
-  SAVE_INSTAGRAM_POSTS_REJECTED: 'SAVE_INSTAGRAM_POSTS_REJECTED',
-  // Save instagram posts
+  // Get all creators with filter
   GET_CREATORS_PAGE: 'GET_CREATORS_PAGE',
   GET_CREATORS_PAGE_PENDING: 'GET_CREATORS_PAGE_PENDING',
   GET_CREATORS_PAGE_FULFILLED: 'GET_CREATORS_PAGE_FULFILLED',
@@ -75,26 +55,6 @@ function getCreatorsPage(page: number, status: CreatorStatus): IAction {
   }
 }
 
-function checkInstagramToken(influencerData: any): IAction {
-  return {
-    type: creatorsActions.CHECK_INSTAGRAM_TOKEN,
-    payload: request
-      .post(`${backendURL}/creators/checkInstagramToken`)
-      .send({ influencerData })
-      .withCredentials(),
-  }
-}
-
-function savePostalAddress(postalAddress: IPostalAddress): IAction {
-  return {
-    type: creatorsActions.SAVE_POSTAL_ADDRESS,
-    payload: request
-      .post(`${backendURL}/creators/postalAddress`)
-      .send({ postalAddress })
-      .withCredentials(),
-  }
-}
-
 function saveCreatorProfile(profile: { name: string; picture: string }): IAction {
   const { name, picture } = profile
   return {
@@ -102,16 +62,6 @@ function saveCreatorProfile(profile: { name: string; picture: string }): IAction
     payload: request
       .post(`${backendURL}/creators/profile`)
       .send({ name, picture })
-      .withCredentials(),
-  }
-}
-
-function linkInstagram(username: string): IAction {
-  return {
-    type: creatorsActions.LINK_INSTAGRAM_ACCOUNT,
-    payload: request
-      .post(`${backendURL}/creators/linkInstagram`)
-      .send({ username })
       .withCredentials(),
   }
 }
@@ -140,20 +90,6 @@ function updateCreatorContactInfo(contactInfo: ICreatorContactInfo): IAction {
   }
 }
 
-interface ISaveInstagramPostsPayload {
-  username: string
-  influencerData: any
-}
-function saveInstagramPosts({ username, influencerData }: ISaveInstagramPostsPayload): IAction {
-  return {
-    type: creatorsActions.SAVE_INSTAGRAM_POSTS,
-    payload: request
-      .post(`${backendURL}/influencer/${username}/posts`)
-      .send({ influencerData })
-      .withCredentials(),
-  }
-}
-
 interface CreatorStatusPayload {
   creatorId: string
   newStatus: CreatorStatus
@@ -171,13 +107,9 @@ function setCreatorStatus({ creatorId, newStatus }: CreatorStatusPayload): IActi
 export {
   creatorsActions,
   getFullCreatorProfile,
-  checkInstagramToken,
-  savePostalAddress,
   saveCreatorProfile,
   linkYoutubeChannel,
-  linkInstagram,
   updateCreatorContactInfo,
-  saveInstagramPosts,
   getCreatorsPage,
   setCreatorStatus,
 }

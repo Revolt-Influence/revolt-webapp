@@ -108,14 +108,6 @@ const PrivacyPolicy: React.FC<{}> = () => {
         </p>
         <ul className="bulleted-list">
           <li>
-            Instagram: username, followers and following counts, profile picture, number of
-            publications, number of likes and comments on the 12 latest posts. This information is
-            used when an influencer offers to make an Instagram post for a brand, so that the brand
-            gets an overview of the Instagram account.
-          </li>
-        </ul>
-        <ul className="bulleted-list">
-          <li>
             YouTube: name of the channel, followers count, number of videos, channel thumbnail, and
             an overview of the channel audience&#x27;s demographics. The demographics we store is
             percentages of the most frequent age ranges, genders and countries of the viewers in the
@@ -124,7 +116,6 @@ const PrivacyPolicy: React.FC<{}> = () => {
             would reach.
           </li>
         </ul>
-        <p />
         <p>
           You are free to refuse our request for your personal information, with the understanding
           that we may be unable to provide you with some of your desired services.

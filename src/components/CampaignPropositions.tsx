@@ -80,7 +80,6 @@ const CampaignPropositions: React.FC<ICampaignPropositionsProps> = ({ campaignId
                   />
                 </Box>
               )}
-              {/* TODO: show something for propositions without a linked Instagram */}
               {newPropositions
                 .sort((a, b) => (a.creationDate > b.creationDate ? -1 : 1))
                 .map(showPropositionPreview)}

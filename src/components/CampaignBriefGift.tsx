@@ -110,12 +110,6 @@ const CampaignBriefGift: React.FC<ICampaignBriefGift> = ({ gift, setGift }) => {
             hasLabel
           />
         </FormInputLabel>
-        <CheckBox
-          text="J'ai besoin de l'adresse de l'influenceur pour envoyer mon cadeau"
-          isChecked={gift.addressIsNeeded}
-          handleClick={() => setGift({ ...gift, addressIsNeeded: !gift.addressIsNeeded })}
-          noMargin
-        />
       </>
     </SplitView>
   )

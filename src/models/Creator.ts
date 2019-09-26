@@ -1,4 +1,3 @@
-import { IInfluencer } from './Influencer'
 import { IRequestStatus, defaultRequestStatus } from '../utils/request'
 import { IYoutuber } from './Youtuber'
 
@@ -16,12 +15,7 @@ export interface ICreator {
   language: string
   birthYear: number // 2002
   passwordHash?: string
-  instagram?: IInfluencer
   youtube?: IYoutuber
-  instagramToken?: string
-  instagramUsername?: string
-  instagramIsVerified: boolean
-  postalAddress?: IPostalAddress
   ambassador?: string // _id
   signupDate?: number
   status: CreatorStatus
@@ -33,9 +27,6 @@ export interface ICreatorState {
   totalPages: number
   requests: {
     getFullProfile: IRequestStatus
-    updateInstagramPhoto: IRequestStatus
-    checkInstagramToken: IRequestStatus
-    saveInstagramPosts: IRequestStatus
     getProfilesPage: IRequestStatus
     setStatus: IRequestStatus
   }
@@ -47,22 +38,9 @@ const defaultCreatorState: ICreatorState = {
   currentPage: 1,
   requests: {
     getFullProfile: defaultRequestStatus,
-    updateInstagramPhoto: defaultRequestStatus,
-    checkInstagramToken: defaultRequestStatus,
-    saveInstagramPosts: defaultRequestStatus,
     getProfilesPage: defaultRequestStatus,
     setStatus: defaultRequestStatus,
   },
-}
-
-export interface IPostalAddress {
-  firstName: string
-  lastName: string
-  address?: string
-  addressLine2?: string
-  postalCode?: string
-  city?: string
-  country?: string
 }
 
 export { defaultCreatorState }

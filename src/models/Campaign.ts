@@ -1,6 +1,6 @@
-import { IInfluencer, Gender } from './Influencer'
 import { IRequestStatus, defaultRequestStatus } from '../utils/request'
 import { IBrand } from './Brand'
+import { Gender } from './Creator'
 
 export type FilterCampaignInfluencer = 'alreadyContacted' | 'notContacted'
 
@@ -23,7 +23,6 @@ export type CurrencyType = 'Euro' | 'US Dollar' | 'Pound Sterling'
 export interface ICampaignGift {
   name: string
   valueIsShown?: boolean
-  addressIsNeeded: boolean
   value?: number
   link?: string
   details?: string
@@ -37,7 +36,7 @@ export interface ICampaignTarget {
   city: string
 }
 
-export type TaskFormatType = 'Instagram story' | 'Instagram post' | 'Youtube video'
+export type TaskFormatType = 'Youtube video'
 export interface ICampaignTask {
   formats: TaskFormatType[]
   including: string
@@ -53,15 +52,8 @@ export interface ICampaignSettings {
   task: ICampaignTask
 }
 
-export interface ICampaignInvite {
-  token: string
-  campaignSettings: ICampaignSettings
-  campaignName: string
-  influencer: IInfluencer
-}
-
 const defaultTask: ICampaignTask = {
-  formats: ['Instagram post'],
+  formats: ['Youtube video'],
   including: '',
   daysToReview: 15,
   rules: [],

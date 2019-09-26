@@ -5,8 +5,6 @@ import { ICampaignTask, TaskFormatType } from '../models/Campaign'
 import { BoldText, LabelText } from '../styles/Text'
 
 // Absolute URL so that it works in an iframe
-const instagramLogo =
-  'https://res.cloudinary.com/influencerz/image/upload/v1566909476/icons/instagram_color.svg'
 const youtubeLogo =
   'https://res.cloudinary.com/influencerz/image/upload/v1566909495/icons/youtube_color.svg'
 
@@ -39,10 +37,6 @@ interface ITaskCardProps {
 const TaskCard: React.FC<ITaskCardProps> = ({ task }) => {
   const getFormatPicture = (_format: TaskFormatType): string => {
     switch (_format) {
-      case 'Instagram post':
-        return instagramLogo
-      case 'Instagram story':
-        return instagramLogo
       case 'Youtube video':
         return youtubeLogo
       default:

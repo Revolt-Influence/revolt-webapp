@@ -37,33 +37,6 @@ const displayReducer = (
           getFullProfile: rejectedRequest,
         },
       }
-    case creatorsActions.CHECK_INSTAGRAM_TOKEN_PENDING:
-      return {
-        ...state,
-        requests: {
-          ...state.requests,
-          checkInstagramToken: loadingRequest,
-        },
-      }
-    case creatorsActions.CHECK_INSTAGRAM_TOKEN_FULFILLED:
-      return {
-        ...state,
-        requests: {
-          ...state.requests,
-          checkInstagramToken: successfulRequest,
-        },
-      }
-    case creatorsActions.CHECK_INSTAGRAM_TOKEN_REJECTED:
-      return {
-        ...state,
-        requests: {
-          ...state.requests,
-          checkInstagramToken: {
-            ...rejectedRequest,
-            hasFailed: payload.response.text,
-          },
-        },
-      }
     case creatorsActions.GET_CREATORS_PAGE_PENDING:
       return {
         ...state,
@@ -116,42 +89,6 @@ const displayReducer = (
         requests: {
           ...state.requests,
           setStatus: rejectedRequest,
-        },
-      }
-    case creatorsActions.SAVE_INSTAGRAM_POSTS_PENDING:
-      return {
-        ...state,
-        requests: {
-          ...state.requests,
-          saveInstagramPosts: loadingRequest,
-        },
-      }
-    case creatorsActions.SAVE_INSTAGRAM_POSTS_FULFILLED:
-      return {
-        ...state,
-        items: state.items.map(_creator => {
-          if (
-            _creator.instagram != null &&
-            _creator.instagram.username === payload.body.influencer.username
-          ) {
-            return {
-              ..._creator,
-              instagram: payload.body.influencer,
-            }
-          }
-          return _creator
-        }),
-        requests: {
-          ...state.requests,
-          saveInstagramPosts: successfulRequest,
-        },
-      }
-    case creatorsActions.SAVE_INSTAGRAM_POSTS_REJECTED:
-      return {
-        ...state,
-        requests: {
-          ...state.requests,
-          saveInstagramPosts: rejectedRequest,
         },
       }
     default:

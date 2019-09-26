@@ -1,6 +1,5 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { Box } from '@rebass/grid'
 import { MainButtonSubmit } from '../styles/Button'
 import { FormInputLabel, FormTextarea } from '../styles/Form'
 import ErrorCard from './ErrorCard'
@@ -12,44 +11,11 @@ import IState from '../models/State'
 import { applyToExperience } from '../actions/collabs'
 import { TaskFormatType } from '../models/Campaign'
 import { ICollabProposition } from '../models/Collab'
-import { ICreator, IPostalAddress } from '../models/Creator'
-import PostalAddressForm from './PostalAddressForm'
+import { ICreator } from '../models/Creator'
 import NotificationCard from './NotificationCard'
-
-const initialAddress: IPostalAddress = {
-  firstName: '',
-  lastName: '',
-  address: '',
-  addressLine2: '',
-  postalCode: '',
-  city: '',
-  country: '',
-}
-
-function addressReducer(address: IPostalAddress, { type, payload }) {
-  switch (type) {
-    case 'firstName':
-      return { ...address, firstName: payload }
-    case 'lastName':
-      return { ...address, lastName: payload }
-    case 'address':
-      return { ...address, address: payload }
-    case 'addressLine2':
-      return { ...address, addressLine2: payload }
-    case 'postalCode':
-      return { ...address, postalCode: payload }
-    case 'city':
-      return { ...address, city: payload }
-    case 'country':
-      return { ...address, country: payload }
-    default:
-      return address
-  }
-}
 
 interface IExperienceFormProps {
   brand: string
-  addressIsNeeded: boolean
   experienceId: string
   possibleFormats: TaskFormatType[]
 }
@@ -57,17 +23,10 @@ interface IExperienceFormProps {
 const ExperienceForm: React.FC<IExperienceFormProps> = ({
   brand,
   experienceId,
-  addressIsNeeded,
   possibleFormats,
 }) => {
   const creator = useSelector<IState, ICreator>(state => state.session.creator)
   const hasYoutube = creator.youtube != null
-  const hasInstagram = creator.instagram != null
-  // Form state
-  const [address, dispatchAddress] = React.useReducer(
-    addressReducer,
-    creator.postalAddress || initialAddress
-  )
 
   const [message, setMessage] = React.useState<string>('')
   const [acceptsTerms, setAcceptsTerms] = React.useState<boolean>(false)
@@ -80,18 +39,7 @@ const ExperienceForm: React.FC<IExperienceFormProps> = ({
   )
 
   const checkIfAllowSubmit = () => {
-    if (
-      !acceptsTerms ||
-      formats.length === 0 ||
-      message.length === 0 ||
-      (addressIsNeeded &&
-        (address.address.length === 0 ||
-          address.firstName.length === 0 ||
-          address.lastName.length === 0 ||
-          address.postalCode.length === 0 ||
-          address.city.length === 0 ||
-          address.country.length === 0))
-    ) {
+    if (!acceptsTerms || formats.length === 0 || message.length === 0) {
       return false
     }
     return true
@@ -111,7 +59,6 @@ const ExperienceForm: React.FC<IExperienceFormProps> = ({
   const handleSubmit = (e: React.MouseEvent<HTMLInputElement>) => {
     e.preventDefault()
     const proposition: ICollabProposition = {
-      ...address,
       message,
       formats,
     }
@@ -120,10 +67,6 @@ const ExperienceForm: React.FC<IExperienceFormProps> = ({
 
   const showFormatText = (_format: TaskFormatType): string => {
     switch (_format) {
-      case 'Instagram post':
-        return `Post Instagram${hasInstagram ? '' : ' (non connecté)'}`
-      case 'Instagram story':
-        return `Story Instagram${hasInstagram ? '' : ' (non connecté)'}`
       case 'Youtube video':
         return `YouTube${hasYoutube ? '' : ' (non connecté)'}`
       default:
@@ -134,14 +77,10 @@ const ExperienceForm: React.FC<IExperienceFormProps> = ({
   const checkIfFormatPossible = (_format: TaskFormatType): boolean => {
     const checkIsPossible = (): boolean => {
       switch (_format) {
-        case 'Instagram post':
-          return hasInstagram
-        case 'Instagram story':
-          return hasInstagram
         case 'Youtube video':
           return hasYoutube
         default:
-          return _format
+          return false
       }
     }
     const isPossible = checkIsPossible()
@@ -171,11 +110,6 @@ const ExperienceForm: React.FC<IExperienceFormProps> = ({
           />
         ))}
       </FormInputLabel>
-      {addressIsNeeded && (
-        <Box mt="2rem">
-          <PostalAddressForm address={address} handleChange={dispatchAddress} />
-        </Box>
-      )}
       <FormInputLabel>
         Message de motivation pour {brand}
         <FormTextarea

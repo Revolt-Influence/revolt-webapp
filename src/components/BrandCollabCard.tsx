@@ -18,7 +18,6 @@ moment.locale('fr')
 
 const eyeSource = require('../images/icons/eye_white.svg')
 const checkSource = require('../images/icons/check_white.svg')
-const instagramSource = require('../images/icons/instagram_color.svg')
 const youtubeSource = require('../images/icons/youtube_color.svg')
 const contactSource = require('../images/icons/email_white.svg')
 
@@ -168,8 +167,8 @@ const BrandCollabCard: React.FC<IBrandCollabCardProps> = ({ collab, isLoading, m
     dispatch(
       showProfilePanel({
         creatorId: (creator as ICreator)._id,
-        message: collab.proposition.message,
-        formats: collab.proposition.formats,
+        message: proposition.message,
+        formats: proposition.formats,
         collabId: collab._id,
         conversationId: collab.conversation,
       })
@@ -264,9 +263,7 @@ const BrandCollabCard: React.FC<IBrandCollabCardProps> = ({ collab, isLoading, m
     }
   }
 
-  console.log(creator)
-  const { name, instagram, picture, youtube } = creator as ICreator
-  const hasInstagram = instagram != null
+  const { name, picture, youtube } = creator as ICreator
   const hasYoutube = youtube != null
 
   return (
@@ -280,15 +277,6 @@ const BrandCollabCard: React.FC<IBrandCollabCardProps> = ({ collab, isLoading, m
           </p>
         </div>
       </Row>
-      {hasInstagram && (
-        <Network flexDirection="row" justifyContent="flex-start" alignItems="center">
-          <img className="networkLogo" src={instagramSource} alt="IG" />
-          <div>
-            <p>{approx(instagram.followers)} followers</p>
-            <p>{approx(instagram.likes)} likes potentiels</p>
-          </div>
-        </Network>
-      )}
       {hasYoutube && (
         <Network flexDirection="row" justifyContent="flex-start" alignItems="center">
           <img className="networkLogo" src={youtubeSource} alt="YT" />
@@ -297,17 +285,6 @@ const BrandCollabCard: React.FC<IBrandCollabCardProps> = ({ collab, isLoading, m
             <p>{approx(youtube.viewCount / youtube.videoCount)} vues potentielles</p>
           </div>
         </Network>
-      )}
-      {collab.status === 'accepted' && (
-        <>
-          <p>{proposition.address && proposition.address}</p>
-          <p>{proposition.addressLine2 && proposition.addressLine2}</p>
-          {proposition.city && proposition.country ? (
-            <p>
-              {proposition.city && proposition.city}, {proposition.country && proposition.country}
-            </p>
-          ) : null}
-        </>
       )}
       {showFooter()}
     </Styles>

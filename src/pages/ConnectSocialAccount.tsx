@@ -1,7 +1,6 @@
 import React from 'react'
 import { ContainerBox } from '../styles/grid'
 import { Title } from '../styles/Text'
-import ConnectCreatorInstagram from '../components/ConnectCreatorInstagram'
 import SplitView from '../components/SplitView'
 import ConnectCreatorYoutube from '../components/ConnectCreatorYoutube'
 import { usePageTitle } from '../utils/hooks'
@@ -14,9 +13,6 @@ const ConnectSocialAccount: React.FC<{}> = () => {
   return (
     <ContainerBox>
       <Title>Connecter un compte</Title>
-      <SplitView title="Connecter Instagram">
-        <ConnectCreatorInstagram />
-      </SplitView>
       <SplitView title="Connecter YouTube">
         <ConnectCreatorYoutube />
       </SplitView>

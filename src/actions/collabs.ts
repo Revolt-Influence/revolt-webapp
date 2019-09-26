@@ -19,11 +19,6 @@ const collabActions = {
   SUBMIT_CREATOR_REVIEWS_PENDING: 'SUBMIT_CREATOR_REVIEWS_PENDING',
   SUBMIT_CREATOR_REVIEWS_FULFILLED: 'SUBMIT_CREATOR_REVIEWS_FULFILLED',
   SUBMIT_CREATOR_REVIEWS_REJECTED: 'SUBMIT_CREATOR_REVIEWS_REJECTED',
-  // Update instagram review
-  UPDATE_INSTAGRAM_REVIEW: 'UPDATE_INSTAGRAM_REVIEW',
-  UPDATE_INSTAGRAM_REVIEW_PENDING: 'UPDATE_INSTAGRAM_REVIEW_PENDING',
-  UPDATE_INSTAGRAM_REVIEW_FULFILLED: 'UPDATE_INSTAGRAM_REVIEW_FULFILLED',
-  UPDATE_INSTAGRAM_REVIEW_REJECTED: 'UPDATE_INSTAGRAM_REVIEW_REJECTED',
 }
 
 function reviewCollabProposition(payload: { collabId: string; action: DashboardAction }): IAction {
@@ -62,28 +57,4 @@ function submitCreatorReviews(payload: { collabId: string; baseReviews: IBaseRev
   }
 }
 
-function updateInstagramReview({
-  reviewId,
-  postData,
-  creatorId,
-}: {
-  reviewId: string
-  postData: any
-  creatorId: string
-}): IAction {
-  return {
-    payload: request
-      .patch(`${backendURL}/review/${reviewId}`)
-      .send({ postData })
-      .withCredentials(),
-    type: collabActions.UPDATE_INSTAGRAM_REVIEW,
-  }
-}
-
-export {
-  collabActions,
-  reviewCollabProposition,
-  applyToExperience,
-  submitCreatorReviews,
-  updateInstagramReview,
-}
+export { collabActions, reviewCollabProposition, applyToExperience, submitCreatorReviews }
