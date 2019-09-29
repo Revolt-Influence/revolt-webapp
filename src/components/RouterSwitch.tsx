@@ -303,4 +303,5 @@ const RouterSwitch: React.FC<IRouterSwitchProps> = () => {
   )
 }
 
+export { GET_SESSION }
 export default RouterSwitch
