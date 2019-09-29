@@ -1,19 +1,17 @@
-import React, { Suspense } from 'react'
-import { gql } from 'apollo-boost'
-import { Route, Switch, Redirect, RouteComponentProps } from 'react-router-dom'
-import { useSelector } from 'react-redux'
-import styled from 'styled-components'
-import Navbar from './Navbar'
-import { SessionType } from '../models/Session'
-import ErrorBoundary from './ErrorBoundary'
-import Loader from './Loader'
-import Landing from '../pages/Landing'
-import IState from '../models/State'
-import { IUser } from '../models/User'
-import { ICreator } from '../models/Creator'
-import Footer from './Footer'
-import { useClientSize } from '../utils/hooks'
 import { useQuery } from '@apollo/react-hooks'
+import { gql } from 'apollo-boost'
+import React, { Suspense } from 'react'
+import { Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom'
+import styled from 'styled-components'
+import Landing from '../pages/Landing'
+import { useClientSize } from '../utils/hooks'
+import { SessionType, Plan } from '../__generated__/globalTypes'
+import { session_session } from '../__generated__/session'
+import ErrorBoundary from './ErrorBoundary'
+import ErrorCard from './ErrorCard'
+import Footer from './Footer'
+import Loader from './Loader'
+import Navbar from './Navbar'
 
 const CampaignDashboard = React.lazy(() => import('../pages/CampaignDashboard'))
 const BrandSignup = React.lazy(() => import('../pages/BrandSignup'))
@@ -75,33 +73,30 @@ interface IRouterSwitchProps extends RouteComponentProps {
 }
 
 const RouterSwitch: React.FC<IRouterSwitchProps> = () => {
-  const { data, loading, error } = useQuery(GET_SESSION)
-  const isLoggedIn = useSelector<IState, boolean>(state => state.session.isLoggedIn)
-  const sessionType = useSelector<IState, SessionType>(state => state.session.type)
-  const isRetrievingUser = useSelector<IState, boolean>(
-    state => state.session.requests.retrieveUser.isLoading
-  )
-  const user = useSelector<IState, IUser>(state => state.session.user)
-  const creator = useSelector<IState, ICreator>(state => state.session.creator)
+  const {
+    data: { isLoggedIn, sessionType, user, creator },
+    loading,
+    error,
+  } = useQuery<session_session>(GET_SESSION)
 
   const clientHeight = useClientSize().height
 
   if (loading) {
-    return <p>apollo loading</p>
+    return <Loader fullScreen />
   }
+
   if (error) {
-    return <p>apollo error</p>
+    return <ErrorCard message="Something went wrong" />
   }
-  return <p>apollo data: {JSON.stringify(data)}</p>
 
   const renderRoot = () => {
     if (!isLoggedIn) {
       return <Landing />
     }
-    if (sessionType === 'brand') {
+    if (sessionType === SessionType.BRAND) {
       return <Redirect to="/brand" />
     }
-    if (sessionType === 'creator') {
+    if (sessionType === SessionType.CREATOR) {
       return <Redirect to="/creator" />
     }
     // Should not happen, here just in case
@@ -134,7 +129,7 @@ const RouterSwitch: React.FC<IRouterSwitchProps> = () => {
 
   const renderBrandAccount = () => {
     // Only allow access if the user is logged in
-    if (!isLoggedIn && !isRetrievingUser) {
+    if (!isLoggedIn) {
       return <Redirect to="/login" />
     }
     return <BrandAccount />
@@ -142,7 +137,7 @@ const RouterSwitch: React.FC<IRouterSwitchProps> = () => {
 
   const renderCreatorAccount = () => {
     // Only allow access if the user is logged in
-    if (!isLoggedIn && !isRetrievingUser) {
+    if (!isLoggedIn) {
       return <Redirect to="/login" />
     }
     return <CreatorAccount />
@@ -150,45 +145,45 @@ const RouterSwitch: React.FC<IRouterSwitchProps> = () => {
 
   const renderUpgradePlan = () => {
     // Only allow access if the user is logged in and not Premium
-    if (!isLoggedIn && !isRetrievingUser) {
+    if (!isLoggedIn) {
       return <Redirect to="/login" />
     }
-    if (user.plan === 'premium') {
+    if (user.plan === Plan.PREMIUM) {
       return <Redirect to="/brand/myAccount" />
     }
     return <Upgrade />
   }
 
   const renderCampaignsList = () => {
-    if (!isLoggedIn && !isRetrievingUser) {
+    if (!isLoggedIn) {
       return <Redirect to="/login" />
     }
     return <CampaignsList />
   }
 
   const renderExperiencesList = () => {
-    if (!isLoggedIn && !isRetrievingUser) {
+    if (!isLoggedIn) {
       return <Redirect to="/login" />
     }
     return <ExperiencesList />
   }
 
   const renderCollabsList = () => {
-    if (!isLoggedIn && !isRetrievingUser) {
+    if (!isLoggedIn) {
       return <Redirect to="/login" />
     }
     return <CollabsList />
   }
 
   const renderExperience = () => {
-    if (!isLoggedIn && !isRetrievingUser) {
+    if (!isLoggedIn) {
       return <Redirect to="/login" />
     }
     return <Experience />
   }
 
   const renderCampaignDashboard = () => {
-    if (!isLoggedIn && !isRetrievingUser) {
+    if (!isLoggedIn) {
       return <Redirect to="/login" />
     }
     return (
@@ -199,10 +194,10 @@ const RouterSwitch: React.FC<IRouterSwitchProps> = () => {
   }
 
   const renderConnectSocialAccount = () => {
-    if (!isLoggedIn && !isRetrievingUser) {
+    if (!isLoggedIn) {
       return <Redirect to="/login" />
     }
-    if (sessionType !== 'creator') {
+    if (sessionType !== SessionType.CREATOR) {
       return <NotFound />
     }
     if (creator.youtube != null) {
@@ -213,21 +208,17 @@ const RouterSwitch: React.FC<IRouterSwitchProps> = () => {
   }
 
   const renderCampaignBrief = () => {
-    if (!isLoggedIn && !isRetrievingUser) {
+    if (!isLoggedIn) {
       return <Redirect to="/login" />
     }
     return <CampaignBrief />
-  }
-
-  if (isRetrievingUser) {
-    return <Loader fullScreen />
   }
 
   const brandRouterSwitch = () => {
     if (!isLoggedIn) {
       return <Redirect to="/login" />
     }
-    if (sessionType === 'creator') {
+    if (sessionType !== SessionType.BRAND) {
       return <NotFound />
     }
     return (
@@ -258,7 +249,7 @@ const RouterSwitch: React.FC<IRouterSwitchProps> = () => {
     if (!isLoggedIn) {
       return <Redirect to="/login" />
     }
-    if (sessionType === 'brand') {
+    if (sessionType !== SessionType.CREATOR) {
       return <NotFound />
     }
     const hasNoNetwork = creator.youtube == null
