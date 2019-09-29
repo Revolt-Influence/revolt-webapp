@@ -1,19 +1,21 @@
-import React, { useEffect } from 'react'
 import * as Sentry from '@sentry/browser' // must be imported with *
+import ApolloClient, { gql } from 'apollo-boost'
+import { ApolloProvider } from '@apollo/react-hooks'
+import React, { useEffect } from 'react'
 import TagManager from 'react-gtm-module'
+import { Provider } from 'react-redux'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 import { LastLocationProvider } from 'react-router-last-location'
-import { createStore, applyMiddleware } from 'redux'
+import { applyMiddleware, createStore } from 'redux'
 import { composeWithDevTools } from 'redux-devtools-extension'
-import { Provider } from 'react-redux'
 import promiseMiddleware from 'redux-promise-middleware'
+import { retrieveUser } from '../../actions/session'
 import { defaultState } from '../../models/State'
 import rootReducer from '../../reducers'
-import RouterSwitch from '../RouterSwitch'
-import Portal from '../PopupsPortal'
-import { GlobalStyle } from './style'
 import CustomThemeProvider from '../CustomThemeProvider'
-import { retrieveUser } from '../../actions/session'
+import Portal from '../PopupsPortal'
+import RouterSwitch from '../RouterSwitch'
+import { GlobalStyle } from './style'
 
 // Create Redux store
 const store = createStore(
@@ -21,6 +23,11 @@ const store = createStore(
   defaultState,
   composeWithDevTools(applyMiddleware(promiseMiddleware()))
 )
+
+// Create Apollo client
+const client = new ApolloClient({
+  uri: `${process.env.REACT_APP_BACKEND_URL}/graphql`,
+})
 
 const App: React.FC = () => {
   // Retrieve user on mount
@@ -42,20 +49,20 @@ const App: React.FC = () => {
 
   return (
     <Provider store={store}>
-      <Router>
-        <CustomThemeProvider>
-          <>
-            <GlobalStyle />
-            <LastLocationProvider watchOnlyPathname>
-              {/* <SocketProvider> */}
-              {/* Show the right page */}
-              <Route component={RouterSwitch} />
-              <Portal />
-              {/* </SocketProvider> */}
-            </LastLocationProvider>
-          </>
-        </CustomThemeProvider>
-      </Router>
+      <ApolloProvider client={client}>
+        <Router>
+          <CustomThemeProvider>
+            <>
+              <GlobalStyle />
+              <LastLocationProvider watchOnlyPathname>
+                {/* Show the right page */}
+                <Route component={RouterSwitch} />
+                <Portal />
+              </LastLocationProvider>
+            </>
+          </CustomThemeProvider>
+        </Router>
+      </ApolloProvider>
     </Provider>
   )
 }

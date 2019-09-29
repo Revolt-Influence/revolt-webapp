@@ -1,4 +1,5 @@
 import React, { Suspense } from 'react'
+import { gql } from 'apollo-boost'
 import { Route, Switch, Redirect, RouteComponentProps } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
@@ -12,6 +13,7 @@ import { IUser } from '../models/User'
 import { ICreator } from '../models/Creator'
 import Footer from './Footer'
 import { useClientSize } from '../utils/hooks'
+import { useQuery } from '@apollo/react-hooks'
 
 const CampaignDashboard = React.lazy(() => import('../pages/CampaignDashboard'))
 const BrandSignup = React.lazy(() => import('../pages/BrandSignup'))
@@ -47,12 +49,33 @@ const Layout = styled.div<{ minHeight: number }>`
   }
 `
 
+const GET_SESSION = gql`
+  query session {
+    session {
+      isLoggedIn
+      sessionId
+      sessionType
+      user {
+        _id
+        plan
+      }
+      creator {
+        _id
+        youtube {
+          _id
+        }
+      }
+    }
+  }
+`
+
 interface IRouterSwitchProps extends RouteComponentProps {
   isRetrievingUser: boolean
   hasVerifiedEmail: boolean
 }
 
 const RouterSwitch: React.FC<IRouterSwitchProps> = () => {
+  const { data, loading, error } = useQuery(GET_SESSION)
   const isLoggedIn = useSelector<IState, boolean>(state => state.session.isLoggedIn)
   const sessionType = useSelector<IState, SessionType>(state => state.session.type)
   const isRetrievingUser = useSelector<IState, boolean>(
@@ -60,7 +83,16 @@ const RouterSwitch: React.FC<IRouterSwitchProps> = () => {
   )
   const user = useSelector<IState, IUser>(state => state.session.user)
   const creator = useSelector<IState, ICreator>(state => state.session.creator)
+
   const clientHeight = useClientSize().height
+
+  if (loading) {
+    return <p>apollo loading</p>
+  }
+  if (error) {
+    return <p>apollo error</p>
+  }
+  return <p>apollo data: {JSON.stringify(data)}</p>
 
   const renderRoot = () => {
     if (!isLoggedIn) {
