@@ -1,29 +1,80 @@
-import React from 'react'
+import { useMutation, useQuery } from '@apollo/react-hooks'
 import { Box } from '@rebass/grid'
-import { useSelector, useDispatch } from 'react-redux'
-import IState from '../models/State'
-import { ISession } from '../models/Session'
+import gql from 'graphql-tag'
+import React from 'react'
 import { MainButton } from '../styles/Button'
-import { logoutUser } from '../actions/session'
-import { IRequestStatus } from '../utils/request'
+import { GetSession } from '../__generated__/GetSession'
+import { SessionType } from '../__generated__/globalTypes'
+import { Logout } from '../__generated__/Logout'
 import ErrorCard from './ErrorCard'
+import Loader from './Loader'
+
+export const GET_SESSION = gql`
+  query GetSession {
+    session {
+      isLoggedIn
+      sessionId
+      sessionType
+      user {
+        _id
+        email
+        plan
+      }
+      creator {
+        _id
+        email
+        status
+        youtube {
+          _id
+        }
+      }
+    }
+  }
+`
+
+const LOGOUT = gql`
+  mutation Logout {
+    logout {
+      sessionId
+    }
+  }
+`
 
 const Session: React.FC<{}> = () => {
-  const dispatch = useDispatch()
-  const { type, creator, user } = useSelector<IState, ISession>(state => state.session)
-  const email = type === 'brand' ? user.email : creator.email
-  const logoutStatus = useSelector<IState, IRequestStatus>(state => state.session.requests.logout)
+  // Get session data
+  const {
+    data: { session },
+    loading: sessionLoading,
+    error: sessionError,
+  } = useQuery<GetSession>(GET_SESSION)
+  const getEmail = () => {
+    switch (session.sessionType) {
+      case SessionType.BRAND:
+        return session.user.email
+      case SessionType.CREATOR:
+        return session.creator.email
+      default:
+        return null
+    }
+  }
+  const email = getEmail()
+
+  // Prepare logout
+  const [logout, logoutStatus] = useMutation<Logout>(LOGOUT)
+
+  if (sessionLoading) {
+    return <Loader />
+  }
+  if (sessionError) {
+    return <ErrorCard />
+  }
+
   return (
     <div>
       <Box mb="1rem">Vous êtes connecté en tant que {email}</Box>
-      {logoutStatus.hasFailed ? <ErrorCard message="La déconnexion a échoué" /> : null}
-      <MainButton
-        onClick={() => dispatch(logoutUser())}
-        disabled={logoutStatus.isLoading}
-        noMargin
-        inverted
-      >
-        {logoutStatus.isLoading ? 'Déconnexion...' : 'Se déconnecter'}
+      {logoutStatus.error ? <ErrorCard message="La déconnexion a échoué" /> : null}
+      <MainButton onClick={() => logout()} disabled={logoutStatus.loading} noMargin inverted>
+        {logoutStatus.loading ? 'Déconnexion...' : 'Se déconnecter'}
       </MainButton>
     </div>
   )

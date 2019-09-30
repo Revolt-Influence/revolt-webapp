@@ -1,17 +1,17 @@
 import { useQuery } from '@apollo/react-hooks'
-import { gql } from 'apollo-boost'
 import React, { Suspense } from 'react'
 import { Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom'
 import styled from 'styled-components'
 import Landing from '../pages/Landing'
 import { useClientSize } from '../utils/hooks'
-import { SessionType, Plan } from '../__generated__/globalTypes'
-import { Session } from '../__generated__/session'
+import { GetSession } from '../__generated__/GetSession'
+import { Plan, SessionType } from '../__generated__/globalTypes'
 import ErrorBoundary from './ErrorBoundary'
 import ErrorCard from './ErrorCard'
 import Footer from './Footer'
 import Loader from './Loader'
 import Navbar from './Navbar'
+import { GET_SESSION } from './Session'
 
 const CampaignDashboard = React.lazy(() => import('../pages/CampaignDashboard'))
 const BrandSignup = React.lazy(() => import('../pages/BrandSignup'))
@@ -47,26 +47,6 @@ const Layout = styled.div<{ minHeight: number }>`
   }
 `
 
-const GET_SESSION = gql`
-  query Session {
-    session {
-      isLoggedIn
-      sessionId
-      sessionType
-      user {
-        _id
-        plan
-      }
-      creator {
-        _id
-        youtube {
-          _id
-        }
-      }
-    }
-  }
-`
-
 interface IRouterSwitchProps extends RouteComponentProps {
   isRetrievingUser: boolean
   hasVerifiedEmail: boolean
@@ -79,7 +59,7 @@ const RouterSwitch: React.FC<IRouterSwitchProps> = () => {
     },
     loading,
     error,
-  } = useQuery<Session>(GET_SESSION)
+  } = useQuery<GetSession>(GET_SESSION)
 
   const clientHeight = useClientSize().height
 
@@ -305,5 +285,4 @@ const RouterSwitch: React.FC<IRouterSwitchProps> = () => {
   )
 }
 
-export { GET_SESSION }
 export default RouterSwitch

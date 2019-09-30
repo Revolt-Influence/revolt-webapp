@@ -1,16 +1,14 @@
+import { Box } from '@rebass/grid'
 import React from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
-import { useSelector } from 'react-redux'
-import { Box } from '@rebass/grid'
-import { ICampaign } from '../models/Campaign'
-import { capitalizeFirstLetter } from '../utils/strings'
-import { palette } from '../utils/colors'
-import { shadow, setFont } from '../utils/styles'
-import { ICollab } from '../models/Collab'
-import IState from '../models/State'
 import { getCampaignStatus } from '../pages/CampaignDashboard'
 import { Dot } from '../styles/Dot'
+import { palette } from '../utils/colors'
+import { capitalizeFirstLetter } from '../utils/strings'
+import { setFont, shadow } from '../utils/styles'
+import { GetCampaigns_campaigns_items } from '../__generated__/GetCampaigns'
+import { CollabStatus } from '../__generated__/globalTypes'
 import ImageWrapper from './ImageWrapper'
 
 const Style = styled(Box)`
@@ -78,21 +76,20 @@ const Style = styled(Box)`
   }
 `
 
-interface ICampaignPreviewCardProps {
-  campaign: ICampaign
+interface Props {
+  campaign: GetCampaigns_campaigns_items
 }
 
-const CampaignPreviewCard: React.FC<ICampaignPreviewCardProps> = ({ campaign }) => {
-  const collabs = useSelector<IState, ICollab[]>(state =>
-    state.collabs.items.filter(_collab => _collab.campaign === campaign._id)
-  )
+const CampaignPreviewCard: React.FC<Props> = ({ campaign }) => {
+  const { collabs, product, name } = campaign
   const collabsCount = collabs.filter(
     _collab =>
-      _collab.status === 'accepted' || _collab.status === 'sent' || _collab.status === 'done'
+      _collab.status === CollabStatus.ACCEPTED ||
+      _collab.status === CollabStatus.SENT ||
+      _collab.status === CollabStatus.DONE
   ).length
-  const propositionsCount = collabs.filter(_collab => _collab.status === 'proposed').length
-  const picture =
-    campaign && campaign.settings && campaign.settings.gift && campaign.settings.gift.picture
+  const propositionsCount = collabs.filter(_collab => _collab.status === CollabStatus.APPLIED)
+    .length
   const status = getCampaignStatus(campaign)
 
   const showStatusLabel = () => (
@@ -106,8 +103,8 @@ const CampaignPreviewCard: React.FC<ICampaignPreviewCardProps> = ({ campaign }) 
     <Link to={`/brand/campaigns/${campaign._id}`}>
       <Style mt={[0, 0, 0]} p={[0, 0, 0]}>
         <ImageWrapper
-          src={picture}
-          alt={campaign.name}
+          src={product.pictures[0]}
+          alt={name}
           ratio={4 / 3}
           placeholderText="Ajoutez une photo du cadeau dans le brief"
           showLabel={showStatusLabel}
@@ -119,7 +116,7 @@ const CampaignPreviewCard: React.FC<ICampaignPreviewCardProps> = ({ campaign }) 
                 propositionsCount > 1 ? 's' : ''
               } · ${collabsCount} collab${collabsCount > 1 ? 's' : ''}`}
         </p>
-        <h3 className="title">{capitalizeFirstLetter(campaign.name)}</h3>
+        <h3 className="title">{capitalizeFirstLetter(name)}</h3>
       </Style>
     </Link>
   )

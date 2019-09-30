@@ -1,5 +1,5 @@
 import { ApolloProvider } from '@apollo/react-hooks'
-import * as Sentry from '@sentry/browser' // must be imported with *
+import * as Sentry from '@sentry/browser'; // must be imported with *
 import ApolloClient from 'apollo-boost'
 import React, { useEffect } from 'react'
 import TagManager from 'react-gtm-module'
@@ -88,6 +88,7 @@ const GlobalStyle = createGlobalStyle`
 // Create Apollo client
 const client = new ApolloClient({
   uri: `${process.env.REACT_APP_BACKEND_URL}/graphql`,
+  credentials: 'include',
 })
 
 const App: React.FC = () => {

@@ -1,9 +1,9 @@
-import React from 'react'
 import { Box } from '@rebass/grid'
+import React from 'react'
 import NotificationCard from './NotificationCard'
 
 interface IErrorCardProps {
-  message: string
+  message?: string
   noMargin?: boolean
 }
 
@@ -12,5 +12,9 @@ const ErrorCard: React.FC<IErrorCardProps> = ({ message, noMargin }) => (
     <NotificationCard nature="error" message={message} />
   </Box>
 )
+
+ErrorCard.defaultProps = {
+  message: 'Something went wrong',
+}
 
 export default ErrorCard

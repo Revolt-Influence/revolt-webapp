@@ -1,12 +1,12 @@
-import { useEffect, useLayoutEffect, useState, useRef, useCallback } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import io from 'socket.io-client'
-import { DeviceType } from '../models/Display'
-import { breakpoints } from '../models/Theme'
-import { useSelector, useDispatch } from 'react-redux'
-import IState from '../models/State'
-import { ISession } from '../models/Session'
 import { receiveMessage } from '../actions/conversations'
 import { IMessage } from '../models/Conversation'
+import { ISession } from '../models/Session'
+import IState from '../models/State'
+import { breakpoints } from '../models/Theme'
+import { DeviceType } from '../types'
 
 function useWindowSize(): { width: number; height: number } {
   const isClient = typeof window === 'object'
@@ -275,19 +275,5 @@ function useConversationsSocket() {
   }, [dispatch])
 }
 
-export {
-  useWindowSize,
-  usePrevious,
-  useRenderCount,
-  useOnClickOutside,
-  usePageTitle,
-  useRect,
-  useScrollLock,
-  useToggle,
-  useDebounce,
-  useStripe,
-  useDeviceType,
-  useIsAdmin,
-  useConversationsSocket,
-  useClientSize,
-}
+export { useWindowSize, usePrevious, useRenderCount, useOnClickOutside, usePageTitle, useRect, useScrollLock, useToggle, useDebounce, useStripe, useDeviceType, useIsAdmin, useConversationsSocket, useClientSize, }
+

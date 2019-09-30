@@ -76,7 +76,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "cypress:open": "cypress open",
-    "apollo:types": "apollo client:codegen --config apollo.config.js --target typescript --outputFlat src/__generated__"
+    "apollo:types": "rm -rf src/__generated__ && apollo client:codegen --config apollo.config.js --target typescript --outputFlat src/__generated__"
   },
   "eslintConfig": {
     "extends": [

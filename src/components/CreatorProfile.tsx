@@ -1,25 +1,25 @@
-import React, { useEffect } from 'react'
-import styled from 'styled-components'
+import { useLazyQuery, useMutation, useQuery } from '@apollo/react-hooks'
 import { Flex } from '@rebass/grid'
-import { palette } from '../utils/colors'
-import { shadow, setFont } from '../utils/styles'
-import { yearToAge } from '../utils/stats'
-import ErrorCard from './ErrorCard'
-import AudienceInsights from './AudienceInsights'
-import Dropdown from './Dropdown'
-import YoutubePreview, { YOUTUBER_PROFILE_FRAGMENT } from './YoutubePreview'
-import { applyCloudinaryTransformations } from '../utils/images'
-import { Link } from 'react-router-dom'
 import { gql } from 'apollo-boost'
-import { useQuery, useLazyQuery, useMutation } from '@apollo/react-hooks'
+import React from 'react'
+import { Link } from 'react-router-dom'
+import styled from 'styled-components'
+import { palette } from '../utils/colors'
+import { applyCloudinaryTransformations } from '../utils/images'
+import { yearToAge } from '../utils/stats'
+import { setFont, shadow } from '../utils/styles'
 import { Creator, CreatorVariables } from '../__generated__/Creator'
-import { Collab, CollabVariables } from '../__generated__/Collab'
+import { GetCollab, GetCollabVariables } from '../__generated__/GetCollab'
 import { CollabStatus, ReviewCollabDecision } from '../__generated__/globalTypes'
 import {
   ReviewCollabApplication,
   ReviewCollabApplicationVariables,
 } from '../__generated__/ReviewCollabApplication'
+import AudienceInsights from './AudienceInsights'
 import { REVIEW_COLLAB_APPLICATION } from './BrandCollabCard'
+import Dropdown from './Dropdown'
+import ErrorCard from './ErrorCard'
+import YoutubePreview, { YOUTUBER_PROFILE_FRAGMENT } from './YoutubePreview'
 
 const checkSource = require('../images/icons/check_white.svg')
 const closeSource = require('../images/icons/close_white.svg')
@@ -138,8 +138,8 @@ const GET_CREATOR = gql`
   ${YOUTUBER_PROFILE_FRAGMENT}
 `
 
-const GET_COLLAB = gql`
-  query Collab($collabId: String!) {
+export const GET_COLLAB = gql`
+  query GetCollab($collabId: String!) {
     collab(collabId: $collabId) {
       _id
       status
@@ -178,7 +178,7 @@ const CreatorProfile: React.FC<Props> = ({ creatorId, collabId, handleAccept, ha
       loading: collabLoading,
       error: collabError,
     },
-  ] = useLazyQuery<Collab, CollabVariables>(GET_COLLAB)
+  ] = useLazyQuery<GetCollab, GetCollabVariables>(GET_COLLAB)
 
   if (collabId) {
     // Only get collab data if an ID is specified

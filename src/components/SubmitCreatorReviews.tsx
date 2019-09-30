@@ -1,25 +1,33 @@
+import { useQuery } from '@apollo/react-hooks'
+import gql from 'graphql-tag'
 import React, { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import SplitView from './SplitView'
-import { ICollab } from '../models/Collab'
-import { IBaseReview } from '../models/Review'
-import { FormInputLabel, FormInput } from '../styles/Form'
 import { MainButtonSubmit } from '../styles/Button'
-import CheckBox from './CheckBox'
-import IState from '../models/State'
+import { FormInput, FormInputLabel } from '../styles/Form'
 import { IRequestStatus } from '../utils/request'
-import SuccessCard from './SuccessCard'
+import { GetCollab, GetCollabVariables } from '../__generated__/GetCollab'
+import CheckBox from './CheckBox'
+import { GET_COLLAB } from './CreatorProfile'
 import ErrorCard from './ErrorCard'
-import { submitCreatorReviews } from '../actions/collabs'
-import { ICreator } from '../models/Creator'
-import { TaskFormatType } from '../models/Campaign'
-import { captureException } from '@sentry/core'
+import SplitView from './SplitView'
+import SuccessCard from './SuccessCard'
 
-interface ISubmitCreatorReviewsProps {
-  collab: ICollab
+const SUBMIT_COLLAB_REVIEW = gql`
+  mutation SubmitCollabReview() {
+    submitCollabReview(reviews: , collabId: ) {
+      
+    }
+  }
+`
+
+interface Props {
+  collabId: string
 }
 
-const SubmitCreatorReviews: React.FC<ISubmitCreatorReviewsProps> = ({ collab }) => {
+const SubmitCreatorReviews: React.FC<Props> = ({ collabId }) => {
+  const {
+    data: { collab },
+  } = useQuery<GetCollab, GetCollabVariables>(GET_COLLAB)
+
   const [hasRespected, setHasRespected] = React.useState<boolean>(false)
 
   // Redux stuff
@@ -72,9 +80,7 @@ const SubmitCreatorReviews: React.FC<ISubmitCreatorReviewsProps> = ({ collab }) 
             collabId: collab._id,
           })
         )
-      } catch (_error) {
-        captureException(_error)
-      }
+      } catch (_error) {}
     }
   }
 

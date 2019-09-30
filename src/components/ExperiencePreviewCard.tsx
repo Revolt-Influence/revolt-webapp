@@ -1,14 +1,13 @@
+import { Box, Flex } from '@rebass/grid'
 import React from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
-import { Flex, Box } from '@rebass/grid'
-import { ICampaign } from '../models/Campaign'
-import { capitalizeFirstLetter } from '../utils/strings'
 import { palette } from '../utils/colors'
-import { shadow, setFont } from '../utils/styles'
-import { getCurrencySymbol } from '../utils/currency'
-import ImageWrapper from './ImageWrapper'
 import { applyCloudinaryTransformations } from '../utils/images'
+import { capitalizeFirstLetter } from '../utils/strings'
+import { setFont, shadow } from '../utils/styles'
+import { Experience_campaign } from '../__generated__/Experience'
+import ImageWrapper from './ImageWrapper'
 
 const Style = styled(Box)`
   h3.title {
@@ -52,39 +51,31 @@ const Style = styled(Box)`
 `
 
 interface IExperiencePreviewCardProps {
-  experience: ICampaign
+  experience: Experience_campaign
 }
 
 const ExperiencePreviewCard: React.FC<IExperiencePreviewCardProps> = ({ experience }) => {
-  const { picture } = experience.settings.gift
-  const showPrice = () => (
-    <p className="price">
-      {experience.settings.gift.value} {getCurrencySymbol(experience.settings.gift.currency)}
-    </p>
-  )
-  const priceIsShown = experience.settings.gift.valueIsShown && experience.settings.gift != null
-
+  const { product, brand } = experience
   return (
     <Link to={`/creator/experiences/${experience._id}`} onClick={() => window.scrollTo(0, 0)}>
       <Style>
         <ImageWrapper
-          src={picture}
+          src={product.pictures[0]}
           alt={experience.name}
           ratio={4 / 3}
           placeholderText="Pas de photo du cadeau"
-          showLabel={priceIsShown ? showPrice : null}
         />
         <h3 className="title">{capitalizeFirstLetter(experience.name)}</h3>
         <div className="brand">
           <Flex flexDirection="row" alignItems="center" justifyContent="flex-start">
             <img
               className="logo"
-              src={applyCloudinaryTransformations(experience.settings.brand.logo, {
+              src={applyCloudinaryTransformations(brand.logo, {
                 width: 150,
               })}
-              alt={experience.settings.brand.name}
+              alt={brand.name}
             />
-            <p>{experience.settings.brand.name}</p>
+            <p>{brand.name}</p>
           </Flex>
         </div>
       </Style>

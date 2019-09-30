@@ -1,18 +1,21 @@
-import React from 'react'
+import { useQuery } from '@apollo/react-hooks'
+import { Box, Flex } from '@rebass/grid'
 import approx from 'approximate-number'
-import { useSelector } from 'react-redux'
-import { Flex, Box } from '@rebass/grid'
+import gql from 'graphql-tag'
+import React from 'react'
 import styled from 'styled-components'
-import { ICampaign } from '../models/Campaign'
 import { ContainerBox } from '../styles/grid'
-import IState from '../models/State'
-import ReviewCard from './ReviewCard'
-import { IReview } from '../models/Review'
-import { ICreator } from '../models/Creator'
 import { palette } from '../utils/colors'
 import { setFont } from '../utils/styles'
-import NotificationCard from './NotificationCard'
+import {
+  GetCampaignReviews,
+  GetCampaignReviewsVariables,
+} from '../__generated__/GetCampaignReviews'
 import ErrorBoundary from './ErrorBoundary'
+import ErrorCard from './ErrorCard'
+import Loader from './Loader'
+import NotificationCard from './NotificationCard'
+import ReviewCard from './ReviewCard'
 
 const Stats = styled(Box)`
   background: ${palette.pink._100};
@@ -31,37 +34,43 @@ const Stats = styled(Box)`
   }
 `
 
-interface ICampaignReviewsProps {
-  campaign: ICampaign
+const GET_CAMPAIGN_REVIEWS = gql`
+  query GetCampaignReviews($campaignId: String!) {
+    campaign(id: $campaignId) {
+      reviews {
+        format
+        commentCount
+        createdAt
+        likeCount
+        link
+        creator {
+          name
+        }
+      }
+    }
+  }
+`
+
+interface Props {
+  campaignId: string
 }
 
-const CampaignReviews: React.FC<ICampaignReviewsProps> = ({ campaign }) => {
-  const reviews = useSelector<IState, IReview[]>(state =>
-    state.collabs.items
-      // Only keep done collabs
-      .filter(_collab => _collab.campaign === campaign._id && _collab.status === 'done')
-      // Get reviews from collabs
-      .map(_collab => _collab.reviews)
-      // Add reviews to a flat array
-      .reduce((allReviews, newReviews) => [...allReviews, ...newReviews], [])
-  )
+const CampaignReviews: React.FC<Props> = ({ campaignId }) => {
+  const {
+    data: { campaign },
+    loading,
+    error,
+  } = useQuery<GetCampaignReviews, GetCampaignReviewsVariables>(GET_CAMPAIGN_REVIEWS)
+  if (loading) {
+    return <Loader />
+  }
+  if (error) {
+    return <ErrorCard />
+  }
+  const { reviews } = campaign
 
-  const creators = useSelector<IState, ICreator[]>(state =>
-    state.collabs.items
-      .filter(_collab =>
-        reviews.map(_review => _review.creator).includes((_collab.creator as ICreator)._id)
-      )
-      // Get creator from collab
-      .map(_collab => _collab.creator as ICreator)
-  )
-
-  const reviewsWithCreators = reviews.map(_review => ({
-    ..._review,
-    creator: creators.find(_creator => _review.creator === _creator._id),
-  }))
-
-  const totalLikes = reviews.reduce((total, _review) => total + (_review.likes || 0), 0)
-  const totalComments = reviews.reduce((total, _review) => total + (_review.comments || 0), 0)
+  const totalLikes = reviews.reduce((total, _review) => total + (_review.likeCount || 0), 0)
+  const totalComments = reviews.reduce((total, _review) => total + (_review.commentCount || 0), 0)
   const earnedMediaValue = (totalLikes + totalComments) * 0.3
 
   const stats = [
@@ -119,7 +128,7 @@ const CampaignReviews: React.FC<ICampaignReviewsProps> = ({ campaign }) => {
                 <NotificationCard nature="info" message="Vous n'avez pas encore de revue" />
               </Box>
             )}
-            {reviewsWithCreators.map((_review, index) => (
+            {reviews.map((_review, index) => (
               <Box width={[1, 6 / 12, 4 / 12]} px="2rem" mb="2rem" key={index}>
                 <ReviewCard review={_review} />
               </Box>

@@ -18,6 +18,15 @@ export enum CollabStatus {
 }
 
 /**
+ * Whether a creator was allowed to access the platform
+ */
+export enum CreatorStatus {
+  BLOCKED = "BLOCKED",
+  UNVERIFIED = "UNVERIFIED",
+  VERIFIED = "VERIFIED",
+}
+
+/**
  * Whether the user has paid or not
  */
 export enum Plan {
@@ -32,6 +41,13 @@ export enum ReviewCollabDecision {
   ACCEPT = "ACCEPT",
   DENY = "DENY",
   MARK_AS_SENT = "MARK_AS_SENT",
+}
+
+/**
+ * What platform the creator will use to promote the game
+ */
+export enum ReviewFormat {
+  YOUTUBE_VIDEO = "YOUTUBE_VIDEO",
 }
 
 /**
