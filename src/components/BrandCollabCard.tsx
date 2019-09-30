@@ -1,18 +1,22 @@
 import React from 'react'
 import approx from 'approximate-number'
+import { gql } from 'apollo-boost'
 import moment from 'moment'
 import 'moment/locale/fr'
 import styled, { css } from 'styled-components'
 import { Flex } from '@rebass/grid'
-import { useDispatch } from 'react-redux'
-import { CollabStatus, ICollab } from '../models/Collab'
 import { palette } from '../utils/colors'
 import { setFont, shadow } from '../utils/styles'
 import { capitalizeFirstLetter } from '../utils/strings'
 import { Row } from '../utils/grid'
-import { ICreator } from '../models/Creator'
-import { showProfilePanel } from '../actions/display'
 import { Link } from 'react-router-dom'
+import { CampaignCollabs_campaign_collabs } from '../__generated__/CampaignCollabs'
+import { CollabStatus, ReviewCollabDecision } from '../__generated__/globalTypes'
+import { useMutation } from '@apollo/react-hooks'
+import {
+  ReviewCollabApplication,
+  ReviewCollabApplicationVariables,
+} from '../__generated__/ReviewCollabApplication'
 
 moment.locale('fr')
 
@@ -35,17 +39,17 @@ const Styles = styled.div`
   }
   ${(props: IStylesProps) => {
     switch (props.status) {
-      case 'accepted':
+      case CollabStatus.ACCEPTED:
         return css`
           /* border: 2px solid ${palette.pink._300}; */
           border: 2px solid ${palette.blue._200};
         `
-      case 'sent':
+      case CollabStatus.SENT:
         return css`
           /* border: 2px solid ${palette.orange._300}; */
           border: 2px solid ${palette.orange._200};
         `
-      case 'done':
+      case CollabStatus.DONE:
         return css`
           /* border: 2px solid ${palette.green._300}; */
           border: 2px solid ${palette.green._200};
@@ -153,26 +157,36 @@ const Network = styled(Flex)`
   }
 `
 
+const REVIEW_COLLAB_APPLICATION = gql`
+  mutation ReviewCollabApplication($decision: ReviewCollabDecision!, $collabId: String!) {
+    reviewCollabApplication(decision: $decision, collabId: $collabId) {
+      updatedAt
+      status
+    }
+  }
+`
+
 interface IBrandCollabCardProps {
-  collab: ICollab
-  markAsSent?: () => void
-  isLoading?: boolean
+  collab: CampaignCollabs_campaign_collabs
 }
 
-const BrandCollabCard: React.FC<IBrandCollabCardProps> = ({ collab, isLoading, markAsSent }) => {
-  const dispatch = useDispatch()
-  const { proposition, status, creator } = collab
+const BrandCollabCard: React.FC<IBrandCollabCardProps> = ({ collab }) => {
+  const { conversation, status, creator, updatedAt, _id } = collab
+  const [reviewCollabApplication, { data, loading }] = useMutation<
+    ReviewCollabApplication,
+    ReviewCollabApplicationVariables
+  >(REVIEW_COLLAB_APPLICATION)
 
   const handleShowProfile = () => {
-    dispatch(
-      showProfilePanel({
-        creatorId: (creator as ICreator)._id,
-        message: proposition.message,
-        formats: proposition.formats,
-        collabId: collab._id,
-        conversationId: collab.conversation,
-      })
-    )
+    // dispatch(
+    //   showProfilePanel({
+    //     creatorId: (creator as ICreator)._id,
+    //     message: proposition.message,
+    //     formats: proposition.formats,
+    //     collabId: collab._id,
+    //     conversationId: collab.conversation,
+    //   })
+    // )
   }
 
   const viewProfileButton = () => (
@@ -186,7 +200,7 @@ const BrandCollabCard: React.FC<IBrandCollabCardProps> = ({ collab, isLoading, m
     <Link
       className="action contact"
       type="button"
-      to={`/brand/messages/${collab.conversation}`}
+      to={`/brand/messages/${conversation._id}`}
       onClick={e => e.stopPropagation()}
     >
       <p>Contacter</p>
@@ -197,18 +211,22 @@ const BrandCollabCard: React.FC<IBrandCollabCardProps> = ({ collab, isLoading, m
   // Adapt footer to status
   const showFooter = () => {
     switch (status) {
-      case 'accepted':
+      case CollabStatus.ACCEPTED:
         return (
           <Footer justifyContent="space-between" alignItems="center">
             {viewProfileButton()}
             <button
               className="action accept"
               type="button"
-              disabled={isLoading}
               onClick={e => {
                 e.stopPropagation()
                 e.preventDefault()
-                markAsSent()
+                reviewCollabApplication({
+                  variables: {
+                    collabId: _id,
+                    decision: ReviewCollabDecision.ACCEPT,
+                  },
+                })
               }}
             >
               <p>A été envoyé</p>
@@ -216,14 +234,14 @@ const BrandCollabCard: React.FC<IBrandCollabCardProps> = ({ collab, isLoading, m
             </button>
           </Footer>
         )
-      case 'sent':
+      case CollabStatus.SENT:
         return (
           <Footer justifyContent="space-between" alignItems="center">
             {viewProfileButton()}
             {showContactButton()}
           </Footer>
         )
-      case 'done':
+      case CollabStatus.DONE:
         return (
           <Footer justifyContent="space-between" alignItems="center">
             {viewProfileButton()}
@@ -237,33 +255,18 @@ const BrandCollabCard: React.FC<IBrandCollabCardProps> = ({ collab, isLoading, m
 
   const formatStatus = (): string => {
     switch (status) {
-      case 'accepted':
+      case CollabStatus.ACCEPTED:
         return 'accepté'
-      case 'sent':
+      case CollabStatus.SENT:
         return 'cadeau envoyé'
-      case 'done':
+      case CollabStatus.DONE:
         return 'publié'
       default:
         return status
     }
   }
 
-  const getLastUpdateDate = (): number => {
-    switch (status) {
-      case 'accepted':
-        return collab.acceptedDate
-      case 'refused':
-        return collab.refusedDate
-      case 'sent':
-        return collab.sentDate
-      case 'done':
-        return collab.doneDate
-      default:
-        return collab.creationDate
-    }
-  }
-
-  const { name, picture, youtube } = creator as ICreator
+  const { name, picture, youtube } = creator
   const hasYoutube = youtube != null
 
   return (
@@ -273,7 +276,7 @@ const BrandCollabCard: React.FC<IBrandCollabCardProps> = ({ collab, isLoading, m
         <div>
           <p className="username">{name}</p>
           <p className="date">
-            {capitalizeFirstLetter(formatStatus())} {moment(getLastUpdateDate()).fromNow()}
+            {capitalizeFirstLetter(formatStatus())} {moment(updatedAt).fromNow()}
           </p>
         </div>
       </Row>
@@ -291,4 +294,5 @@ const BrandCollabCard: React.FC<IBrandCollabCardProps> = ({ collab, isLoading, m
   )
 }
 
+export { REVIEW_COLLAB_APPLICATION }
 export default BrandCollabCard

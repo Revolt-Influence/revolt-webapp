@@ -25,9 +25,7 @@ interface IYoutubeVideoProps {
   video: IYoutubeVideo
 }
 
-const YoutubeVideo: React.FC<IYoutubeVideoProps> = ({
-  video: { thumbnail, title, videoId, url, views },
-}) => (
+const YoutubeVideo: React.FC<IYoutubeVideoProps> = ({ video: { title, videoId } }) => (
   <Styles>
     {/* <img className="thumbnail" src={url} alt={title} />
       <Fl */}

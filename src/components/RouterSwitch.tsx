@@ -6,7 +6,7 @@ import styled from 'styled-components'
 import Landing from '../pages/Landing'
 import { useClientSize } from '../utils/hooks'
 import { SessionType, Plan } from '../__generated__/globalTypes'
-import { session_session } from '../__generated__/session'
+import { Session } from '../__generated__/session'
 import ErrorBoundary from './ErrorBoundary'
 import ErrorCard from './ErrorCard'
 import Footer from './Footer'
@@ -48,7 +48,7 @@ const Layout = styled.div<{ minHeight: number }>`
 `
 
 const GET_SESSION = gql`
-  query session {
+  query Session {
     session {
       isLoggedIn
       sessionId
@@ -74,10 +74,12 @@ interface IRouterSwitchProps extends RouteComponentProps {
 
 const RouterSwitch: React.FC<IRouterSwitchProps> = () => {
   const {
-    data: { isLoggedIn, sessionType, user, creator },
+    data: {
+      session: { isLoggedIn, sessionType, user, creator },
+    },
     loading,
     error,
-  } = useQuery<session_session>(GET_SESSION)
+  } = useQuery<Session>(GET_SESSION)
 
   const clientHeight = useClientSize().height
 

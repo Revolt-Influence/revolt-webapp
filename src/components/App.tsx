@@ -10,7 +10,6 @@ import reset from 'styled-reset'
 import { palette } from '../utils/colors'
 import { setFont, setOutline } from '../utils/styles'
 import CustomThemeProvider, { Theme } from './CustomThemeProvider'
-import Portal from './PopupsPortal'
 import RouterSwitch from './RouterSwitch'
 
 const GlobalStyle = createGlobalStyle`
@@ -113,7 +112,6 @@ const App: React.FC = () => {
             <LastLocationProvider watchOnlyPathname>
               {/* Show the right page */}
               <Route component={RouterSwitch} />
-              <Portal />
             </LastLocationProvider>
           </>
         </CustomThemeProvider>

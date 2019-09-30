@@ -3,6 +3,7 @@
 # CUSTOM IGNORES
 .env
 /.vscode
+apollo.config.js
 
 # DEFAULT CREATE-REACT-APP IGNORES
 
