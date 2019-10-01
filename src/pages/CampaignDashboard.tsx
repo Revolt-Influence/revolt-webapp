@@ -20,6 +20,8 @@ import {
   GetCampaignVariables,
   GetCampaign_campaign,
 } from '../__generated__/GetCampaign'
+import Loader from '../components/Loader'
+import ErrorCard from '../components/ErrorCard'
 
 export enum CampaignStatus {
   ARCHIVED = 'Not published',
@@ -178,6 +180,13 @@ const CampaignDashboard: React.FC<Props> = ({ match, location }) => {
       default:
         return <CampaignCollabRequests campaignId={campaignId} />
     }
+  }
+
+  if (loading) {
+    return <Loader />
+  }
+  if (error) {
+    return <ErrorCard message="Could not show campaign" />
   }
 
   return (

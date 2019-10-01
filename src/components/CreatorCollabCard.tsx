@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 import { Flex, Box } from '@rebass/grid'
 import { capitalizeFirstLetter } from '../utils/strings'
 import { palette, paletteColorName } from '../utils/colors'
@@ -50,29 +50,29 @@ const Style = styled(Box)`
   }
 `
 
-const Deadline = styled.p<{ color: paletteColorName }>`
-  ${setFont(600, 'normal')}
-  ${props => {
-    switch (props.color) {
-      case 'red':
-        return css`
-          color: ${palette.red._700};
-        `
-      case 'green':
-        return css`
-          color: ${palette.green._700};
-        `
-      case 'orange':
-        return css`
-          color: ${palette.orange._700};
-        `
-      default:
-        return css`
-          color: ${palette.grey._700};
-        `
-    }
-  }}
-`
+// const Deadline = styled.p<{ color: paletteColorName }>`
+//   ${setFont(600, 'normal')}
+//   ${props => {
+//     switch (props.color) {
+//       case 'red':
+//         return css`
+//           color: ${palette.red._700};
+//         `
+//       case 'green':
+//         return css`
+//           color: ${palette.green._700};
+//         `
+//       case 'orange':
+//         return css`
+//           color: ${palette.orange._700};
+//         `
+//       default:
+//         return css`
+//           color: ${palette.grey._700};
+//         `
+//     }
+//   }}
+// `
 
 interface Props {
   collab: GetCreatorCollabs_collabs

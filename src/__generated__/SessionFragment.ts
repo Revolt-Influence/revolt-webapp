@@ -5,10 +5,10 @@
 import { SessionType, Plan, CreatorStatus } from "./globalTypes";
 
 // ====================================================
-// GraphQL query operation: GetSession
+// GraphQL fragment: SessionFragment
 // ====================================================
 
-export interface GetSession_session_user {
+export interface SessionFragment_user {
   __typename: "User";
   _id: string;
   /**
@@ -21,7 +21,7 @@ export interface GetSession_session_user {
   plan: Plan;
 }
 
-export interface GetSession_session_creator_youtube {
+export interface SessionFragment_creator_youtube {
   __typename: "Youtuber";
   /**
    * Mongoose generated ID
@@ -29,7 +29,7 @@ export interface GetSession_session_creator_youtube {
   _id: string;
 }
 
-export interface GetSession_session_creator {
+export interface SessionFragment_creator {
   __typename: "Creator";
   /**
    * Mongoose generated ID
@@ -54,10 +54,10 @@ export interface GetSession_session_creator {
   /**
    * Youtube account linked to the creator
    */
-  youtube: GetSession_session_creator_youtube | null;
+  youtube: SessionFragment_creator_youtube | null;
 }
 
-export interface GetSession_session {
+export interface SessionFragment {
   __typename: "Session";
   /**
    * Whether a session was found
@@ -71,16 +71,9 @@ export interface GetSession_session {
   /**
    * The user that _may_ be logged in
    */
-  user: GetSession_session_user | null;
+  user: SessionFragment_user | null;
   /**
    * The creator that _may_ be logged in
    */
-  creator: GetSession_session_creator | null;
-}
-
-export interface GetSession {
-  /**
-   * Check if a session exists, could be a creator or a brand user
-   */
-  session: GetSession_session;
+  creator: SessionFragment_creator | null;
 }

@@ -2,13 +2,33 @@
 /* eslint-disable */
 // This file was automatically generated and should not be edited.
 
-import { CollabStatus } from "./globalTypes";
+import { CreatorStatus } from "./globalTypes";
 
 // ====================================================
-// GraphQL query operation: GetCreatorCollabs
+// GraphQL query operation: GetCreatorStatusAndExperience
 // ====================================================
 
-export interface GetCreatorCollabs_collabs_campaign_brand {
+export interface GetCreatorStatusAndExperience_session_creator {
+  __typename: "Creator";
+  /**
+   * Mongoose generated ID
+   */
+  _id: string;
+  /**
+   * Whether the influencer was validated by an admin
+   */
+  status: CreatorStatus;
+}
+
+export interface GetCreatorStatusAndExperience_session {
+  __typename: "Session";
+  /**
+   * The creator that _may_ be logged in
+   */
+  creator: GetCreatorStatusAndExperience_session_creator | null;
+}
+
+export interface GetCreatorStatusAndExperience_campaign_brand {
   __typename: "Brand";
   /**
    * Mongoose generated ID
@@ -25,7 +45,7 @@ export interface GetCreatorCollabs_collabs_campaign_brand {
   website: string;
 }
 
-export interface GetCreatorCollabs_collabs_campaign_product {
+export interface GetCreatorStatusAndExperience_campaign_product {
   __typename: "CampaignProduct";
   /**
    * Name of the product
@@ -49,7 +69,7 @@ export interface GetCreatorCollabs_collabs_campaign_product {
   pictures: string[];
 }
 
-export interface GetCreatorCollabs_collabs_campaign {
+export interface GetCreatorStatusAndExperience_campaign {
   __typename: "Campaign";
   /**
    * Mongoose generated ID
@@ -66,11 +86,11 @@ export interface GetCreatorCollabs_collabs_campaign {
   /**
    * The brand that published the campaign
    */
-  brand: GetCreatorCollabs_collabs_campaign_brand | null;
+  brand: GetCreatorStatusAndExperience_campaign_brand | null;
   /**
    * What the creator will receive
    */
-  product: GetCreatorCollabs_collabs_campaign_product;
+  product: GetCreatorStatusAndExperience_campaign_product;
   /**
    * Rules that creators must respect to receive the gift
    */
@@ -78,26 +98,17 @@ export interface GetCreatorCollabs_collabs_campaign {
   createdAt: any;
 }
 
-export interface GetCreatorCollabs_collabs {
-  __typename: "Collab";
+export interface GetCreatorStatusAndExperience {
   /**
-   * Mongoose generated ID
+   * Check if a session exists, could be a creator or a brand user
    */
-  _id: string;
+  session: GetCreatorStatusAndExperience_session;
   /**
-   * Advancement of the collab
+   * Get campaign by ID
    */
-  status: CollabStatus;
-  updatedAt: any;
-  /**
-   * The campaign the collab is a part of
-   */
-  campaign: GetCreatorCollabs_collabs_campaign;
+  campaign: GetCreatorStatusAndExperience_campaign;
 }
 
-export interface GetCreatorCollabs {
-  /**
-   * Get list of creator collabs
-   */
-  collabs: GetCreatorCollabs_collabs[];
+export interface GetCreatorStatusAndExperienceVariables {
+  campaignId: string;
 }

@@ -130,7 +130,7 @@ export const CREATOR_PROFILE_FRAGMENT = gql`
     country
     birthYear
     youtube {
-      ...YoutuberProfile
+      ...YoutuberProfileFragment
     }
   }
   ${YOUTUBER_PROFILE_FRAGMENT}

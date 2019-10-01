@@ -9,27 +9,36 @@ import { Logout } from '../__generated__/Logout'
 import ErrorCard from './ErrorCard'
 import Loader from './Loader'
 
-export const GET_SESSION = gql`
-  query GetSession {
-    session {
-      isLoggedIn
-      sessionId
-      sessionType
-      user {
+export const SESSION_FRAGMENT = gql`
+  fragment SessionFragment on Session {
+    isLoggedIn
+    sessionId
+    sessionType
+    user {
+      _id
+      email
+      plan
+    }
+    creator {
+      _id
+      name
+      picture
+      email
+      status
+      youtube {
         _id
-        email
-        plan
-      }
-      creator {
-        _id
-        email
-        status
-        youtube {
-          _id
-        }
       }
     }
   }
+`
+
+export const GET_SESSION = gql`
+  query GetSession {
+    session {
+      ...SessionFragment
+    }
+  }
+  ${SESSION_FRAGMENT}
 `
 
 const LOGOUT = gql`

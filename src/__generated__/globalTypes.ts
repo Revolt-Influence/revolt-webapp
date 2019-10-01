@@ -80,6 +80,22 @@ export enum SessionType {
   CREATOR = "CREATOR",
 }
 
+export interface SignupCreatorInput {
+  email: string;
+  password: string;
+  birthYear: number;
+  country: string;
+  language: string;
+  ambassador?: string | null;
+}
+
+export interface SignupUserInput {
+  email: string;
+  password: string;
+  company: string;
+  ambassador?: string | null;
+}
+
 export interface SubmitCollabReviewInput {
   link: string;
   format: ReviewFormat;

@@ -3,10 +3,10 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL fragment: YoutuberProfile
+// GraphQL fragment: YoutuberProfileFragment
 // ====================================================
 
-export interface YoutuberProfile_videos {
+export interface YoutuberProfileFragment_videos {
   __typename: "YoutubeVideo";
   title: string;
   /**
@@ -15,7 +15,7 @@ export interface YoutuberProfile_videos {
   videoId: string;
 }
 
-export interface YoutuberProfile_audience_ageGroups {
+export interface YoutuberProfileFragment_audience_ageGroups {
   __typename: "AudienceMetric";
   name: string;
   /**
@@ -24,7 +24,7 @@ export interface YoutuberProfile_audience_ageGroups {
   percentage: number;
 }
 
-export interface YoutuberProfile_audience_countries {
+export interface YoutuberProfileFragment_audience_countries {
   __typename: "AudienceMetric";
   name: string;
   /**
@@ -33,16 +33,16 @@ export interface YoutuberProfile_audience_countries {
   percentage: number;
 }
 
-export interface YoutuberProfile_audience {
+export interface YoutuberProfileFragment_audience {
   __typename: "YoutubeAudience";
-  ageGroups: YoutuberProfile_audience_ageGroups[];
+  ageGroups: YoutuberProfileFragment_audience_ageGroups[];
   /**
    * ISO 3166-1-alpha-2 codes of countries and their percentage
    */
-  countries: YoutuberProfile_audience_countries[];
+  countries: YoutuberProfileFragment_audience_countries[];
 }
 
-export interface YoutuberProfile {
+export interface YoutuberProfileFragment {
   __typename: "Youtuber";
   /**
    * Mongoose generated ID
@@ -58,6 +58,6 @@ export interface YoutuberProfile {
   picture: string;
   videoCount: number;
   subscriberCount: number;
-  videos: YoutuberProfile_videos[];
-  audience: YoutuberProfile_audience;
+  videos: YoutuberProfileFragment_videos[];
+  audience: YoutuberProfileFragment_audience;
 }

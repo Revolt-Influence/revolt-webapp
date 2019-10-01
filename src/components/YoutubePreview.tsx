@@ -12,7 +12,7 @@ import Loader from './Loader'
 const youtubeSource = require('../images/icons/youtube_color.svg')
 
 const YOUTUBER_PROFILE_FRAGMENT = gql`
-  fragment YoutuberProfile on Youtuber {
+  fragment YoutuberProfileFragment on Youtuber {
     _id
     name
     picture
@@ -38,7 +38,7 @@ const YOUTUBER_PROFILE_FRAGMENT = gql`
 const GET_YOUTUBER = gql`
   query Youtuber($youtuberId: String!) {
     youtuber(id: $youtuberId) {
-      ...YoutuberProfile
+      ...YoutuberProfileFragment
     }
   }
   ${YOUTUBER_PROFILE_FRAGMENT}

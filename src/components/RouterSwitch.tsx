@@ -14,7 +14,7 @@ import Navbar from './Navbar'
 import { GET_SESSION } from './Session'
 
 const CampaignDashboard = React.lazy(() => import('../pages/CampaignDashboard'))
-const BrandSignup = React.lazy(() => import('../pages/BrandSignup'))
+const UserSignup = React.lazy(() => import('../pages/UserSignup'))
 const CreatorSignup = React.lazy(() => import('../pages/CreatorSignup'))
 const Login = React.lazy(() => import('../pages/Login'))
 const ForgotPassword = React.lazy(() => import('../pages/ForgotPassword'))
@@ -85,12 +85,12 @@ const RouterSwitch: React.FC<IRouterSwitchProps> = () => {
     return <Landing />
   }
 
-  const renderBrandSignup = () => {
+  const renderUserSignup = () => {
     // Only allow access if the user is not logged in
     if (isLoggedIn) {
       return <Redirect to="/" />
     }
-    return <BrandSignup />
+    return <UserSignup />
   }
 
   const renderCreatorSignup = () => {
@@ -267,7 +267,7 @@ const RouterSwitch: React.FC<IRouterSwitchProps> = () => {
             {/* All creator routes */}
             <Route path="/creator" render={creatorRouterSwitch} />
             {/* All other routes */}
-            <Route path="/brandSignup" render={renderBrandSignup} />
+            <Route path="/userSignup" render={renderUserSignup} />
             <Route path="/connectSocialAccount" render={renderConnectSocialAccount} />
             <Route path="/creatorSignup" render={renderCreatorSignup} />
             <Route path="/login" render={renderLogin} />
