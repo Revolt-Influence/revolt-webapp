@@ -8,10 +8,13 @@ import { setFont, shadow } from '../utils/styles'
 import { palette } from '../utils/colors'
 import ErrorBoundary from './ErrorBoundary'
 import { useQuery } from '@apollo/react-hooks'
-import { Campaign_campaign, CampaignVariables } from '../__generated__/Campaign'
 import { CollabStatus } from '../__generated__/globalTypes'
 import Loader from './Loader'
 import ErrorCard from './ErrorCard'
+import {
+  GetCampaignCollabs,
+  GetCampaignCollabsVariables,
+} from '../__generated__/GetCampaignCollabs'
 
 const Column = styled.section<{ status: CollabStatus }>`
   padding-top: 2rem;
@@ -103,7 +106,7 @@ const Column = styled.section<{ status: CollabStatus }>`
 `
 
 const GET_CAMPAIGN_COLLABS = gql`
-  query CampaignCollabs($campaignId: String!) {
+  query GetCampaignCollabs($campaignId: String!) {
     campaign(id: $campaignId) {
       _id
       collabs {
@@ -136,10 +139,10 @@ interface ICampaignCollabsProps {
 const CampaignCollabs: React.FC<ICampaignCollabsProps> = ({ campaignId }) => {
   // Get campaign collabs from Redux
   const {
-    data: { collabs },
+    data: { campaign },
     loading,
     error,
-  } = useQuery<Campaign_campaign, CampaignVariables>(GET_CAMPAIGN_COLLABS)
+  } = useQuery<GetCampaignCollabs, GetCampaignCollabsVariables>(GET_CAMPAIGN_COLLABS)
 
   if (loading) {
     return <Loader fullScreen />
@@ -148,6 +151,7 @@ const CampaignCollabs: React.FC<ICampaignCollabsProps> = ({ campaignId }) => {
     return <ErrorCard message="Collabs could not be loaded" />
   }
 
+  const { collabs } = campaign
   const acceptedCollabs = collabs.filter(_collab => _collab.status === CollabStatus.ACCEPTED)
   const sentCollabs = collabs.filter(_collab => _collab.status === CollabStatus.SENT)
   const doneCollabs = collabs.filter(_collab => _collab.status === CollabStatus.DONE)
@@ -192,7 +196,7 @@ const CampaignCollabs: React.FC<ICampaignCollabsProps> = ({ campaignId }) => {
               </p>
               {sentCollabs.length === 0 && <p className="noResult">Pas de collab en cours.</p>}
               {sentCollabs.map(_collab => (
-                <BrandCollabCard collab={_collab} isLoading={false} key={_collab._id} />
+                <BrandCollabCard collab={_collab} />
               ))}
             </Column>
           </Box>

@@ -4,7 +4,7 @@ import React from 'react'
 import { RouteComponentProps, withRouter } from 'react-router-dom'
 import CampaignBriefPreview from '../components/CampaignBriefPreview'
 import CampaignCollabs from '../components/CampaignCollabs'
-import CampaignPropositions from '../components/CampaignPropositions'
+import CampaignCollabRequests from '../components/CampaignCollabRequests'
 import CampaignReviews from '../components/CampaignReviews'
 import CampaignSettings from '../components/CampaignSettings'
 import NotificationCard from '../components/NotificationCard'
@@ -13,25 +13,53 @@ import Tabs, { ITabItem } from '../components/Tabs'
 import { ContainerBox } from '../styles/grid'
 import { palette } from '../utils/colors'
 import { usePageTitle } from '../utils/hooks'
+import gql from 'graphql-tag'
+import { useQuery } from '@apollo/react-hooks'
+import {
+  GetCampaign,
+  GetCampaignVariables,
+  GetCampaign_campaign,
+} from '../__generated__/GetCampaign'
 
-const getCampaignStatus = (campaign: ICampaign): ICampaignStatus => {
-  const { settings } = campaign
+export enum CampaignStatus {
+  ARCHIVED = 'Not published',
+  ONLINE = 'Online',
+  AWAITING_REVIEW = 'Awaiting review',
+  INCOMPLETE = 'Incomplete',
+}
+
+interface CampaignStatusInfo {
+  name: CampaignStatus
+  description: string
+  color: string
+}
+
+const getCampaignStatus = (campaign: GetCampaign_campaign): CampaignStatusInfo => {
   if (
-    settings == null ||
-    settings.brief == null ||
-    settings.gift == null ||
-    settings.target == null ||
-    settings.task == null
+    !campaign ||
+    !campaign.name ||
+    !campaign.description ||
+    !campaign.estimatedBudget ||
+    !campaign.product ||
+    !campaign.product.name ||
+    !campaign.product.description ||
+    !campaign.product.pictures ||
+    !campaign.product.website ||
+    !campaign.product.youtubeLink ||
+    !campaign.targetAudience == null ||
+    !campaign.targetAudience.ageGroups == null ||
+    !campaign.targetAudience.countries == null ||
+    !campaign.targetAudience.gender == null
   ) {
     return {
-      name: 'Incomplet',
+      name: CampaignStatus.INCOMPLETE,
       description: 'Complétez votre brief pour publier la campagne',
       color: palette.red._500,
     }
   }
   if (campaign.isArchived) {
     return {
-      name: 'Non publié',
+      name: CampaignStatus.ARCHIVED,
       description:
         "Les influenceurs ne peuvent pas voir votre campagne. C'est soit parce qu'elle est terminée, soit parce que vous n'avez pas terminé votre brief. Vous pouvez la publier à tout moment",
       color: palette.grey._400,
@@ -39,35 +67,67 @@ const getCampaignStatus = (campaign: ICampaign): ICampaignStatus => {
   }
   if (campaign.isReviewed) {
     return {
-      name: 'En ligne',
+      name: CampaignStatus.ONLINE,
       description:
         "Votre campagne est visible par tous les influenceurs. Allez dans l'onglet Propositions pour voir qui est intéressé",
       color: palette.green._500,
     }
   }
   return {
-    name: 'En attente de modération',
+    name: CampaignStatus.AWAITING_REVIEW,
     description:
       "Une fois que nos experts en marketing d'influence auront analysé votre campagne, vous pourrez recevoir des propositions d'influenceurs.",
     color: palette.orange._500,
   }
 }
 
-interface IMatchParams {
+const GET_CAMPAIGN = gql`
+  query GetCampaign($campaignId: String!) {
+    campaign(id: $campaignId) {
+      _id
+      name
+      description
+      estimatedBudget
+      product {
+        name
+        description
+        website
+        pictures
+        youtubeLink
+      }
+      brand {
+        _id
+        name
+        website
+      }
+      targetAudience {
+        gender
+        countries
+        ageGroups
+      }
+      rules
+      isArchived
+      isReviewed
+    }
+  }
+`
+
+interface MatchParams {
   campaignId: string
 }
 
-interface ICampaignDashboard extends RouteComponentProps<IMatchParams> {}
+interface Props extends RouteComponentProps<MatchParams> {}
 
-const CampaignDashboard: React.FC<ICampaignDashboard> = ({ match, location }) => {
+const CampaignDashboard: React.FC<Props> = ({ match, location }) => {
   const { campaignId } = match.params
-  const campaign = useSelector<IState, ICampaign>(state =>
-    state.campaigns.items.find(_campaign => _campaign._id === campaignId)
-  )
-  usePageTitle(campaign.name)
 
-  React.useEffect(() => window.scrollTo(0, 0), [])
+  const {
+    data: { campaign },
+    loading,
+    error,
+  } = useQuery<GetCampaign, GetCampaignVariables>(GET_CAMPAIGN)
 
+  usePageTitle(campaign && campaign.name)
   // Get current page from URL
   const parsedQuery = queryString.parse(location.search)
   const hasQueryParams = Object.entries(parsedQuery).length > 0
@@ -106,17 +166,17 @@ const CampaignDashboard: React.FC<ICampaignDashboard> = ({ match, location }) =>
   const showCurrentTab = (): React.ReactElement => {
     switch (currentTab) {
       case 'propositions':
-        return <CampaignPropositions campaignId={campaignId} />
+        return <CampaignCollabRequests campaignId={campaignId} />
       case 'collabs':
-        return <CampaignCollabs campaign={campaign} />
+        return <CampaignCollabs campaignId={campaignId} />
       case 'brief':
         return <CampaignBriefPreview campaign={campaign} />
       case 'reviews':
-        return <CampaignReviews campaign={campaign} />
+        return <CampaignReviews campaignId={campaignId} />
       case 'settings':
         return <CampaignSettings campaign={campaign} status={status} />
       default:
-        return <CampaignPropositions campaignId={campaignId} />
+        return <CampaignCollabRequests campaignId={campaignId} />
     }
   }
 
@@ -125,21 +185,21 @@ const CampaignDashboard: React.FC<ICampaignDashboard> = ({ match, location }) =>
       <ContainerBox>
         <PageHeader title={campaign.name} destination="/brand" />
       </ContainerBox>
-      {status.name !== 'En ligne' && (
+      {status.name !== CampaignStatus.ONLINE && (
         <ContainerBox mb="2rem" mt="-1rem">
-          {status.name === 'En attente de modération' && (
+          {status.name === CampaignStatus.AWAITING_REVIEW && (
             <NotificationCard
               message="Votre campagne est en attente de modération. Elle n'est pas encore visible."
               nature="info"
             />
           )}
-          {status.name === 'Non publié' && (
+          {status.name === CampaignStatus.ARCHIVED && (
             <NotificationCard
               message="Votre campagne n'est pas en ligne. Vous pouvez la publier dans l'onglet Réglages"
               nature="info"
             />
           )}
-          {status.name === 'Incomplet' && (
+          {status.name === CampaignStatus.INCOMPLETE && (
             <NotificationCard message={status.description} nature="info" />
           )}
         </ContainerBox>

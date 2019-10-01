@@ -1,6 +1,5 @@
 import React from 'react'
 import approx from 'approximate-number'
-import { gql } from 'apollo-boost'
 import moment from 'moment'
 import 'moment/locale/fr'
 import styled, { css } from 'styled-components'
@@ -9,14 +8,15 @@ import { palette } from '../utils/colors'
 import { setFont, shadow } from '../utils/styles'
 import { capitalizeFirstLetter } from '../utils/strings'
 import { Row } from '../utils/grid'
+import { REVIEW_COLLAB_APPLICATION } from './CampaignCollabRequests'
 import { Link } from 'react-router-dom'
-import { CampaignCollabs_campaign_collabs } from '../__generated__/CampaignCollabs'
 import { CollabStatus, ReviewCollabDecision } from '../__generated__/globalTypes'
 import { useMutation } from '@apollo/react-hooks'
 import {
   ReviewCollabApplication,
   ReviewCollabApplicationVariables,
 } from '../__generated__/ReviewCollabApplication'
+import { GetCampaignCollabs_campaign_collabs } from '../__generated__/GetCampaignCollabs'
 
 moment.locale('fr')
 
@@ -157,27 +157,19 @@ const Network = styled(Flex)`
   }
 `
 
-const REVIEW_COLLAB_APPLICATION = gql`
-  mutation ReviewCollabApplication($decision: ReviewCollabDecision!, $collabId: String!) {
-    reviewCollabApplication(decision: $decision, collabId: $collabId) {
-      updatedAt
-      status
-    }
-  }
-`
-
-interface IBrandCollabCardProps {
-  collab: CampaignCollabs_campaign_collabs
+interface Props {
+  collab: GetCampaignCollabs_campaign_collabs
 }
 
-const BrandCollabCard: React.FC<IBrandCollabCardProps> = ({ collab }) => {
+const BrandCollabCard: React.FC<Props> = ({ collab }) => {
   const { conversation, status, creator, updatedAt, _id } = collab
-  const [reviewCollabApplication, { data, loading }] = useMutation<
+  const [reviewCollabApplication, { loading }] = useMutation<
     ReviewCollabApplication,
     ReviewCollabApplicationVariables
   >(REVIEW_COLLAB_APPLICATION)
 
   const handleShowProfile = () => {
+    window.alert('TODO')
     // dispatch(
     //   showProfilePanel({
     //     creatorId: (creator as ICreator)._id,
@@ -218,6 +210,7 @@ const BrandCollabCard: React.FC<IBrandCollabCardProps> = ({ collab }) => {
             <button
               className="action accept"
               type="button"
+              disabled={loading}
               onClick={e => {
                 e.stopPropagation()
                 e.preventDefault()

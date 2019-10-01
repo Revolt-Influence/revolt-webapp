@@ -2,20 +2,13 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import styled, { css } from 'styled-components'
 import { Flex, Box } from '@rebass/grid'
-import { useDispatch, useSelector } from 'react-redux'
-import { ICampaign } from '../models/Campaign'
 import { capitalizeFirstLetter } from '../utils/strings'
 import { palette, paletteColorName } from '../utils/colors'
 import { shadow, setFont } from '../utils/styles'
-import { ICollab } from '../models/Collab'
-import { getCurrencySymbol } from '../utils/currency'
 import { Status } from '../styles/Status'
-import ErrorCard from './ErrorCard'
-import IState from '../models/State'
-import { IRequestStatus } from '../utils/request'
-import { getCampaign } from '../actions/campaigns'
-import Loader from './Loader'
 import ImageWrapper from './ImageWrapper'
+import { GetCreatorCollabs_collabs } from '../__generated__/GetCreatorCollabs'
+import { CollabStatus } from '../__generated__/globalTypes'
 
 const Style = styled(Box)`
   h3.title {
@@ -81,57 +74,29 @@ const Deadline = styled.p<{ color: paletteColorName }>`
   }}
 `
 
-interface ICreatorCollabCardProps {
-  experience: ICampaign
-  experienceId: string
-  collab: ICollab
+interface Props {
+  collab: GetCreatorCollabs_collabs
 }
 
-const dayTimestamp = 1000 * 60 * 60 * 24
-
-const CreatorCollabCard: React.FC<ICreatorCollabCardProps> = ({
-  experience,
-  collab,
-  experienceId,
-}) => {
-  // Redux stuff
-  const dispatch = useDispatch()
-  const getCampaignStatus = useSelector<IState, IRequestStatus>(
-    state => state.campaigns.requests.getCampaign
-  )
-
-  // Pick the right data from the experience/collab
-  const picture = experience == null ? '' : experience.settings.gift.picture
-  const dueDate =
-    collab.acceptedDate + (experience && experience.settings.task.daysToReview) * dayTimestamp
-  const dateDiff = dueDate - Date.now() // negative if late
-  let timingColor: paletteColorName = 'green'
-  const dueToday = dateDiff > 0 && dateDiff < dayTimestamp
-  const daysDiff = Math.floor(dateDiff / dayTimestamp)
-  if (dateDiff < 0) {
-    timingColor = 'red'
-  } else if (dueToday) {
-    timingColor = 'orange'
-  }
-
+const CreatorCollabCard: React.FC<Props> = ({ collab }) => {
   const formatStatus = (): { name: string; color: paletteColorName } => {
     switch (collab.status) {
-      case 'proposed':
+      case CollabStatus.APPLIED:
         return {
           name: 'en attente de la marque',
           color: 'grey',
         }
-      case 'accepted':
+      case CollabStatus.ACCEPTED:
         return {
           name: 'produit pas encore envoyé',
           color: 'blue',
         }
-      case 'sent':
+      case CollabStatus.SENT:
         return {
           name: 'en attente de publication',
           color: 'orange',
         }
-      case 'done':
+      case CollabStatus.DONE:
         return {
           name: 'terminé',
           color: 'green',
@@ -145,58 +110,21 @@ const CreatorCollabCard: React.FC<ICreatorCollabCardProps> = ({
   }
   const status = formatStatus()
 
-  if (getCampaignStatus.hasFailed) {
-    return <ErrorCard message="La collab n'a pas pu être chargée" />
-  }
-  if (getCampaignStatus.isLoading) {
-    return <Loader fullScreen />
-  }
-
-  if (experience == null) {
-    dispatch(getCampaign(experienceId))
-    return <Loader fullScreen />
-  }
-
-  const showPrice = () => (
-    <p className="price">
-      {experience.settings.gift.value} {getCurrencySymbol(experience.settings.gift.currency)}
-    </p>
-  )
-  const priceIsShown =
-    experience.settings.gift.valueIsShown && experience.settings.gift.valueIsShown != null
+  const { campaign: experience } = collab
 
   return (
     <Link to={`/creator/experiences/${experience._id}`}>
       <Style mt={[0, 0, 0]} p={[0, 0, 0]}>
-        <ImageWrapper
-          src={picture}
-          alt={experience.name}
-          ratio={4 / 3}
-          showLabel={priceIsShown ? showPrice : null}
-        />
+        <ImageWrapper src={experience.product.pictures[0]} alt={experience.name} ratio={4 / 3} />
         <h3 className="title">{capitalizeFirstLetter(experience.name)}</h3>
         <div className="brand">
           <Flex flexDirection="row" alignItems="center" justifyContent="flex-start">
-            <img
-              className="logo"
-              src={experience.settings.brand.logo}
-              alt={experience.settings.brand.name}
-            />
-            <p>{experience.settings.brand.name}</p>
+            <img className="logo" src={experience.brand.logo} alt={experience.brand.name} />
+            <p>{experience.brand.name}</p>
           </Flex>
         </div>
         <Flex flexDirection="row" alignItems="center" justifyContent="space-between" mt="1rem">
           <Status color={status.color}>{status.name}</Status>
-          {collab.status === 'sent' ? (
-            <Deadline color={timingColor}>
-              {dueToday
-                ? "Pour aujourd'hui"
-                : `${daysDiff < 0 ? 'il y a' : 'encore'} ${Math.abs(daysDiff)} jours`}
-            </Deadline>
-          ) : (
-            // Nothing, just to keep Flexbox alignment
-            <div />
-          )}
         </Flex>
       </Style>
     </Link>

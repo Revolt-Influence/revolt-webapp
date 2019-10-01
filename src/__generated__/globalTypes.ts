@@ -7,6 +7,19 @@
 //==============================================================
 
 /**
+ * Age groups based formatted to match YouTube API data
+ */
+export enum AgeGroup {
+  AGE_13_17 = "AGE_13_17",
+  AGE_18_24 = "AGE_18_24",
+  AGE_25_34 = "AGE_25_34",
+  AGE_35_44 = "AGE_35_44",
+  AGE_45_54 = "AGE_45_54",
+  AGE_55_64 = "AGE_55_64",
+  AGE_65_PLUS = "AGE_65_PLUS",
+}
+
+/**
  * The advancement of the campaign
  */
 export enum CollabStatus {
@@ -24,6 +37,15 @@ export enum CreatorStatus {
   BLOCKED = "BLOCKED",
   UNVERIFIED = "UNVERIFIED",
   VERIFIED = "VERIFIED",
+}
+
+/**
+ * Male female or don't care
+ */
+export enum Gender {
+  ANY = "ANY",
+  FEMALE = "FEMALE",
+  MALE = "MALE",
 }
 
 /**

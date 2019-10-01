@@ -122,20 +122,27 @@ const Styles = styled.div`
   }
 `
 
-const GET_CREATOR = gql`
-  query Creator($creatorId: String!) {
-    creator(id: $creatorId) {
-      _id
-      name
-      picture
-      country
-      birthYear
-      youtube {
-        ...YoutuberProfile
-      }
+export const CREATOR_PROFILE_FRAGMENT = gql`
+  fragment CreatorProfileFragment on Creator {
+    _id
+    name
+    picture
+    country
+    birthYear
+    youtube {
+      ...YoutuberProfile
     }
   }
   ${YOUTUBER_PROFILE_FRAGMENT}
+`
+
+export const GET_CREATOR = gql`
+  query Creator($creatorId: String!) {
+    creator(id: $creatorId) {
+      ...CreatorProfileFragment
+    }
+  }
+  ${CREATOR_PROFILE_FRAGMENT}
 `
 
 export const GET_COLLAB = gql`

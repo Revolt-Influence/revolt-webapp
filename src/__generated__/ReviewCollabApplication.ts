@@ -10,11 +10,15 @@ import { ReviewCollabDecision, CollabStatus } from "./globalTypes";
 
 export interface ReviewCollabApplication_reviewCollabApplication {
   __typename: "Collab";
-  updatedAt: any;
+  /**
+   * Mongoose generated ID
+   */
+  _id: string;
   /**
    * Advancement of the collab
    */
   status: CollabStatus;
+  updatedAt: any;
 }
 
 export interface ReviewCollabApplication {
@@ -25,6 +29,6 @@ export interface ReviewCollabApplication {
 }
 
 export interface ReviewCollabApplicationVariables {
-  decision: ReviewCollabDecision;
   collabId: string;
+  decision: ReviewCollabDecision;
 }

@@ -5,10 +5,10 @@
 import { CollabStatus, AgeGroup, Gender } from "./globalTypes";
 
 // ====================================================
-// GraphQL query operation: GetCampaigns
+// GraphQL fragment: CampaignCardFragment
 // ====================================================
 
-export interface GetCampaigns_campaigns_items_brand {
+export interface CampaignCardFragment_brand {
   __typename: "Brand";
   /**
    * Mongoose generated ID
@@ -25,7 +25,7 @@ export interface GetCampaigns_campaigns_items_brand {
   website: string;
 }
 
-export interface GetCampaigns_campaigns_items_product {
+export interface CampaignCardFragment_product {
   __typename: "CampaignProduct";
   /**
    * Name of the product
@@ -49,7 +49,7 @@ export interface GetCampaigns_campaigns_items_product {
   pictures: string[];
 }
 
-export interface GetCampaigns_campaigns_items_collabs {
+export interface CampaignCardFragment_collabs {
   __typename: "Collab";
   /**
    * Mongoose generated ID
@@ -61,7 +61,7 @@ export interface GetCampaigns_campaigns_items_collabs {
   status: CollabStatus;
 }
 
-export interface GetCampaigns_campaigns_items_targetAudience {
+export interface CampaignCardFragment_targetAudience {
   __typename: "TargetAudience";
   /**
    * Groups of age
@@ -77,7 +77,7 @@ export interface GetCampaigns_campaigns_items_targetAudience {
   gender: Gender;
 }
 
-export interface GetCampaigns_campaigns_items {
+export interface CampaignCardFragment {
   __typename: "Campaign";
   /**
    * Mongoose generated ID
@@ -94,11 +94,11 @@ export interface GetCampaigns_campaigns_items {
   /**
    * The brand that published the campaign
    */
-  brand: GetCampaigns_campaigns_items_brand | null;
+  brand: CampaignCardFragment_brand | null;
   /**
    * What the creator will receive
    */
-  product: GetCampaigns_campaigns_items_product;
+  product: CampaignCardFragment_product;
   /**
    * Rules that creators must respect to receive the gift
    */
@@ -107,7 +107,7 @@ export interface GetCampaigns_campaigns_items {
   /**
    * All collabs linked to the campaign
    */
-  collabs: GetCampaigns_campaigns_items_collabs[];
+  collabs: CampaignCardFragment_collabs[];
   /**
    * Total amount of money that will be given to creators
    */
@@ -115,7 +115,7 @@ export interface GetCampaigns_campaigns_items {
   /**
    * The ideal audience the brand wants to reach
    */
-  targetAudience: GetCampaigns_campaigns_items_targetAudience;
+  targetAudience: CampaignCardFragment_targetAudience;
   /**
    * Whether the brand is willing to publish the campaign
    */
@@ -124,18 +124,4 @@ export interface GetCampaigns_campaigns_items {
    * Whether an admin allowed the campaign to be published
    */
   isReviewed: boolean;
-}
-
-export interface GetCampaigns_campaigns {
-  __typename: "PaginatedCampaignResponse";
-  currentPage: number;
-  totalPages: number;
-  items: GetCampaigns_campaigns_items[];
-}
-
-export interface GetCampaigns {
-  /**
-   * Get page of campaigns or experiences depending on whether the session is a brand or a user
-   */
-  campaigns: GetCampaigns_campaigns;
 }

@@ -1,21 +1,17 @@
 import React from 'react'
-import { ICampaign } from '../models/Campaign'
 import { ContainerBox } from '../styles/grid'
 import { MainLink } from '../styles/Button'
 import NotificationCard from './NotificationCard'
 import ExperiencePresentation from './ExperiencePresentation'
+import { GetCampaign_campaign } from '../__generated__/GetCampaign'
+import { getCampaignStatus, CampaignStatus } from '../pages/CampaignDashboard'
 
 interface ICampaignBriefPreviewProps {
-  campaign: ICampaign
+  campaign: GetCampaign_campaign
 }
 
 const CampaignBriefPreview: React.FC<ICampaignBriefPreviewProps> = ({ campaign }) => {
-  const briefIsReady =
-    campaign.settings != null &&
-    campaign.settings.brief != null &&
-    campaign.settings.gift != null &&
-    campaign.settings.target != null &&
-    campaign.settings.task != null
+  const status = getCampaignStatus(campaign)
   return (
     <ContainerBox>
       <NotificationCard
@@ -26,7 +22,9 @@ const CampaignBriefPreview: React.FC<ICampaignBriefPreviewProps> = ({ campaign }
       <MainLink to={`/brand/campaigns/${campaign._id}/brief`} inverted>
         Modifier mon brief
       </MainLink>
-      {briefIsReady && <ExperiencePresentation experience={campaign} />}
+      {status.name !== CampaignStatus.INCOMPLETE && (
+        <ExperiencePresentation experienceId={campaign._id} />
+      )}
     </ContainerBox>
   )
 }

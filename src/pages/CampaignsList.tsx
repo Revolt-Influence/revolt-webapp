@@ -16,21 +16,36 @@ import { usePageTitle } from '../utils/hooks'
 import { CreateCampaign } from '../__generated__/CreateCampaign'
 import { GetCampaigns } from '../__generated__/GetCampaigns'
 
+const CAMPAIGN_CARD_FRAGMENT = gql`
+  fragment CampaignCardFragment on Campaign {
+    ...ExperiencePresentation
+    collabs {
+      _id
+      status
+    }
+    estimatedBudget
+    targetAudience {
+      ageGroups
+      countries
+      gender
+    }
+    isArchived
+    isReviewed
+  }
+  ${EXPERIENCE_PRESENTATION_FRAGMENT}
+`
+
 const GET_CAMPAIGNS = gql`
   query GetCampaigns {
     campaigns {
       currentPage
       totalPages
       items {
-        ...ExperiencePresentation
-        collabs {
-          _id
-          status
-        }
+        ...CampaignCardFragment
       }
     }
   }
-  ${EXPERIENCE_PRESENTATION_FRAGMENT}
+  ${CAMPAIGN_CARD_FRAGMENT}
 `
 
 const CREATE_CAMPAIGN = gql`
