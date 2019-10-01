@@ -1,29 +1,37 @@
-import React from 'react'
-import { Flex, Box } from '@rebass/grid'
-import { useSelector, useDispatch } from 'react-redux'
-import { Title } from '../styles/Text'
+import { useMutation } from '@apollo/react-hooks'
+import { Box, Flex } from '@rebass/grid'
+import gql from 'graphql-tag'
+import React, { useState } from 'react'
+import ErrorCard from '../components/ErrorCard'
+import SuccessCard from '../components/SuccessCard'
 import { MainButtonSubmit } from '../styles/Button'
 import { FormInput, FormInputLabel } from '../styles/Form'
+import { Title } from '../styles/Text'
 import { Container } from '../utils/grid'
-import { IRequestStatus } from '../utils/request'
-import SuccessCard from '../components/SuccessCard'
-import ErrorCard from '../components/ErrorCard'
 import { usePageTitle } from '../utils/hooks'
-import IState from '../models/State'
-import { sendResetPasswordLink } from '../actions/session'
+import {
+  SendResetPasswordEmail,
+  SendResetPasswordEmailVariables,
+} from '../__generated__/SendResetPasswordEmail'
+
+const SEND_RESET_PASSWORD_EMAIL = gql`
+  mutation SendResetPasswordEmail($email: String!) {
+    sendResetPasswordEmail(email: $email)
+  }
+`
 
 const ForgotPassword: React.FC<{}> = () => {
-  usePageTitle('Mot de passe oublié')
-  const [email, setEmail] = React.useState('')
-  const dispatch = useDispatch()
-  const { isLoading, hasFailed, hasSucceeded } = useSelector<IState, IRequestStatus>(
-    state => state.session.requests.sendResetPasswordLink
-  )
+  usePageTitle('Forgot password')
+  const [email, setEmail] = useState('')
+  const [succeeded, setSucceeded] = useState(false)
+  const [sendResetPasswordEmail, { loading, error }] = useMutation<
+    SendResetPasswordEmail,
+    SendResetPasswordEmailVariables
+  >(SEND_RESET_PASSWORD_EMAIL, { onCompleted: () => setSucceeded(true) })
 
   const handleSubmit = (e: React.FormEvent) => {
-    console.log('submit')
     e.preventDefault()
-    dispatch(sendResetPasswordLink(email))
+    sendResetPasswordEmail({ variables: { email } })
     setEmail('')
   }
 
@@ -49,11 +57,11 @@ const ForgotPassword: React.FC<{}> = () => {
               hasLabel
             />
           </FormInputLabel>
-          {hasSucceeded ? <SuccessCard message="Vous avez reçu un lien par email" /> : null}
-          {hasFailed ? <ErrorCard message="Le mail n'a pas pu être envoyé" /> : null}
+          {succeeded ? <SuccessCard message="Vous avez reçu un lien par email" /> : null}
+          {error ? <ErrorCard message="Le mail n'a pas pu être envoyé" /> : null}
           <MainButtonSubmit
-            disabled={isLoading}
-            value={isLoading ? 'Envoi du mail...' : 'Réinitialiser mon mot de passe'}
+            disabled={loading}
+            value={loading ? 'Envoi du mail...' : 'Réinitialiser mon mot de passe'}
           />
         </Box>
       </Flex>

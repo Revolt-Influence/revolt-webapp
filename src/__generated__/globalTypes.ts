@@ -58,6 +58,11 @@ export enum SessionType {
   CREATOR = "CREATOR",
 }
 
+export interface SubmitCollabReviewInput {
+  link: string;
+  format: ReviewFormat;
+}
+
 //==============================================================
 // END Enums and Input Objects
 //==============================================================
