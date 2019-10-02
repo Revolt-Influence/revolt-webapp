@@ -1,4 +1,5 @@
 import { useMutation, useQuery } from '@apollo/react-hooks'
+import { useHistory } from 'react-router-dom'
 import { Box } from '@rebass/grid'
 import gql from 'graphql-tag'
 import React from 'react'
@@ -51,6 +52,7 @@ const LOGOUT = gql`
 `
 
 const Session: React.FC<{}> = () => {
+  const history = useHistory()
   // Get session data
   const {
     data: { session } = { session: null },
@@ -70,7 +72,9 @@ const Session: React.FC<{}> = () => {
   const email = getEmail()
 
   // Prepare logout
-  const [logout, logoutStatus] = useMutation<Logout>(LOGOUT)
+  const [logout, logoutStatus] = useMutation<Logout>(LOGOUT, {
+    onCompleted: () => history.push('/'),
+  })
 
   if (sessionLoading) {
     return <Loader />

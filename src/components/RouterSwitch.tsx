@@ -48,12 +48,7 @@ const Layout = styled.div<{ minHeight: number }>`
   }
 `
 
-interface IRouterSwitchProps extends RouteComponentProps {
-  isRetrievingUser: boolean
-  hasVerifiedEmail: boolean
-}
-
-const RouterSwitch: React.FC<IRouterSwitchProps> = () => {
+const RouterSwitch: React.FC<RouteComponentProps> = () => {
   const { data: { session } = { session: null }, loading, error } = useQuery<GetSession>(
     GET_SESSION
   )

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import { Flex, Box } from '@rebass/grid'
 import styled from 'styled-components'
 import { Container, Row } from '../utils/grid'
@@ -43,6 +43,7 @@ const LOGIN_MUTATION = gql`
 
 const Login: React.FC<{}> = () => {
   usePageTitle('Se connecter')
+  const history = useHistory()
 
   // Form state
   const [email, setEmail] = useState<string>('')
@@ -50,7 +51,8 @@ const Login: React.FC<{}> = () => {
 
   // Server requests
   const [login, { error, loading }] = useMutation<LoginMutation, LoginMutationVariables>(
-    LOGIN_MUTATION
+    LOGIN_MUTATION,
+    { onCompleted: () => history.push('/') }
   )
 
   const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
