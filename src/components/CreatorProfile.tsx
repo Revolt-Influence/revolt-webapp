@@ -185,7 +185,7 @@ const CreatorProfile: React.FC<Props> = ({ creatorId, collabId, handleAccept, ha
 
   if (collabId) {
     // Only get collab data if an ID is specified
-    fetchCollab()
+    fetchCollab({ variables: { collabId } })
   }
 
   const [reviewCollabApplication] = useMutation<

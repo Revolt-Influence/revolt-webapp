@@ -130,7 +130,7 @@ const CampaignDashboard: React.FC<Props> = ({ match, location }) => {
   const { data: { campaign } = { campaign: null }, loading, error } = useQuery<
     GetCampaign,
     GetCampaignVariables
-  >(GET_CAMPAIGN)
+  >(GET_CAMPAIGN, { variables: { campaignId } })
 
   usePageTitle(campaign && campaign.name)
   // Get current page from URL

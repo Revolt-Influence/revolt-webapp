@@ -59,7 +59,7 @@ const CampaignReviews: React.FC<Props> = ({ campaignId }) => {
   const { data: { campaign } = { campaign: null }, loading, error } = useQuery<
     GetCampaignReviews,
     GetCampaignReviewsVariables
-  >(GET_CAMPAIGN_REVIEWS)
+  >(GET_CAMPAIGN_REVIEWS, { variables: { campaignId } })
   if (loading) {
     return <Loader />
   }

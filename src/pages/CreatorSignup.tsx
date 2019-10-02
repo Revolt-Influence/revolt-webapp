@@ -14,7 +14,7 @@ import { palette } from '../utils/colors'
 import { usePageTitle } from '../utils/hooks'
 import { IconButtonWrapper } from '../styles/Icon'
 import gql from 'graphql-tag'
-import { SESSION_FRAGMENT } from '../components/Session'
+import { SESSION_FRAGMENT, GET_SESSION } from '../components/Session'
 import { useMutation } from '@apollo/react-hooks'
 import {
   SignupCreatorMutation,
@@ -50,7 +50,10 @@ const CreatorSignup: React.FC<RouteComponentProps> = ({ location }) => {
   const [signupCreator, { loading, error }] = useMutation<
     SignupCreatorMutation,
     SignupCreatorMutationVariables
-  >(SIGNUP_CREATOR_MUTATION)
+  >(SIGNUP_CREATOR_MUTATION, {
+    refetchQueries: [{ query: GET_SESSION }],
+    awaitRefetchQueries: true,
+  })
 
   // Form data
   const [email, setEmail] = useState<string>('')

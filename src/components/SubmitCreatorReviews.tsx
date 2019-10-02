@@ -44,7 +44,7 @@ const SubmitCreatorReviews: React.FC<Props> = ({ collabId }) => {
   const { data: { collab } = { collab: null }, ...collabRequestStatus } = useQuery<
     GetCollab,
     GetCollabVariables
-  >(GET_COLLAB)
+  >(GET_COLLAB, { variables: { collabId } })
   const [submitCollabReview, { loading, error }] = useMutation<
     SubmitCollabReview,
     SubmitCollabReviewVariables

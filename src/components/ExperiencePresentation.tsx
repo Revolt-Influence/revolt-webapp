@@ -92,7 +92,7 @@ const ExperiencePresentation: React.FC<Props> = ({ experienceId }) => {
   const { data: { campaign: experience } = { campaign: null }, loading, error } = useQuery<
     Experience,
     ExperienceVariables
-  >(GET_EXPERIENCE)
+  >(GET_EXPERIENCE, { variables: { campaignId: experienceId } })
 
   const { width } = useWindowSize()
   const isMobile = width < 600

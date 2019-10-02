@@ -75,7 +75,7 @@ const CampaignForm: React.FC<RouteComponentProps<MatchParams>> = ({ match }) => 
   const { data: { campaign } = { campaign: null }, loading, error } = useQuery<
     GetCampaign,
     GetCampaignVariables
-  >(GET_CAMPAIGN)
+  >(GET_CAMPAIGN, { variables: { campaignId } })
 
   const [toggleArchiveCampaign, toggleArchiveCampaignStatus] = useMutation<
     ToggleArchiveCampaign,

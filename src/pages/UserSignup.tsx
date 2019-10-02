@@ -12,7 +12,7 @@ import { emailRegex } from '../utils/strings'
 import { palette } from '../utils/colors'
 import { usePageTitle } from '../utils/hooks'
 import gql from 'graphql-tag'
-import { SESSION_FRAGMENT } from '../components/Session'
+import { SESSION_FRAGMENT, GET_SESSION } from '../components/Session'
 import { useMutation } from '@apollo/react-hooks'
 import {
   SignupUserMutation,
@@ -48,7 +48,10 @@ const UserSignup: React.FC<RouteComponentProps> = ({ location }) => {
   const [signupUser, { loading, error }] = useMutation<
     SignupUserMutation,
     SignupUserMutationVariables
-  >(SIGNUP_USER_MUTATION)
+  >(SIGNUP_USER_MUTATION, {
+    refetchQueries: [{ query: GET_SESSION }],
+    awaitRefetchQueries: true,
+  })
 
   // Check if there's an ambassador
   const parsedQuery = queryString.parse(location.search)

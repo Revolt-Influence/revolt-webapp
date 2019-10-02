@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import { useHistory } from 'react-router-dom'
 import { Flex } from '@rebass/grid'
 import { MainButton } from '../styles/Button'
 import { setFont } from '../utils/styles'
@@ -82,7 +83,12 @@ const slidesReducer = (
 }
 
 const BrandOnboarding: React.FC<{}> = () => {
-  const [createCampaign] = useMutation<CreateCampaign>(CREATE_CAMPAIGN)
+  const history = useHistory()
+  const [createCampaign] = useMutation<CreateCampaign>(CREATE_CAMPAIGN, {
+    onCompleted: ({ createCampaign: { _id } }) => {
+      history.push(`/brand/campaigns/${_id}`)
+    },
+  })
   // Store current status in state
   const [slidesState, slidesDispatch] = React.useReducer(slidesReducer, initialSlidesState)
 

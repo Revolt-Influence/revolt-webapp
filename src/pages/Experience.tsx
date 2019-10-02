@@ -61,7 +61,9 @@ const Experience: React.FC<Props> = ({ match }) => {
     },
     loading,
     error,
-  } = useQuery<GetExperiencePage, GetExperiencePageVariables>(GET_EXPERIENCE_PAGE)
+  } = useQuery<GetExperiencePage, GetExperiencePageVariables>(GET_EXPERIENCE_PAGE, {
+    variables: { campaignId },
+  })
   const [tab, setTab] = useState<ExperienceTab>(ExperienceTab.PRESENTATION)
 
   usePageTitle(experience && experience.name)

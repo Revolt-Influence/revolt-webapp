@@ -141,7 +141,7 @@ const CampaignCollabs: React.FC<ICampaignCollabsProps> = ({ campaignId }) => {
   const { data: { campaign } = { campaign: null }, loading, error } = useQuery<
     GetCampaignCollabs,
     GetCampaignCollabsVariables
-  >(GET_CAMPAIGN_COLLABS)
+  >(GET_CAMPAIGN_COLLABS, { variables: { campaignId } })
 
   if (loading) {
     return <Loader fullScreen />

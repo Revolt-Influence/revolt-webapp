@@ -49,7 +49,9 @@ interface Props {
 }
 
 const YoutubePreview: React.FC<Props> = ({ youtuberId }) => {
-  const { data, loading, error } = useQuery<Youtuber, YoutuberVariables>(GET_YOUTUBER)
+  const { data, loading, error } = useQuery<Youtuber, YoutuberVariables>(GET_YOUTUBER, {
+    variables: { youtuberId },
+  })
   if (loading) {
     return <Loader fullScreen />
   }

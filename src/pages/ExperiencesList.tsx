@@ -39,6 +39,11 @@ const GET_EXPERIENCES_PAGE = gql`
 const ExperiencesList: React.FC<RouteComponentProps> = ({ location, history }) => {
   usePageTitle('Expériences')
 
+  // Get current page from URL
+  const parsedQuery = queryString.parse(location.search)
+  const hasQueryParams = Object.entries(parsedQuery).length > 0
+  const urlCurrentPage = hasQueryParams ? parseInt((parsedQuery as any).page) : 1
+
   const [
     getExperiencesPage,
     { data: { campaigns: experiences } = { campaigns: null }, loading, error },
@@ -46,11 +51,6 @@ const ExperiencesList: React.FC<RouteComponentProps> = ({ location, history }) =
   const { data: { session } = { session: null } } = useQuery<GetSession>(GET_SESSION)
 
   const deviceType = useDeviceType()
-
-  // Get current page from URL
-  const parsedQuery = queryString.parse(location.search)
-  const hasQueryParams = Object.entries(parsedQuery).length > 0
-  const urlCurrentPage = hasQueryParams ? parseInt((parsedQuery as any).page) : 1
 
   // Check if a fetch is necessary based on current page
   useEffect(() => {
