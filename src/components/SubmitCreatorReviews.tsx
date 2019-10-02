@@ -41,10 +41,10 @@ const SubmitCreatorReviews: React.FC<Props> = ({ collabId }) => {
   const [succeeded, setSucceeded] = useState<boolean>(false)
 
   // Network requests
-  const {
-    data: { collab },
-    ...collabRequestStatus
-  } = useQuery<GetCollab, GetCollabVariables>(GET_COLLAB)
+  const { data: { collab } = { collab: null }, ...collabRequestStatus } = useQuery<
+    GetCollab,
+    GetCollabVariables
+  >(GET_COLLAB)
   const [submitCollabReview, { loading, error }] = useMutation<
     SubmitCollabReview,
     SubmitCollabReviewVariables

@@ -29,7 +29,7 @@ interface Props {
 
 const ExperienceForm: React.FC<Props> = ({ brand, experienceId }) => {
   const {
-    data: { session },
+    data: { session } = { session: null },
     loading: sessionLoading,
     error: sessionError,
   } = useQuery<GetSession, {}>(GET_SESSION)
@@ -39,7 +39,7 @@ const ExperienceForm: React.FC<Props> = ({ brand, experienceId }) => {
     {
       loading: applyLoading,
       error: applyError,
-      data: { applyToExperience: createdCollab },
+      data: { applyToExperience: createdCollab } = { applyToExperience: null },
     },
   ] = useMutation<ApplyToExperience, ApplyToExperienceVariables>(APPLY_TO_EXPERIENCE)
 

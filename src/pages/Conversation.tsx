@@ -81,7 +81,7 @@ const Conversation: React.FC<RouteComponentProps<Match>> = ({ match }) => {
 
   // Fetch conversations on mount
   const {
-    data: { conversations: paginatedConversations },
+    data: { conversations: paginatedConversations } = { conversations: null },
     loading,
     error,
   } = useQuery<GetConversationsList, GetConversationsListVariables>(GET_CONVERSATIONS_LIST)
@@ -115,9 +115,7 @@ const Conversation: React.FC<RouteComponentProps<Match>> = ({ match }) => {
   })
 
   // Get session data to know what info to show
-  const {
-    data: { session },
-  } = useQuery<GetSession>(GET_SESSION)
+  const { data: { session } = { session: null } } = useQuery<GetSession>(GET_SESSION)
   const isAdmin = session.user && session.user.isAdmin
 
   const getRecipientName = (): string => {

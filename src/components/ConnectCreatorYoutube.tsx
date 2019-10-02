@@ -28,10 +28,9 @@ const ATTACH_CREATOR_YOUTUBE = gql`
 
 const ConnectCreatorYoutube: React.FC<{}> = () => {
   // Network requests
-  const {
-    data: { session },
-    ...sessionStatus
-  } = useQuery<GetSession, {}>(GET_SESSION)
+  const { data: { session } = { session: null }, ...sessionStatus } = useQuery<GetSession, {}>(
+    GET_SESSION
+  )
   const [attachCreatorYoutube, attachCreatorYoutubeStatus] = useMutation<
     AttachCreatorYoutube,
     AttachCreatorYoutubeVariables

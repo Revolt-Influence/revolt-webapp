@@ -53,11 +53,10 @@ const Community: React.FC<RouteComponentProps> = ({ location }) => {
   const [selectedId, setSelectedId] = useState<string>(null)
   const [currentPage, setCurrentPage] = useState<number>(1)
 
-  const {
-    data: { creators: paginatedCreators },
-    loading,
-    error,
-  } = useQuery<GetCreatorsPage, GetCreatorsPageVariables>(GET_CREATORS_PAGE, {
+  const { data: { creators: paginatedCreators } = { creators: null }, loading, error } = useQuery<
+    GetCreatorsPage,
+    GetCreatorsPageVariables
+  >(GET_CREATORS_PAGE, {
     variables: { page: currentPage, status: filter },
     onCompleted: ({ creators: _paginatedCreators }) => {
       if (_paginatedCreators.items.length > 0) {

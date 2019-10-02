@@ -173,18 +173,14 @@ interface AdvertisingPerformance {
 
 const CreatorProfile: React.FC<Props> = ({ creatorId, collabId, handleAccept, handleRefuse }) => {
   const {
-    data: { creator },
+    data: { creator } = { creator: null },
     loading: creatorLoading,
     error: creatorError,
   } = useQuery<Creator, CreatorVariables>(GET_CREATOR)
 
   const [
     fetchCollab,
-    {
-      data: { collab },
-      loading: collabLoading,
-      error: collabError,
-    },
+    { data: { collab } = { collab: null }, loading: collabLoading, error: collabError },
   ] = useLazyQuery<GetCollab, GetCollabVariables>(GET_COLLAB)
 
   if (collabId) {

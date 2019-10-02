@@ -26,15 +26,13 @@ const ConversationsListPreview: React.FC<RouteComponentProps<IMatch>> = ({ match
   const basePath = match.path.replace('/:conversationId', '')
   const [page, setPage] = useState<number>(1)
   const {
-    data: { conversations: paginatedConversations },
+    data: { conversations: paginatedConversations } = { conversations: null },
     loading,
     error,
   } = useQuery<GetConversationsList, GetConversationsListVariables>(GET_CONVERSATIONS_LIST, {
     variables: { page },
   })
-  const {
-    data: { session },
-  } = useQuery<GetSession>(GET_SESSION)
+  const { data: { session } = { session: null } } = useQuery<GetSession>(GET_SESSION)
   const isAdmin = useIsAdmin()
 
   if (loading) {

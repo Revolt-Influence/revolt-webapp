@@ -39,9 +39,7 @@ const creatorSteps = [
 const AmbassadorProgram: React.FunctionComponent<{}> = () => {
   usePageTitle('Devenez ambassadeur')
   // Copy link
-  const {
-    data: { session },
-  } = useQuery<GetSession>(GET_SESSION)
+  const { data: { session } = { session: null } } = useQuery<GetSession>(GET_SESSION)
   const creatorId = session.creator._id
   const creatorLink = `${window.location.origin}/creatorSignup?ambassador=${creatorId}`
   const [creatorCopyButtonText, setCreatorCopyButtonText] = React.useState<string>('Copier le lien')

@@ -271,11 +271,9 @@ function useConversationsSocket() {
 }
 
 function useIsAdmin() {
-  const {
-    data: { session },
-    loading,
-    error,
-  } = useQuery<GetSession>(GET_SESSION)
+  const { data: { session } = { session: null }, loading, error } = useQuery<GetSession>(
+    GET_SESSION
+  )
   if (loading || error) {
     return false
   }

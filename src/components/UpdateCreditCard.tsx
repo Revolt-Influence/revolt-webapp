@@ -47,10 +47,9 @@ const UpdateCreditCard: React.FC<ReactStripeElements.InjectedStripeProps> = ({ s
   const [succeeded, setSucceeded] = useState<boolean>(false)
 
   // Server requests
-  const {
-    data: { session },
-    ...getSessionStatus
-  } = useQuery<GetSessionUserName>(GET_SESSION_USER_NAME)
+  const { data: { session } = { session: null }, ...getSessionStatus } = useQuery<
+    GetSessionUserName
+  >(GET_SESSION_USER_NAME)
   const [updateCreditCard, { loading, error }] = useMutation<
     UpdateCreditCardMutation,
     UpdateCreditCardMutationVariables

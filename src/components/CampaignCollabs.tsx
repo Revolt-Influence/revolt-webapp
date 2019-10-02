@@ -138,11 +138,10 @@ interface ICampaignCollabsProps {
 
 const CampaignCollabs: React.FC<ICampaignCollabsProps> = ({ campaignId }) => {
   // Get campaign collabs from Redux
-  const {
-    data: { campaign },
-    loading,
-    error,
-  } = useQuery<GetCampaignCollabs, GetCampaignCollabsVariables>(GET_CAMPAIGN_COLLABS)
+  const { data: { campaign } = { campaign: null }, loading, error } = useQuery<
+    GetCampaignCollabs,
+    GetCampaignCollabsVariables
+  >(GET_CAMPAIGN_COLLABS)
 
   if (loading) {
     return <Loader fullScreen />

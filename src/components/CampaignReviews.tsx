@@ -56,11 +56,10 @@ interface Props {
 }
 
 const CampaignReviews: React.FC<Props> = ({ campaignId }) => {
-  const {
-    data: { campaign },
-    loading,
-    error,
-  } = useQuery<GetCampaignReviews, GetCampaignReviewsVariables>(GET_CAMPAIGN_REVIEWS)
+  const { data: { campaign } = { campaign: null }, loading, error } = useQuery<
+    GetCampaignReviews,
+    GetCampaignReviewsVariables
+  >(GET_CAMPAIGN_REVIEWS)
   if (loading) {
     return <Loader />
   }

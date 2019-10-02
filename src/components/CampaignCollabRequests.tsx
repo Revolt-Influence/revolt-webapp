@@ -65,13 +65,10 @@ interface Props {
 
 const CampaignPropositions: React.FC<Props> = ({ campaignId }) => {
   // Server requests
-  const {
-    data: { campaign },
-    loading,
-    error,
-  } = useQuery<GetCampaignRequestedCollabs, GetCampaignRequestedCollabsVariables>(
-    GET_CAMPAIGN_REQUESTED_COLLABS
-  )
+  const { data: { campaign } = { campaign: null }, loading, error } = useQuery<
+    GetCampaignRequestedCollabs,
+    GetCampaignRequestedCollabsVariables
+  >(GET_CAMPAIGN_REQUESTED_COLLABS)
   const collabsApplied = campaign
     ? campaign.collabs.filter(_collab => _collab.status === CollabStatus.APPLIED)
     : []

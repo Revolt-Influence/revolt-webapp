@@ -43,10 +43,10 @@ interface ICampaignSettingsProps extends RouteComponentProps {
 
 const CampaignSettings: React.FC<ICampaignSettingsProps> = ({ campaignId, history }) => {
   // Get campaign query
-  const {
-    data: { campaign },
-    ...getCampaignRequestStatus
-  } = useQuery<GetCampaign, GetCampaignVariables>(GET_CAMPAIGN, { variables: { campaignId } })
+  const { data: { campaign } = { campaign: null }, ...getCampaignRequestStatus } = useQuery<
+    GetCampaign,
+    GetCampaignVariables
+  >(GET_CAMPAIGN, { variables: { campaignId } })
   // Toggle archive mutation
   const [toggleArchiveCampaign, toggleArchiveCampaignStatus] = useMutation<
     ToggleArchiveCampaign,

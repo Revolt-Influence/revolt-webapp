@@ -53,7 +53,7 @@ const LOGOUT = gql`
 const Session: React.FC<{}> = () => {
   // Get session data
   const {
-    data: { session },
+    data: { session } = { session: null },
     loading: sessionLoading,
     error: sessionError,
   } = useQuery<GetSession>(GET_SESSION)

@@ -21,9 +21,7 @@ const UPDATE_USER_EMAIL = gql`
 
 const UpdateUserInfo: React.FC<{}> = () => {
   // Get user from session
-  const {
-    data: { session },
-  } = useQuery<GetSession>(GET_SESSION)
+  const { data: { session } = { session: null } } = useQuery<GetSession>(GET_SESSION)
   // Prepare change email
   const [succeeded, setSucceeded] = useState<boolean>(false)
   const [updateEmail, { loading, error }] = useMutation<UpdateUserEmail, UpdateUserEmailVariables>(

@@ -31,11 +31,9 @@ const CollabsList: React.FC<{}> = () => {
   usePageTitle('Vos collabs')
 
   // Get all creator collabs ids
-  const {
-    data: { collabs },
-    error,
-    loading,
-  } = useQuery<GetCreatorCollabs, {}>(GET_CREATOR_COLLABS)
+  const { data: { collabs } = { collabs: null }, error, loading } = useQuery<GetCreatorCollabs, {}>(
+    GET_CREATOR_COLLABS
+  )
 
   const { width } = useWindowSize()
 

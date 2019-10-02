@@ -127,11 +127,10 @@ interface Props extends RouteComponentProps<MatchParams> {}
 const CampaignDashboard: React.FC<Props> = ({ match, location }) => {
   const { campaignId } = match.params
 
-  const {
-    data: { campaign },
-    loading,
-    error,
-  } = useQuery<GetCampaign, GetCampaignVariables>(GET_CAMPAIGN)
+  const { data: { campaign } = { campaign: null }, loading, error } = useQuery<
+    GetCampaign,
+    GetCampaignVariables
+  >(GET_CAMPAIGN)
 
   usePageTitle(campaign && campaign.name)
   // Get current page from URL

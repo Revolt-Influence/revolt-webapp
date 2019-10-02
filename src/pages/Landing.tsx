@@ -68,7 +68,7 @@ const Landing: React.FC<{}> = () => {
             </Box>
             <Box ml={[0, '2rem', '2rem']}>
               <MainLink
-                to="/brandSignup"
+                to="/userSignup"
                 inverted
                 style={{ padding: 'calc(1.5rem - 2px) calc(2rem - 2px)' }}
               >

@@ -54,7 +54,11 @@ const Experience: React.FC<Props> = ({ match }) => {
   const { campaignId } = match.params
   const { width } = useWindowSize()
   const {
-    data: { session, campaign: experience, collabs },
+    data: { session, campaign: experience, collabs } = {
+      session: null,
+      campaign: null,
+      collabs: null,
+    },
     loading,
     error,
   } = useQuery<GetExperiencePage, GetExperiencePageVariables>(GET_EXPERIENCE_PAGE)

@@ -41,15 +41,9 @@ const ExperiencesList: React.FC<RouteComponentProps> = ({ location, history }) =
 
   const [
     getExperiencesPage,
-    {
-      data: { campaigns: experiences },
-      loading,
-      error,
-    },
+    { data: { campaigns: experiences } = { campaigns: null }, loading, error },
   ] = useLazyQuery<GetExperiencesPage, GetExperiencesPageVariables>(GET_EXPERIENCES_PAGE)
-  const {
-    data: { session },
-  } = useQuery<GetSession>(GET_SESSION)
+  const { data: { session } = { session: null } } = useQuery<GetSession>(GET_SESSION)
 
   const deviceType = useDeviceType()
 

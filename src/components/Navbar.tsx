@@ -137,11 +137,9 @@ interface ILink {
 }
 
 const Navbar: React.FC<{}> = () => {
-  const {
-    data: { session },
-    loading,
-    error,
-  } = useQuery<GetSession>(GET_SESSION)
+  const { data: { session } = { session: null }, loading, error } = useQuery<GetSession>(
+    GET_SESSION
+  )
   const { isLoggedIn, sessionType, user } = session || {}
 
   const getLinks = (): ILink[] => {

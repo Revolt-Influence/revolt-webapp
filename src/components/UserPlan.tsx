@@ -42,11 +42,9 @@ export const GET_USER_PLAN = gql`
 `
 
 const UserPlan: React.FC<{}> = () => {
-  const {
-    data: { session },
-    loading,
-    error,
-  } = useQuery<GetUserPlan, {}>(GET_USER_PLAN)
+  const { data: { session } = { session: null }, loading, error } = useQuery<GetUserPlan, {}>(
+    GET_USER_PLAN
+  )
   if (loading) {
     return <Loader />
   }

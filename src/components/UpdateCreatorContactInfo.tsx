@@ -24,9 +24,7 @@ const UPDATE_CREATOR_EMAIL = gql`
 
 const UpdateCreatorContactInfo: React.FC<{}> = () => {
   // Get creator from session
-  const {
-    data: { session },
-  } = useQuery<GetSession>(GET_SESSION)
+  const { data: { session } = { session: null } } = useQuery<GetSession>(GET_SESSION)
   // Prepare change email
   const [succeeded, setSucceeded] = useState(false)
   const [updateEmail, { loading, error }] = useMutation<

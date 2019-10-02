@@ -12,6 +12,7 @@ import Footer from './Footer'
 import Loader from './Loader'
 import Navbar from './Navbar'
 import { GET_SESSION } from './Session'
+import { ContainerBox } from '../styles/grid'
 
 const CampaignDashboard = React.lazy(() => import('../pages/CampaignDashboard'))
 const UserSignup = React.lazy(() => import('../pages/UserSignup'))
@@ -64,7 +65,11 @@ const RouterSwitch: React.FC<IRouterSwitchProps> = () => {
   }
 
   if (error) {
-    return <ErrorCard message="Something went wrong" />
+    return (
+      <ContainerBox>
+        <ErrorCard message="Something went wrong" />
+      </ContainerBox>
+    )
   }
 
   const { isLoggedIn, sessionType, user, creator } = session

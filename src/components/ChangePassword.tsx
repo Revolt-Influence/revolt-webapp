@@ -42,7 +42,7 @@ const CHANGE_CREATOR_PASSWORD = gql`
 const ChangePassword: React.FC<{}> = () => {
   // Get session to check what mutation to make
   const {
-    data: { session },
+    data: { session } = { session: null },
     loading: sessionLoading,
     error: sessionError,
   } = useQuery<GetSession, {}>(GET_SESSION)

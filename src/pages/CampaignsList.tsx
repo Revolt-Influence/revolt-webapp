@@ -68,11 +68,9 @@ export const CREATE_CAMPAIGN = gql`
 const CampaignsList: React.FC<RouteComponentProps> = ({ history }) => {
   usePageTitle('Mes campagnes')
   // Fetch data
-  const {
-    data: { campaigns },
-    loading,
-    error,
-  } = useQuery<GetCampaigns, {}>(GET_CAMPAIGNS)
+  const { data: { campaigns } = { campaigns: null }, loading, error } = useQuery<GetCampaigns, {}>(
+    GET_CAMPAIGNS
+  )
   const [createCampaign, createCampaignStatus] = useMutation<CreateCampaign, {}>(CREATE_CAMPAIGN, {
     // Go to campaign page if campaign was created
     onCompleted: createdCampaign => {

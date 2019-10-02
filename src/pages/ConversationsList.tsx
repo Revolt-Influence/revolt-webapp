@@ -21,7 +21,7 @@ const ConversationsList: React.FC<RouteComponentProps> = ({ match }) => {
 
   // Fetch coversations if they don't exist
   const {
-    data: { conversations: paginatedConversations },
+    data: { conversations: paginatedConversations } = { conversations: null },
     loading,
     error,
   } = useQuery<GetConversationsList, GetConversationsListVariables>(GET_CONVERSATIONS_LIST)

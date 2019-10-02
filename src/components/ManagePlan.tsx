@@ -23,10 +23,9 @@ const DOWNGRADE_USER = gql`
 `
 
 const ManagePlan: React.FC<{}> = () => {
-  const {
-    data: { session },
-    ...getUserPlanStatus
-  } = useQuery<GetUserPlan, {}>(GET_USER_PLAN)
+  const { data: { session } = { session: null }, ...getUserPlanStatus } = useQuery<GetUserPlan, {}>(
+    GET_USER_PLAN
+  )
   const [downgradeSuccess, setDowngradeSuccess] = useState<boolean>(false)
   const [downgradeUser, downgradeUserStatus] = useMutation<DowngradeUser, {}>(DOWNGRADE_USER, {
     onCompleted: () => setDowngradeSuccess(true),

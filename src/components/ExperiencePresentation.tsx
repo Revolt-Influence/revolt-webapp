@@ -89,11 +89,10 @@ interface Props {
 }
 
 const ExperiencePresentation: React.FC<Props> = ({ experienceId }) => {
-  const {
-    data: { campaign: experience },
-    loading,
-    error,
-  } = useQuery<Experience, ExperienceVariables>(GET_EXPERIENCE)
+  const { data: { campaign: experience } = { campaign: null }, loading, error } = useQuery<
+    Experience,
+    ExperienceVariables
+  >(GET_EXPERIENCE)
 
   const { width } = useWindowSize()
   const isMobile = width < 600
