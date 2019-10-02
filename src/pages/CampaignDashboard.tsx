@@ -110,6 +110,7 @@ export const GET_CAMPAIGN = gql`
       isArchived
       isReviewed
       owner {
+        _id
         email
       }
     }

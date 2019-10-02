@@ -33,6 +33,7 @@ const CAMPAIGN_CARD_FRAGMENT = gql`
     isReviewed
     owner {
       _id
+      email
     }
   }
   ${EXPERIENCE_PRESENTATION_FRAGMENT}

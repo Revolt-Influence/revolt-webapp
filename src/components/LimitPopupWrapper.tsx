@@ -4,8 +4,6 @@ import styled from 'styled-components'
 import { Row, Col } from '../utils/grid'
 import { DarkOverlay, PopupBox } from '../utils/styles'
 import { palette } from '../utils/colors'
-import { useDispatch } from 'react-redux'
-import { closeLimitPopup } from '../actions/display'
 
 const portraitSource = require('../images/photos/juliette.png')
 const close = require('../images/icons/close.svg')
@@ -74,9 +72,9 @@ interface ILimitPopupWrapperProps {
 }
 
 const LimitPopupWrapper: React.FC<ILimitPopupWrapperProps> = ({ children }) => {
-  const dispatch = useDispatch()
+  const closeLimitPopup = () => console.log('close popup')
   return (
-    <DarkOverlay onClick={() => dispatch(closeLimitPopup())}>
+    <DarkOverlay onClick={() => closeLimitPopup()}>
       <ScrollLock />
       <PopupBox onClick={e => e.stopPropagation()}>
         <Row>

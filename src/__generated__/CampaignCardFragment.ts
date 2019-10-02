@@ -80,6 +80,10 @@ export interface CampaignCardFragment_targetAudience {
 export interface CampaignCardFragment_owner {
   __typename: "User";
   _id: string;
+  /**
+   * Used for login and notification and marketing emails
+   */
+  email: string;
 }
 
 export interface CampaignCardFragment {

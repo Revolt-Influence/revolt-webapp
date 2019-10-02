@@ -4,6 +4,7 @@ import LimitPopupWrapper from './LimitPopupWrapper'
 import { MainLink } from '../styles/Button'
 import FeaturesList from './FeaturesList'
 import { setFont } from '../utils/styles'
+import { Plan } from '../__generated__/globalTypes'
 
 const FormColumn = styled.div`
   display: flex;
@@ -28,7 +29,7 @@ class GuestLimitPopup extends React.Component<IGuestLimitPopupProps, {}> {
         <FormColumn>
           <div>
             <PopupTitle>Créez un compte pour découvrir de nouveaux influenceurs</PopupTitle>
-            <FeaturesList plan="free" />
+            <FeaturesList plan={Plan.FREE} />
           </div>
           <MainLink display="inline" to="/signup">
             S'incrire gratuitement

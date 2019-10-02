@@ -67,6 +67,7 @@ export interface GetCampaign_campaign_targetAudience {
 
 export interface GetCampaign_campaign_owner {
   __typename: "User";
+  _id: string;
   /**
    * Used for login and notification and marketing emails
    */

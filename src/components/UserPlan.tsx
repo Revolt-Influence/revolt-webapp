@@ -63,7 +63,7 @@ const UserPlan: React.FC<{}> = () => {
       <Divider />
       {plan === Plan.FREE ? (
         <>
-          <FeaturesList plan="premium" />
+          <FeaturesList plan={Plan.PREMIUM} />
           <MainLink to="/brand/upgrade" display="inline">
             Passer au Premium
           </MainLink>

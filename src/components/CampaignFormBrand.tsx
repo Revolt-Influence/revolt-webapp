@@ -55,7 +55,7 @@ const CampaignFormBrand: React.FC<Props> = ({ brand }) => {
   const [hasSaved, setHasSaved] = useState<boolean>(false)
   const [updateBrand, { error, loading }] = useMutation<UpdateBrand, UpdateBrandVariables>(
     UPDATE_BRAND,
-    { onCompleted: () => hasSaved(true) }
+    { onCompleted: () => setHasSaved(true) }
   )
 
   // Debounce to throttle server requests

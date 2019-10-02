@@ -53,13 +53,9 @@ interface IRouterSwitchProps extends RouteComponentProps {
 }
 
 const RouterSwitch: React.FC<IRouterSwitchProps> = () => {
-  const {
-    data: {
-      session: { isLoggedIn, sessionType, user, creator },
-    },
-    loading,
-    error,
-  } = useQuery<GetSession>(GET_SESSION)
+  const { data: { session } = { session: null }, loading, error } = useQuery<GetSession>(
+    GET_SESSION
+  )
 
   const clientHeight = useClientSize().height
 
@@ -70,6 +66,8 @@ const RouterSwitch: React.FC<IRouterSwitchProps> = () => {
   if (error) {
     return <ErrorCard message="Something went wrong" />
   }
+
+  const { isLoggedIn, sessionType, user, creator } = session
 
   const renderRoot = () => {
     if (!isLoggedIn) {
