@@ -74,6 +74,8 @@ const Session: React.FC<{}> = () => {
   // Prepare logout
   const [logout, logoutStatus] = useMutation<Logout>(LOGOUT, {
     onCompleted: () => history.push('/'),
+    refetchQueries: [{ query: GET_SESSION }],
+    awaitRefetchQueries: true,
   })
 
   if (sessionLoading) {

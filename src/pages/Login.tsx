@@ -12,6 +12,7 @@ import { usePageTitle } from '../utils/hooks'
 import gql from 'graphql-tag'
 import { useMutation } from '@apollo/react-hooks'
 import { LoginMutation, LoginMutationVariables } from '../__generated__/LoginMutation'
+import { GET_SESSION } from '../components/Session'
 
 const Help = styled.p`
   text-align: center;
@@ -52,7 +53,11 @@ const Login: React.FC<{}> = () => {
   // Server requests
   const [login, { error, loading }] = useMutation<LoginMutation, LoginMutationVariables>(
     LOGIN_MUTATION,
-    { onCompleted: () => history.push('/') }
+    {
+      onCompleted: () => history.push('/'),
+      refetchQueries: [{ query: GET_SESSION }],
+      awaitRefetchQueries: true,
+    }
   )
 
   const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {

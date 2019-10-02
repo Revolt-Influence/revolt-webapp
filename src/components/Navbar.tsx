@@ -168,7 +168,7 @@ const Navbar: React.FC<{}> = () => {
           description: 'Échangez avec les influenceurs',
         },
         // Only show community to admin users
-        ...(user.isAdmin
+        ...(user && user.isAdmin
           ? [
               {
                 logo: communitySource,
