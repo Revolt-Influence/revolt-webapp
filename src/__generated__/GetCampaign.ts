@@ -40,6 +40,10 @@ export interface GetCampaign_campaign_brand {
   _id: string;
   name: string;
   /**
+   * Cloudinary URL of brand logo
+   */
+  logo: string;
+  /**
    * URL of the brand's website
    */
   website: string;
@@ -59,6 +63,14 @@ export interface GetCampaign_campaign_targetAudience {
    * Groups of age
    */
   ageGroups: AgeGroup[];
+}
+
+export interface GetCampaign_campaign_owner {
+  __typename: "User";
+  /**
+   * Used for login and notification and marketing emails
+   */
+  email: string;
 }
 
 export interface GetCampaign_campaign {
@@ -103,6 +115,10 @@ export interface GetCampaign_campaign {
    * Whether an admin allowed the campaign to be published
    */
   isReviewed: boolean;
+  /**
+   * The user who created the campaign
+   */
+  owner: GetCampaign_campaign_owner;
 }
 
 export interface GetCampaign {

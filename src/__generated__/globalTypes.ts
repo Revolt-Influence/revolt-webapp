@@ -101,6 +101,12 @@ export interface SubmitCollabReviewInput {
   format: ReviewFormat;
 }
 
+export interface UpdateBrandInput {
+  logo: string;
+  name: string;
+  website: string;
+}
+
 //==============================================================
 // END Enums and Input Objects
 //==============================================================

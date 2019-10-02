@@ -18,6 +18,7 @@ export const SESSION_FRAGMENT = gql`
       _id
       email
       plan
+      isAdmin
     }
     creator {
       _id

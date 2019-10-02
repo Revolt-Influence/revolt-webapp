@@ -22,6 +22,7 @@ import {
 } from '../__generated__/GetCampaign'
 import Loader from '../components/Loader'
 import ErrorCard from '../components/ErrorCard'
+import { BRAND_FRAGMENT } from '../components/CampaignFormBrand'
 
 export enum CampaignStatus {
   ARCHIVED = 'Not published',
@@ -83,7 +84,7 @@ const getCampaignStatus = (campaign: GetCampaign_campaign): CampaignStatusInfo =
   }
 }
 
-const GET_CAMPAIGN = gql`
+export const GET_CAMPAIGN = gql`
   query GetCampaign($campaignId: String!) {
     campaign(id: $campaignId) {
       _id
@@ -98,9 +99,7 @@ const GET_CAMPAIGN = gql`
         youtubeLink
       }
       brand {
-        _id
-        name
-        website
+        ...BrandFragment
       }
       targetAudience {
         gender
@@ -110,8 +109,12 @@ const GET_CAMPAIGN = gql`
       rules
       isArchived
       isReviewed
+      owner {
+        email
+      }
     }
   }
+  ${BRAND_FRAGMENT}
 `
 
 interface MatchParams {
@@ -176,7 +179,7 @@ const CampaignDashboard: React.FC<Props> = ({ match, location }) => {
       case 'reviews':
         return <CampaignReviews campaignId={campaignId} />
       case 'settings':
-        return <CampaignSettings campaign={campaign} status={status} />
+        return <CampaignSettings campaignId={campaignId} />
       default:
         return <CampaignCollabRequests campaignId={campaignId} />
     }

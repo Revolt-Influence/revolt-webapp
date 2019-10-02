@@ -1,41 +1,73 @@
 import React, { useRef, useEffect, useCallback } from 'react'
 import { SubTitle, Title } from '../styles/Text'
-import { usePageTitle, useDeviceType, useIsAdmin, useConversationsSocket } from '../utils/hooks'
+import { usePageTitle, useDeviceType } from '../utils/hooks'
 import { Flex, Box } from '@rebass/grid'
 import ConversationsListPreview from '../components/ConversationsListPreview'
 import { RouteComponentProps } from 'react-router'
 import PageHeader from '../components/PageHeader'
-import { useSelector, useDispatch } from 'react-redux'
-import IState from '../models/State'
-import { ISession } from '../models/Session'
-import ConversationMessages from '../components/ConversationMessages'
+import ConversationMessages, {
+  MESSAGE_FRAGMENT,
+  MessageDetailed,
+} from '../components/ConversationMessages'
 import MessageForm from '../components/MessageForm'
-import { IConversation, IMessageDetailed } from '../models/Conversation'
-import { fetchConversationsPage, fetchConversation } from '../actions/conversations'
-import { IRequestStatus } from '../utils/request'
 import Loader from '../components/Loader'
 import ErrorCard from '../components/ErrorCard'
-import { ICreator } from '../models/Creator'
-import { IBrand } from '../models/Brand'
 import FullHeightColumns from '../components/FullHeightColumns'
 import { ContainerBox } from '../styles/grid'
 import FullHeightWrapper from '../components/FullHeightWrapper'
+import gql from 'graphql-tag'
+import { useQuery, useLazyQuery } from '@apollo/react-hooks'
+import {
+  GetConversationsList,
+  GetConversationsListVariables,
+} from '../__generated__/GetConversationsList'
+import { GET_SESSION } from '../components/Session'
+import { GetSession } from '../__generated__/GetSession'
+import { SessionType } from '../__generated__/globalTypes'
+import { GetConversation, GetConversationVariables } from '../__generated__/GetConversation'
 
-function useConversationsList() {
-  // Fetch conversations on mount
-  const dispatch = useDispatch()
-  const conversations = useSelector<IState, IConversation[]>(state => state.conversations.items)
-  const fetchConversationsStatus = useSelector<IState, IRequestStatus>(
-    state => state.conversations.requests.getConversationsPage
-  )
-  useEffect(() => {
-    if (conversations.length === 0) {
-      dispatch(fetchConversationsPage(1))
+const CONVERSATION_FRAGMENT = gql`
+  fragment ConversationFragment on Conversation {
+    _id
+    createdAt
+    messages {
+      ...MessageFragment
     }
-  }, [conversations.length, dispatch])
-  useConversationsSocket()
-  return { conversations, fetchConversationsStatus }
-}
+    creator {
+      _id
+      name
+      picture
+    }
+    brand {
+      _id
+      name
+      logo
+    }
+  }
+  ${MESSAGE_FRAGMENT}
+`
+
+export const GET_CONVERSATIONS_LIST = gql`
+  query GetConversationsList($page: Float) {
+    conversations(page: $page) {
+      totalPages
+      currentPage
+      items {
+        ...ConversationFragment
+      }
+    }
+  }
+  ${CONVERSATION_FRAGMENT}
+`
+
+const GET_CONVERSATION = gql`
+  query GetConversation($conversationId: String!) {
+    conversation(id: $conversationId) {
+      ...ConversationFragment
+    }
+  }
+  ${CONVERSATION_FRAGMENT}
+`
 
 interface Match {
   conversationId: string
@@ -43,39 +75,22 @@ interface Match {
 
 const Conversation: React.FC<RouteComponentProps<Match>> = ({ match }) => {
   const deviceType = useDeviceType()
-  const { conversationId } = match.params
-  const dispatch = useDispatch()
 
   // Scroll messages to the bottom
   const messagesRef = useRef<HTMLElement>(null)
 
   // Fetch conversations on mount
-  const { conversations, fetchConversationsStatus } = useConversationsList()
+  const {
+    data: { conversations: paginatedConversations },
+    loading,
+    error,
+  } = useQuery<GetConversationsList, GetConversationsListVariables>(GET_CONVERSATIONS_LIST)
 
+  const conversations = loading || error ? [] : paginatedConversations.items
+
+  // Get the selected conversation based on URL
+  const { conversationId } = match.params
   const conversation = conversations.find(_conv => _conv._id === conversationId)
-  const { type: sessionType } = useSelector<IState, ISession>(state => state.session)
-
-  const isAdmin = useIsAdmin()
-
-  const getRecipientName = (): string => {
-    // Don't crash when conversation is null
-    if (conversation == null) {
-      return null
-    }
-    if (sessionType === 'creator') {
-      return (conversation.brand as IBrand).name
-    }
-    if (sessionType === 'brand') {
-      // Always show creator recipient to brands
-      return (conversation.creator as ICreator).name
-    }
-  }
-  const recipientName = getRecipientName()
-
-  const pageTitle = `Parler à ${recipientName}${
-    isAdmin ? ` et ${conversation && (conversation.brand as IBrand).name}` : ''
-  }`
-  usePageTitle(recipientName)
 
   // Scroll to the bottom of messages
   useEffect(() => {
@@ -86,14 +101,52 @@ const Conversation: React.FC<RouteComponentProps<Match>> = ({ match }) => {
     }
   }, [conversation])
 
+  // TODO
   // useConversationsSocket()
 
-  const getDetailedMessages = useCallback((): IMessageDetailed[] => {
-    if (
-      conversation == null ||
-      fetchConversationsStatus.isLoading ||
-      fetchConversationsStatus.hasFailed
-    ) {
+  // Prepare optional query to get specific conversion
+  const [getSpecificConversation, getSpecificConversationStatus] = useLazyQuery<
+    GetConversation,
+    GetConversationVariables
+  >(GET_CONVERSATION, {
+    onCompleted: ({ conversation: specificConversation }) => {
+      conversations.push(specificConversation)
+    },
+  })
+
+  // Get session data to know what info to show
+  const {
+    data: { session },
+  } = useQuery<GetSession>(GET_SESSION)
+  const isAdmin = session.user && session.user.isAdmin
+
+  const getRecipientName = (): string => {
+    // Don't crash when conversation is null
+    if (conversation == null) {
+      return null
+    }
+    if (session.sessionType === SessionType.CREATOR) {
+      return conversation.brand.name
+    }
+    if (session.sessionType === SessionType.BRAND) {
+      // Always show creator recipient to brands
+      return conversation.creator.name
+    }
+  }
+  const recipientName = getRecipientName()
+  usePageTitle('Conversations')
+
+  // Fetch the specific conversation if it's not in the paginated list
+  if (conversation == null) {
+    getSpecificConversation()
+  }
+
+  const pageTitle = `Parler à ${recipientName}${
+    isAdmin ? ` et ${conversation && conversation.brand.name}` : ''
+  }`
+
+  const getDetailedMessages = useCallback((): MessageDetailed[] => {
+    if (conversation == null || loading || error) {
       return []
     }
     return conversation.messages.map(_message => {
@@ -101,7 +154,7 @@ const Conversation: React.FC<RouteComponentProps<Match>> = ({ match }) => {
         if (isAdmin) {
           return _message.isAdminAuthor
         }
-        return sessionType === 'brand'
+        return session.sessionType === SessionType.BRAND
           ? _message.brandAuthor != null
           : _message.creatorAuthor != null
       }
@@ -110,13 +163,13 @@ const Conversation: React.FC<RouteComponentProps<Match>> = ({ match }) => {
         // The recipient can be a brand, a user or an admin
         if (_message.creatorAuthor != null) {
           return {
-            name: (conversation.creator as ICreator).name,
-            picture: (conversation.creator as ICreator).picture,
+            name: conversation.creator.name,
+            picture: conversation.creator.picture,
           }
         } else if (_message.brandAuthor != null) {
           return {
-            name: (conversation.brand as IBrand).name,
-            picture: (conversation.brand as IBrand).logo,
+            name: conversation.brand.name,
+            picture: conversation.brand.logo,
           }
         } else if (_message.isAdminAuthor) {
           return {
@@ -133,30 +186,19 @@ const Conversation: React.FC<RouteComponentProps<Match>> = ({ match }) => {
       return {
         _id: _message._id,
         text: _message.text,
-        sentAt: _message.sentAt,
+        sentAt: _message.createdAt,
         isFromMe: checkIfFromMe(),
         authorName: authorData.name,
         authorPicture: authorData.picture,
       }
     })
-  }, [
-    conversation,
-    fetchConversationsStatus.hasFailed,
-    fetchConversationsStatus.isLoading,
-    isAdmin,
-    sessionType,
-  ])
+  }, [conversation, error, isAdmin, loading, session.sessionType])
 
-  if (fetchConversationsStatus.isLoading) {
+  if (loading || getSpecificConversationStatus.loading) {
     return <Loader fullScreen />
   }
-  if (fetchConversationsStatus.hasFailed) {
+  if (error || getSpecificConversationStatus.error) {
     return <ErrorCard message="Vos messages n'ont pas pu être chargés" />
-  }
-
-  // Fetch the specific conversation if it's not in the paginated list
-  if (conversation == null) {
-    dispatch(fetchConversation(conversationId))
   }
 
   const detailedMessages = getDetailedMessages()
@@ -173,7 +215,11 @@ const Conversation: React.FC<RouteComponentProps<Match>> = ({ match }) => {
       {deviceType === 'desktop' ? (
         <SubTitle>{pageTitle}</SubTitle>
       ) : (
-        <PageHeader smallerOnMobile title={pageTitle} destination={`/${sessionType}/messages`} />
+        <PageHeader
+          smallerOnMobile
+          title={pageTitle}
+          destination={`/${session.sessionType.toLowerCase()}/messages`}
+        />
       )}
       {/* Conversation messages */}
       <Box flex={1} style={{ overflowY: 'scroll' }} ref={messagesRef}>
@@ -218,5 +264,4 @@ const Conversation: React.FC<RouteComponentProps<Match>> = ({ match }) => {
   )
 }
 
-export { useConversationsList }
 export default Conversation

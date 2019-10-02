@@ -12,7 +12,7 @@ import { setFont, setOutline } from '../utils/styles'
 import CustomThemeProvider, { Theme } from './CustomThemeProvider'
 import RouterSwitch from './RouterSwitch'
 
-const GlobalStyle = createGlobalStyle`
+export const GlobalStyle = createGlobalStyle`
   ${reset}
   html {
     font-size: 10px;

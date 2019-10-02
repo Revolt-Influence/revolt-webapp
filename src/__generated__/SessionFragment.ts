@@ -19,6 +19,10 @@ export interface SessionFragment_user {
    * Whether the user has paid
    */
   plan: Plan;
+  /**
+   * Whether he works for Revolt
+   */
+  isAdmin: boolean;
 }
 
 export interface SessionFragment_creator_youtube {

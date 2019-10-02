@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 import io from 'socket.io-client'
-import { receiveMessage } from '../actions/conversations'
-import { IMessage } from '../models/Conversation'
-import { ISession } from '../models/Session'
-import IState from '../models/State'
-import { breakpoints } from '../models/Theme'
 import { DeviceType } from '../types'
+import { useQuery } from '@apollo/react-hooks'
+import { GET_SESSION } from '../components/Session'
+import { GetSession } from '../__generated__/GetSession'
+import { SessionType } from '../__generated__/globalTypes'
+import { MessageFragment } from '../__generated__/MessageFragment'
+import { breakpoints } from '../components/CustomThemeProvider'
 
 function useWindowSize(): { width: number; height: number } {
   const isClient = typeof window === 'object'
@@ -230,14 +230,6 @@ function useDeviceType(): DeviceType {
   return 'desktop'
 }
 
-function useIsAdmin(): boolean {
-  const { isLoggedIn, type, user } = useSelector<IState, ISession>(state => state.session)
-  if (!isLoggedIn || type === 'creator' || user == null || user.plan !== 'admin') {
-    return false
-  }
-  return true
-}
-
 const socketEvents = {
   JOIN_ROOM: 'JOIN_ROOM',
   NEW_MESSAGE: 'NEW_MESSAGE',
@@ -251,7 +243,11 @@ function useConversationsSocket() {
   }
 
   // Get connected user ID
-  const { user, isLoggedIn, creator } = useSelector<IState, ISession>(state => state.session)
+  const {
+    data: {
+      session: { user, isLoggedIn, creator },
+    },
+  } = useQuery<GetSession>(GET_SESSION)
   const creatorId = creator && creator._id
   const userId = user && user._id
   // Join room on startup
@@ -263,17 +259,45 @@ function useConversationsSocket() {
   }, [creatorId, isLoggedIn, userId])
 
   // Listen to messages
-  const dispatch = useDispatch()
   useEffect(() => {
     const socket = socketRef.current
-    const handleNewMessage = (newMessage: IMessage) => {
-      // Attach message to the Redux store
-      dispatch(receiveMessage(newMessage))
+    const handleNewMessage = (newMessage: MessageFragment) => {
+      // TODO: Attach message to the Redux store
+      // dispatch(receiveMessage(newMessage))
     }
     socket.on(socketEvents.NEW_MESSAGE, handleNewMessage)
     return () => socket.removeListener(socketEvents.NEW_MESSAGE, handleNewMessage)
-  }, [dispatch])
+  }, [])
 }
 
-export { useWindowSize, usePrevious, useRenderCount, useOnClickOutside, usePageTitle, useRect, useScrollLock, useToggle, useDebounce, useStripe, useDeviceType, useIsAdmin, useConversationsSocket, useClientSize, }
+function useIsAdmin() {
+  const {
+    data: { session },
+    loading,
+    error,
+  } = useQuery<GetSession>(GET_SESSION)
+  if (loading || error) {
+    return false
+  }
+  if (session.sessionType === SessionType.BRAND) {
+    return session.user.isAdmin
+  }
+  return false
+}
 
+export {
+  useWindowSize,
+  usePrevious,
+  useRenderCount,
+  useOnClickOutside,
+  usePageTitle,
+  useRect,
+  useScrollLock,
+  useToggle,
+  useDebounce,
+  useStripe,
+  useDeviceType,
+  useConversationsSocket,
+  useClientSize,
+  useIsAdmin,
+}

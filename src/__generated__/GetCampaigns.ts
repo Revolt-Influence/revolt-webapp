@@ -77,6 +77,11 @@ export interface GetCampaigns_campaigns_items_targetAudience {
   gender: Gender;
 }
 
+export interface GetCampaigns_campaigns_items_owner {
+  __typename: "User";
+  _id: string;
+}
+
 export interface GetCampaigns_campaigns_items {
   __typename: "Campaign";
   /**
@@ -124,6 +129,10 @@ export interface GetCampaigns_campaigns_items {
    * Whether an admin allowed the campaign to be published
    */
   isReviewed: boolean;
+  /**
+   * The user who created the campaign
+   */
+  owner: GetCampaigns_campaigns_items_owner;
 }
 
 export interface GetCampaigns_campaigns {

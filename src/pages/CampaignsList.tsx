@@ -31,6 +31,9 @@ const CAMPAIGN_CARD_FRAGMENT = gql`
     }
     isArchived
     isReviewed
+    owner {
+      _id
+    }
   }
   ${EXPERIENCE_PRESENTATION_FRAGMENT}
 `
@@ -48,7 +51,7 @@ const GET_CAMPAIGNS = gql`
   ${CAMPAIGN_CARD_FRAGMENT}
 `
 
-const CREATE_CAMPAIGN = gql`
+export const CREATE_CAMPAIGN = gql`
   mutation CreateCampaign {
     createCampaign {
       ...ExperiencePresentation

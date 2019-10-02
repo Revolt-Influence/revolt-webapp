@@ -19,6 +19,10 @@ export interface SignupCreatorMutation_signupCreator_user {
    * Whether the user has paid
    */
   plan: Plan;
+  /**
+   * Whether he works for Revolt
+   */
+  isAdmin: boolean;
 }
 
 export interface SignupCreatorMutation_signupCreator_creator_youtube {

@@ -77,6 +77,11 @@ export interface CampaignCardFragment_targetAudience {
   gender: Gender;
 }
 
+export interface CampaignCardFragment_owner {
+  __typename: "User";
+  _id: string;
+}
+
 export interface CampaignCardFragment {
   __typename: "Campaign";
   /**
@@ -124,4 +129,8 @@ export interface CampaignCardFragment {
    * Whether an admin allowed the campaign to be published
    */
   isReviewed: boolean;
+  /**
+   * The user who created the campaign
+   */
+  owner: CampaignCardFragment_owner;
 }

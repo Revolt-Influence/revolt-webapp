@@ -1,17 +1,21 @@
-import React from 'react'
+import React, { useState } from 'react'
 import ErrorBoundary from '../components/ErrorBoundary'
 import { Box } from '@rebass/grid'
 import { withRouter, RouteComponentProps } from 'react-router-dom'
-import { IConversationsState } from '../models/Conversation'
-import { useSelector, useDispatch } from 'react-redux'
-import IState from '../models/State'
-import { SessionType } from '../models/Session'
-import { ICreator } from '../models/Creator'
-import { IBrand } from '../models/Brand'
 import { useIsAdmin } from '../utils/hooks'
 import SelectableCard from './SelectableCard'
 import { TextButton } from '../styles/Button'
-import { fetchConversationsPage } from '../actions/conversations'
+import { useQuery } from '@apollo/react-hooks'
+import { GET_SESSION } from './Session'
+import { GetSession } from '../__generated__/GetSession'
+import {
+  GetConversationsList,
+  GetConversationsListVariables,
+} from '../__generated__/GetConversationsList'
+import { GET_CONVERSATIONS_LIST } from '../pages/Conversation'
+import Loader from './Loader'
+import ErrorCard from './ErrorCard'
+import { SessionType } from '../__generated__/globalTypes'
 
 interface IMatch {
   conversationId: string
@@ -20,40 +24,51 @@ interface IMatch {
 const ConversationsListPreview: React.FC<RouteComponentProps<IMatch>> = ({ match }) => {
   const conversationId = match.params.conversationId || 'default id'
   const basePath = match.path.replace('/:conversationId', '')
-  const dispatch = useDispatch()
-  const { items: conversations, totalPages, currentPage } = useSelector<
-    IState,
-    IConversationsState
-  >(state => state.conversations)
-  const sessionType = useSelector<IState, SessionType>(state => state.session.type)
+  const [page, setPage] = useState<number>(1)
+  const {
+    data: { conversations: paginatedConversations },
+    loading,
+    error,
+  } = useQuery<GetConversationsList, GetConversationsListVariables>(GET_CONVERSATIONS_LIST, {
+    variables: { page },
+  })
+  const {
+    data: { session },
+  } = useQuery<GetSession>(GET_SESSION)
   const isAdmin = useIsAdmin()
-  const conversationOverviews = conversations
+
+  if (loading) {
+    return <Loader />
+  }
+  if (error) {
+    return <ErrorCard />
+  }
+
+  const conversationOverviews = paginatedConversations.items
     // Sort by most recent message
     .sort(
       (_convA, _convB) =>
-        _convB.messages[_convB.messages.length - 1].sentAt -
-        _convA.messages[_convA.messages.length - 1].sentAt
+        _convB.messages[_convB.messages.length - 1].createdAt -
+        _convA.messages[_convA.messages.length - 1].createdAt
     )
     // Select just the data we need
     .map(_conv => ({
       _id: _conv._id,
       lastMessage: _conv.messages[_conv.messages.length - 1],
       recipientName:
-        sessionType === 'brand' ? (_conv.creator as ICreator).name : (_conv.brand as IBrand).name,
+        session.sessionType === SessionType.BRAND ? _conv.creator.name : _conv.brand.name,
       recipientPicture:
-        sessionType === 'brand'
-          ? (_conv.creator as ICreator).picture
-          : (_conv.brand as IBrand).logo,
-      authorName: isAdmin ? (_conv.brand as IBrand).name : null,
-      authorPicture: isAdmin ? (_conv.brand as IBrand).logo : null,
+        session.sessionType === SessionType.BRAND ? _conv.creator.picture : _conv.brand.logo,
+      authorName: isAdmin ? _conv.brand.name : null,
+      authorPicture: isAdmin ? _conv.brand.logo : null,
     }))
 
   return (
     <ErrorBoundary message="Les messages n'ont pas pu être affichés">
       <Box width={1}>
-        {currentPage > 1 && (
+        {paginatedConversations.currentPage > 1 && (
           <Box mb="1rem">
-            <TextButton onClick={() => dispatch(fetchConversationsPage(currentPage - 1))} noMargin>
+            <TextButton onClick={() => setPage(page - 1)} noMargin>
               Voir les plus récents
             </TextButton>
           </Box>
@@ -70,8 +85,8 @@ const ConversationsListPreview: React.FC<RouteComponentProps<IMatch>> = ({ match
             description={_conversation.lastMessage.text}
           />
         ))}
-        {totalPages > currentPage && (
-          <TextButton onClick={() => dispatch(fetchConversationsPage(currentPage + 1))} noMargin>
+        {paginatedConversations.totalPages > paginatedConversations.currentPage && (
+          <TextButton onClick={() => setPage(page + 1)} noMargin>
             Voir les plus anciens
           </TextButton>
         )}

@@ -15,6 +15,7 @@ import ErrorCard from './ErrorCard'
 import ImageWrapper from './ImageWrapper'
 import Loader from './Loader'
 import SplitView from './SplitView'
+import { BRAND_FRAGMENT } from './CampaignFormBrand'
 
 const Styles = styled.div`
   h3 {
@@ -59,10 +60,7 @@ const EXPERIENCE_PRESENTATION_FRAGMENT = gql`
     name
     description
     brand {
-      _id
-      name
-      logo
-      website
+      ...BrandFragment
     }
     product {
       name
@@ -74,6 +72,7 @@ const EXPERIENCE_PRESENTATION_FRAGMENT = gql`
     rules
     createdAt
   }
+  ${BRAND_FRAGMENT}
 `
 
 const GET_EXPERIENCE = gql`

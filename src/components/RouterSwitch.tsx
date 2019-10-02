@@ -196,6 +196,13 @@ const RouterSwitch: React.FC<IRouterSwitchProps> = () => {
     return <CampaignBrief />
   }
 
+  const renderCommunity = () => {
+    if (!user.isAdmin) {
+      return <Redirect to="/" />
+    }
+    return <Community />
+  }
+
   const brandRouterSwitch = () => {
     if (!isLoggedIn) {
       return <Redirect to="/login" />
@@ -220,7 +227,7 @@ const RouterSwitch: React.FC<IRouterSwitchProps> = () => {
         <Route path="/brand/upgrade" render={renderUpgradePlan} />
         <Route path="/brand/messages/:conversationId" component={Conversation} />
         <Route exact path="/brand/messages" component={ConversationsList} />
-        <Route path="/brand/community" component={Community} />
+        <Route path="/brand/community" render={renderCommunity} />
         {/* Handle 404 */}
         <Route component={NotFound} />
       </Switch>

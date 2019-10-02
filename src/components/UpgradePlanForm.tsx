@@ -1,18 +1,16 @@
 import React from 'react'
 import { CardElement, injectStripe } from 'react-stripe-elements'
 import { Flex, Box } from '@rebass/grid'
-import { useSelector, useDispatch } from 'react-redux'
 import styled from 'styled-components'
 import { fontStack, setFont } from '../utils/styles'
 import { MainButtonSubmit } from '../styles/Button'
 import { FormInputLabel, FormInput } from '../styles/Form'
 import { palette } from '../utils/colors'
-import { IRequestStatus } from '../utils/request'
-import SuccessCard from './SuccessCard'
 import ErrorCard from './ErrorCard'
 import { CreditCardWrapper } from '../styles/CreditCardWrapper'
-import IState from '../models/State'
-import { switchToPremium } from '../actions/session'
+import gql from 'graphql-tag'
+import { useMutation } from '@apollo/react-hooks'
+import { UpgradeUser, UpgradeUserVariables } from '../__generated__/UpgradeUser'
 
 const Price = styled.p`
   color: ${palette.green._500};
@@ -20,11 +18,20 @@ const Price = styled.p`
   ${setFont(600, 'normal')}
 `
 
+const UPGRADE_USER = gql`
+  mutation UpgradeUser($firstName: String!, $lastName: String!, $paymentToken: String!) {
+    upgradeUser(firstName: $firstName, lastName: $lastName, paymentToken: $paymentToken) {
+      _id
+      plan
+      creditCardLast4
+    }
+  }
+`
+
 const UpgradePlan: React.FC<any> = ({ stripe }) => {
   // Redux
-  const dispatch = useDispatch()
-  const { hasFailed, hasSucceeded, isLoading } = useSelector<IState, IRequestStatus>(
-    state => state.session.requests.switchToPremium
+  const [upgradeUser, { loading, error }] = useMutation<UpgradeUser, UpgradeUserVariables>(
+    UPGRADE_USER
   )
 
   // Form state
@@ -50,13 +57,13 @@ const UpgradePlan: React.FC<any> = ({ stripe }) => {
         address_city: city,
         address_zip: postalCode,
       })
-      dispatch(
-        switchToPremium({
+      upgradeUser({
+        variables: {
           firstName,
           lastName,
-          token: token.id,
-        })
-      )
+          paymentToken: token.id,
+        },
+      })
     } catch {
       setTokenCreationHasFailed(true)
     }
@@ -155,16 +162,15 @@ const UpgradePlan: React.FC<any> = ({ stripe }) => {
         />
       </CreditCardWrapper>
       {/* Success card */}
-      {hasSucceeded ? <SuccessCard message="Vous êtes maintenant Premium !" /> : null}
-      {hasFailed || tokenCreationHasFailed ? (
+      {error || tokenCreationHasFailed ? (
         <ErrorCard message="Le changement n'a pas pu être fait" />
       ) : null}
       {/* Submit button */}
       <Flex flexDirection="row" alignItems="baseline">
         <MainButtonSubmit
           type="submit"
-          disabled={!cardIsComplete || isLoading || isCreatingToken || !firstName || !lastName}
-          value={isLoading || isCreatingToken ? 'Passage au Premium...' : 'Passer au Premium'}
+          disabled={!cardIsComplete || loading || isCreatingToken || !firstName || !lastName}
+          value={loading || isCreatingToken ? 'Passage au Premium...' : 'Passer au Premium'}
         />
         <Price>179€ par mois TTC</Price>
       </Flex>

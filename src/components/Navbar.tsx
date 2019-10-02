@@ -1,13 +1,17 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
-import { useSelector } from 'react-redux'
 import { Flex } from '@rebass/grid'
 import { palette } from '../utils/colors'
-import IState from '../models/State'
 import { setFont, setOutline } from '../utils/styles'
 import { ContainerBox } from '../styles/grid'
-import { useToggle, useScrollLock, useDeviceType, useIsAdmin } from '../utils/hooks'
+import { useToggle, useScrollLock, useDeviceType } from '../utils/hooks'
+import { useQuery } from '@apollo/react-hooks'
+import { GET_SESSION } from './Session'
+import { GetSession } from '../__generated__/GetSession'
+import Loader from './Loader'
+import ErrorCard from './ErrorCard'
+import { SessionType } from '../__generated__/globalTypes'
 
 const logoSource = require('../images/logos/logo_light.svg')
 const userSource = require('../images/icons/user_black.svg')
@@ -133,9 +137,12 @@ interface ILink {
 }
 
 const Navbar: React.FC<{}> = () => {
-  const isLoggedIn = useSelector((state: IState) => state.session.isLoggedIn)
-  const sessionType = useSelector((state: IState) => state.session.type)
-  const isAdmin = useIsAdmin()
+  const {
+    data: { session },
+    loading,
+    error,
+  } = useQuery<GetSession>(GET_SESSION)
+  const { isLoggedIn, sessionType, user } = session || {}
 
   const getLinks = (): ILink[] => {
     if (!isLoggedIn) {
@@ -148,7 +155,7 @@ const Navbar: React.FC<{}> = () => {
         },
       ]
     }
-    if (sessionType === 'brand') {
+    if (sessionType === SessionType.BRAND) {
       return [
         {
           logo: campaignSource,
@@ -163,7 +170,7 @@ const Navbar: React.FC<{}> = () => {
           description: 'Échangez avec les influenceurs',
         },
         // Only show community to admin users
-        ...(isAdmin
+        ...(user.isAdmin
           ? [
               {
                 logo: communitySource,
@@ -181,7 +188,7 @@ const Navbar: React.FC<{}> = () => {
         },
       ]
     }
-    if (sessionType === 'creator') {
+    if (sessionType === SessionType.CREATOR) {
       return [
         {
           logo: experiencesSource,
@@ -221,7 +228,7 @@ const Navbar: React.FC<{}> = () => {
   const [mobileMenuIsShown, toggleMenuIsShown] = useToggle(false)
 
   // Auto close mobile menu when window becomes desktop
-  React.useEffect(() => {
+  useEffect(() => {
     if (isDesktop && mobileMenuIsShown) {
       toggleMenuIsShown()
     }
@@ -245,6 +252,13 @@ const Navbar: React.FC<{}> = () => {
       ))}
     </div>
   )
+
+  if (loading) {
+    return <Loader />
+  }
+  if (error) {
+    return <ErrorCard />
+  }
 
   return (
     <Style>

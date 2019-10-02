@@ -1,29 +1,44 @@
-import React from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import React, { useState } from 'react'
 import { FormInputLabel, FormInput } from '../styles/Form'
 import { MainButtonSubmit } from '../styles/Button'
 import { emailRegex } from '../utils/strings'
 import ErrorCard from './ErrorCard'
 import SuccessCard from './SuccessCard'
-import IState from '../models/State'
-import { IRequestStatus } from '../utils/request'
-import { updateCreatorContactInfo } from '../actions/creators'
-import { ICreator } from '../models/Creator'
+import { useQuery, useMutation } from '@apollo/react-hooks'
+import { GET_SESSION } from './Session'
+import { GetSession } from '../__generated__/GetSession'
+import gql from 'graphql-tag'
+import {
+  UpdateCreatorEmailVariables,
+  UpdateCreatorEmail,
+} from '../__generated__/UpdateCreatorEmail'
+
+const UPDATE_CREATOR_EMAIL = gql`
+  mutation UpdateCreatorEmail($newEmail: String!) {
+    updateCreatorEmail(newEmail: $newEmail) {
+      _id
+      email
+    }
+  }
+`
 
 const UpdateCreatorContactInfo: React.FC<{}> = () => {
-  // Redux stuff
-  const dispatch = useDispatch()
-  const creator = useSelector<IState, ICreator>(state => state.session.creator)
-  const { isLoading, hasFailed, hasSucceeded } = useSelector<IState, IRequestStatus>(
-    state => state.session.requests.updateCreatorContact
-  )
+  // Get creator from session
+  const {
+    data: { session },
+  } = useQuery<GetSession>(GET_SESSION)
+  // Prepare change email
+  const [succeeded, setSucceeded] = useState(false)
+  const [updateEmail, { loading, error }] = useMutation<
+    UpdateCreatorEmail,
+    UpdateCreatorEmailVariables
+  >(UPDATE_CREATOR_EMAIL, { onCompleted: () => setSucceeded(true) })
   // Form state
-  const [phone, setPhone] = React.useState(creator.phone)
-  const [email, setEmail] = React.useState(creator.email)
+  const [email, setEmail] = useState(session.creator.email)
 
   const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    dispatch(updateCreatorContactInfo({ email, phone }))
+    updateEmail({ variables: { newEmail: email } })
   }
 
   return (
@@ -39,23 +54,12 @@ const UpdateCreatorContactInfo: React.FC<{}> = () => {
           hasLabel
         />
       </FormInputLabel>
-      {/* Edit phone number */}
-      <FormInputLabel>
-        Numéro de téléphone
-        <FormInput
-          type="tel"
-          value={phone}
-          onChange={e => setPhone(e.target.value)}
-          required
-          hasLabel
-        />
-      </FormInputLabel>
-      {hasFailed && <ErrorCard message="Le changement n'a pas pu être enregistré" />}
-      {hasSucceeded && <SuccessCard message="Le changement a bien été enregistré" />}
+      {error && <ErrorCard message="Le changement n'a pas pu être enregistré" />}
+      {succeeded && <SuccessCard message="Le changement a bien été enregistré" />}
       {/* Submit form */}
       <MainButtonSubmit
-        value={isLoading ? 'Enregistrement...' : 'Enregistrer mes coordonnées'}
-        disabled={isLoading || (email === creator.email && phone === creator.phone)}
+        value={loading ? 'Enregistrement...' : 'Enregistrer mes coordonnées'}
+        disabled={loading || email === session.creator.email}
       />
     </form>
   )

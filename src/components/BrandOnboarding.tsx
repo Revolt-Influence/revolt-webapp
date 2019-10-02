@@ -1,11 +1,12 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Flex } from '@rebass/grid'
-import { useDispatch } from 'react-redux'
 import { MainButton } from '../styles/Button'
 import { setFont } from '../utils/styles'
 import OnboardingSlide from './OnboardingSlide'
-import { createCampaign } from '../actions/campaigns'
+import { useMutation } from '@apollo/react-hooks'
+import { CreateCampaign } from '../__generated__/CreateCampaign'
+import { CREATE_CAMPAIGN } from '../pages/CampaignsList'
 
 const landingIllustration = require('../images/illustrations/landing.png')
 const campaignIllustration = require('../images/illustrations/campaign.svg')
@@ -81,7 +82,7 @@ const slidesReducer = (
 }
 
 const BrandOnboarding: React.FC<{}> = () => {
-  const reduxDispatch = useDispatch()
+  const [createCampaign] = useMutation<CreateCampaign>(CREATE_CAMPAIGN)
   // Store current status in state
   const [slidesState, slidesDispatch] = React.useReducer(slidesReducer, initialSlidesState)
 
@@ -108,7 +109,7 @@ const BrandOnboarding: React.FC<{}> = () => {
       description:
         'Consultez directement l’engagement généré par vos collaborations avec des influenceurs (likes, commentaires, traffic généré…)',
       buttonText: 'Créer ma campagne',
-      handleButtonClick: () => reduxDispatch(createCampaign()),
+      handleButtonClick: () => createCampaign(),
       image: performancesIllustration,
     },
   ]

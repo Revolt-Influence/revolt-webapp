@@ -1,7 +1,7 @@
 import React from 'react'
 import { BlueText } from '../styles/Text'
-import { Plan } from '../models/Session'
 import CheckList from './CheckList'
+import { Plan } from '../__generated__/globalTypes'
 
 interface IFeaturesListProps {
   plan: Plan
@@ -20,11 +20,11 @@ const premiumFeatures: string[] = [
 ]
 
 const FeaturesList: React.FC<IFeaturesListProps> = ({ plan }) => {
-  const relevantFeatures = plan === 'free' ? freeFeatures : premiumFeatures
+  const relevantFeatures = plan === Plan.FREE ? freeFeatures : premiumFeatures
 
   return (
     <>
-      {plan === 'free' ? (
+      {plan === Plan.FREE ? (
         <p>
           Débloquez <BlueText>gratuitement</BlueText> de nouvelles fonctionnalités.
         </p>

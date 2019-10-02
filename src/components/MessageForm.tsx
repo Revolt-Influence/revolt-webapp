@@ -5,11 +5,10 @@ import styled from 'styled-components'
 import { palette } from '../utils/colors'
 import { setOutline, setFont } from '../utils/styles'
 import { TextButton } from '../styles/Button'
-import { useDispatch, useSelector } from 'react-redux'
-import { sendMessage } from '../actions/conversations'
-import IState from '../models/State'
-import { IRequestStatus } from '../utils/request'
 import ErrorCard from './ErrorCard'
+import gql from 'graphql-tag'
+import { useMutation } from '@apollo/react-hooks'
+import { SendMessage, SendMessageVariables } from '../__generated__/SendMessage'
 
 const Styles = styled(Flex)`
   color: ${palette.grey._900};
@@ -36,21 +35,26 @@ const Styles = styled(Flex)`
   }
 `
 
+const SEND_MESSAGE = gql`
+  mutation SendMessage($text: String!, $conversationId: String!) {
+    sendMessage(text: $text, conversationId: $conversationId)
+  }
+`
+
 interface Props {
   conversationId: string
 }
 
 const MessageForm: React.FC<Props> = ({ conversationId }) => {
   const [text, setText] = useState<string>('')
-  const dispatch = useDispatch()
-  const sendMessageStatus = useSelector<IState, IRequestStatus>(
-    state => state.conversations.requests.sendMessage
+  const [sendMessage, { error, loading }] = useMutation<SendMessage, SendMessageVariables>(
+    SEND_MESSAGE
   )
   const textAreaRef = useRef<HTMLTextAreaElement>(null)
 
   const handleSendMessage = () => {
     // Send message to server
-    dispatch(sendMessage({ text, conversationId }))
+    sendMessage({ variables: { text, conversationId } })
     // Reset form
     setText('')
     // Focus message form
@@ -67,7 +71,7 @@ const MessageForm: React.FC<Props> = ({ conversationId }) => {
   }
   return (
     <div>
-      {sendMessageStatus.hasFailed && <ErrorCard message="Le message n'a pas pu être envoyé" />}
+      {error && <ErrorCard message="Le message n'a pas pu être envoyé" />}
       <Styles flexDirection="row" alignItems="flex-start" justifyContent="space-between" my="1rem">
         <Textarea
           minRows={1}
@@ -76,7 +80,7 @@ const MessageForm: React.FC<Props> = ({ conversationId }) => {
           onChange={e => setText(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="Votre message"
-          disabled={sendMessageStatus.isLoading}
+          disabled={loading}
           inputRef={textAreaRef}
           autoFocus
         />
@@ -85,10 +89,10 @@ const MessageForm: React.FC<Props> = ({ conversationId }) => {
             onClick={handleSendMessage}
             style={{ padding: '0.5rem' }}
             nature="primary"
-            disabled={sendMessageStatus.isLoading}
+            disabled={loading}
             smallMargin
           >
-            {sendMessageStatus.isLoading ? 'Envoi...' : 'Envoyer'}
+            {loading ? 'Envoi...' : 'Envoyer'}
           </TextButton>
         </Box>
       </Styles>

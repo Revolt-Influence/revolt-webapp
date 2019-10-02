@@ -5,10 +5,10 @@
 import { CreatorStatus } from "./globalTypes";
 
 // ====================================================
-// GraphQL query operation: GetCreatorStatus
+// GraphQL mutation operation: SetCreatorStatus
 // ====================================================
 
-export interface GetCreatorStatus_session_creator {
+export interface SetCreatorStatus_setCreatorStatus {
   __typename: "Creator";
   /**
    * Mongoose generated ID
@@ -20,17 +20,14 @@ export interface GetCreatorStatus_session_creator {
   status: CreatorStatus;
 }
 
-export interface GetCreatorStatus_session {
-  __typename: "Session";
+export interface SetCreatorStatus {
   /**
-   * The creator that _may_ be logged in
+   * Admin marks creator as verified or blocked
    */
-  creator: GetCreatorStatus_session_creator | null;
+  setCreatorStatus: SetCreatorStatus_setCreatorStatus;
 }
 
-export interface GetCreatorStatus {
-  /**
-   * Check if a session exists, could be a creator or a brand user
-   */
-  session: GetCreatorStatus_session;
+export interface SetCreatorStatusVariables {
+  creatorId: string;
+  newStatus: CreatorStatus;
 }
