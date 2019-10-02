@@ -1,16 +1,17 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Box, Flex } from '@rebass/grid'
-import { useSelector } from 'react-redux'
 import copy from 'copy-to-clipboard'
 import { LabelText } from '../styles/Text'
 import { ContainerBox } from '../styles/grid'
 import { MainButton } from '../styles/Button'
 import OrderedList from '../components/OrderedList'
 import { usePageTitle } from '../utils/hooks'
-import IState from '../models/State'
 import { setFont } from '../utils/styles'
 import PageHeader from '../components/PageHeader'
+import { useQuery } from '@apollo/react-hooks'
+import { GET_SESSION } from '../components/Session'
+import { GetSession } from '../__generated__/GetSession'
 
 const illustrationSource = require('../images/illustrations/ambassador.svg')
 
@@ -38,7 +39,10 @@ const creatorSteps = [
 const AmbassadorProgram: React.FunctionComponent<{}> = () => {
   usePageTitle('Devenez ambassadeur')
   // Copy link
-  const creatorId = useSelector<IState, string>(state => state.session.creator._id)
+  const {
+    data: { session },
+  } = useQuery<GetSession>(GET_SESSION)
+  const creatorId = session.creator._id
   const creatorLink = `${window.location.origin}/creatorSignup?ambassador=${creatorId}`
   const [creatorCopyButtonText, setCreatorCopyButtonText] = React.useState<string>('Copier le lien')
 

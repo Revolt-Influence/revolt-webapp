@@ -1,6 +1,5 @@
 import React from 'react'
 import { Flex } from '@rebass/grid'
-import { IMessageDetailed } from '../models/Conversation'
 import styled, { css } from 'styled-components'
 import { palette } from '../utils/colors'
 import { applyCloudinaryTransformations } from '../utils/images'

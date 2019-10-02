@@ -27,7 +27,7 @@ const CampaignsList = React.lazy(() => import('../pages/CampaignsList'))
 const ExperiencesList = React.lazy(() => import('../pages/ExperiencesList'))
 const CollabsList = React.lazy(() => import('../pages/CollabsList'))
 const Experience = React.lazy(() => import('../pages/Experience'))
-const CampaignBrief = React.lazy(() => import('../pages/CampaignBrief'))
+const CampaignForm = React.lazy(() => import('../pages/CampaignForm'))
 const ConnectSocialAccount = React.lazy(() => import('../pages/ConnectSocialAccount'))
 const AmbassadorProgram = React.lazy(() => import('../pages/AmbassadorProgram'))
 const PrivacyPolicy = React.lazy(() => import('../pages/PrivacyPolicy'))
@@ -189,11 +189,11 @@ const RouterSwitch: React.FC<IRouterSwitchProps> = () => {
     return <ConnectSocialAccount />
   }
 
-  const renderCampaignBrief = () => {
+  const renderCampaignForm = () => {
     if (!isLoggedIn) {
       return <Redirect to="/login" />
     }
-    return <CampaignBrief />
+    return <CampaignForm />
   }
 
   const renderCommunity = () => {
@@ -222,7 +222,7 @@ const RouterSwitch: React.FC<IRouterSwitchProps> = () => {
           )}
         />
         <Route path="/brand/campaigns/:campaignId/dashboard" render={renderCampaignDashboard} />
-        <Route path="/brand/campaigns/:campaignId/brief" render={renderCampaignBrief} />
+        <Route path="/brand/campaigns/:campaignId/brief" render={renderCampaignForm} />
         <Route path="/brand/myAccount" render={renderBrandAccount} />
         <Route path="/brand/upgrade" render={renderUpgradePlan} />
         <Route path="/brand/messages/:conversationId" component={Conversation} />
