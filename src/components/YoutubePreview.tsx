@@ -8,6 +8,7 @@ import { useQuery } from '@apollo/react-hooks'
 import { Youtuber, YoutuberVariables } from '../__generated__/Youtuber'
 import ErrorCard from './ErrorCard'
 import Loader from './Loader'
+import { GetYoutuber, GetYoutuberVariables } from '../__generated__/GetYoutuber'
 
 const youtubeSource = require('../images/icons/youtube_color.svg')
 
@@ -36,7 +37,7 @@ const YOUTUBER_PROFILE_FRAGMENT = gql`
 `
 
 const GET_YOUTUBER = gql`
-  query Youtuber($youtuberId: String!) {
+  query GetYoutuber($youtuberId: String!) {
     youtuber(id: $youtuberId) {
       ...YoutuberProfileFragment
     }
@@ -49,7 +50,7 @@ interface Props {
 }
 
 const YoutubePreview: React.FC<Props> = ({ youtuberId }) => {
-  const { data, loading, error } = useQuery<Youtuber, YoutuberVariables>(GET_YOUTUBER, {
+  const { data, loading, error } = useQuery<GetYoutuber, GetYoutuberVariables>(GET_YOUTUBER, {
     variables: { youtuberId },
   })
   if (loading) {

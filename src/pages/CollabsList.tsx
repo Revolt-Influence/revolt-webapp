@@ -20,7 +20,7 @@ const GET_CREATOR_COLLABS = gql`
       status
       updatedAt
       campaign {
-        ...ExperiencePresentation
+        ...ExperiencePresentationFragment
       }
     }
   }

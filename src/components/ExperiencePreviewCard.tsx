@@ -6,7 +6,7 @@ import { palette } from '../utils/colors'
 import { applyCloudinaryTransformations } from '../utils/images'
 import { capitalizeFirstLetter } from '../utils/strings'
 import { setFont, shadow } from '../utils/styles'
-import { Experience_campaign } from '../__generated__/Experience'
+import { GetExperience_campaign } from '../__generated__/GetExperience'
 import ImageWrapper from './ImageWrapper'
 
 const Style = styled(Box)`
@@ -51,7 +51,7 @@ const Style = styled(Box)`
 `
 
 interface IExperiencePreviewCardProps {
-  experience: Experience_campaign
+  experience: GetExperience_campaign
 }
 
 const ExperiencePreviewCard: React.FC<IExperiencePreviewCardProps> = ({ experience }) => {

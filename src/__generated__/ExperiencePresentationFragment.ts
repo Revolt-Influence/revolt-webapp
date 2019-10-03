@@ -3,10 +3,10 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL query operation: Experience
+// GraphQL fragment: ExperiencePresentationFragment
 // ====================================================
 
-export interface Experience_campaign_brand {
+export interface ExperiencePresentationFragment_brand {
   __typename: "Brand";
   /**
    * Mongoose generated ID
@@ -23,7 +23,7 @@ export interface Experience_campaign_brand {
   website: string;
 }
 
-export interface Experience_campaign_product {
+export interface ExperiencePresentationFragment_product {
   __typename: "CampaignProduct";
   /**
    * Name of the product
@@ -47,7 +47,7 @@ export interface Experience_campaign_product {
   pictures: string[];
 }
 
-export interface Experience_campaign {
+export interface ExperiencePresentationFragment {
   __typename: "Campaign";
   /**
    * Mongoose generated ID
@@ -64,25 +64,14 @@ export interface Experience_campaign {
   /**
    * The brand that published the campaign
    */
-  brand: Experience_campaign_brand | null;
+  brand: ExperiencePresentationFragment_brand | null;
   /**
    * What the creator will receive
    */
-  product: Experience_campaign_product;
+  product: ExperiencePresentationFragment_product;
   /**
    * Rules that creators must respect to receive the gift
    */
   rules: string[];
   createdAt: any;
-}
-
-export interface Experience {
-  /**
-   * Get campaign by ID
-   */
-  campaign: Experience_campaign;
-}
-
-export interface ExperienceVariables {
-  campaignId: string;
 }

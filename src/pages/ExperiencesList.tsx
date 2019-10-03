@@ -29,7 +29,7 @@ const GET_EXPERIENCES_PAGE = gql`
       currentPage
       totalPages
       items {
-        ...ExperiencePresentation
+        ...ExperiencePresentationFragment
       }
     }
   }

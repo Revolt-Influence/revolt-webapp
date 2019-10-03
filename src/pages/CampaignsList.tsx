@@ -18,7 +18,7 @@ import { GetCampaigns } from '../__generated__/GetCampaigns'
 
 const CAMPAIGN_CARD_FRAGMENT = gql`
   fragment CampaignCardFragment on Campaign {
-    ...ExperiencePresentation
+    ...ExperiencePresentationFragment
     collabs {
       _id
       status
@@ -55,7 +55,7 @@ const GET_CAMPAIGNS = gql`
 export const CREATE_CAMPAIGN = gql`
   mutation CreateCampaign {
     createCampaign {
-      ...ExperiencePresentation
+      ...ExperiencePresentationFragment
       collabs {
         _id
         status

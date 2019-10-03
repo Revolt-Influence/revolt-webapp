@@ -35,7 +35,7 @@ const GET_EXPERIENCE_PAGE = gql`
       }
     }
     campaign(id: $campaignId) {
-      ...ExperiencePresentation
+      ...ExperiencePresentationFragment
     }
     collabs {
       _id

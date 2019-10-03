@@ -9,13 +9,13 @@ import { palette } from '../utils/colors'
 import { useWindowSize } from '../utils/hooks'
 import { applyCloudinaryTransformations } from '../utils/images'
 import { setFont } from '../utils/styles'
-import { Experience, ExperienceVariables } from '../__generated__/Experience'
 import CheckList from './CheckList'
 import ErrorCard from './ErrorCard'
 import ImageWrapper from './ImageWrapper'
 import Loader from './Loader'
 import SplitView from './SplitView'
 import { BRAND_FRAGMENT } from './CampaignFormBrand'
+import { GetExperience, GetExperienceVariables } from '../__generated__/GetExperience'
 
 const Styles = styled.div`
   h3 {
@@ -55,7 +55,7 @@ const ExternalLink = styled(TextLinkExternal)<{ black?: boolean }>`
 `
 
 const EXPERIENCE_PRESENTATION_FRAGMENT = gql`
-  fragment ExperiencePresentation on Campaign {
+  fragment ExperiencePresentationFragment on Campaign {
     _id
     name
     description
@@ -76,9 +76,9 @@ const EXPERIENCE_PRESENTATION_FRAGMENT = gql`
 `
 
 const GET_EXPERIENCE = gql`
-  query Experience($campaignId: String!) {
+  query GetExperience($campaignId: String!) {
     campaign(id: $campaignId) {
-      ...ExperiencePresentation
+      ...ExperiencePresentationFragment
     }
   }
   ${EXPERIENCE_PRESENTATION_FRAGMENT}
@@ -90,8 +90,8 @@ interface Props {
 
 const ExperiencePresentation: React.FC<Props> = ({ experienceId }) => {
   const { data: { campaign: experience } = { campaign: null }, loading, error } = useQuery<
-    Experience,
-    ExperienceVariables
+    GetExperience,
+    GetExperienceVariables
   >(GET_EXPERIENCE, { variables: { campaignId: experienceId } })
 
   const { width } = useWindowSize()
