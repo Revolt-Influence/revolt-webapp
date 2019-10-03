@@ -5,10 +5,9 @@ import SocialAccountPreview from './SocialAccountPreview'
 import YoutubeVideo from './YoutubeVideo'
 import { gql } from 'apollo-boost'
 import { useQuery } from '@apollo/react-hooks'
-import { Youtuber, YoutuberVariables } from '../__generated__/Youtuber'
+import { GetYoutuber, GetYoutuberVariables } from '../__generated__/GetYoutuber'
 import ErrorCard from './ErrorCard'
 import Loader from './Loader'
-import { GetYoutuber, GetYoutuberVariables } from '../__generated__/GetYoutuber'
 
 const youtubeSource = require('../images/icons/youtube_color.svg')
 

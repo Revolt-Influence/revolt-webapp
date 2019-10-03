@@ -7,9 +7,9 @@ import { palette } from '../utils/colors'
 import { setFont, shadow } from '../utils/styles'
 import ErrorBoundary from './ErrorBoundary'
 import {
-  Youtuber_youtuber_audience,
-  Youtuber_youtuber_audience_countries,
-} from '../__generated__/Youtuber'
+  GetYoutuber_youtuber_audience,
+  GetYoutuber_youtuber_audience_countries,
+} from '../__generated__/GetYoutuber'
 
 const MAX_LOCATIONS = 6
 
@@ -35,8 +35,8 @@ const Styles = styled.div`
 `
 
 const sortByPercentage = (
-  metricA: Youtuber_youtuber_audience_countries,
-  metricB: Youtuber_youtuber_audience_countries
+  metricA: GetYoutuber_youtuber_audience_countries,
+  metricB: GetYoutuber_youtuber_audience_countries
 ): number => {
   if (metricA.percentage < metricB.percentage) return 1
   if (metricA.percentage > metricB.percentage) return -1
@@ -44,7 +44,7 @@ const sortByPercentage = (
 }
 
 interface Props {
-  youtuberAudience: Youtuber_youtuber_audience
+  youtuberAudience: GetYoutuber_youtuber_audience
 }
 
 const AudienceInsights: React.FC<Props> = ({ youtuberAudience: { ageGroups, countries } }) => {
