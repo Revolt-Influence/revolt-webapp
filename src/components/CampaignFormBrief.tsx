@@ -99,6 +99,7 @@ const CampaignFormBrief: React.FC<Prop> = ({ brief }) => {
               value={briefInput.estimatedBudget}
               onChange={e => handleUpdateBrief({ estimatedBudget: parseFloat(e.target.value) })}
               hasLabel
+              type="number"
               required
             />
           </FormInputLabel>
