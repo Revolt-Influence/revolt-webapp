@@ -15,6 +15,7 @@ import {
 } from '../__generated__/UpdateCampaignTargetAudience'
 import { showGender, showAgeGroup } from '../utils/enums'
 import CheckBox from './CheckBox'
+import Tag from './Tag'
 
 const possibleAgeGroups = Object.values(AgeGroup) as AgeGroup[]
 
@@ -123,6 +124,15 @@ const CampaignFormTargetAudience: React.FC<Prop> = ({ targetAudience, campaignId
                   />
                 </Box>
               ))}
+            </Flex>
+          </FormInputLabel>
+          <FormInputLabel>
+            Countries
+            <Flex flexDirection="row" flexWrap="wrap">
+              <Tag text="France" handleRemove={() => console.log('remove')} />
+              <Tag text="France" handleRemove={() => console.log('remove')} />
+              <Tag text="France" handleRemove={() => console.log('remove')} />
+              <Tag text="France" handleRemove={() => console.log('remove')} />
             </Flex>
           </FormInputLabel>
         </Box>

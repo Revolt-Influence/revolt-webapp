@@ -1,4 +1,4 @@
-import React, { useRef, useState, useCallback } from 'react'
+import React, { useState, useCallback } from 'react'
 import { RouteComponentProps, withRouter } from 'react-router-dom'
 import { Flex, Box } from '@rebass/grid'
 import StyledFrame from 'react-styled-frame'
@@ -82,7 +82,6 @@ const CampaignForm: React.FC<RouteComponentProps<MatchParams>> = ({ match }) => 
   >(TOGGLE_ARCHIVE_CAMPAIGN)
 
   // Calculate available vertical space
-  const selfRef = useRef(null)
   const [topDistance, setTopDistance] = useState<number>(0)
   const measuredRef = useCallback((node: HTMLElement) => {
     if (node !== null) {
