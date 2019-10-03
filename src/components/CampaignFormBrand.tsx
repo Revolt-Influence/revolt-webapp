@@ -38,7 +38,7 @@ const CampaignFormBrand: React.FC<Props> = ({ brand }) => {
   // Omit brand data that doesn't belong in the input type
   const { __typename, _id, ...brandInputData } = brand
 
-  // Update logcal form state
+  // Update local form state
   const [brandInput, setBrandInput] = useState<UpdateBrandInput>(brandInputData)
   const [hasSaved, setHasSaved] = useState<boolean>(false)
 
@@ -70,8 +70,8 @@ const CampaignFormBrand: React.FC<Props> = ({ brand }) => {
   return (
     <div>
       {/* Notifications */}
-      {hasSaved && <Toast nature="success" text="Changements enregistrés" disappear />}
-      {error && <Toast nature="error" text="Échec de l'enregistrement" disappear />}
+      {hasSaved && <Toast nature="success" text="Changes saved" disappear />}
+      {error && <Toast nature="error" text="Could not save changes" disappear />}
       {/* Brand section */}
       <SplitView title="Votre marque" stacked noBorder>
         <Flex flexDirection="row" alignItems="flex-start" flexWrap="wrap">

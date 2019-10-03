@@ -9,9 +9,9 @@
 export interface Logout_logout {
   __typename: "Session";
   /**
-   * UUID used to uniquely identify the session from the GQL client
+   * ID used to uniquely identify the session from the GQL client, null if logged out
    */
-  sessionId: string;
+  sessionId: string | null;
 }
 
 export interface Logout {

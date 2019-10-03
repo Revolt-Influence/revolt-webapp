@@ -30,6 +30,9 @@ import {
   ToggleArchiveCampaignVariables,
 } from '../__generated__/ToggleArchiveCampaign'
 import Loader from '../components/Loader'
+import CampaignFormProduct from '../components/CampaignFormProduct'
+import CampaignFormBrief from '../components/CampaignFormBrief'
+import CampaignFormTargetAudience from '../components/CampaignFormTargetAudience'
 
 export const CAMPAIGN_SAVE_DEBOUNCE = 1500
 
@@ -137,6 +140,9 @@ const CampaignForm: React.FC<RouteComponentProps<MatchParams>> = ({ match }) => 
     )
   }
 
+  // Split the campaign object
+  const { product, brand, targetAudience, isArchived, isReviewed, owner, ...brief } = campaign
+
   return (
     <ErrorBoundary message="Le brief n'a pas pu être affiché">
       <ContainerBox ref={selfRef}>
@@ -152,31 +158,10 @@ const CampaignForm: React.FC<RouteComponentProps<MatchParams>> = ({ match }) => 
               destination={`/brand/campaigns/${campaign._id}`}
             />
             {showPublishButton()}
-            <CampaignFormBrand brand={campaign.brand} />
-            {/* <CampaignBriefIntro
-              brief={campaign.settings.brief}
-              setBrief={(newState: ICampaignBrief) =>
-                dispatchCampaign({ section: 'brief', newState })
-              }
-              name={campaign.name}
-              setName={(newName: string) =>
-                dispatchCampaign({ section: 'root', newState: { name: newName } })
-              }
-            />
-            <CampaignBriefGift
-              gift={campaign.settings.gift}
-              setGift={(newState: ICampaignGift) => dispatchCampaign({ section: 'gift', newState })}
-            />
-            <CampaignBriefTarget
-              target={campaign.settings.target}
-              setTarget={(newState: ICampaignTarget) =>
-                dispatchCampaign({ section: 'target', newState })
-              }
-            />
-            <CampaignBriefTask
-              task={campaign.settings.task}
-              setTask={(newState: ICampaignTask) => dispatchCampaign({ section: 'task', newState })}
-            /> */}
+            <CampaignFormProduct product={product} campaignId={campaign._id} />
+            <CampaignFormBrief brief={brief} />
+            <CampaignFormBrand brand={brand} />
+            <CampaignFormTargetAudience targetAudience={targetAudience} campaignId={campaign._id} />
             {showPublishButton()}
             {/* Some whitespace because there is no footer on this page */}
             <Box mb="1rem" />

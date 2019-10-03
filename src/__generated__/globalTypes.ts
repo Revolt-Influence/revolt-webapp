@@ -80,6 +80,27 @@ export enum SessionType {
   CREATOR = "CREATOR",
 }
 
+export interface CampaignAudienceInput {
+  gender: Gender;
+  countries: string[];
+  ageGroups: AgeGroup[];
+}
+
+export interface CampaignBriefInput {
+  name: string;
+  description: string;
+  rules: string[];
+  estimatedBudget: number;
+}
+
+export interface CampaignProductInput {
+  name: string;
+  description: string;
+  website: string;
+  pictures: string[];
+  youtubeLink?: string | null;
+}
+
 export interface SignupCreatorInput {
   email: string;
   password: string;

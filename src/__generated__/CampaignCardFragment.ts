@@ -120,7 +120,7 @@ export interface CampaignCardFragment {
   /**
    * Total amount of money that will be given to creators
    */
-  estimatedBudget: number;
+  estimatedBudget: number | null;
   /**
    * The ideal audience the brand wants to reach
    */

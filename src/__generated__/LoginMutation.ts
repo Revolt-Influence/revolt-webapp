@@ -31,9 +31,9 @@ export interface LoginMutation_login {
    */
   isLoggedIn: boolean;
   /**
-   * UUID used to uniquely identify the session from the GQL client
+   * ID used to uniquely identify the session from the GQL client, null if logged out
    */
-  sessionId: string;
+  sessionId: string | null;
   sessionType: SessionType | null;
   /**
    * The user that _may_ be logged in

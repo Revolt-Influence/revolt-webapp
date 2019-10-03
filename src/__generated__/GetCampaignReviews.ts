@@ -42,7 +42,7 @@ export interface GetCampaignReviews_campaign {
    */
   _id: string;
   /**
-   * All collabs linked to the campaign
+   * All reviews made for the campaign
    */
   reviews: GetCampaignReviews_campaign_reviews[];
 }

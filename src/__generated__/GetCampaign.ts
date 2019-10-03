@@ -91,7 +91,7 @@ export interface GetCampaign_campaign {
   /**
    * Total amount of money that will be given to creators
    */
-  estimatedBudget: number;
+  estimatedBudget: number | null;
   /**
    * What the creator will receive
    */
