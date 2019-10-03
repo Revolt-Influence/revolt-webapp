@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react'
+import React, { useRef, useEffect, useState, useReducer } from 'react'
 import equal from 'fast-deep-equal'
 import { Flex, Box } from '@rebass/grid'
 import SplitView from './SplitView'
@@ -35,9 +35,22 @@ interface Props {
   brand: BrandFragment
 }
 
+const brandReducer = (
+  state: UpdateBrandInput,
+  update: Partial<UpdateBrandInput>
+): UpdateBrandInput => {
+  console.log({ state, update })
+  return { ...state, ...update }
+}
+
 const CampaignFormBrand: React.FC<Props> = ({ brand }) => {
   // Omit brand data that doesn't belong in the input type
   const { __typename, _id, ...brandInputData } = brand
+  // console.log(brandInputData)
+
+  // Update logcal form state
+  const [brandInput, dispatch] = useReducer(brandReducer, brandInputData)
+  // const [brandInput, setBrandInput] = useState<UpdateBrandInput>(brandInputData)
 
   // Use a ref to prevent stale data in the event handle
   const brandInputRef = useRef<UpdateBrandInput>()
@@ -45,11 +58,14 @@ const CampaignFormBrand: React.FC<Props> = ({ brand }) => {
     brandInputRef.current = brandInput
   })
 
-  // Update logcal form state
-  const [brandInput, setBrandInput] = useState<UpdateBrandInput>(brandInputData)
-  const handleUpdateBrand = (update: Partial<UpdateBrandInput>) => {
-    setBrandInput({ ...brandInputRef.current, ...update })
-  }
+  // const handleUpdateBrand = (update: Partial<UpdateBrandInput>) => {
+  //   console.log('update brand', update, brandInputRef.current)
+  //   if (update.logo) {
+  //     setBrandInput({ ...brandInputRef.current, ...update })
+  //   } else {
+  //     setBrandInput({ ...brandInput, ...update })
+  //   }
+  // }
 
   // Prepare save to server request
   const [hasSaved, setHasSaved] = useState<boolean>(false)
@@ -83,7 +99,7 @@ const CampaignFormBrand: React.FC<Props> = ({ brand }) => {
               Nom de la marque
               <FormInput
                 value={brand.name}
-                onChange={e => handleUpdateBrand({ name: e.target.value })}
+                onChange={e => dispatch({ name: e.target.value })}
                 placeholder="Adidas"
                 hasLabel
                 required
@@ -93,7 +109,7 @@ const CampaignFormBrand: React.FC<Props> = ({ brand }) => {
               Lien vers votre site
               <FormInput
                 value={brand.website}
-                onChange={e => handleUpdateBrand({ website: e.target.value })}
+                onChange={e => dispatch({ website: e.target.value })}
                 placeholder="https://yoursite.com"
                 hasLabel
                 required
@@ -104,7 +120,7 @@ const CampaignFormBrand: React.FC<Props> = ({ brand }) => {
             <FormInputLabel>
               Votre logo
               <DropImage
-                handleDrop={newLogo => handleUpdateBrand({ logo: newLogo })}
+                handleDrop={newLogo => dispatch({ logo: newLogo })}
                 preset="brand_logo"
                 currentImage={brand.logo}
                 idealSize="400x400 pixels (1:1)"

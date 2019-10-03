@@ -38,6 +38,10 @@ export interface GetCampaignReviews_campaign_reviews {
 export interface GetCampaignReviews_campaign {
   __typename: "Campaign";
   /**
+   * Mongoose generated ID
+   */
+  _id: string;
+  /**
    * All collabs linked to the campaign
    */
   reviews: GetCampaignReviews_campaign_reviews[];

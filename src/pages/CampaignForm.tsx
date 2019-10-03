@@ -102,7 +102,7 @@ const CampaignForm: React.FC<RouteComponentProps<MatchParams>> = ({ match }) => 
     const campaignIsComplete = getCampaignStatus(campaign).name !== CampaignStatus.INCOMPLETE
     return (
       <>
-        {toggleArchiveCampaignStatus && (
+        {toggleArchiveCampaignStatus.error && (
           <ErrorCard noMargin message="Votre demande n'a pas pu être enregistrée" />
         )}
         {!campaign.isArchived && !campaign.isReviewed && (

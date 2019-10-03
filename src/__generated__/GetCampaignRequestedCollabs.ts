@@ -128,6 +128,10 @@ export interface GetCampaignRequestedCollabs_campaign_collabs {
 export interface GetCampaignRequestedCollabs_campaign {
   __typename: "Campaign";
   /**
+   * Mongoose generated ID
+   */
+  _id: string;
+  /**
    * All collabs linked to the campaign
    */
   collabs: GetCampaignRequestedCollabs_campaign_collabs[];

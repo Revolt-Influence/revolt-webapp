@@ -32,6 +32,7 @@ const placeholderImage = 'https://dummyimage.com/40x40/d8dee3/D8DEE3.jpg'
 const GET_CAMPAIGN_REQUESTED_COLLABS = gql`
   query GetCampaignRequestedCollabs($campaignId: String!) {
     campaign(id: $campaignId) {
+      _id
       collabs {
         _id
         status

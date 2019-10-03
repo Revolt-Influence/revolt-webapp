@@ -37,6 +37,7 @@ const Stats = styled(Box)`
 const GET_CAMPAIGN_REVIEWS = gql`
   query GetCampaignReviews($campaignId: String!) {
     campaign(id: $campaignId) {
+      _id
       reviews {
         format
         commentCount
