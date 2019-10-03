@@ -64,7 +64,7 @@ const CampaignFormTargetAudience: React.FC<Prop> = ({ targetAudience, campaignId
   })
 
   return (
-    <SplitView title="Détails du cadeau" ratio={4 / 12} stacked>
+    <SplitView title="Target audience" ratio={4 / 12} stacked>
       <>
         {/* Notifications */}
         {hasSaved && <Toast nature="success" text="Changes saved" disappear />}

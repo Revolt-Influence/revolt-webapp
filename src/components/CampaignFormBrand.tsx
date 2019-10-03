@@ -73,7 +73,7 @@ const CampaignFormBrand: React.FC<Props> = ({ brand }) => {
       {hasSaved && <Toast nature="success" text="Changes saved" disappear />}
       {error && <Toast nature="error" text="Could not save changes" disappear />}
       {/* Brand section */}
-      <SplitView title="Votre marque" stacked noBorder>
+      <SplitView title="Votre marque" stacked>
         <Flex flexDirection="row" alignItems="flex-start" flexWrap="wrap">
           <Box width={[1, 1, 6 / 12]} pr={[0, 0, '2rem']}>
             <FormInputLabel>

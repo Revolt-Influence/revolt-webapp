@@ -1,8 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react'
 import moment from 'moment'
-import 'react-dates/initialize'
-import 'react-dates/lib/css/_datepicker.css'
-import { SingleDatePicker } from 'react-dates'
 import { Flex, Box } from '@rebass/grid'
 import gql from 'graphql-tag'
 import { FormInputLabel, FormInput, FormTextarea } from '../styles/Form'
@@ -46,7 +43,6 @@ const CampaignFormProduct: React.FC<Prop> = ({ product, campaignId }) => {
   // Update local form state
   const [productInput, setProductInput] = useState<CampaignProductInput>(productInputData)
   const [hasSaved, setHasSaved] = useState<boolean>(false)
-  const [dateIsFocused, setDateIsFocused] = useState<boolean>(false)
 
   // Use a ref to prevent stale data in the event handle
   const productInputRef = useRef<CampaignProductInput>()
@@ -78,7 +74,7 @@ const CampaignFormProduct: React.FC<Prop> = ({ product, campaignId }) => {
   })
 
   return (
-    <SplitView title="Your game" ratio={4 / 12} stacked>
+    <SplitView title="Your game" ratio={4 / 12} stacked noBorder>
       <>
         {/* Notifications */}
         {hasSaved && <Toast nature="success" text="Changes saved" disappear />}
@@ -131,16 +127,20 @@ const CampaignFormProduct: React.FC<Prop> = ({ product, campaignId }) => {
           />
         </FormInputLabel>
         {/* Launch date */}
-        <FormInputLabel>
-          Launch date
-          <SingleDatePicker
-            date={moment(productInput.launchedAt)}
-            onDateChange={newDate => handleUpdateProduct({ launchedAt: newDate.toISOString() })}
-            onFocusChange={focusedData => setDateIsFocused(focusedData.focused)}
-            focused={dateIsFocused}
-            id="launch_date_picker"
-          />
-        </FormInputLabel>
+        <Box width={[1, 1, 6 / 12]}>
+          <FormInputLabel withMargin>
+            Game launch date
+            <FormInput
+              type="date"
+              value={moment(productInput.launchedAt).format('YYYY-MM-DD')}
+              onChange={e => {
+                console.log(e.target.value)
+                handleUpdateProduct({ launchedAt: e.target.value })
+              }}
+              hasLabel
+            />
+          </FormInputLabel>
+        </Box>
       </>
     </SplitView>
   )
