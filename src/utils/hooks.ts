@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import io from 'socket.io-client'
-import { DeviceType } from '../types'
 import { useQuery } from '@apollo/react-hooks'
+import { DeviceType } from '../types'
 import { GET_SESSION } from '../components/Session'
 import { GetSession } from '../__generated__/GetSession'
 import { SessionType } from '../__generated__/globalTypes'
@@ -172,14 +172,16 @@ function useToggle(initialValue: boolean) {
 }
 
 // Got from usehooks.com
-function useDebounce(value: unknown, delay: number) {
+function useDebounce<T>(value: T, delay: number, handleIsFresh: Function) {
   // State and setters for debounced value
-  const [debouncedValue, setDebouncedValue] = useState<typeof value>(value)
+  const [debouncedValue, setDebouncedValue] = useState<T>(value)
 
   useEffect(() => {
     // Update debounced value after delay
-    const handler = setTimeout(() => {
+    const handler = window.setTimeout(() => {
       setDebouncedValue(value)
+      console.log('is fresh')
+      handleIsFresh()
     }, delay)
 
     // Cancel the timeout if value changes (also on delay change or unmount)
@@ -188,7 +190,7 @@ function useDebounce(value: unknown, delay: number) {
     return () => {
       clearTimeout(handler)
     }
-  }, [value, delay]) // Only re-call effect if value or delay changes
+  }, [value, delay, handleIsFresh]) // Only re-call effect if value or delay changes
 
   return debouncedValue
 }

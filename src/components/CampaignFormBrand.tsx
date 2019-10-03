@@ -1,5 +1,5 @@
-import React, { useRef, useEffect, useState, useReducer } from 'react'
-import equal from 'fast-deep-equal'
+import React, { useRef, useEffect, useState } from 'react'
+import { useDebouncedCallback } from 'use-debounce'
 import { Flex, Box } from '@rebass/grid'
 import SplitView from './SplitView'
 import { FormInputLabel, FormInput } from '../styles/Form'
@@ -7,7 +7,6 @@ import DropImage from './DropImage'
 import gql from 'graphql-tag'
 import { UpdateBrandInput } from '../__generated__/globalTypes'
 import { BrandFragment } from '../__generated__/BrandFragment'
-import { useDebounce, useRenderCount } from '../utils/hooks'
 import { CAMPAIGN_SAVE_DEBOUNCE } from '../pages/CampaignForm'
 import { useMutation } from '@apollo/react-hooks'
 import { UpdateBrandVariables, UpdateBrand } from '../__generated__/UpdateBrand'
@@ -35,22 +34,13 @@ interface Props {
   brand: BrandFragment
 }
 
-const brandReducer = (
-  state: UpdateBrandInput,
-  update: Partial<UpdateBrandInput>
-): UpdateBrandInput => {
-  console.log({ state, update })
-  return { ...state, ...update }
-}
-
 const CampaignFormBrand: React.FC<Props> = ({ brand }) => {
   // Omit brand data that doesn't belong in the input type
   const { __typename, _id, ...brandInputData } = brand
-  // console.log(brandInputData)
 
   // Update logcal form state
-  const [brandInput, dispatch] = useReducer(brandReducer, brandInputData)
-  // const [brandInput, setBrandInput] = useState<UpdateBrandInput>(brandInputData)
+  const [brandInput, setBrandInput] = useState<UpdateBrandInput>(brandInputData)
+  const [hasSaved, setHasSaved] = useState<boolean>(false)
 
   // Use a ref to prevent stale data in the event handle
   const brandInputRef = useRef<UpdateBrandInput>()
@@ -58,33 +48,24 @@ const CampaignFormBrand: React.FC<Props> = ({ brand }) => {
     brandInputRef.current = brandInput
   })
 
-  // const handleUpdateBrand = (update: Partial<UpdateBrandInput>) => {
-  //   console.log('update brand', update, brandInputRef.current)
-  //   if (update.logo) {
-  //     setBrandInput({ ...brandInputRef.current, ...update })
-  //   } else {
-  //     setBrandInput({ ...brandInput, ...update })
-  //   }
-  // }
+  const [debouncedCallback] = useDebouncedCallback(() => {
+    updateBrand({ variables: { id: _id, updatedBrand: brandInput } })
+  }, CAMPAIGN_SAVE_DEBOUNCE)
+
+  const handleUpdateBrand = (update: Partial<UpdateBrandInput>) => {
+    setHasSaved(false)
+    if (update.logo) {
+      setBrandInput({ ...brandInputRef.current, ...update })
+    } else {
+      setBrandInput({ ...brandInput, ...update })
+    }
+    debouncedCallback()
+  }
 
   // Prepare save to server request
-  const [hasSaved, setHasSaved] = useState<boolean>(false)
-  const [updateBrand, { error, loading }] = useMutation<UpdateBrand, UpdateBrandVariables>(
-    UPDATE_BRAND,
-    { onCompleted: () => setHasSaved(true) }
-  )
-
-  // Debounce to throttle server requests
-  const debouncedBrandInput = useDebounce(brandInput, CAMPAIGN_SAVE_DEBOUNCE)
-  const debounceIsObsolete = debouncedBrandInput !== brandInputData
-  const renderCount = useRenderCount()
-  // Save on server once debounced and fresh data are in sync
-  React.useEffect(() => {
-    if (!debounceIsObsolete && renderCount > 0) {
-      // Save on server
-      updateBrand({ variables: { id: _id, updatedBrand: brandInput } })
-    }
-  }, [_id, brandInput, debounceIsObsolete, renderCount, updateBrand])
+  const [updateBrand, { error }] = useMutation<UpdateBrand, UpdateBrandVariables>(UPDATE_BRAND, {
+    onCompleted: () => setHasSaved(true),
+  })
 
   return (
     <div>
@@ -98,8 +79,8 @@ const CampaignFormBrand: React.FC<Props> = ({ brand }) => {
             <FormInputLabel>
               Nom de la marque
               <FormInput
-                value={brand.name}
-                onChange={e => dispatch({ name: e.target.value })}
+                value={brandInput.name}
+                onChange={e => handleUpdateBrand({ name: e.target.value })}
                 placeholder="Adidas"
                 hasLabel
                 required
@@ -108,8 +89,8 @@ const CampaignFormBrand: React.FC<Props> = ({ brand }) => {
             <FormInputLabel>
               Lien vers votre site
               <FormInput
-                value={brand.website}
-                onChange={e => dispatch({ website: e.target.value })}
+                value={brandInput.website}
+                onChange={e => handleUpdateBrand({ website: e.target.value })}
                 placeholder="https://yoursite.com"
                 hasLabel
                 required
@@ -120,19 +101,17 @@ const CampaignFormBrand: React.FC<Props> = ({ brand }) => {
             <FormInputLabel>
               Votre logo
               <DropImage
-                handleDrop={newLogo => dispatch({ logo: newLogo })}
+                handleDrop={newLogo => handleUpdateBrand({ logo: newLogo })}
                 preset="brand_logo"
-                currentImage={brand.logo}
+                currentImage={brandInput.logo}
                 idealSize="400x400 pixels (1:1)"
               />
             </FormInputLabel>
           </Box>
         </Flex>
-      </SplitView>{' '}
+      </SplitView>
     </div>
   )
 }
 
-export default React.memo(CampaignFormBrand, (prevProps, newProps) =>
-  equal(prevProps.brand, newProps.brand)
-)
+export default CampaignFormBrand
