@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useRef, useState, useCallback } from 'react'
 import { RouteComponentProps, withRouter } from 'react-router-dom'
 import { Flex, Box } from '@rebass/grid'
 import StyledFrame from 'react-styled-frame'
@@ -6,7 +6,7 @@ import styled from 'styled-components'
 import ErrorBoundary from '../components/ErrorBoundary'
 import ErrorCard from '../components/ErrorCard'
 import { MainButton } from '../styles/Button'
-import { usePageTitle, useRect } from '../utils/hooks'
+import { usePageTitle, useClientSize } from '../utils/hooks'
 import PhoneMockup from '../components/PhoneMockup'
 import ExperiencePresentation from '../components/ExperiencePresentation'
 import { Title, SubTitle } from '../styles/Text'
@@ -83,8 +83,16 @@ const CampaignForm: React.FC<RouteComponentProps<MatchParams>> = ({ match }) => 
 
   // Calculate available vertical space
   const selfRef = useRef(null)
-  const box = useRect(selfRef)
-  const availableHeight = window.innerHeight - box.top
+  const [topDistance, setTopDistance] = useState<number>(0)
+  const measuredRef = useCallback((node: HTMLElement) => {
+    if (node !== null) {
+      setTopDistance(node.offsetTop)
+    }
+  }, [])
+
+  // const box = useRect(selfRef)
+  const { height } = useClientSize()
+  const availableHeight = height - topDistance
 
   if (loading) {
     return <Loader fullScreen />
@@ -141,7 +149,7 @@ const CampaignForm: React.FC<RouteComponentProps<MatchParams>> = ({ match }) => 
 
   return (
     <ErrorBoundary message="Le brief n'a pas pu être affiché">
-      <ContainerBox ref={selfRef}>
+      <ContainerBox ref={measuredRef}>
         <FullHeightFlex
           flexDirection={['column', 'column', 'row']}
           justifyContent="space-between"
@@ -166,10 +174,10 @@ const CampaignForm: React.FC<RouteComponentProps<MatchParams>> = ({ match }) => 
             <PreviewColumn>
               <Box py="1rem">
                 <SubTitle isCentered noMargin>
-                  Aperçu en direct
+                  Live preview
                 </SubTitle>
                 <p style={{ textAlign: 'center', color: palette.grey._500 }}>
-                  Voici ce que verront les influenceurs
+                  Here's what influencers will see
                 </p>
               </Box>
               <PhoneMockup>

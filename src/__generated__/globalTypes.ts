@@ -17,6 +17,7 @@ export enum AgeGroup {
   AGE_45_54 = "AGE_45_54",
   AGE_55_64 = "AGE_55_64",
   AGE_65_PLUS = "AGE_65_PLUS",
+  ANY = "ANY",
 }
 
 /**
