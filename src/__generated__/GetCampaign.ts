@@ -30,6 +30,10 @@ export interface GetCampaign_campaign_product {
    * Link of a YouTube video that presents the product
    */
   youtubeLink: string | null;
+  /**
+   * Game lauch date, can be past or future
+   */
+  launchedAt: any;
 }
 
 export interface GetCampaign_campaign_brand {

@@ -97,6 +97,7 @@ export const GET_CAMPAIGN = gql`
         website
         pictures
         youtubeLink
+        launchedAt
       }
       brand {
         ...BrandFragment

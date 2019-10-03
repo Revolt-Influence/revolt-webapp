@@ -68,6 +68,7 @@ const EXPERIENCE_PRESENTATION_FRAGMENT = gql`
       website
       youtubeLink
       pictures
+      launchedAt
     }
     rules
     createdAt

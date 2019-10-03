@@ -45,6 +45,10 @@ export interface GetExperiencesPage_campaigns_items_product {
    * Cloudinary URLs of promo images of the product
    */
   pictures: string[];
+  /**
+   * Game lauch date, can be past or future
+   */
+  launchedAt: any;
 }
 
 export interface GetExperiencesPage_campaigns_items {

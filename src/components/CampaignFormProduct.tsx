@@ -1,4 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react'
+import moment from 'moment'
+import 'react-dates/initialize'
+import 'react-dates/lib/css/_datepicker.css'
+import { SingleDatePicker } from 'react-dates'
 import { Flex, Box } from '@rebass/grid'
 import gql from 'graphql-tag'
 import { FormInputLabel, FormInput, FormTextarea } from '../styles/Form'
@@ -42,6 +46,7 @@ const CampaignFormProduct: React.FC<Prop> = ({ product, campaignId }) => {
   // Update local form state
   const [productInput, setProductInput] = useState<CampaignProductInput>(productInputData)
   const [hasSaved, setHasSaved] = useState<boolean>(false)
+  const [dateIsFocused, setDateIsFocused] = useState<boolean>(false)
 
   // Use a ref to prevent stale data in the event handle
   const productInputRef = useRef<CampaignProductInput>()
@@ -55,7 +60,8 @@ const CampaignFormProduct: React.FC<Prop> = ({ product, campaignId }) => {
 
   const handleUpdateProduct = (update: Partial<CampaignProductInput>) => {
     setHasSaved(false)
-    if (update.pictures) {
+    // Treat update that come from callbacks separately as we need to ensure they have fresh data
+    if (update.pictures || update.launchedAt) {
       setProductInput({ ...productInputRef.current, ...update })
     } else {
       setProductInput({ ...productInput, ...update })
@@ -86,11 +92,12 @@ const CampaignFormProduct: React.FC<Prop> = ({ product, campaignId }) => {
               <FormInput
                 value={productInput.name}
                 onChange={e => handleUpdateProduct({ name: e.target.value })}
+                placeholder="Your game"
                 hasLabel
               />
             </FormInputLabel>
             <FormInputLabel>
-              Lien vers plus de détails
+              Link to more details
               {/* Link to more details */}
               <FormInput
                 value={productInput.website}
@@ -103,7 +110,7 @@ const CampaignFormProduct: React.FC<Prop> = ({ product, campaignId }) => {
           {/* Photo upload */}
           <Box width={[1, 1, 6 / 12]} pl={[0, 0, '1rem']} mt={['15px', 0, 0]}>
             <FormInputLabel>
-              Photo du cadeau
+              Game promo image
               <DropImage
                 handleDrop={newPhoto => handleUpdateProduct({ pictures: [newPhoto] })}
                 preset="campaign_gift"
@@ -115,12 +122,23 @@ const CampaignFormProduct: React.FC<Prop> = ({ product, campaignId }) => {
         </Flex>
         {/* Other info */}
         <FormInputLabel>
-          Description du cadeau
+          Description
           <FormTextarea
             value={productInput.description}
             rows={4}
             onChange={e => handleUpdateProduct({ description: e.target.value })}
             hasLabel
+          />
+        </FormInputLabel>
+        {/* Launch date */}
+        <FormInputLabel>
+          Launch date
+          <SingleDatePicker
+            date={moment(productInput.launchedAt)}
+            onDateChange={newDate => handleUpdateProduct({ launchedAt: newDate.toISOString() })}
+            onFocusChange={focusedData => setDateIsFocused(focusedData.focused)}
+            focused={dateIsFocused}
+            id="launch_date_picker"
           />
         </FormInputLabel>
       </>

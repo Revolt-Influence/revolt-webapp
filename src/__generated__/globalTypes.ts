@@ -90,7 +90,7 @@ export interface CampaignBriefInput {
   name: string;
   description: string;
   rules: string[];
-  estimatedBudget: number;
+  estimatedBudget?: number | null;
 }
 
 export interface CampaignProductInput {
@@ -98,6 +98,7 @@ export interface CampaignProductInput {
   description: string;
   website: string;
   pictures: string[];
+  launchedAt: any;
   youtubeLink?: string | null;
 }
 
