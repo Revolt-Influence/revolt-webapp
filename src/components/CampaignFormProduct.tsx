@@ -2,19 +2,20 @@ import React, { useEffect, useState, useRef } from 'react'
 import moment from 'moment'
 import { Flex, Box } from '@rebass/grid'
 import gql from 'graphql-tag'
-import { FormInputLabel, FormInput, FormTextarea, FormSelect } from '../styles/Form'
+import { FormInputLabel, FormInput, FormTextarea } from '../styles/Form'
 import DropImage from './DropImage'
 import SplitView from './SplitView'
 import { GetCampaign_campaign_product } from '../__generated__/GetCampaign'
 import { CAMPAIGN_SAVE_DEBOUNCE } from '../pages/CampaignForm'
 import { useDebouncedCallback } from 'use-debounce/lib'
-import { CampaignProductInput } from '../__generated__/globalTypes'
+import { CampaignProductInput, TrackingProvider } from '../__generated__/globalTypes'
 import {
   UpdateCampaignProduct,
   UpdateCampaignProductVariables,
 } from '../__generated__/UpdateCampaignProduct'
 import { useMutation } from '@apollo/react-hooks'
 import Toast from './Toast'
+import GameCategoriesForm from './GameCategoriesForm'
 
 const UPDATE_CAMPAIGN_PRODUCT = gql`
   mutation UpdateCampaignProduct($campaignProduct: CampaignProductInput!, $campaignId: String!) {
@@ -57,7 +58,7 @@ const CampaignFormProduct: React.FC<Prop> = ({ product, campaignId }) => {
   const handleUpdateProduct = (update: Partial<CampaignProductInput>) => {
     setHasSaved(false)
     // Treat update that come from callbacks separately as we need to ensure they have fresh data
-    if (update.pictures || update.launchedAt) {
+    if (update.pictures || update.launchedAt || update.categories) {
       setProductInput({ ...productInputRef.current, ...update })
     } else {
       setProductInput({ ...productInput, ...update })
@@ -116,6 +117,14 @@ const CampaignFormProduct: React.FC<Prop> = ({ product, campaignId }) => {
             </FormInputLabel>
           </Box>
         </Flex>
+        {/* Game categories */}
+        <FormInputLabel>Game categories</FormInputLabel>
+        <GameCategoriesForm
+          selectedCategories={productInput.categories}
+          handleNewSelectedCategories={newCategories =>
+            handleUpdateProduct({ categories: newCategories })
+          }
+        />
         {/* Other info */}
         <FormInputLabel>
           Description
@@ -146,10 +155,6 @@ const CampaignFormProduct: React.FC<Prop> = ({ product, campaignId }) => {
               hasLabel
             />
           </FormInputLabel>
-        </Box>
-        {/* Tracking provider */}
-        <Box width={[1, 1, 6 / 12]}>
-          <FormSelect></FormSelect>
         </Box>
       </>
     </SplitView>

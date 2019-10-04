@@ -2,7 +2,7 @@
 /* eslint-disable */
 // This file was automatically generated and should not be edited.
 
-import { CreatorStatus, CollabStatus } from "./globalTypes";
+import { CreatorStatus, GameCategory, CollabStatus } from "./globalTypes";
 
 // ====================================================
 // GraphQL query operation: GetExperiencePage
@@ -55,6 +55,10 @@ export interface GetExperiencePage_campaign_product {
    * Paragraph of info about the product
    */
   description: string;
+  /**
+   * Game categories that best describe the game
+   */
+  categories: GameCategory[];
   /**
    * Link to more info about the product
    */

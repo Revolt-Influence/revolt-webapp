@@ -65,6 +65,7 @@ const EXPERIENCE_PRESENTATION_FRAGMENT = gql`
     product {
       name
       description
+      categories
       website
       youtubeLink
       pictures

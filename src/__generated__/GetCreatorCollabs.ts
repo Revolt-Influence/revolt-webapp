@@ -2,7 +2,7 @@
 /* eslint-disable */
 // This file was automatically generated and should not be edited.
 
-import { CollabStatus } from "./globalTypes";
+import { CollabStatus, GameCategory } from "./globalTypes";
 
 // ====================================================
 // GraphQL query operation: GetCreatorCollabs
@@ -35,6 +35,10 @@ export interface GetCreatorCollabs_collabs_campaign_product {
    * Paragraph of info about the product
    */
   description: string;
+  /**
+   * Game categories that best describe the game
+   */
+  categories: GameCategory[];
   /**
    * Link to more info about the product
    */

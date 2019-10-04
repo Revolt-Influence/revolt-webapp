@@ -2,7 +2,7 @@
 /* eslint-disable */
 // This file was automatically generated and should not be edited.
 
-import { CampaignBriefInput } from "./globalTypes";
+import { CampaignBriefInput, TrackingProvider } from "./globalTypes";
 
 // ====================================================
 // GraphQL mutation operation: UpdateCampaignBrief
@@ -30,6 +30,10 @@ export interface UpdateCampaignBrief_updateCampaignBrief {
    * Total amount of money that will be given to creators
    */
   estimatedBudget: number | null;
+  /**
+   * Solution used to provide game analytics
+   */
+  trackingProvider: TrackingProvider;
 }
 
 export interface UpdateCampaignBrief {

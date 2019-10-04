@@ -41,6 +41,30 @@ export enum CreatorStatus {
 }
 
 /**
+ * Family of games
+ */
+export enum GameCategory {
+  ACTION = "ACTION",
+  ADVENTURE = "ADVENTURE",
+  ARCADE = "ARCADE",
+  AR_VR = "AR_VR",
+  HORROR = "HORROR",
+  INDIE = "INDIE",
+  MMO = "MMO",
+  PARTY_GAME = "PARTY_GAME",
+  PLATFORMER = "PLATFORMER",
+  PUZZLE = "PUZZLE",
+  RETRO = "RETRO",
+  ROGUELIKE = "ROGUELIKE",
+  RPG = "RPG",
+  SHOOTER = "SHOOTER",
+  SIMULATION = "SIMULATION",
+  SPORTS = "SPORTS",
+  STRATEGY = "STRATEGY",
+  SURVIVAL = "SURVIVAL",
+}
+
+/**
  * Male female or don't care
  */
 export enum Gender {
@@ -81,6 +105,17 @@ export enum SessionType {
   CREATOR = "CREATOR",
 }
 
+/**
+ * Platforms that provide analytics for game
+ */
+export enum TrackingProvider {
+  GAME_ANALYTICS = "GAME_ANALYTICS",
+  GOOGLE_ANALYTICS = "GOOGLE_ANALYTICS",
+  NONE = "NONE",
+  OTHER = "OTHER",
+  UNITY_ANALYTICS = "UNITY_ANALYTICS",
+}
+
 export interface CampaignAudienceInput {
   gender: Gender;
   countries: string[];
@@ -92,6 +127,7 @@ export interface CampaignBriefInput {
   description: string;
   rules: string[];
   estimatedBudget?: number | null;
+  trackingProvider: TrackingProvider;
 }
 
 export interface CampaignProductInput {
@@ -100,6 +136,7 @@ export interface CampaignProductInput {
   website: string;
   pictures: string[];
   launchedAt: any;
+  categories: GameCategory[];
   youtubeLink?: string | null;
 }
 

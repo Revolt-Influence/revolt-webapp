@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import { Box } from '@rebass/grid'
 import gql from 'graphql-tag'
-import { FormInputLabel, FormInput, FormTextarea } from '../styles/Form'
+import { FormInputLabel, FormInput, FormTextarea, FormSelect } from '../styles/Form'
 import SplitView from './SplitView'
 import { CAMPAIGN_SAVE_DEBOUNCE } from '../pages/CampaignForm'
 import { useDebouncedCallback } from 'use-debounce/lib'
-import { CampaignBriefInput } from '../__generated__/globalTypes'
+import { CampaignBriefInput, TrackingProvider } from '../__generated__/globalTypes'
 import { useMutation } from '@apollo/react-hooks'
 import Toast from './Toast'
 import { CampaignBriefFragment } from '../__generated__/CampaignBriefFragment'
@@ -13,6 +13,9 @@ import {
   UpdateCampaignBrief,
   UpdateCampaignBriefVariables,
 } from '../__generated__/UpdateCampaignBrief'
+import { showTrackingProvider } from '../utils/enums'
+
+const possibleTrackingProviders = Object.values(TrackingProvider) as TrackingProvider[]
 
 export const CAMPAIGN_BRIEF_FRAGMENT = gql`
   fragment CampaignBriefFragment on Campaign {
@@ -21,6 +24,7 @@ export const CAMPAIGN_BRIEF_FRAGMENT = gql`
     description
     rules
     estimatedBudget
+    trackingProvider
   }
 `
 
@@ -92,7 +96,27 @@ const CampaignFormBrief: React.FC<Prop> = ({ brief }) => {
             required
           />
         </FormInputLabel>
-        <Box width={[1, 1, 6 / 12]} pr={[0, 0, '2rem']}>
+        {/* Tracking provider */}
+        <Box width={[1, 1, 6 / 12]}>
+          <FormInputLabel withMargin>
+            Tracking provider
+            <FormSelect
+              value={briefInput.trackingProvider}
+              onChange={e =>
+                handleUpdateBrief({ trackingProvider: e.target.value as TrackingProvider })
+              }
+              fullWidth
+            >
+              {possibleTrackingProviders.map(_provider => (
+                <option value={_provider} key={_provider}>
+                  {showTrackingProvider(_provider)}
+                </option>
+              ))}
+            </FormSelect>
+          </FormInputLabel>
+        </Box>
+
+        <Box width={[1, 1, 8 / 12]} pr={[0, 0, '2rem']}>
           <FormInputLabel withMargin>
             Total campaign budget estimation (in US Dollars)
             <FormInput
@@ -100,7 +124,6 @@ const CampaignFormBrief: React.FC<Prop> = ({ brief }) => {
               onChange={e => handleUpdateBrief({ estimatedBudget: parseFloat(e.target.value) })}
               hasLabel
               type="number"
-              required
             />
           </FormInputLabel>
         </Box>

@@ -2,7 +2,7 @@
 /* eslint-disable */
 // This file was automatically generated and should not be edited.
 
-import { CollabStatus, AgeGroup, Gender } from "./globalTypes";
+import { GameCategory, CollabStatus, TrackingProvider, AgeGroup, Gender } from "./globalTypes";
 
 // ====================================================
 // GraphQL query operation: GetCampaigns
@@ -35,6 +35,10 @@ export interface GetCampaigns_campaigns_items_product {
    * Paragraph of info about the product
    */
   description: string;
+  /**
+   * Game categories that best describe the game
+   */
+  categories: GameCategory[];
   /**
    * Link to more info about the product
    */
@@ -125,6 +129,10 @@ export interface GetCampaigns_campaigns_items {
    * Total amount of money that will be given to creators
    */
   estimatedBudget: number | null;
+  /**
+   * Solution used to provide game analytics
+   */
+  trackingProvider: TrackingProvider;
   /**
    * The ideal audience the brand wants to reach
    */

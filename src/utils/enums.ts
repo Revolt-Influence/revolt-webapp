@@ -1,4 +1,4 @@
-import { Gender, AgeGroup } from '../__generated__/globalTypes'
+import { Gender, AgeGroup, GameCategory, TrackingProvider } from '../__generated__/globalTypes'
 
 export function showGender(gender: Gender): string {
   switch (gender) {
@@ -31,5 +31,67 @@ export function showAgeGroup(ageGroup: AgeGroup): string {
       return '65+'
     case AgeGroup.ANY:
       return 'any'
+    default:
+      return ageGroup
+  }
+}
+
+export function showGameCategory(category: GameCategory): string {
+  switch (category) {
+    case GameCategory.ACTION:
+      return 'Action'
+    case GameCategory.ADVENTURE:
+      return 'Adventure'
+    case GameCategory.ARCADE:
+      return 'Arcade'
+    case GameCategory.AR_VR:
+      return 'AR / VR'
+    case GameCategory.HORROR:
+      return 'Horror'
+    case GameCategory.INDIE:
+      return 'Indie'
+    case GameCategory.MMO:
+      return 'MMO'
+    case GameCategory.PARTY_GAME:
+      return 'Party game'
+    case GameCategory.PLATFORMER:
+      return 'Platformer'
+    case GameCategory.PUZZLE:
+      return 'Puzzle'
+    case GameCategory.RETRO:
+      return 'Retro'
+    case GameCategory.ROGUELIKE:
+      return 'Roguelike'
+    case GameCategory.RPG:
+      return 'RPG'
+    case GameCategory.SHOOTER:
+      return 'Shooter'
+    case GameCategory.SIMULATION:
+      return 'Simulation'
+    case GameCategory.SPORTS:
+      return 'Sports'
+    case GameCategory.STRATEGY:
+      return 'Strategy'
+    case GameCategory.SURVIVAL:
+      return 'Survival'
+    default:
+      return category
+  }
+}
+
+export function showTrackingProvider(provider: TrackingProvider): string {
+  switch (provider) {
+    case TrackingProvider.GAME_ANALYTICS:
+      return 'Game Analytics'
+    case TrackingProvider.GOOGLE_ANALYTICS:
+      return 'Google Analytics'
+    case TrackingProvider.NONE:
+      return 'No tracking provider'
+    case TrackingProvider.OTHER:
+      return 'Other'
+    case TrackingProvider.UNITY_ANALYTICS:
+      return 'Unity Analytics'
+    default:
+      return provider
   }
 }

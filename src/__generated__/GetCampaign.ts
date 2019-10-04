@@ -2,7 +2,7 @@
 /* eslint-disable */
 // This file was automatically generated and should not be edited.
 
-import { Gender, AgeGroup } from "./globalTypes";
+import { TrackingProvider, GameCategory, Gender, AgeGroup } from "./globalTypes";
 
 // ====================================================
 // GraphQL query operation: GetCampaign
@@ -30,6 +30,10 @@ export interface GetCampaign_campaign_product {
    * Link of a YouTube video that presents the product
    */
   youtubeLink: string | null;
+  /**
+   * Game categories that best describe the game
+   */
+  categories: GameCategory[];
   /**
    * Game lauch date, can be past or future
    */
@@ -96,6 +100,10 @@ export interface GetCampaign_campaign {
    * Total amount of money that will be given to creators
    */
   estimatedBudget: number | null;
+  /**
+   * Solution used to provide game analytics
+   */
+  trackingProvider: TrackingProvider;
   /**
    * What the creator will receive
    */

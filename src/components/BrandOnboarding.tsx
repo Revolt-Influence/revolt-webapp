@@ -86,7 +86,7 @@ const BrandOnboarding: React.FC<{}> = () => {
   const history = useHistory()
   const [createCampaign] = useMutation<CreateCampaign>(CREATE_CAMPAIGN, {
     onCompleted: ({ createCampaign: { _id } }) => {
-      history.push(`/brand/campaigns/${_id}`)
+      history.push(`/brand/campaigns/${_id}/brief`)
     },
   })
   // Store current status in state

@@ -91,12 +91,14 @@ export const GET_CAMPAIGN = gql`
       name
       description
       estimatedBudget
+      trackingProvider
       product {
         name
         description
         website
         pictures
         youtubeLink
+        categories
         launchedAt
       }
       brand {

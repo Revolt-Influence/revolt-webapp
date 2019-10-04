@@ -2,6 +2,8 @@
 /* eslint-disable */
 // This file was automatically generated and should not be edited.
 
+import { GameCategory } from "./globalTypes";
+
 // ====================================================
 // GraphQL fragment: ExperiencePresentationFragment
 // ====================================================
@@ -33,6 +35,10 @@ export interface ExperiencePresentationFragment_product {
    * Paragraph of info about the product
    */
   description: string;
+  /**
+   * Game categories that best describe the game
+   */
+  categories: GameCategory[];
   /**
    * Link to more info about the product
    */

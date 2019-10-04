@@ -2,6 +2,8 @@
 /* eslint-disable */
 // This file was automatically generated and should not be edited.
 
+import { TrackingProvider } from "./globalTypes";
+
 // ====================================================
 // GraphQL fragment: CampaignBriefFragment
 // ====================================================
@@ -28,4 +30,8 @@ export interface CampaignBriefFragment {
    * Total amount of money that will be given to creators
    */
   estimatedBudget: number | null;
+  /**
+   * Solution used to provide game analytics
+   */
+  trackingProvider: TrackingProvider;
 }

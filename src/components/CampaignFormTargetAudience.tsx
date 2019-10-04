@@ -139,7 +139,7 @@ const CampaignFormTargetAudience: React.FC<Prop> = ({ targetAudience, campaignId
             Age
             <Flex width={[1, 1, 8 / 12]} flexDirection="row" flexWrap="wrap">
               {possibleAgeGroups.map(_ageGroup => (
-                <Box width={1 / 2}>
+                <Box width={1 / 2} key={_ageGroup}>
                   <CheckBox
                     text={showAgeGroup(_ageGroup)}
                     isChecked={targetAudienceInput.ageGroups.includes(_ageGroup)}

@@ -109,23 +109,20 @@ const CampaignForm: React.FC<RouteComponentProps<MatchParams>> = ({ match }) => 
     return (
       <>
         {toggleArchiveCampaignStatus.error && (
-          <ErrorCard noMargin message="Votre demande n'a pas pu être enregistrée" />
+          <ErrorCard noMargin message="Could not send to review" />
         )}
         {!campaign.isArchived && !campaign.isReviewed && (
           <SuccessCard
             noMargin
-            message="Votre demande a été enregistrée. Nous allons vérifier votre campagne et vous recontacter"
+            message="Your campaign is being reviewed. We'll get back to you shortly"
           />
         )}
         {!campaign.isArchived && campaign.isReviewed && (
-          <SuccessCard noMargin message="Votre campagne est en ligne" />
+          <SuccessCard noMargin message="Your campaign is online" />
         )}
         {!campaignIsComplete && campaign.isArchived && (
           <Box mb="1rem">
-            <NotificationCard
-              nature="info"
-              message="Complétez votre brief pour demander à publier la campagne"
-            />
+            <NotificationCard nature="info" message="Complete your brief to send to review" />
           </Box>
         )}
         {publishButtonIsShown && (
@@ -135,7 +132,7 @@ const CampaignForm: React.FC<RouteComponentProps<MatchParams>> = ({ match }) => 
               disabled={toggleArchiveCampaignStatus.loading || !campaignIsComplete}
               noMargin
             >
-              {toggleArchiveCampaignStatus.loading ? 'Publication...' : 'Demander la publication'}
+              {toggleArchiveCampaignStatus.loading ? 'Sending to review...' : 'Send to review'}
             </MainButton>
           </div>
         )}
@@ -147,7 +144,7 @@ const CampaignForm: React.FC<RouteComponentProps<MatchParams>> = ({ match }) => 
   const { product, brand, targetAudience, isArchived, isReviewed, owner, ...brief } = campaign
 
   return (
-    <ErrorBoundary message="Le brief n'a pas pu être affiché">
+    <ErrorBoundary message="Could not show your brief">
       <ContainerBox ref={measuredRef}>
         <FullHeightFlex
           flexDirection={['column', 'column', 'row']}
@@ -156,10 +153,7 @@ const CampaignForm: React.FC<RouteComponentProps<MatchParams>> = ({ match }) => 
           style={{ position: 'relative' }}
         >
           <FormBox width={[1, 1, 8 / 12]}>
-            <PageHeader
-              title="Brief de la campagne"
-              destination={`/brand/campaigns/${campaign._id}`}
-            />
+            <PageHeader title="Campaign brief" destination={`/brand/campaigns/${campaign._id}`} />
             {showPublishButton()}
             <CampaignFormProduct product={product} campaignId={campaign._id} />
             <CampaignFormBrief brief={brief} />
