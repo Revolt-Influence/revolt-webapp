@@ -121,7 +121,7 @@ const ExperiencePresentation: React.FC<Props> = ({ experienceId }) => {
         <Box width={[1, 1, 6 / 12]} pr={[0, 0, '15rem']}>
           <SplitView title="Votre cadeau" stacked noBorder>
             <ImageWrapper
-              src={product.pictures.length > 0 && product.pictures[0]}
+              src={product.pictures.length > 0 ? product.pictures[0] : null}
               alt={product.name || 'Cadeau'}
               ratio={4 / 3}
               placeholderText="Pas d'image disponible"

@@ -138,8 +138,9 @@ const CampaignFormProduct: React.FC<Prop> = ({ product, campaignId }) => {
         </FormInputLabel>
         {/* Promo video */}
         <FormInputLabel>
-          Promo video
+          YouTube promo video
           <FormInput
+            type="url"
             value={productInput.youtubeLink}
             onChange={e => handleUpdateProduct({ youtubeLink: e.target.value })}
             hasLabel

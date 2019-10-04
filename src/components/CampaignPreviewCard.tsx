@@ -103,7 +103,7 @@ const CampaignPreviewCard: React.FC<Props> = ({ campaign }) => {
     <Link to={`/brand/campaigns/${campaign._id}`}>
       <Style mt={[0, 0, 0]} p={[0, 0, 0]}>
         <ImageWrapper
-          src={product.pictures[0]}
+          src={product.pictures.length > 0 ? product.pictures[0] : null}
           alt={name}
           ratio={4 / 3}
           placeholderText="Ajoutez une photo du cadeau dans le brief"

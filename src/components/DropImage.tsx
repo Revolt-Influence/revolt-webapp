@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import { useDropzone, DropzoneOptions } from 'react-dropzone'
 import styled from 'styled-components'
 import { MainButton } from '../styles/Button'
@@ -92,6 +92,10 @@ const DropImage: React.FC<Props> = ({
   const [isUploading, setIsUploading] = useState<boolean>(false)
   const { width } = useWindowSize()
 
+  // useEffect(() => {
+  //   console.log('current iamages changed', currentImages)
+  // }, [currentImages])
+
   // Handle drop/select function
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
@@ -104,6 +108,7 @@ const DropImage: React.FC<Props> = ({
           name: acceptedFiles[0].name,
           data: reader.result as string,
         }))
+        console.log(acceptedFiles, imagesData)
         setNewImages(imagesData)
       }
       if (acceptedFiles.length > 0) {
@@ -140,22 +145,27 @@ const DropImage: React.FC<Props> = ({
     >
       {error ? (
         <ErrorCard message="Upload failed" />
-      ) : newImages.length > 0 ? (
-        newImages.map(_newImage => (
-          <DroppedImagePreview key={`${_newImage.name}-${Date.now()}`}>
-            <img
-              src={_newImage && _newImage.data}
-              alt={(_newImage && _newImage.name) || 'Game promo'}
-            />
-            <p>{_newImage && _newImage.name}</p>
-          </DroppedImagePreview>
-        ))
       ) : (
-        currentImages.map(_currentImage => (
-          <DroppedImagePreview key={_currentImage}>
-            <img src={_currentImage} alt="Game promo" />
-          </DroppedImagePreview>
-        ))
+        // Show current or new image
+        <>
+          {newImages.length > 0
+            ? newImages.map(_newImage => (
+                <DroppedImagePreview key={`${_newImage.name}-${Date.now()}`}>
+                  {console.log('from new image', _newImage)}
+                  <img
+                    src={_newImage && _newImage.data}
+                    alt={(_newImage && _newImage.name) || 'Game promo'}
+                  />
+                  <p>{_newImage && _newImage.name}</p>
+                </DroppedImagePreview>
+              ))
+            : currentImages.map(_currentImage => (
+                <DroppedImagePreview key={_currentImage}>
+                  {console.log('from current image', _currentImage)}
+                  <img src={_currentImage} alt="Game promo" />
+                </DroppedImagePreview>
+              ))}
+        </>
       )}
       {/* Don't suggest drag and drop on mobile */}
       {!isUploading && width > 700 && newImages.length === 0 && `Faites glisser une image ici`}
