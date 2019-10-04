@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useState, useCallback } from 'react'
 import { useDropzone, DropzoneOptions } from 'react-dropzone'
 import styled from 'styled-components'
 import { MainButton } from '../styles/Button'
@@ -92,41 +92,51 @@ const DropImage: React.FC<Props> = ({
   const [isUploading, setIsUploading] = useState<boolean>(false)
   const { width } = useWindowSize()
 
-  // useEffect(() => {
-  //   console.log('current iamages changed', currentImages)
-  // }, [currentImages])
-
   // Handle drop/select function
   const onDrop = useCallback(
-    (acceptedFiles: File[]) => {
-      // Reset state
-      setError(null)
-      // Save image to local state as base64 for display purposes
-      const reader = new FileReader()
-      reader.onload = () => {
-        const imagesData = acceptedFiles.map(_file => ({
-          name: acceptedFiles[0].name,
-          data: reader.result as string,
-        }))
-        console.log(acceptedFiles, imagesData)
-        setNewImages(imagesData)
+    (newAcceptedFiles: File[]) => {
+      // Serate function since useCallback doesn't support async function as argument
+      const handleAcceptedFiles = async (acceptedFiles: File[]) => {
+        // Reset state
+        setError(null)
+        if (acceptedFiles.length > 0) {
+          let isNewDrop = true
+          setIsUploading(true)
+          const uploadImagesPromises: Promise<string>[] = acceptedFiles.map(
+            async (_acceptedFile, _acceptedIndex) => {
+              // Save image to local state as base64 for display purposes
+              const reader = new FileReader()
+              reader.onload = e => {
+                console.log(e)
+                const imageData = {
+                  name: _acceptedFile.name,
+                  data: (e.currentTarget as any).result,
+                }
+                // Reset array on new drop, add to array if it's not the first item of the drop
+                const newImagesArray = isNewDrop ? [imageData] : [...newImages, imageData]
+                console.log('set new images array', { isNewDrop, newImagesArray })
+                setNewImages(newImagesArray)
+                isNewDrop = false
+              }
+              reader.readAsDataURL(_acceptedFile as Blob)
+              // Upload to cloudinary then send to parent
+              const response = await request
+                .post('https://api.cloudinary.com/v1_1/influencerz/upload')
+                .field('file', _acceptedFile)
+                .field('upload_preset', preset)
+              return response.body.secure_url as string
+            }
+          )
+          const cloudinaryUrls = await Promise.all(uploadImagesPromises)
+          handleDrop(cloudinaryUrls)
+          setIsUploading(false)
+        }
       }
-      if (acceptedFiles.length > 0) {
-        reader.readAsDataURL(acceptedFiles[0] as Blob)
-        // Upload to cloudinary then send to parent
-        setIsUploading(true)
-        request
-          .post('https://api.cloudinary.com/v1_1/influencerz/upload')
-          .field('file', acceptedFiles[0])
-          .field('upload_preset', preset)
-          .then(({ body }) => {
-            handleDrop(body.secure_url)
-            setIsUploading(false)
-          })
-          .catch(error => setError(error))
-      }
+
+      // Actually run the function
+      handleAcceptedFiles(newAcceptedFiles)
     },
-    [handleDrop, preset]
+    [handleDrop, newImages, preset]
   )
 
   const dropSettings: DropzoneOptions = {
@@ -151,7 +161,6 @@ const DropImage: React.FC<Props> = ({
           {newImages.length > 0
             ? newImages.map(_newImage => (
                 <DroppedImagePreview key={`${_newImage.name}-${Date.now()}`}>
-                  {console.log('from new image', _newImage)}
                   <img
                     src={_newImage && _newImage.data}
                     alt={(_newImage && _newImage.name) || 'Game promo'}
@@ -161,17 +170,21 @@ const DropImage: React.FC<Props> = ({
               ))
             : currentImages.map(_currentImage => (
                 <DroppedImagePreview key={_currentImage}>
-                  {console.log('from current image', _currentImage)}
                   <img src={_currentImage} alt="Game promo" />
                 </DroppedImagePreview>
               ))}
         </>
       )}
       {/* Don't suggest drag and drop on mobile */}
-      {!isUploading && width > 700 && newImages.length === 0 && `Faites glisser une image ici`}
-      {!isUploading && newImages.length !== 0 && `Votre image est prête`}
-      {isUploading && 'Chargement de votre image...'}
-      {idealSize && <p className="details">Format idéal : {idealSize}</p>}
+      {!isUploading &&
+        width > 700 &&
+        newImages.length === 0 &&
+        `Drop ${allowMultiple ? 'images' : 'an image'} here`}
+      {!isUploading &&
+        newImages.length !== 0 &&
+        `Your image${allowMultiple ? 's are' : 'is'} ready`}
+      {isUploading && `Uploading your image${allowMultiple ? 's' : ''}...`}
+      {idealSize && <p className="details">Ideal size: {idealSize}</p>}
       <input
         {...getInputProps()}
         style={{
@@ -185,7 +198,7 @@ const DropImage: React.FC<Props> = ({
         }}
       />
       <MainButton type="button" display="inline" smaller inverted>
-        Sélectionner un fichier
+        Select {allowMultiple ? 'images' : 'an image'}
       </MainButton>
     </DropStyles>
   )
