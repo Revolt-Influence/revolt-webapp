@@ -29,7 +29,7 @@ interface Props extends RouteComponentProps<RouterProps> {}
 
 const ResetPassword: React.FC<Props> = ({ match }) => {
   // Page management
-  usePageTitle('Réinitialiser le mot de passe')
+  usePageTitle('Reset password')
   const { token } = match.params
   // Form state
   const [newPassword, setNewPassword] = useState<string>('')
@@ -49,22 +49,22 @@ const ResetPassword: React.FC<Props> = ({ match }) => {
   return (
     <ContainerBox>
       <Flex justifyContent="center" flexDirection="column" width={[1, 10 / 12, 6 / 12]} mx="auto">
-        <Title>Réinitialiser votre mot de passe</Title>
+        <Title>Reset my password</Title>
         {succeeded ? (
           <>
-            <SuccessCard message="Votre mot de passe a bien été enregistré" />
-            <MainLink to="/login">Se connecter</MainLink>
+            <SuccessCard message="Your password has been reset" />
+            <MainLink to="/login">Login</MainLink>
           </>
         ) : (
           <form onSubmit={handleFormSubmit}>
             {/* New password */}
             <FormInputLabel>
-              Nouveau mot de passe
+              New password
               <FormInput
                 value={newPassword}
                 onChange={e => setNewPassword(e.target.value)}
                 type="password"
-                placeholder="Au moins 6 carctères"
+                placeholder="At least 6 characters"
                 pattern=".{6,}"
                 required
                 hasLabel
@@ -72,19 +72,19 @@ const ResetPassword: React.FC<Props> = ({ match }) => {
             </FormInputLabel>
             {/* Confirm new password */}
             <FormInputLabel>
-              Confirmer le mot de passe
+              Confirm password
               <FormInput
                 value={confirmNewPassword}
                 onChange={e => setConfirmNewPassword(e.target.value)}
                 type="password"
-                placeholder="Même mot de passe"
+                placeholder="Same password"
                 required
                 hasLabel
               />
             </FormInputLabel>
-            {error && <ErrorCard message="Ce lien n'est pas valide" />}
+            {error && <ErrorCard message="Invalid link" />}
             <MainButtonSubmit
-              value={loading ? 'Enregistrement...' : 'Enregistrer le mot de passe'}
+              value={loading ? 'Saving password...' : 'Save new password'}
               type="submit"
               disabled={loading || newPassword !== confirmNewPassword}
             />

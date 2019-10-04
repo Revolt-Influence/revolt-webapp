@@ -12,7 +12,7 @@ const Style = styled.div`
 const Upgrade: React.FC<{}> = () => (
   <Style>
     <Container>
-      <Title>Passer au Premium</Title>
+      <Title>Switch to Premium</Title>
       <Row justify="center">
         <Col size={6 / 12}>
           <UpgradePlan />

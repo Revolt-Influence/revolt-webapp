@@ -6,14 +6,14 @@ import ConnectCreatorYoutube from '../components/ConnectCreatorYoutube'
 import { usePageTitle } from '../utils/hooks'
 
 const ConnectSocialAccount: React.FC<{}> = () => {
-  usePageTitle('Connecter un compte')
+  usePageTitle('Connect an account')
   React.useEffect(() => {
     window.scrollTo(0, 0)
   }, [])
   return (
     <ContainerBox>
-      <Title>Connecter un compte</Title>
-      <SplitView title="Connecter YouTube">
+      <Title>Connect an account</Title>
+      <SplitView title="Connect YouTube">
         <ConnectCreatorYoutube />
       </SplitView>
     </ContainerBox>

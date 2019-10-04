@@ -12,31 +12,31 @@ import Session from '../components/Session'
 import ChangePassword from '../components/ChangePassword'
 
 const CreatorAccount: React.FC<{}> = () => {
-  usePageTitle('Mon compte')
+  usePageTitle('My account')
 
   return (
     <ErrorBoundary message="Votre profil n'a pas pu être affiché">
       <ContainerBox>
-        <Title>Mon compte</Title>
+        <Title>My account</Title>
         <Box width={[1, 10 / 12, 10 / 12]}>
           {/* Identity */}
-          <SplitView title="Mon profil">
+          <SplitView title="My profile">
             <CreatorIdentityProfile />
           </SplitView>
           {/* Youtube */}
-          <SplitView title="Ma chaîne Youtube">
+          <SplitView title="My YouTube channel">
             <ConnectCreatorYoutube />
           </SplitView>
           {/* Contact info */}
-          <SplitView title="Mes coordonnées">
+          <SplitView title="My contact info">
             <UpdateCreatorContactInfo />
           </SplitView>
           {/* Change password */}
-          <SplitView title="Mon mot de passe">
+          <SplitView title="My password">
             <ChangePassword />
           </SplitView>
           {/* Session */}
-          <SplitView title="Ma session">
+          <SplitView title="My session">
             <Session />
           </SplitView>
         </Box>

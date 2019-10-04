@@ -37,7 +37,7 @@ const GET_EXPERIENCES_PAGE = gql`
 `
 
 const ExperiencesList: React.FC<RouteComponentProps> = ({ location, history }) => {
-  usePageTitle('Expériences')
+  usePageTitle('Experiences')
 
   // Get current page from URL
   const parsedQuery = queryString.parse(location.search)
@@ -63,12 +63,16 @@ const ExperiencesList: React.FC<RouteComponentProps> = ({ location, history }) =
     return <Loader />
   }
   if (error) {
-    return <ErrorCard message="Could not show experiences" />
+    return (
+      <ContainerBox>
+        <ErrorCard message="Could not show experiences" />
+      </ContainerBox>
+    )
   }
 
   return (
     <ContainerBox>
-      <ErrorBoundary message="Les expériences n'ont pas pu être affichées">
+      <ErrorBoundary message="Could not show experiences">
         <>
           <Title isCentered={deviceType !== 'desktop'}>Expériences</Title>
           <>
