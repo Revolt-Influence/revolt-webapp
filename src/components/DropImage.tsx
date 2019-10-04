@@ -8,6 +8,7 @@ import { palette } from '../utils/colors'
 import { truncateString } from '../utils/strings'
 import { useWindowSize } from '../utils/hooks'
 import ErrorCard from './ErrorCard'
+import { Flex } from '@rebass/grid'
 
 interface IDropProps {
   isDragReject: boolean
@@ -87,16 +88,16 @@ const DropImage: React.FC<Props> = ({
   idealSize,
   allowMultiple,
 }) => {
-  const [newImages, setNewImages] = useState<{ name: string; data: string }[]>([])
+  // const [newImages, setNewImages] = useState<{ name: string; data: string }[]>([])
   const [error, setError] = useState(null)
   const [isUploading, setIsUploading] = useState<boolean>(false)
   const { width } = useWindowSize()
 
-  const newImagesRef = useRef<{ name: string; data: string }[]>(newImages)
+  // const newImagesRef = useRef<{ name: string; data: string }[]>(newImages)
 
-  useEffect(() => {
-    newImagesRef.current = newImages
-  }, [newImages])
+  // useEffect(() => {
+  //   newImagesRef.current = newImages
+  // }, [newImages])
 
   // Handle drop/select function
   const onDrop = useCallback(
@@ -106,33 +107,19 @@ const DropImage: React.FC<Props> = ({
         // Reset state
         setError(null)
         if (acceptedFiles.length > 0) {
-          let isNewDrop = true
           setIsUploading(true)
           const uploadImagesPromises: Promise<string>[] = acceptedFiles.map(
             async (_acceptedFile, _acceptedIndex) => {
-              // Save image to local state as base64 for display purposes
-              const reader = new FileReader()
-              reader.onload = e => {
-                console.log(e)
-                const imageData = {
-                  name: _acceptedFile.name,
-                  data: (e.currentTarget as any).result,
-                }
-                // Reset array on new drop, add to array if it's not the first item of the drop
-                const newImagesArray = isNewDrop
-                  ? [imageData]
-                  : [...newImagesRef.current, imageData]
-                console.log('set new images array', { isNewDrop, newImagesArray })
-                setNewImages(newImagesArray)
-                isNewDrop = false
-              }
-              reader.readAsDataURL(_acceptedFile as Blob)
               // Upload to cloudinary then send to parent
-              const response = await request
-                .post('https://api.cloudinary.com/v1_1/influencerz/upload')
-                .field('file', _acceptedFile)
-                .field('upload_preset', preset)
-              return response.body.secure_url as string
+              try {
+                const response = await request
+                  .post('https://api.cloudinary.com/v1_1/revolt/upload')
+                  .field('file', _acceptedFile)
+                  .field('upload_preset', preset)
+                return response.body.secure_url as string
+              } catch (e) {
+                setError(e)
+              }
             }
           )
           const cloudinaryUrls = await Promise.all(uploadImagesPromises)
@@ -165,31 +152,21 @@ const DropImage: React.FC<Props> = ({
         <ErrorCard message="Upload failed" />
       ) : (
         // Show current or new image
-        <>
-          {newImages.length > 0
-            ? newImages.map(_newImage => (
-                <DroppedImagePreview key={`${_newImage.name}-${Date.now()}`}>
-                  <img
-                    src={_newImage && _newImage.data}
-                    alt={(_newImage && _newImage.name) || 'Game promo'}
-                  />
-                  <p>{_newImage && _newImage.name}</p>
-                </DroppedImagePreview>
-              ))
-            : currentImages.map(_currentImage => (
-                <DroppedImagePreview key={_currentImage}>
-                  <img src={_currentImage} alt="Game promo" />
-                </DroppedImagePreview>
-              ))}
-        </>
+        <Flex flexDirection="row" justifyContent="center" flexWrap="wrap">
+          {currentImages.map(_currentImage => (
+            <DroppedImagePreview key={_currentImage}>
+              <img src={_currentImage} alt="Game promo" />
+            </DroppedImagePreview>
+          ))}
+        </Flex>
       )}
       {/* Don't suggest drag and drop on mobile */}
       {!isUploading &&
         width > 700 &&
-        newImages.length === 0 &&
+        currentImages.length === 0 &&
         `Drop ${allowMultiple ? 'images' : 'an image'} here`}
       {!isUploading &&
-        newImages.length !== 0 &&
+        currentImages.length !== 0 &&
         `Your image${allowMultiple ? 's are' : 'is'} ready`}
       {isUploading && `Uploading your image${allowMultiple ? 's' : ''}...`}
       {idealSize && <p className="details">Ideal size: {idealSize}</p>}
