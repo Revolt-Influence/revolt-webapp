@@ -8,7 +8,7 @@ import SplitView from './SplitView'
 import { GetCampaign_campaign_product } from '../__generated__/GetCampaign'
 import { CAMPAIGN_SAVE_DEBOUNCE } from '../pages/CampaignForm'
 import { useDebouncedCallback } from 'use-debounce/lib'
-import { CampaignProductInput, TrackingProvider } from '../__generated__/globalTypes'
+import { CampaignProductInput } from '../__generated__/globalTypes'
 import {
   UpdateCampaignProduct,
   UpdateCampaignProductVariables,
@@ -107,11 +107,12 @@ const CampaignFormProduct: React.FC<Prop> = ({ product, campaignId }) => {
           {/* Photo upload */}
           <Box width={[1, 1, 6 / 12]} pl={[0, 0, '1rem']} mt={['15px', 0, 0]}>
             <FormInputLabel>
-              Game promo image
+              Game promo images
               <DropImage
-                handleDrop={newPhoto => handleUpdateProduct({ pictures: [newPhoto] })}
+                handleDrop={newPhotos => handleUpdateProduct({ pictures: newPhotos })}
                 preset="campaign_gift"
-                currentImage={productInput.pictures[0]}
+                allowMultiple
+                currentImages={productInput.pictures}
                 idealSize="800x600 pixels (4:3)"
               />
             </FormInputLabel>

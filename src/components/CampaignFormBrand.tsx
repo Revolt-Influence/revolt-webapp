@@ -101,9 +101,9 @@ const CampaignFormBrand: React.FC<Props> = ({ brand }) => {
             <FormInputLabel>
               Votre logo
               <DropImage
-                handleDrop={newLogo => handleUpdateBrand({ logo: newLogo })}
+                handleDrop={newLogos => handleUpdateBrand({ logo: newLogos[0] })}
                 preset="brand_logo"
-                currentImage={brandInput.logo}
+                currentImages={[brandInput.logo]}
                 idealSize="400x400 pixels (1:1)"
               />
             </FormInputLabel>

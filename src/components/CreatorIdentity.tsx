@@ -63,8 +63,8 @@ const CreatorIdentityProfile: React.FC<{}> = () => {
           <FormInputLabel>
             Photo
             <DropImage
-              currentImage={newPicture}
-              handleDrop={url => setNewPicture(url)}
+              currentImages={[newPicture]}
+              handleDrop={urls => setNewPicture(urls[0])}
               preset="creator_picture"
             />
           </FormInputLabel>
