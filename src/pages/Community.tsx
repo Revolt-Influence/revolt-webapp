@@ -47,7 +47,7 @@ const SET_CREATOR_STATUS = gql`
 `
 
 const Community: React.FC<RouteComponentProps> = ({ location }) => {
-  usePageTitle('Communauté')
+  usePageTitle('Community')
   // User defined state
   const [filter, setFilter] = useState<CreatorStatus>(CreatorStatus.UNVERIFIED)
   const [selectedId, setSelectedId] = useState<string>(null)
@@ -83,11 +83,11 @@ const Community: React.FC<RouteComponentProps> = ({ location }) => {
   const translateStatus = (status: CreatorStatus): string => {
     switch (status) {
       case CreatorStatus.UNVERIFIED:
-        return 'Non vérifié'
+        return 'Unverified'
       case CreatorStatus.VERIFIED:
-        return 'Vérifié'
+        return 'Verified'
       case CreatorStatus.BLOCKED:
-        return 'Bloqué'
+        return 'Blocked'
       default:
         return status
     }
@@ -114,7 +114,7 @@ const Community: React.FC<RouteComponentProps> = ({ location }) => {
   }
 
   return (
-    <ErrorBoundary message="La communauté d'influenceurs n'a pas pu être affichée">
+    <ErrorBoundary message="Could not show community">
       <ContainerBox>
         <FullHeightColumns
           noPadding
@@ -126,7 +126,7 @@ const Community: React.FC<RouteComponentProps> = ({ location }) => {
               justifyContent="space-between"
               style={{ height: '100%', maxHeight: '100%' }}
             >
-              <Title>Communauté</Title>
+              <Title>Community</Title>
               <Box flex={1} style={{ overflowY: 'scroll' }} pb="1rem">
                 <Dropdown
                   name="Statut"
@@ -143,7 +143,7 @@ const Community: React.FC<RouteComponentProps> = ({ location }) => {
                 />
                 {currentPage > 1 && (
                   <TextButton onClick={() => setCurrentPage(currentPage - 1)}>
-                    Voir les plus récents
+                    See more recents
                   </TextButton>
                 )}
                 {paginatedCreators.items.map(_creator => (
@@ -152,7 +152,7 @@ const Community: React.FC<RouteComponentProps> = ({ location }) => {
                     key={_creator._id}
                     title={_creator.name}
                     picture={_creator.picture}
-                    description={`${translateStatus(_creator.status)} · inscrit ${moment(
+                    description={`${translateStatus(_creator.status)} · signed up ${moment(
                       _creator.createdAt
                     ).fromNow()}`}
                     handleClick={() => setSelectedId(_creator._id)}

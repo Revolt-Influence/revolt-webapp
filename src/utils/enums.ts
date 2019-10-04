@@ -1,4 +1,10 @@
-import { Gender, AgeGroup, GameCategory, TrackingProvider } from '../__generated__/globalTypes'
+import {
+  Gender,
+  AgeGroup,
+  GameCategory,
+  TrackingProvider,
+  Language,
+} from '../__generated__/globalTypes'
 
 export function showGender(gender: Gender): string {
   switch (gender) {
@@ -93,5 +99,40 @@ export function showTrackingProvider(provider: TrackingProvider): string {
       return 'Unity Analytics'
     default:
       return provider
+  }
+}
+
+export function showLanguage(language: Language): string {
+  switch (language) {
+    case Language.ARABIC:
+      return 'Arabic'
+    case Language.ENGLISH:
+      return 'English'
+    case Language.FRENCH:
+      return 'French'
+    case Language.GERMAN:
+      return 'German'
+    case Language.HINDI:
+      return 'Hindi'
+    case Language.INDONESIAN:
+      return 'Indonesian'
+    case Language.ITALIAN:
+      return 'Italian'
+    case Language.JAPANESE:
+      return 'Japanese'
+    case Language.MANDARIN:
+      return 'Mandarin Chinese'
+    case Language.NORWEGIAN:
+      return 'Norwegian'
+    case Language.PORTUGUESE:
+      return 'Portuguese'
+    case Language.RUSSIAN:
+      return 'Russian'
+    case Language.SPANISH:
+      return 'Spanish'
+    case Language.SWEDISH:
+      return 'Swedish'
+    case Language.OTHER:
+      return 'Other language'
   }
 }

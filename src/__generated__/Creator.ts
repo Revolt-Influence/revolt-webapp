@@ -69,7 +69,7 @@ export interface Creator_creator {
    */
   _id: string;
   /**
-   * Creator-defined named, can be a full name or a pseudo
+   * Creator display name, can be a full name or a pseudo
    */
   name: string;
   /**

@@ -31,30 +31,30 @@ const Styles = styled(ContainerBox)`
 `
 
 const creatorSteps = [
-  "L'influenceur doit s'incrire avec votre lien",
-  "L'influenceur doit avoir au moins 2k sur YouTube",
-  "L'influenceur doit réaliser un partenariat sur la plateforme",
+  'The influencer must sign up with your link',
+  'The influencer must have at least 2k followers on YouTube or Twitch',
+  'The influencer must conclude a collab on the platform',
 ]
 
 const AmbassadorProgram: React.FunctionComponent<{}> = () => {
-  usePageTitle('Devenez ambassadeur')
+  usePageTitle('Become an ambassador')
   // Copy link
   const { data: { session } = { session: null } } = useQuery<GetSession>(GET_SESSION)
   const creatorId = session.creator._id
   const creatorLink = `${window.location.origin}/creatorSignup?ambassador=${creatorId}`
-  const [creatorCopyButtonText, setCreatorCopyButtonText] = React.useState<string>('Copier le lien')
+  const [creatorCopyButtonText, setCreatorCopyButtonText] = React.useState<string>('Copy link')
 
   const handleCreatorCopy = () => {
     copy(creatorLink)
-    setCreatorCopyButtonText('Lien copié !')
+    setCreatorCopyButtonText('Link copied!')
     window.setTimeout(() => {
-      setCreatorCopyButtonText('Copier le lien')
+      setCreatorCopyButtonText('Copy link')
     }, 2000)
   }
 
   return (
     <Styles>
-      <PageHeader title="Invitez vos amis et soyez récompensé" />
+      <PageHeader title="Invite your friends and earn a reward" />
       <Flex
         flexDirection="row"
         justifyContent="flex-start"
@@ -64,17 +64,17 @@ const AmbassadorProgram: React.FunctionComponent<{}> = () => {
       >
         {/* Creator referral */}
         <Box width={[1, 1, 8 / 12]}>
-          <p>Nous vous donnons 5€ chaque fois que vous amenez un influenceur actif sur Revolt.</p>
+          <p>We give you $5 each time you bring a qualified influencer on the platform.</p>
           <LabelText withMargin>Conditions</LabelText>
           <OrderedList items={creatorSteps} />
-          <LabelText withMargin>Lien à envoyer aux influenceurs</LabelText>
+          <LabelText withMargin>Link to share</LabelText>
           <p className="link">{creatorLink}</p>
           <MainButton onClick={handleCreatorCopy} smaller inverted>
             {creatorCopyButtonText}
           </MainButton>
         </Box>
         <Box width={[0, 0, 4 / 12]}>
-          <img src={illustrationSource} alt="Ambassadeur" className="illustration" />
+          <img src={illustrationSource} alt="ambassador" className="illustration" />
         </Box>
       </Flex>
     </Styles>

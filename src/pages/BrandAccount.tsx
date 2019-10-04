@@ -10,26 +10,26 @@ import UserPlan from '../components/UserPlan'
 import Session from '../components/Session'
 
 const BrandAccount: React.FC<{}> = () => {
-  usePageTitle('Mon compte')
+  usePageTitle('My account')
 
   return (
     <Container>
       <Title>Mon compte</Title>
       <Box width={[1, 10 / 12, 10 / 12]}>
         {/* Contact info */}
-        <SplitView title="Changer mes coordonnées">
+        <SplitView title="My contact info">
           <UpdateUserInfo />
         </SplitView>
         {/* Change password */}
-        <SplitView title="Mon mot de passe">
+        <SplitView title="My password">
           <ChangePassword />
         </SplitView>
         {/* Payment info */}
-        <SplitView title="Mon offre">
+        <SplitView title="My plan">
           <UserPlan />
         </SplitView>
         {/* Session */}
-        <SplitView title="Ma session">
+        <SplitView title="My session">
           <Session />
         </SplitView>
       </Box>

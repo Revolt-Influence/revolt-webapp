@@ -31,6 +31,14 @@ export enum CampaignStatus {
   INCOMPLETE = 'Incomplete',
 }
 
+enum DashboardTab {
+  REQUESTS = 'requests',
+  COLLABS = 'collabs',
+  BRIEF = 'brief',
+  REVIEWS = 'reviews',
+  SETTINGS = 'settings',
+}
+
 interface CampaignStatusInfo {
   name: CampaignStatus
   description: string
@@ -56,30 +64,27 @@ const getCampaignStatus = (campaign: GetCampaign_campaign): CampaignStatusInfo =
   ) {
     return {
       name: CampaignStatus.INCOMPLETE,
-      description: 'Complétez votre brief pour publier la campagne',
+      description: 'Fill your brief to publish the campaign',
       color: palette.red._500,
     }
   }
   if (campaign.isArchived) {
     return {
       name: CampaignStatus.ARCHIVED,
-      description:
-        "Les influenceurs ne peuvent pas voir votre campagne. C'est soit parce qu'elle est terminée, soit parce que vous n'avez pas terminé votre brief. Vous pouvez la publier à tout moment",
+      description: 'Influencers cannot see your campaign. You can publish it whenever you like',
       color: palette.grey._400,
     }
   }
   if (campaign.isReviewed) {
     return {
       name: CampaignStatus.ONLINE,
-      description:
-        "Votre campagne est visible par tous les influenceurs. Allez dans l'onglet Propositions pour voir qui est intéressé",
+      description: 'Influencers can see your campaign. Check the Requests tab for new collabs',
       color: palette.green._500,
     }
   }
   return {
     name: CampaignStatus.AWAITING_REVIEW,
-    description:
-      "Une fois que nos experts en marketing d'influence auront analysé votre campagne, vous pourrez recevoir des propositions d'influenceurs.",
+    description: 'Our team is analyzing your campaign, we will get back to you shortly.',
     color: palette.orange._500,
   }
 }
@@ -139,49 +144,51 @@ const CampaignDashboard: React.FC<Props> = ({ match, location }) => {
   // Get current page from URL
   const parsedQuery = queryString.parse(location.search)
   const hasQueryParams = Object.entries(parsedQuery).length > 0
-  const currentTab = hasQueryParams ? (parsedQuery as any).tab : 'propositions'
+  const currentTab = hasQueryParams
+    ? (parsedQuery as any).tab
+    : (DashboardTab.REQUESTS as DashboardTab)
 
   const status = getCampaignStatus(campaign)
 
   const tabItems: ITabItem[] = [
     {
-      name: 'Nouvelles propositions',
-      link: `/brand/campaigns/${campaignId}/dashboard?tab=propositions`,
-      isActive: currentTab === 'propositions',
+      name: 'Requests',
+      link: `/brand/campaigns/${campaignId}/dashboard?tab=${DashboardTab.REQUESTS}`,
+      isActive: currentTab === DashboardTab.REQUESTS,
     },
     {
-      name: 'Partenariats',
-      link: `/brand/campaigns/${campaignId}/dashboard?tab=collabs`,
-      isActive: currentTab === 'collabs',
+      name: 'Collabs',
+      link: `/brand/campaigns/${campaignId}/dashboard?tab=${DashboardTab.COLLABS}`,
+      isActive: currentTab === DashboardTab.COLLABS,
     },
     {
       name: 'Brief',
-      link: `/brand/campaigns/${campaignId}/dashboard?tab=brief`,
-      isActive: currentTab === 'brief',
+      link: `/brand/campaigns/${campaignId}/dashboard?tab=${DashboardTab.BRIEF}`,
+      isActive: currentTab === DashboardTab.BRIEF,
     },
     {
-      name: 'Revues',
-      link: `/brand/campaigns/${campaignId}/dashboard?tab=reviews`,
-      isActive: currentTab === 'reviews',
+      name: 'Reviews',
+      link: `/brand/campaigns/${campaignId}/dashboard?tab=${DashboardTab.REVIEWS}`,
+      isActive: currentTab === DashboardTab.REVIEWS,
     },
     {
-      name: 'Réglages',
-      link: `/brand/campaigns/${campaignId}/dashboard?tab=settings`,
-      isActive: currentTab === 'settings',
+      name: 'Settings',
+      link: `/brand/campaigns/${campaignId}/dashboard?tab=${DashboardTab.SETTINGS}`,
+      isActive: currentTab === DashboardTab.SETTINGS,
     },
   ]
 
   const showCurrentTab = (): React.ReactElement => {
     switch (currentTab) {
-      case 'propositions':
+      case DashboardTab.REQUESTS:
         return <CampaignCollabRequests campaignId={campaignId} />
-      case 'collabs':
+      case DashboardTab.COLLABS:
         return <CampaignCollabs campaignId={campaignId} />
-      case 'brief':
+      case DashboardTab.BRIEF:
         return <CampaignBriefPreview campaign={campaign} />
-      case 'reviews':
+      case DashboardTab.REVIEWS:
         return <CampaignReviews campaignId={campaignId} />
-      case 'settings':
+      case DashboardTab.SETTINGS:
         return <CampaignSettings campaignId={campaignId} />
       default:
         return <CampaignCollabRequests campaignId={campaignId} />
@@ -203,16 +210,10 @@ const CampaignDashboard: React.FC<Props> = ({ match, location }) => {
       {status.name !== CampaignStatus.ONLINE && (
         <ContainerBox mb="2rem" mt="-1rem">
           {status.name === CampaignStatus.AWAITING_REVIEW && (
-            <NotificationCard
-              message="Votre campagne est en attente de modération. Elle n'est pas encore visible."
-              nature="info"
-            />
+            <NotificationCard message={status.description} nature="info" />
           )}
           {status.name === CampaignStatus.ARCHIVED && (
-            <NotificationCard
-              message="Votre campagne n'est pas en ligne. Vous pouvez la publier dans l'onglet Réglages"
-              nature="info"
-            />
+            <NotificationCard message={status.description} nature="info" />
           )}
           {status.name === CampaignStatus.INCOMPLETE && (
             <NotificationCard message={status.description} nature="info" />

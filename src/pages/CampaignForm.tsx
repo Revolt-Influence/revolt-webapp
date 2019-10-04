@@ -68,7 +68,7 @@ interface MatchParams {
 }
 
 const CampaignForm: React.FC<RouteComponentProps<MatchParams>> = ({ match }) => {
-  usePageTitle('Brief de la campagne')
+  usePageTitle('Campaign brief')
   const { campaignId } = match.params
 
   const { data: { campaign } = { campaign: null }, loading, error } = useQuery<

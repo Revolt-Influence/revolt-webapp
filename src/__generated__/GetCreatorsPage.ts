@@ -71,7 +71,7 @@ export interface GetCreatorsPage_creators_items {
    */
   _id: string;
   /**
-   * Creator-defined named, can be a full name or a pseudo
+   * Creator display name, can be a full name or a pseudo
    */
   name: string;
   /**

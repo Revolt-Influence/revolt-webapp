@@ -74,6 +74,27 @@ export enum Gender {
 }
 
 /**
+ * Spoken language or dialect
+ */
+export enum Language {
+  ARABIC = "ARABIC",
+  ENGLISH = "ENGLISH",
+  FRENCH = "FRENCH",
+  GERMAN = "GERMAN",
+  HINDI = "HINDI",
+  INDONESIAN = "INDONESIAN",
+  ITALIAN = "ITALIAN",
+  JAPANESE = "JAPANESE",
+  MANDARIN = "MANDARIN",
+  NORWEGIAN = "NORWEGIAN",
+  OTHER = "OTHER",
+  PORTUGUESE = "PORTUGUESE",
+  RUSSIAN = "RUSSIAN",
+  SPANISH = "SPANISH",
+  SWEDISH = "SWEDISH",
+}
+
+/**
  * Whether the user has paid or not
  */
 export enum Plan {
@@ -144,8 +165,8 @@ export interface SignupCreatorInput {
   email: string;
   password: string;
   birthYear: number;
-  country: string;
-  language: string;
+  language: Language;
+  categories: GameCategory[];
   ambassador?: string | null;
 }
 

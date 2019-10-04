@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef, useEffect } from 'react'
+import React, { useState, useCallback } from 'react'
 import { useDropzone, DropzoneOptions } from 'react-dropzone'
 import styled from 'styled-components'
 import { MainButton } from '../styles/Button'

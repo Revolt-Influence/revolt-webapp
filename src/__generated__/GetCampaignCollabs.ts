@@ -27,7 +27,7 @@ export interface GetCampaignCollabs_campaign_collabs_creator_youtube {
 export interface GetCampaignCollabs_campaign_collabs_creator {
   __typename: "Creator";
   /**
-   * Creator-defined named, can be a full name or a pseudo
+   * Creator display name, can be a full name or a pseudo
    */
   name: string;
   /**

@@ -1,14 +1,11 @@
-import { useMutation, useQuery } from '@apollo/react-hooks'
-import gql from 'graphql-tag'
 import React, { useState } from 'react'
+import { useMutation } from '@apollo/react-hooks'
+import gql from 'graphql-tag'
 import { MainButtonSubmit } from '../styles/Button'
 import { FormInputLabel, FormTextarea } from '../styles/Form'
 import { ApplyToExperience, ApplyToExperienceVariables } from '../__generated__/ApplyToExperience'
-import { GetSession } from '../__generated__/GetSession'
 import CheckBox from './CheckBox'
 import ErrorCard from './ErrorCard'
-import Loader from './Loader'
-import { GET_SESSION } from './Session'
 import SplitView from './SplitView'
 import SuccessCard from './SuccessCard'
 
@@ -28,12 +25,6 @@ interface Props {
 }
 
 const ExperienceForm: React.FC<Props> = ({ brand, experienceId }) => {
-  const {
-    data: { session } = { session: null },
-    loading: sessionLoading,
-    error: sessionError,
-  } = useQuery<GetSession, {}>(GET_SESSION)
-
   const [
     applyToExperience,
     {
@@ -45,13 +36,6 @@ const ExperienceForm: React.FC<Props> = ({ brand, experienceId }) => {
 
   const [message, setMessage] = useState<string>('')
   const [acceptsTerms, setAcceptsTerms] = useState<boolean>(false)
-
-  if (sessionLoading) {
-    return <Loader fullScreen />
-  }
-  if (sessionError) {
-    return <ErrorCard />
-  }
 
   const checkIfAllowSubmit = () => {
     if (!acceptsTerms || message.length === 0) {

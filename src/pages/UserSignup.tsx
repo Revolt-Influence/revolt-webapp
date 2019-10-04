@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Link, withRouter, RouteComponentProps } from 'react-router-dom'
+import { Link, useLocation, useHistory } from 'react-router-dom'
 import { Flex, Box } from '@rebass/grid'
 import queryString from 'query-string'
 import styled from 'styled-components'
@@ -38,11 +38,17 @@ const SIGNUP_USER_MUTATION = gql`
   ${SESSION_FRAGMENT}
 `
 
-const UserSignup: React.FC<RouteComponentProps> = ({ location }) => {
+const UserSignup: React.FC<{}> = () => {
+  usePageTitle('Brand signup')
+
   // Form state
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [company, setCompany] = useState('')
+
+  // Router state
+  const location = useLocation()
+  const history = useHistory()
 
   // Prepare request
   const [signupUser, { loading, error }] = useMutation<
@@ -51,14 +57,13 @@ const UserSignup: React.FC<RouteComponentProps> = ({ location }) => {
   >(SIGNUP_USER_MUTATION, {
     refetchQueries: [{ query: GET_SESSION }],
     awaitRefetchQueries: true,
+    onCompleted: () => history.push('/'),
   })
 
   // Check if there's an ambassador
   const parsedQuery = queryString.parse(location.search)
   const hasQueryParams = Object.entries(parsedQuery).length > 0
   const ambassador = hasQueryParams ? (parsedQuery as any).ambassador : null
-
-  usePageTitle("S'inscrire en tant que marque")
 
   const handleFormSubmit = (e: React.FormEvent<HTMLDivElement>) => {
     // Handle actual form submit
@@ -83,11 +88,9 @@ const UserSignup: React.FC<RouteComponentProps> = ({ location }) => {
     <Container>
       <Box my="3rem">
         <Title isCentered noMargin>
-          Créer mon compte
+          Create an account
         </Title>
-        <p style={{ marginTop: '1.5rem', textAlign: 'center' }}>
-          Pas de carte de crédit nécessaire
-        </p>
+        <p style={{ marginTop: '1.5rem', textAlign: 'center' }}>No credit card necessary</p>
       </Box>
       <Flex flexDirection="column" alignItems="center" mt="2rem">
         <Box as="form" onSubmit={handleFormSubmit} width={[1, 10 / 12, 6 / 12]}>
@@ -99,47 +102,47 @@ const UserSignup: React.FC<RouteComponentProps> = ({ location }) => {
               onChange={e => setEmail(e.target.value)}
               value={email}
               pattern={emailRegex}
-              placeholder="Votre mail pro"
+              placeholder="Your pro email"
               required
               hasLabel
             />
           </FormInputLabel>
           {/* Company */}
           <FormInputLabel>
-            Entreprise
+            Company
             <FormInput
               type="text"
               onChange={e => setCompany(e.target.value)}
               value={company}
-              placeholder="Votre entreprise"
+              placeholder="Your employer"
               hasLabel
             />
           </FormInputLabel>
           {/* Password */}
           <FormInputLabel>
-            Mot de passe
+            Password
             <FormInput
               type="password"
               onChange={e => setPassword(e.target.value)}
               value={password}
-              placeholder="Au moins 6 caractères"
+              placeholder="At least 6 characters"
               pattern=".{6,}"
               required
               hasLabel
             />
           </FormInputLabel>
-          {error && <ErrorCard message="Le compte n'a pas pu être créé" />}
+          {error && <ErrorCard message="Could not sign up. The email may already be used" />}
           {/* Button submit */}
           <MainButtonSubmit
             type="submit"
             disabled={loading || !allowSubmit}
-            value={loading ? 'Création du compte...' : 'Créer mon compte'}
+            value={loading ? 'Signing up...' : 'Sign up'}
           />
         </Box>
         <Help>
-          Vous avez déjà un compte ?{' '}
+          Already have an account?{' '}
           <HelpLink>
-            <Link to="/login">Se connecter</Link>
+            <Link to="/login">Login</Link>
           </HelpLink>
         </Help>
       </Flex>
@@ -147,4 +150,4 @@ const UserSignup: React.FC<RouteComponentProps> = ({ location }) => {
   )
 }
 
-export default withRouter(UserSignup)
+export default UserSignup
