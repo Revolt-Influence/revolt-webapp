@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useRef, useEffect } from 'react'
 import { useDropzone, DropzoneOptions } from 'react-dropzone'
 import styled from 'styled-components'
 import { MainButton } from '../styles/Button'
@@ -92,6 +92,12 @@ const DropImage: React.FC<Props> = ({
   const [isUploading, setIsUploading] = useState<boolean>(false)
   const { width } = useWindowSize()
 
+  const newImagesRef = useRef<{ name: string; data: string }[]>(newImages)
+
+  useEffect(() => {
+    newImagesRef.current = newImages
+  }, [newImages])
+
   // Handle drop/select function
   const onDrop = useCallback(
     (newAcceptedFiles: File[]) => {
@@ -113,7 +119,9 @@ const DropImage: React.FC<Props> = ({
                   data: (e.currentTarget as any).result,
                 }
                 // Reset array on new drop, add to array if it's not the first item of the drop
-                const newImagesArray = isNewDrop ? [imageData] : [...newImages, imageData]
+                const newImagesArray = isNewDrop
+                  ? [imageData]
+                  : [...newImagesRef.current, imageData]
                 console.log('set new images array', { isNewDrop, newImagesArray })
                 setNewImages(newImagesArray)
                 isNewDrop = false
@@ -136,7 +144,7 @@ const DropImage: React.FC<Props> = ({
       // Actually run the function
       handleAcceptedFiles(newAcceptedFiles)
     },
-    [handleDrop, newImages, preset]
+    [handleDrop, preset]
   )
 
   const dropSettings: DropzoneOptions = {
