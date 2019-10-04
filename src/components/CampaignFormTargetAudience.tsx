@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Box, Flex } from '@rebass/grid'
+import { getNameList, getName } from 'country-list'
 import gql from 'graphql-tag'
 import { FormInputLabel, FormSelect } from '../styles/Form'
 import SplitView from './SplitView'
@@ -16,8 +17,11 @@ import {
 import { showGender, showAgeGroup } from '../utils/enums'
 import CheckBox from './CheckBox'
 import Tag from './Tag'
+import { capitalizeFirstLetter } from '../utils/strings'
 
 const possibleAgeGroups = Object.values(AgeGroup) as AgeGroup[]
+const allCountries = Object.entries(getNameList())
+const noPreferenceKey = 'no_preference'
 
 const UPDATE_CAMPAIGN_TARGET_AUDIENCE = gql`
   mutation UpdateCampaignTargetAudience(
@@ -55,6 +59,7 @@ const CampaignFormTargetAudience: React.FC<Prop> = ({ targetAudience, campaignId
   }, CAMPAIGN_SAVE_DEBOUNCE)
 
   const handleUpdateTargetAudience = (update: Partial<CampaignAudienceInput>) => {
+    console.log('update', { targetAudienceInput, update })
     setHasSaved(false)
     setTargetAudienceInput({ ...targetAudienceInput, ...update })
     debouncedCallback()
@@ -75,7 +80,7 @@ const CampaignFormTargetAudience: React.FC<Prop> = ({ targetAudience, campaignId
       if (groupToToggle === AgeGroup.ANY && !wasCheckedBefore) {
         return [AgeGroup.ANY]
       }
-      // Otherwise togge
+      // Otherwise toggle
       if (wasCheckedBefore) {
         // Remove from array
         return targetAudienceInput.ageGroups.filter(
@@ -90,6 +95,24 @@ const CampaignFormTargetAudience: React.FC<Prop> = ({ targetAudience, campaignId
     }
     const newGroups = getNewGroups()
     handleUpdateTargetAudience({ ageGroups: newGroups })
+  }
+
+  const handleAddCountry = (countryToAdd: string) => {
+    console.log(countryToAdd)
+    // If selection is noPreference, clear all countries
+    if (countryToAdd === noPreferenceKey) {
+      console.log('reset', noPreferenceKey)
+      handleUpdateTargetAudience({ countries: [] })
+    } else {
+      // Otherwise add the country
+      handleUpdateTargetAudience({ countries: [...targetAudienceInput.countries, countryToAdd] })
+    }
+  }
+
+  const handleRemoveCountry = (countryToRemove: string) => {
+    handleUpdateTargetAudience({
+      countries: targetAudienceInput.countries.filter(_country => _country !== countryToRemove),
+    })
   }
 
   return (
@@ -128,13 +151,28 @@ const CampaignFormTargetAudience: React.FC<Prop> = ({ targetAudience, campaignId
           </FormInputLabel>
           <FormInputLabel>
             Countries
-            <Flex flexDirection="row" flexWrap="wrap">
-              <Tag text="France" handleRemove={() => console.log('remove')} />
-              <Tag text="France" handleRemove={() => console.log('remove')} />
-              <Tag text="France" handleRemove={() => console.log('remove')} />
-              <Tag text="France" handleRemove={() => console.log('remove')} />
-            </Flex>
+            <FormSelect onChange={e => handleAddCountry(e.target.value)}>
+              <option disabled selected>
+                Add a country
+              </option>
+              <option value={noPreferenceKey}>No preference</option>
+              {allCountries.map(_country => (
+                <option key={_country[1]} value={_country[1]}>
+                  {capitalizeFirstLetter(_country[0])}
+                </option>
+              ))}
+            </FormSelect>
           </FormInputLabel>
+          {/* Show selected countries */}
+          <Flex flexDirection="row" flexWrap="wrap">
+            {targetAudienceInput.countries.map(_country => (
+              <Tag
+                text={getName(_country)}
+                handleRemove={() => handleRemoveCountry(_country)}
+                key={_country}
+              />
+            ))}
+          </Flex>
         </Box>
       </>
     </SplitView>

@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react'
 import moment from 'moment'
 import { Flex, Box } from '@rebass/grid'
 import gql from 'graphql-tag'
-import { FormInputLabel, FormInput, FormTextarea } from '../styles/Form'
+import { FormInputLabel, FormInput, FormTextarea, FormSelect } from '../styles/Form'
 import DropImage from './DropImage'
 import SplitView from './SplitView'
 import { GetCampaign_campaign_product } from '../__generated__/GetCampaign'
@@ -126,6 +126,15 @@ const CampaignFormProduct: React.FC<Prop> = ({ product, campaignId }) => {
             hasLabel
           />
         </FormInputLabel>
+        {/* Promo video */}
+        <FormInputLabel>
+          Promo video
+          <FormInput
+            value={productInput.youtubeLink}
+            onChange={e => handleUpdateProduct({ youtubeLink: e.target.value })}
+            hasLabel
+          />
+        </FormInputLabel>
         {/* Launch date */}
         <Box width={[1, 1, 6 / 12]}>
           <FormInputLabel withMargin>
@@ -133,13 +142,14 @@ const CampaignFormProduct: React.FC<Prop> = ({ product, campaignId }) => {
             <FormInput
               type="date"
               value={moment(productInput.launchedAt).format('YYYY-MM-DD')}
-              onChange={e => {
-                console.log(e.target.value)
-                handleUpdateProduct({ launchedAt: e.target.value })
-              }}
+              onChange={e => handleUpdateProduct({ launchedAt: e.target.value })}
               hasLabel
             />
           </FormInputLabel>
+        </Box>
+        {/* Tracking provider */}
+        <Box width={[1, 1, 6 / 12]}>
+          <FormSelect></FormSelect>
         </Box>
       </>
     </SplitView>

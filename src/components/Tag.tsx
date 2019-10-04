@@ -27,6 +27,7 @@ const Styles = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    transform: translateY(1px);
     img {
       width: 2rem;
       height: 2rem;

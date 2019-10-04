@@ -8,7 +8,6 @@ import { Title } from '../styles/Text'
 import { FormInput, FormInputLabel, FormSelect } from '../styles/Form'
 import { MainButtonSubmit, TextLinkExternal } from '../styles/Button'
 import ErrorCard from '../components/ErrorCard'
-import { allCountries, allLanguages } from '../utils/locations'
 import { emailRegex } from '../utils/strings'
 import { palette } from '../utils/colors'
 import { usePageTitle } from '../utils/hooks'
@@ -162,7 +161,7 @@ const CreatorSignup: React.FC<RouteComponentProps> = ({ location }) => {
             </Box>
           </Flex>
           <Flex flexDirection="row" justifyContent="space-between" flexWrap="wrap">
-            <Box width={[1, 1, 6 / 12]} pr={[0, 0, '1rem']}>
+            {/* <Box width={[1, 1, 6 / 12]} pr={[0, 0, '1rem']}>
               <FormInputLabel>
                 Langue
                 <FormSelect
@@ -197,7 +196,7 @@ const CreatorSignup: React.FC<RouteComponentProps> = ({ location }) => {
                   ))}
                 </FormSelect>
               </FormInputLabel>
-            </Box>
+            </Box> */}
           </Flex>
           {/* Terms and conditions */}
           <Flex
