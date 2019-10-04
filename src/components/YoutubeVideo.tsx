@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { IYoutubeVideo } from '../models/YoutubeVideo'
+import { YoutuberProfileFragment_videos } from '../__generated__/YoutuberProfileFragment'
 
 const Styles = styled.article`
   border-radius: 8px;
@@ -22,12 +22,10 @@ const Styles = styled.article`
 `
 
 interface IYoutubeVideoProps {
-  video: IYoutubeVideo
+  video: YoutuberProfileFragment_videos
 }
 
-const YoutubeVideo: React.FC<IYoutubeVideoProps> = ({
-  video: { thumbnail, title, videoId, url, views },
-}) => (
+const YoutubeVideo: React.FC<IYoutubeVideoProps> = ({ video: { title, videoId } }) => (
   <Styles>
     {/* <img className="thumbnail" src={url} alt={title} />
       <Fl */}

@@ -1,59 +1,83 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { RouteComponentProps, withRouter } from 'react-router-dom'
-import { useSelector, useDispatch } from 'react-redux'
 import { Flex, Box } from '@rebass/grid'
-import IState from '../models/State'
-import { ICampaign } from '../models/Campaign'
 import ErrorCard from '../components/ErrorCard'
 import ExperienceForm from '../components/ExperienceForm'
 import { ContainerBox } from '../styles/grid'
-import { ICollab } from '../models/Collab'
-import ExperiencePresentation from '../components/ExperiencePresentation'
+import ExperiencePresentation, {
+  EXPERIENCE_PRESENTATION_FRAGMENT,
+} from '../components/ExperiencePresentation'
 import PageHeader from '../components/PageHeader'
 import ErrorBoundary from '../components/ErrorBoundary'
 import SubmitCreatorReviews from '../components/SubmitCreatorReviews'
 import { usePageTitle, useWindowSize } from '../utils/hooks'
-import { getCampaign } from '../actions/campaigns'
-import { IRequestStatus } from '../utils/request'
 import Loader from '../components/Loader'
 import { MainButton, TextButton } from '../styles/Button'
 import { palette } from '../utils/colors'
-import { CreatorStatus } from '../models/Creator'
 import NotificationCard from '../components/NotificationCard'
+import gql from 'graphql-tag'
+import { useQuery } from '@apollo/react-hooks'
+import { GetExperiencePage, GetExperiencePageVariables } from '../__generated__/GetExperiencePage'
+import { CreatorStatus, CollabStatus } from '../__generated__/globalTypes'
 
-interface IExperienceProps extends RouteComponentProps<{ campaignId: string }> {}
+enum ExperienceTab {
+  PRESENTATION = 'presentation',
+  APPLY = 'apply',
+  SUBMIT = 'submit',
+}
 
-const Experience: React.FC<IExperienceProps> = ({ match }) => {
+const GET_EXPERIENCE_PAGE = gql`
+  query GetExperiencePage($campaignId: String!) {
+    session {
+      creator {
+        _id
+        status
+      }
+    }
+    campaign(id: $campaignId) {
+      ...ExperiencePresentationFragment
+    }
+    collabs {
+      _id
+      status
+      campaign {
+        _id
+      }
+    }
+  }
+  ${EXPERIENCE_PRESENTATION_FRAGMENT}
+`
+
+interface Props extends RouteComponentProps<{ campaignId: string }> {}
+
+const Experience: React.FC<Props> = ({ match }) => {
   const { campaignId } = match.params
   const { width } = useWindowSize()
-  const creatorStatus = useSelector<IState, CreatorStatus>(state => state.session.creator.status)
-  // Find experience from Redux
-  const experience = useSelector<IState, ICampaign>(state =>
-    state.campaigns.items.find(_experience => _experience._id === campaignId)
-  )
-  // Load experience from API if it's not already in Redux
-  const dispatch = useDispatch()
-  const getExperienceStatus = useSelector<IState, IRequestStatus>(
-    state => state.campaigns.requests.getCampaign
-  )
-  if (experience == null && !getExperienceStatus.isLoading && !getExperienceStatus.hasFailed) {
-    dispatch(getCampaign(campaignId))
-  }
+  const {
+    data: { session, campaign: experience, collabs } = {
+      session: null,
+      campaign: null,
+      collabs: null,
+    },
+    loading,
+    error,
+  } = useQuery<GetExperiencePage, GetExperiencePageVariables>(GET_EXPERIENCE_PAGE, {
+    variables: { campaignId },
+  })
+  const [tab, setTab] = useState<ExperienceTab>(ExperienceTab.PRESENTATION)
 
   usePageTitle(experience && experience.name)
 
-  // Get ID of all experiences that are linked to a collab
-  const collabs = useSelector<IState, ICollab[]>(state => state.collabs.items)
-
-  // Check if it's already in a collab
-  const linkedCollab = collabs.find(_collab => _collab.campaign === campaignId)
-  const alreadyInCollab = linkedCollab != null
-
-  const [tab, setTab] = React.useState<'presentation' | 'apply' | 'submit'>('presentation')
-
-  if (getExperienceStatus.isLoading) {
+  if (loading) {
     return <Loader fullScreen />
   }
+  if (error) {
+    return <ErrorCard message="Could not show experience" />
+  }
+
+  // Check if it's already in a collab
+  const linkedCollab = collabs.find(_collab => _collab.campaign._id === campaignId)
+  const alreadyInCollab = linkedCollab != null
 
   // Handle case where no experience is defined
   if (experience == null) {
@@ -64,7 +88,7 @@ const Experience: React.FC<IExperienceProps> = ({ match }) => {
     )
   }
 
-  const showPresentation = () => <ExperiencePresentation experience={experience} />
+  const showPresentation = () => <ExperiencePresentation experienceId={experience._id} />
 
   const changeTab = (newTab: typeof tab) => {
     window.scrollTo(0, 0)
@@ -76,21 +100,21 @@ const Experience: React.FC<IExperienceProps> = ({ match }) => {
     if (tab === 'presentation' && !alreadyInCollab) {
       return (
         <MainButton
-          onClick={() => changeTab('apply')}
+          onClick={() => changeTab(ExperienceTab.APPLY)}
           noMargin
-          disabled={creatorStatus !== 'verified'}
+          disabled={session.creator.status !== CreatorStatus.VERIFIED}
         >
           Postuler à l'expérience
         </MainButton>
       )
     }
     if (
-      tab === 'presentation' &&
+      tab === ExperienceTab.PRESENTATION &&
       alreadyInCollab &&
-      (linkedCollab.status === 'sent' || linkedCollab.status === 'accepted')
+      (linkedCollab.status === CollabStatus.SENT || linkedCollab.status === CollabStatus.ACCEPTED)
     ) {
       return (
-        <MainButton onClick={() => changeTab('submit')} noMargin>
+        <MainButton onClick={() => changeTab(ExperienceTab.SUBMIT)} noMargin>
           Poster ma revue
         </MainButton>
       )
@@ -105,23 +129,17 @@ const Experience: React.FC<IExperienceProps> = ({ match }) => {
 
     // Apply to campaign
     if (tab === 'apply') {
-      return (
-        <ExperienceForm
-          brand={experience.settings.brand.name}
-          experienceId={experience._id}
-          possibleFormats={experience.settings.task.formats}
-        />
-      )
+      return <ExperienceForm brand={experience.brand.name} experienceId={experience._id} />
     }
 
     // Submit review
     if (tab === 'submit') {
       if (
         alreadyInCollab &&
-        linkedCollab.status !== 'proposed' &&
-        linkedCollab.status !== 'refused'
+        linkedCollab.status !== CollabStatus.APPLIED &&
+        linkedCollab.status !== CollabStatus.DENIED
       ) {
-        return <SubmitCreatorReviews collab={linkedCollab} />
+        return <SubmitCreatorReviews collabId={linkedCollab._id} />
       }
     }
 
@@ -146,7 +164,7 @@ const Experience: React.FC<IExperienceProps> = ({ match }) => {
           {showActionButton()}
         </Flex>
         {/* Eventual info message */}
-        {creatorStatus !== 'verified' && (
+        {session.creator.status !== CreatorStatus.VERIFIED && (
           <Box mt="2rem">
             <NotificationCard
               nature="info"
@@ -163,7 +181,9 @@ const Experience: React.FC<IExperienceProps> = ({ match }) => {
         {/* Go back to main tab (presentation) if not on main tab */}
         {tab !== 'presentation' && (
           <Flex justifyContent="center" mt="2rem">
-            <TextButton onClick={() => changeTab('presentation')}>Retour à l'expérience</TextButton>
+            <TextButton onClick={() => changeTab(ExperienceTab.PRESENTATION)}>
+              Retour à l'expérience
+            </TextButton>
           </Flex>
         )}
       </ContainerBox>

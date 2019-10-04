@@ -1,23 +1,22 @@
 import React from 'react'
 import styled, { css } from 'styled-components'
-import { useSelector, useDispatch } from 'react-redux'
+import { gql } from 'apollo-boost'
 import { Box, Flex } from '@rebass/grid'
 import BrandCollabCard from './BrandCollabCard'
 import { Container, Row } from '../utils/grid'
 import { setFont, shadow } from '../utils/styles'
 import { palette } from '../utils/colors'
-import { ICampaign } from '../models/Campaign'
-import { CollabStatus, ICollab } from '../models/Collab'
-
-import IState from '../models/State'
-import { reviewCollabProposition } from '../actions/collabs'
 import ErrorBoundary from './ErrorBoundary'
+import { useQuery } from '@apollo/react-hooks'
+import { CollabStatus } from '../__generated__/globalTypes'
+import Loader from './Loader'
+import ErrorCard from './ErrorCard'
+import {
+  GetCampaignCollabs,
+  GetCampaignCollabsVariables,
+} from '../__generated__/GetCampaignCollabs'
 
-interface IColumnProps {
-  status: CollabStatus
-}
-
-const Column = styled.section<IColumnProps>`
+const Column = styled.section<{ status: CollabStatus }>`
   padding-top: 2rem;
   padding-bottom: 1px;
   margin-bottom: 2rem;
@@ -36,7 +35,7 @@ const Column = styled.section<IColumnProps>`
   }
   ${props => {
     switch (props.status) {
-      case 'accepted':
+      case CollabStatus.ACCEPTED:
         return css`
           border-top: 6px solid ${palette.blue._400};
           /* background: ${palette.blue._200}; */
@@ -51,7 +50,7 @@ const Column = styled.section<IColumnProps>`
             color: ${palette.blue._800};
           }
         `
-      case 'sent':
+      case CollabStatus.SENT:
         return css`
           border-top: 6px solid ${palette.orange._500};
           /* background: ${palette.orange._200}; */
@@ -66,7 +65,7 @@ const Column = styled.section<IColumnProps>`
             color: ${palette.orange._800};
           }
         `
-      case 'done':
+      case CollabStatus.DONE:
         return css`
           border-top: 6px solid ${palette.green._300};
           /* background: ${palette.green._200}; */
@@ -106,20 +105,55 @@ const Column = styled.section<IColumnProps>`
   }
 `
 
+const GET_CAMPAIGN_COLLABS = gql`
+  query GetCampaignCollabs($campaignId: String!) {
+    campaign(id: $campaignId) {
+      _id
+      collabs {
+        _id
+        conversation {
+          _id
+          createdAt
+        }
+        status
+        message
+        updatedAt
+        creator {
+          name
+          picture
+          youtube {
+            viewCount
+            subscriberCount
+            videoCount
+          }
+        }
+      }
+    }
+  }
+`
+
 interface ICampaignCollabsProps {
-  campaign: ICampaign
+  campaignId: string
 }
 
-const CampaignCollabs: React.FC<ICampaignCollabsProps> = ({ campaign }) => {
+const CampaignCollabs: React.FC<ICampaignCollabsProps> = ({ campaignId }) => {
   // Get campaign collabs from Redux
-  const collabs = useSelector<IState, ICollab[]>(state =>
-    state.collabs.items.filter(_collab => _collab.campaign === campaign._id)
-  )
-  const dispatch = useDispatch()
+  const { data: { campaign } = { campaign: null }, loading, error } = useQuery<
+    GetCampaignCollabs,
+    GetCampaignCollabsVariables
+  >(GET_CAMPAIGN_COLLABS, { variables: { campaignId } })
 
-  const notSentCollabs = collabs.filter(_collab => _collab.status === 'accepted')
-  const waitingCollabs = collabs.filter(_collab => _collab.status === 'sent')
-  const doneCollabs = collabs.filter(_collab => _collab.status === 'done')
+  if (loading) {
+    return <Loader fullScreen />
+  }
+  if (error) {
+    return <ErrorCard message="Collabs could not be loaded" />
+  }
+
+  const { collabs } = campaign
+  const acceptedCollabs = collabs.filter(_collab => _collab.status === CollabStatus.ACCEPTED)
+  const sentCollabs = collabs.filter(_collab => _collab.status === CollabStatus.SENT)
+  const doneCollabs = collabs.filter(_collab => _collab.status === CollabStatus.DONE)
 
   return (
     <Container>
@@ -131,51 +165,42 @@ const CampaignCollabs: React.FC<ICampaignCollabsProps> = ({ campaign }) => {
           justifyContent="space-between"
         >
           <Box width={[1, 1, 4 / 12]} pr={[0, 0, '2rem']}>
-            <Column status="accepted">
+            <Column status={CollabStatus.ACCEPTED}>
               <Row className="header" justify="space-between" verticalAlign="center">
                 <h2>
-                  Produit pas encore envoyé <span>({notSentCollabs.length})</span>
+                  Produit pas encore envoyé <span>({acceptedCollabs.length})</span>
                 </h2>
               </Row>
               <p className="help">
                 Vous avez accepté la collab, mais n'avez pas encore envoyé le produit à
                 l'influenceur.
               </p>
-              {notSentCollabs.length === 0 && (
+              {acceptedCollabs.length === 0 && (
                 <p className="noResult">Pas encore de propositions.</p>
               )}
-              {notSentCollabs.map(_collab => (
-                <BrandCollabCard
-                  collab={_collab}
-                  isLoading={false}
-                  markAsSent={() =>
-                    dispatch(
-                      reviewCollabProposition({ collabId: _collab._id, action: 'markAsSent' })
-                    )
-                  }
-                  key={_collab._id}
-                />
+              {acceptedCollabs.map(_collab => (
+                <BrandCollabCard collab={_collab} key={_collab._id} />
               ))}
             </Column>
           </Box>
           <Box width={[1, 1, 4 / 12]} pr={[0, 0, '2rem']}>
-            <Column status="sent">
+            <Column status={CollabStatus.SENT}>
               <Row className="header" justify="space-between" verticalAlign="center">
                 <h2>
-                  En attente de publication <span>({waitingCollabs.length})</span>
+                  En attente de publication <span>({sentCollabs.length})</span>
                 </h2>
               </Row>
               <p className="help">
                 Le produit est envoyé mais l'influenceur n'a pas encore publié ses revues.
               </p>
-              {waitingCollabs.length === 0 && <p className="noResult">Pas de collab en cours.</p>}
-              {waitingCollabs.map(_collab => (
-                <BrandCollabCard collab={_collab} isLoading={false} key={_collab._id} />
+              {sentCollabs.length === 0 && <p className="noResult">Pas de collab en cours.</p>}
+              {sentCollabs.map(_collab => (
+                <BrandCollabCard collab={_collab} />
               ))}
             </Column>
           </Box>
           <Box width={[1, 1, 4 / 12]}>
-            <Column status="done">
+            <Column status={CollabStatus.DONE}>
               <Row className="header" justify="space-between" verticalAlign="center">
                 <h2>
                   Collabs terminées <span>({doneCollabs.length})</span>

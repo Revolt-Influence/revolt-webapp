@@ -1,23 +1,24 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link, withRouter, RouteComponentProps } from 'react-router-dom'
 import { Flex, Box } from '@rebass/grid'
 import queryString from 'query-string'
 import styled from 'styled-components'
-import { useDispatch, useSelector } from 'react-redux'
 import { Container } from '../utils/grid'
 import { Title } from '../styles/Text'
 import { FormInput, FormInputLabel, FormSelect } from '../styles/Form'
 import { MainButtonSubmit, TextLinkExternal } from '../styles/Button'
 import ErrorCard from '../components/ErrorCard'
-import { allCountries, allLanguages } from '../utils/locations'
 import { emailRegex } from '../utils/strings'
 import { palette } from '../utils/colors'
-import { Gender } from '../models/Creator'
-import { signupInfluencer } from '../actions/session'
 import { usePageTitle } from '../utils/hooks'
 import { IconButtonWrapper } from '../styles/Icon'
-import IState from '../models/State'
-import { IRequestStatus } from '../utils/request'
+import gql from 'graphql-tag'
+import { SESSION_FRAGMENT, GET_SESSION } from '../components/Session'
+import { useMutation } from '@apollo/react-hooks'
+import {
+  SignupCreatorMutation,
+  SignupCreatorMutationVariables,
+} from '../__generated__/SignupCreatorMutation'
 
 const checkboxEmpty = require('../images/icons/checkboxEmpty.svg')
 const checkboxChecked = require('../images/icons/checkboxChecked.svg')
@@ -32,53 +33,59 @@ const HelpLink = styled.span`
   color: ${palette.blue._700};
 `
 
-const termsLink = 'https://docs.google.com/document/d/1nLrfWKpBxjgQXsrIeISD08FunDNhCLi562HeIaxPdUE/'
+const SIGNUP_CREATOR_MUTATION = gql`
+  mutation SignupCreatorMutation($creator: SignupCreatorInput!) {
+    signupCreator(creator: $creator) {
+      ...SessionFragment
+    }
+  }
+  ${SESSION_FRAGMENT}
+`
 
 const CreatorSignup: React.FC<RouteComponentProps> = ({ location }) => {
   usePageTitle("S'inscrire en tant qu'influenceur")
   const currentYear = new Date().getFullYear()
+
+  const [signupCreator, { loading, error }] = useMutation<
+    SignupCreatorMutation,
+    SignupCreatorMutationVariables
+  >(SIGNUP_CREATOR_MUTATION, {
+    refetchQueries: [{ query: GET_SESSION }],
+    awaitRefetchQueries: true,
+  })
+
   // Form data
-  const [email, setEmail] = React.useState<string>('')
-  const [password, setPassword] = React.useState<string>('')
-  const [phone, setPhone] = React.useState<string>('')
-  const [birthYear, setBirthYear] = React.useState<number>(currentYear - 25)
-  const [gender, setGender] = React.useState<Gender>('female')
-  const [language, setLanguage] = React.useState<string>('French')
-  const [country, setCountry] = React.useState<string>('France')
-  const [acceptsTerms, setAcceptsTerms] = React.useState<boolean>(false)
-  const [hasTermsError, setHasTermsError] = React.useState<boolean>(false)
+  const [email, setEmail] = useState<string>('')
+  const [password, setPassword] = useState<string>('')
+  const [phone, setPhone] = useState<string>('')
+  const [birthYear, setBirthYear] = useState<number>(currentYear - 25)
+  const [language, setLanguage] = useState<string>('French')
+  const [country, setCountry] = useState<string>('France')
+  const [acceptsTerms, setAcceptsTerms] = useState<boolean>(false)
+  const [hasTermsError, setHasTermsError] = useState<boolean>(false)
 
   // Check if there's an ambassador
   const parsedQuery = queryString.parse(location.search)
   const hasQueryParams = Object.entries(parsedQuery).length > 0
   const ambassador = hasQueryParams ? (parsedQuery as any).ambassador : null
 
-  const dispatch = useDispatch()
-  const { isLoading, hasFailed } = useSelector<IState, IRequestStatus>(
-    state => state.session.requests.signup
-  )
-
   const handleSubmit = (e: React.FormEvent<HTMLDivElement>) => {
     e.preventDefault()
     if (!acceptsTerms) {
       setHasTermsError(true)
     } else {
-      dispatch(
-        signupInfluencer({
+      signupCreator({
+        variables: {
           creator: {
             email,
-            phone,
+            password,
             country,
             language,
             birthYear,
-            gender,
-            picture: null,
-            name: null,
             ambassador,
           },
-          plainPassword: password,
-        })
-      )
+        },
+      })
     }
   }
 
@@ -152,23 +159,9 @@ const CreatorSignup: React.FC<RouteComponentProps> = ({ location }) => {
                 </FormSelect>
               </FormInputLabel>
             </Box>
-            <Box width={[1, 1, 6 / 12]} pl={[0, 0, '1rem']}>
-              <FormInputLabel withMargin>
-                Genre
-                <FormSelect
-                  fullWidth
-                  value={gender}
-                  onChange={e => setGender(e.target.value as Gender)}
-                  required
-                >
-                  <option value="female">femme</option>
-                  <option value="male">homme</option>
-                </FormSelect>
-              </FormInputLabel>
-            </Box>
           </Flex>
           <Flex flexDirection="row" justifyContent="space-between" flexWrap="wrap">
-            <Box width={[1, 1, 6 / 12]} pr={[0, 0, '1rem']}>
+            {/* <Box width={[1, 1, 6 / 12]} pr={[0, 0, '1rem']}>
               <FormInputLabel>
                 Langue
                 <FormSelect
@@ -203,7 +196,7 @@ const CreatorSignup: React.FC<RouteComponentProps> = ({ location }) => {
                   ))}
                 </FormSelect>
               </FormInputLabel>
-            </Box>
+            </Box> */}
           </Flex>
           {/* Terms and conditions */}
           <Flex
@@ -220,7 +213,7 @@ const CreatorSignup: React.FC<RouteComponentProps> = ({ location }) => {
             </IconButtonWrapper>
             <p style={{ cursor: 'default' }}>
               J'accepte les{' '}
-              <TextLinkExternal href={termsLink} target="_blank">
+              <TextLinkExternal href="/tersAndConditions" target="_blank">
                 conditions d'utilisation
               </TextLinkExternal>
             </p>
@@ -229,12 +222,12 @@ const CreatorSignup: React.FC<RouteComponentProps> = ({ location }) => {
           {hasTermsError && (
             <ErrorCard message="Vous devez accepter les conditions pour continuer" />
           )}
-          {hasFailed && <ErrorCard message="Le compte n'a pas pu être créé" />}
+          {error && <ErrorCard message="Le compte n'a pas pu être créé" />}
           {/* Button submit */}
           <MainButtonSubmit
             type="submit"
-            disabled={isLoading}
-            value={isLoading ? 'Création du compte...' : 'Créer mon compte'}
+            disabled={loading}
+            value={loading ? 'Création du compte...' : 'Créer mon compte'}
           />
         </Box>
         <Help>

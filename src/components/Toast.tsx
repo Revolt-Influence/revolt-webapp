@@ -1,7 +1,5 @@
 import React from 'react'
 import styled, { css } from 'styled-components'
-import { ClipLoader } from 'react-spinners'
-import { Box } from '@rebass/grid'
 import { shadow } from '../utils/styles'
 import { palette } from '../utils/colors'
 
@@ -9,7 +7,7 @@ const infoSource = require('../images/icons/info_blue.svg')
 const successSource = require('../images/icons/success_green.svg')
 const errorSource = require('../images/icons/error_red.svg')
 
-type Nature = 'info' | 'success' | 'error' | 'loading'
+type Nature = 'info' | 'success' | 'error'
 
 const Styles = styled.div<{ nature: Nature }>`
   position: fixed;
@@ -92,13 +90,7 @@ const Toast: React.FunctionComponent<IToastProps> = ({ disappear, nature, text }
 
   return (
     <Styles nature={nature}>
-      {nature === 'loading' ? (
-        <Box mr="1.5rem">
-          <ClipLoader size={25} />
-        </Box>
-      ) : (
-        <img className="icon" src={getImage()} alt={nature} />
-      )}
+      <img className="icon" src={getImage()} alt={nature} />
       <p>{text}</p>
     </Styles>
   )

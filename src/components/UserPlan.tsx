@@ -1,27 +1,28 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { Box } from '@rebass/grid'
-import IState from '../models/State'
 import { palette } from '../utils/colors'
 import { setFont, Divider } from '../utils/styles'
-import { Plan } from '../models/Session'
 import FeaturesList from './FeaturesList'
 import { MainLink } from '../styles/Button'
 import ManagePlan from './ManagePlan'
 import { capitalizeFirstLetter } from '../utils/strings'
+import { Plan } from '../__generated__/globalTypes'
+import gql from 'graphql-tag'
+import { useQuery } from '@apollo/react-hooks'
+import { GetUserPlan } from '../__generated__/GetUserPlan'
+import Loader from './Loader'
+import ErrorCard from './ErrorCard'
 
 const CurrentPlan = styled.span<{ value: Plan }>`
   display: inline-block;
   ${setFont(600, 'normal')}
   color: ${props => {
     switch (props.value) {
-      case 'free':
+      case Plan.FREE:
         return palette.blue._600
-      case 'premium':
+      case Plan.PREMIUM:
         return palette.green._500
-      case 'admin':
-        return palette.orange._500
       default:
         return palette.blue._600
     }
@@ -29,8 +30,28 @@ const CurrentPlan = styled.span<{ value: Plan }>`
   margin-top: 20px;
 `
 
+export const GET_USER_PLAN = gql`
+  query GetUserPlan {
+    session {
+      user {
+        plan
+        creditCardLast4
+      }
+    }
+  }
+`
+
 const UserPlan: React.FC<{}> = () => {
-  const plan = useSelector<IState, Plan>(state => state.session.user.plan)
+  const { data: { session } = { session: null }, loading, error } = useQuery<GetUserPlan, {}>(
+    GET_USER_PLAN
+  )
+  if (loading) {
+    return <Loader />
+  }
+  if (error) {
+    return <ErrorCard />
+  }
+  const { plan } = session.user
   return (
     <Box>
       <p>
@@ -38,15 +59,15 @@ const UserPlan: React.FC<{}> = () => {
         <CurrentPlan value={plan}>{capitalizeFirstLetter(plan)}</CurrentPlan>.
       </p>
       <Divider />
-      {plan === 'free' ? (
+      {plan === Plan.FREE ? (
         <>
-          <FeaturesList plan="premium" />
+          <FeaturesList plan={Plan.PREMIUM} />
           <MainLink to="/brand/upgrade" display="inline">
             Passer au Premium
           </MainLink>
         </>
       ) : null}
-      {plan === 'premium' ? <ManagePlan /> : null}
+      {plan === Plan.PREMIUM ? <ManagePlan /> : null}
     </Box>
   )
 }

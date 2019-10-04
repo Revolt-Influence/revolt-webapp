@@ -1,23 +1,25 @@
-import React, { useEffect } from 'react'
-import styled from 'styled-components'
+import { useLazyQuery, useMutation, useQuery } from '@apollo/react-hooks'
 import { Flex } from '@rebass/grid'
-import { useSelector, useDispatch } from 'react-redux'
-import { ICreator } from '../models/Creator'
-import { palette } from '../utils/colors'
-import { shadow, setFont } from '../utils/styles'
-import { yearToAge } from '../utils/stats'
-import IState from '../models/State'
-import { IRequestStatus } from '../utils/request'
-import { getFullCreatorProfile } from '../actions/creators'
-import ErrorCard from './ErrorCard'
-import AudienceInsights from './AudienceInsights'
-import { TaskFormatType } from '../models/Campaign'
-import Dropdown from './Dropdown'
-import { reviewCollabProposition } from '../actions/collabs'
-import { ICollab } from '../models/Collab'
-import YoutubePreview from './YoutubePreview'
-import { applyCloudinaryTransformations } from '../utils/images'
+import { gql } from 'apollo-boost'
+import React from 'react'
 import { Link } from 'react-router-dom'
+import styled from 'styled-components'
+import { palette } from '../utils/colors'
+import { applyCloudinaryTransformations } from '../utils/images'
+import { yearToAge } from '../utils/stats'
+import { setFont, shadow } from '../utils/styles'
+import { Creator, CreatorVariables } from '../__generated__/Creator'
+import { GetCollab, GetCollabVariables } from '../__generated__/GetCollab'
+import { CollabStatus, ReviewCollabDecision } from '../__generated__/globalTypes'
+import {
+  ReviewCollabApplication,
+  ReviewCollabApplicationVariables,
+} from '../__generated__/ReviewCollabApplication'
+import AudienceInsights from './AudienceInsights'
+import { REVIEW_COLLAB_APPLICATION } from './BrandCollabCard'
+import Dropdown from './Dropdown'
+import ErrorCard from './ErrorCard'
+import YoutubePreview, { YOUTUBER_PROFILE_FRAGMENT } from './YoutubePreview'
 
 const checkSource = require('../images/icons/check_white.svg')
 const closeSource = require('../images/icons/close_white.svg')
@@ -120,92 +122,114 @@ const Styles = styled.div`
   }
 `
 
+export const CREATOR_PROFILE_FRAGMENT = gql`
+  fragment CreatorProfileFragment on Creator {
+    _id
+    name
+    picture
+    country
+    birthYear
+    youtube {
+      ...YoutuberProfileFragment
+    }
+  }
+  ${YOUTUBER_PROFILE_FRAGMENT}
+`
+
+export const GET_CREATOR = gql`
+  query Creator($creatorId: String!) {
+    creator(id: $creatorId) {
+      ...CreatorProfileFragment
+    }
+  }
+  ${CREATOR_PROFILE_FRAGMENT}
+`
+
+export const GET_COLLAB = gql`
+  query GetCollab($collabId: String!) {
+    collab(collabId: $collabId) {
+      _id
+      status
+      message
+      updatedAt
+      conversation {
+        _id
+      }
+    }
+  }
+`
+
 interface Props {
   creatorId: string
-  conversationId?: string
-  message?: string
   collabId?: string
-  formats?: TaskFormatType[]
   handleAccept?: () => any
   handleRefuse?: () => any
 }
 
-interface IAdvertisingPerformance {
+interface AdvertisingPerformance {
   type: 'Mauvaise' | 'Normale' | 'Bonne'
   color: string
 }
 
-const CreatorProfile: React.FC<Props> = ({
-  creatorId,
-  collabId,
-  message,
-  handleAccept,
-  handleRefuse,
-  formats,
-  conversationId,
-}) => {
-  const dispatch = useDispatch()
-  const creator = useSelector<IState, ICreator>(state =>
-    state.creators.items.find(_creator => _creator._id === creatorId)
-  )
-  const getProfileStatus = useSelector<IState, IRequestStatus>(
-    state => state.creators.requests.getFullProfile
-  )
+const CreatorProfile: React.FC<Props> = ({ creatorId, collabId, handleAccept, handleRefuse }) => {
+  const {
+    data: { creator } = { creator: null },
+    loading: creatorLoading,
+    error: creatorError,
+  } = useQuery<Creator, CreatorVariables>(GET_CREATOR)
 
-  const collab = useSelector<IState, ICollab>(state =>
-    state.collabs.items.find(_collab => _collab._id === collabId)
-  )
-  const reduxStatus = collab && collab.status
+  const [
+    fetchCollab,
+    { data: { collab } = { collab: null }, loading: collabLoading, error: collabError },
+  ] = useLazyQuery<GetCollab, GetCollabVariables>(GET_COLLAB)
 
-  const getStatusDropdownSelected = () => {
-    switch (reduxStatus) {
-      case 'accepted':
+  if (collabId) {
+    // Only get collab data if an ID is specified
+    fetchCollab({ variables: { collabId } })
+  }
+
+  const [reviewCollabApplication] = useMutation<
+    ReviewCollabApplication,
+    ReviewCollabApplicationVariables
+  >(REVIEW_COLLAB_APPLICATION)
+
+  const getStatusDropdownSelected = (): string => {
+    switch (collab.status) {
+      case CollabStatus.ACCEPTED:
         return 'Accepté'
-      case 'refused':
+      case CollabStatus.DENIED:
         return 'Refusé'
-      case 'sent':
+      case CollabStatus.SENT:
         return 'Produit envoyé'
       default:
-        return reduxStatus
+        return collab.status
     }
   }
 
   const statusDropdownSelected = getStatusDropdownSelected()
-  useEffect(() => {
-    if (creator == null) {
-      dispatch(getFullCreatorProfile(creatorId))
-    }
-  }, [creator, creatorId, dispatch])
 
-  if (getProfileStatus.hasFailed) {
-    return <ErrorCard message="Le profil n'a pas pu être chargé" noMargin />
-  }
-  if (getProfileStatus.isLoading || creator == null) {
+  if (creatorLoading || collabLoading) {
     return <p>Chargement du profil...</p>
+  }
+  if (creatorError || collabError) {
+    return <ErrorCard message="Le profil n'a pas pu être chargé" noMargin />
   }
 
   // Destructure creator data
-  const { birthYear, gender, country, name, picture } = creator
+  const { birthYear, country, name, picture } = creator
   const { youtube } = creator
   const hasYoutube = youtube != null
 
   const showContactButton = () => (
-    <Link to={`/brand/messages/${conversationId}`} className="action contact" type="button">
+    <Link
+      to={`/brand/messages/${collab.conversation._id}`}
+      className="action contact"
+      type="button"
+    >
       <p>Contacter</p>
       <img src={contactSource} alt="Email" />
     </Link>
   )
-
-  const translateGender = (): string => {
-    switch (gender) {
-      case 'female':
-        return 'femme'
-      case 'male':
-        return 'homme'
-      default:
-        return 'sexe inconnu'
-    }
-  }
 
   return (
     <Styles>
@@ -218,19 +242,13 @@ const CreatorProfile: React.FC<Props> = ({
         <div>
           <h1 className="name">{name}</h1>
           <p>
-            {yearToAge(birthYear)} ans, {translateGender()}, {country}
+            {yearToAge(birthYear)} ans, {country}
           </p>
-          <p>{creator.phone}</p>
         </div>
       </Flex>
-      {message && (
+      {collab && (
         <p className="message">
-          <span className="label">Message :</span> {message}
-        </p>
-      )}
-      {formats && (
-        <p>
-          <span className="label">Plateformes :</span> {formats.join(', ')}
+          <span className="label">Message :</span> {collab.message}
         </p>
       )}
       <Flex flexDirection="row" justifyContent="space-between" mt="2rem">
@@ -246,23 +264,28 @@ const CreatorProfile: React.FC<Props> = ({
                 <img src={closeSource} alt="Refuse" />
               </button>
             </Flex>
-            {conversationId && showContactButton()}
+            {collab && showContactButton()}
           </>
         ) : (
           collabId && (
             <>
               {showContactButton()}
               <Dropdown
-                options={['Accepté', 'Refusé', 'Produit envoyé']}
+                options={
+                  [
+                    ReviewCollabDecision.ACCEPT,
+                    ReviewCollabDecision.DENY,
+                    ReviewCollabDecision.MARK_AS_SENT,
+                  ] as ReviewCollabDecision[]
+                }
                 selection={statusDropdownSelected}
-                handleChange={newSelection => {
-                  if (newSelection === 'Accepté') {
-                    dispatch(reviewCollabProposition({ collabId, action: 'accept' }))
-                  } else if (newSelection === 'Refusé') {
-                    dispatch(reviewCollabProposition({ collabId, action: 'refuse' }))
-                  } else if (newSelection === 'Produit envoyé') {
-                    dispatch(reviewCollabProposition({ collabId, action: 'markAsSent' }))
-                  }
+                handleChange={(newSelection: ReviewCollabDecision) => {
+                  reviewCollabApplication({
+                    variables: {
+                      collabId: collabId,
+                      decision: newSelection,
+                    },
+                  })
                 }}
               />
             </>
@@ -270,16 +293,16 @@ const CreatorProfile: React.FC<Props> = ({
         )}
       </Flex>
       {/* Networks preview */}
-      {hasYoutube && <h2 className="section">Plateformes</h2>}
-      <section>{hasYoutube && <YoutubePreview youtuber={youtube} />}</section>
+      {youtube && <h2 className="section">Plateformes</h2>}
+      <section>{hasYoutube && <YoutubePreview youtuberId={youtube._id} />}</section>
       {/* Youtube analytics */}
-      {hasYoutube && (
+      {youtube && (
         <section>
-          {youtube.audience != null && (
+          {youtube.audience && (
             <>
               {/* Gender chart */}
               <h2 className="section">Audience YouTube</h2>
-              <AudienceInsights {...youtube.audience} />
+              <AudienceInsights youtuberAudience={youtube.audience} />
             </>
           )}
         </section>

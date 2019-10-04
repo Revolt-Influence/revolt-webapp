@@ -1,74 +1,92 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import moment from 'moment'
 import 'moment/locale/fr'
-import { useSelector, useDispatch } from 'react-redux'
-import { useIsAdmin, usePageTitle } from '../utils/hooks'
-import { Redirect, withRouter, RouteComponentProps } from 'react-router-dom'
-import IState from '../models/State'
-import { ICreatorState, CreatorStatus } from '../models/Creator'
+import { usePageTitle } from '../utils/hooks'
+import { withRouter, RouteComponentProps } from 'react-router-dom'
 import { ContainerBox } from '../styles/grid'
 import ErrorBoundary from '../components/ErrorBoundary'
-import { getCreatorsPage, setCreatorStatus } from '../actions/creators'
 import Loader from '../components/Loader'
 import FullHeightColumns from '../components/FullHeightColumns'
 import SelectableCard from '../components/SelectableCard'
 import { Flex, Box } from '@rebass/grid'
 import { TextButton } from '../styles/Button'
-import CreatorProfile from '../components/CreatorProfile'
+import CreatorProfile, { CREATOR_PROFILE_FRAGMENT } from '../components/CreatorProfile'
 import { Title } from '../styles/Text'
 import Dropdown from '../components/Dropdown'
+import gql from 'graphql-tag'
+import { useQuery, useMutation } from '@apollo/react-hooks'
+import { GetCreatorsPage, GetCreatorsPageVariables } from '../__generated__/GetCreatorsPage'
+import { CreatorStatus } from '../__generated__/globalTypes'
+import ErrorCard from '../components/ErrorCard'
+import { SetCreatorStatus, SetCreatorStatusVariables } from '../__generated__/SetCreatorStatus'
 
 moment.locale('fr')
 
+const GET_CREATORS_PAGE = gql`
+  query GetCreatorsPage($page: Float!, $status: CreatorStatus!) {
+    creators(page: $page, status: $status) {
+      currentPage
+      totalPages
+      items {
+        ...CreatorProfileFragment
+        status
+        createdAt
+      }
+    }
+  }
+  ${CREATOR_PROFILE_FRAGMENT}
+`
+
+const SET_CREATOR_STATUS = gql`
+  mutation SetCreatorStatus($creatorId: String!, $newStatus: CreatorStatus!) {
+    setCreatorStatus(newStatus: $newStatus, creatorId: $creatorId) {
+      _id
+      status
+    }
+  }
+`
+
 const Community: React.FC<RouteComponentProps> = ({ location }) => {
   usePageTitle('Communauté')
-
-  // Get all the data we need from Redux
-  const {
-    items: creators,
-    totalPages,
-    // currentPage,
-    requests: { getProfilesPage: getProfilesStatus },
-  } = useSelector<IState, ICreatorState>(state => state.creators)
-  const dispatch = useDispatch()
-  const [filter, setFilter] = useState<CreatorStatus>('unverified')
-  const [currentPage, setCurrentPage] = useState<number>(1)
-  const filteredCreators = creators.filter(_creator => _creator.status === filter)
-
+  // User defined state
+  const [filter, setFilter] = useState<CreatorStatus>(CreatorStatus.UNVERIFIED)
   const [selectedId, setSelectedId] = useState<string>(null)
+  const [currentPage, setCurrentPage] = useState<number>(1)
 
-  useEffect(() => {
-    dispatch(getCreatorsPage(currentPage, filter))
-  }, [currentPage, dispatch, filter])
+  const { data: { creators: paginatedCreators } = { creators: null }, loading, error } = useQuery<
+    GetCreatorsPage,
+    GetCreatorsPageVariables
+  >(GET_CREATORS_PAGE, {
+    variables: { page: currentPage, status: filter },
+    onCompleted: ({ creators: _paginatedCreators }) => {
+      if (_paginatedCreators.items.length > 0) {
+        // Set the first one if it exists
+        setSelectedId(_paginatedCreators.items[0]._id)
+      } else {
+        // List is empty or not ready, don't select anything
+        setSelectedId(null)
+      }
+    },
+  })
 
-  useEffect(() => {
-    if (filteredCreators.length > 0 && getProfilesStatus.hasSucceeded) {
-      // Set the first one if it exists
-      setSelectedId(filteredCreators[0]._id)
-    } else {
-      // List is empty or not ready, don't select anything
-      setSelectedId(null)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [getProfilesStatus.hasSucceeded])
+  const [setCreatorStatus] = useMutation<SetCreatorStatus, SetCreatorStatusVariables>(
+    SET_CREATOR_STATUS
+  )
 
-  // Make sure page is only visible to admin users
-  const isAdmin = useIsAdmin()
-  if (!isAdmin) {
-    return <Redirect to="/" />
-  }
-
-  if (getProfilesStatus.isLoading) {
+  if (loading) {
     return <Loader fullScreen />
+  }
+  if (error) {
+    return <ErrorCard />
   }
 
   const translateStatus = (status: CreatorStatus): string => {
     switch (status) {
-      case 'unverified':
+      case CreatorStatus.UNVERIFIED:
         return 'Non vérifié'
-      case 'verified':
+      case CreatorStatus.VERIFIED:
         return 'Vérifié'
-      case 'blocked':
+      case CreatorStatus.BLOCKED:
         return 'Bloqué'
       default:
         return status
@@ -77,16 +95,17 @@ const Community: React.FC<RouteComponentProps> = ({ location }) => {
 
   const handleFilterChange = (newFilter: CreatorStatus) => {
     setFilter(newFilter)
-    dispatch(getCreatorsPage(1, newFilter))
   }
 
   const handleSetStatus = (newStatus: CreatorStatus) => {
     // Make sure new status is different from the previous one
-    if (newStatus !== creators.find(_creator => _creator._id === selectedId).status) {
+    if (
+      newStatus !== paginatedCreators.items.find(_creator => _creator._id === selectedId).status
+    ) {
       // Save change in server
-      dispatch(setCreatorStatus({ creatorId: selectedId, newStatus }))
+      setCreatorStatus({ variables: { creatorId: selectedId, newStatus } })
       // Select next creator in the list
-      const potentialNextSelections = filteredCreators
+      const potentialNextSelections = paginatedCreators.items
         .filter(_creator => _creator._id !== selectedId)
         .map(_creator => _creator._id)
       const nextSelectionId = potentialNextSelections.length > 0 ? potentialNextSelections[0] : null
@@ -112,7 +131,13 @@ const Community: React.FC<RouteComponentProps> = ({ location }) => {
                 <Dropdown
                   name="Statut"
                   selection={filter}
-                  options={['unverified', 'verified', 'blocked'] as CreatorStatus[]}
+                  options={
+                    [
+                      CreatorStatus.UNVERIFIED,
+                      CreatorStatus.VERIFIED,
+                      CreatorStatus.BLOCKED,
+                    ] as CreatorStatus[]
+                  }
                   handleChange={handleFilterChange}
                   withMargin
                 />
@@ -121,19 +146,19 @@ const Community: React.FC<RouteComponentProps> = ({ location }) => {
                     Voir les plus récents
                   </TextButton>
                 )}
-                {filteredCreators.map(_creator => (
+                {paginatedCreators.items.map(_creator => (
                   <SelectableCard
                     selected={selectedId === _creator._id}
                     key={_creator._id}
                     title={_creator.name}
                     picture={_creator.picture}
-                    description={`${translateStatus(_creator.status)} · inscrit${
-                      _creator.gender === 'female' ? 'e' : ''
-                    } ${moment(_creator.signupDate).fromNow()}`}
+                    description={`${translateStatus(_creator.status)} · inscrit ${moment(
+                      _creator.createdAt
+                    ).fromNow()}`}
                     handleClick={() => setSelectedId(_creator._id)}
                   />
                 ))}
-                {totalPages > currentPage && (
+                {paginatedCreators.totalPages > currentPage && (
                   <TextButton onClick={() => setCurrentPage(currentPage + 1)}>
                     Voir les plus anciens
                   </TextButton>
@@ -146,8 +171,8 @@ const Community: React.FC<RouteComponentProps> = ({ location }) => {
               {selectedId && (
                 <CreatorProfile
                   creatorId={selectedId}
-                  handleAccept={() => handleSetStatus('verified')}
-                  handleRefuse={() => handleSetStatus('blocked')}
+                  handleAccept={() => handleSetStatus(CreatorStatus.VERIFIED)}
+                  handleRefuse={() => handleSetStatus(CreatorStatus.UNVERIFIED)}
                 />
               )}
             </Box>

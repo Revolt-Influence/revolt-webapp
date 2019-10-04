@@ -1,20 +1,21 @@
+import { useQuery } from '@apollo/react-hooks'
 import React, { Suspense } from 'react'
-import { Route, Switch, Redirect, RouteComponentProps } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom'
 import styled from 'styled-components'
-import Navbar from './Navbar'
-import { SessionType } from '../models/Session'
-import ErrorBoundary from './ErrorBoundary'
-import Loader from './Loader'
 import Landing from '../pages/Landing'
-import IState from '../models/State'
-import { IUser } from '../models/User'
-import { ICreator } from '../models/Creator'
-import Footer from './Footer'
 import { useClientSize } from '../utils/hooks'
+import { GetSession } from '../__generated__/GetSession'
+import { Plan, SessionType } from '../__generated__/globalTypes'
+import ErrorBoundary from './ErrorBoundary'
+import ErrorCard from './ErrorCard'
+import Footer from './Footer'
+import Loader from './Loader'
+import Navbar from './Navbar'
+import { GET_SESSION } from './Session'
+import { ContainerBox } from '../styles/grid'
 
 const CampaignDashboard = React.lazy(() => import('../pages/CampaignDashboard'))
-const BrandSignup = React.lazy(() => import('../pages/BrandSignup'))
+const UserSignup = React.lazy(() => import('../pages/UserSignup'))
 const CreatorSignup = React.lazy(() => import('../pages/CreatorSignup'))
 const Login = React.lazy(() => import('../pages/Login'))
 const ForgotPassword = React.lazy(() => import('../pages/ForgotPassword'))
@@ -27,7 +28,7 @@ const CampaignsList = React.lazy(() => import('../pages/CampaignsList'))
 const ExperiencesList = React.lazy(() => import('../pages/ExperiencesList'))
 const CollabsList = React.lazy(() => import('../pages/CollabsList'))
 const Experience = React.lazy(() => import('../pages/Experience'))
-const CampaignBrief = React.lazy(() => import('../pages/CampaignBrief'))
+const CampaignForm = React.lazy(() => import('../pages/CampaignForm'))
 const ConnectSocialAccount = React.lazy(() => import('../pages/ConnectSocialAccount'))
 const AmbassadorProgram = React.lazy(() => import('../pages/AmbassadorProgram'))
 const PrivacyPolicy = React.lazy(() => import('../pages/PrivacyPolicy'))
@@ -47,41 +48,47 @@ const Layout = styled.div<{ minHeight: number }>`
   }
 `
 
-interface IRouterSwitchProps extends RouteComponentProps {
-  isRetrievingUser: boolean
-  hasVerifiedEmail: boolean
-}
-
-const RouterSwitch: React.FC<IRouterSwitchProps> = () => {
-  const isLoggedIn = useSelector<IState, boolean>(state => state.session.isLoggedIn)
-  const sessionType = useSelector<IState, SessionType>(state => state.session.type)
-  const isRetrievingUser = useSelector<IState, boolean>(
-    state => state.session.requests.retrieveUser.isLoading
+const RouterSwitch: React.FC<RouteComponentProps> = () => {
+  const { data: { session } = { session: null }, loading, error } = useQuery<GetSession>(
+    GET_SESSION
   )
-  const user = useSelector<IState, IUser>(state => state.session.user)
-  const creator = useSelector<IState, ICreator>(state => state.session.creator)
+
   const clientHeight = useClientSize().height
+
+  if (loading) {
+    return <Loader fullScreen />
+  }
+
+  if (error) {
+    return (
+      <ContainerBox>
+        <ErrorCard message="Something went wrong" />
+      </ContainerBox>
+    )
+  }
+
+  const { isLoggedIn, sessionType, user, creator } = session
 
   const renderRoot = () => {
     if (!isLoggedIn) {
       return <Landing />
     }
-    if (sessionType === 'brand') {
+    if (sessionType === SessionType.BRAND) {
       return <Redirect to="/brand" />
     }
-    if (sessionType === 'creator') {
+    if (sessionType === SessionType.CREATOR) {
       return <Redirect to="/creator" />
     }
     // Should not happen, here just in case
     return <Landing />
   }
 
-  const renderBrandSignup = () => {
+  const renderUserSignup = () => {
     // Only allow access if the user is not logged in
     if (isLoggedIn) {
       return <Redirect to="/" />
     }
-    return <BrandSignup />
+    return <UserSignup />
   }
 
   const renderCreatorSignup = () => {
@@ -102,7 +109,7 @@ const RouterSwitch: React.FC<IRouterSwitchProps> = () => {
 
   const renderBrandAccount = () => {
     // Only allow access if the user is logged in
-    if (!isLoggedIn && !isRetrievingUser) {
+    if (!isLoggedIn) {
       return <Redirect to="/login" />
     }
     return <BrandAccount />
@@ -110,7 +117,7 @@ const RouterSwitch: React.FC<IRouterSwitchProps> = () => {
 
   const renderCreatorAccount = () => {
     // Only allow access if the user is logged in
-    if (!isLoggedIn && !isRetrievingUser) {
+    if (!isLoggedIn) {
       return <Redirect to="/login" />
     }
     return <CreatorAccount />
@@ -118,45 +125,45 @@ const RouterSwitch: React.FC<IRouterSwitchProps> = () => {
 
   const renderUpgradePlan = () => {
     // Only allow access if the user is logged in and not Premium
-    if (!isLoggedIn && !isRetrievingUser) {
+    if (!isLoggedIn) {
       return <Redirect to="/login" />
     }
-    if (user.plan === 'premium') {
+    if (user.plan === Plan.PREMIUM) {
       return <Redirect to="/brand/myAccount" />
     }
     return <Upgrade />
   }
 
   const renderCampaignsList = () => {
-    if (!isLoggedIn && !isRetrievingUser) {
+    if (!isLoggedIn) {
       return <Redirect to="/login" />
     }
     return <CampaignsList />
   }
 
   const renderExperiencesList = () => {
-    if (!isLoggedIn && !isRetrievingUser) {
+    if (!isLoggedIn) {
       return <Redirect to="/login" />
     }
     return <ExperiencesList />
   }
 
   const renderCollabsList = () => {
-    if (!isLoggedIn && !isRetrievingUser) {
+    if (!isLoggedIn) {
       return <Redirect to="/login" />
     }
     return <CollabsList />
   }
 
   const renderExperience = () => {
-    if (!isLoggedIn && !isRetrievingUser) {
+    if (!isLoggedIn) {
       return <Redirect to="/login" />
     }
     return <Experience />
   }
 
   const renderCampaignDashboard = () => {
-    if (!isLoggedIn && !isRetrievingUser) {
+    if (!isLoggedIn) {
       return <Redirect to="/login" />
     }
     return (
@@ -167,10 +174,10 @@ const RouterSwitch: React.FC<IRouterSwitchProps> = () => {
   }
 
   const renderConnectSocialAccount = () => {
-    if (!isLoggedIn && !isRetrievingUser) {
+    if (!isLoggedIn) {
       return <Redirect to="/login" />
     }
-    if (sessionType !== 'creator') {
+    if (sessionType !== SessionType.CREATOR) {
       return <NotFound />
     }
     if (creator.youtube != null) {
@@ -180,22 +187,25 @@ const RouterSwitch: React.FC<IRouterSwitchProps> = () => {
     return <ConnectSocialAccount />
   }
 
-  const renderCampaignBrief = () => {
-    if (!isLoggedIn && !isRetrievingUser) {
+  const renderCampaignForm = () => {
+    if (!isLoggedIn) {
       return <Redirect to="/login" />
     }
-    return <CampaignBrief />
+    return <CampaignForm />
   }
 
-  if (isRetrievingUser) {
-    return <Loader fullScreen />
+  const renderCommunity = () => {
+    if (!user.isAdmin) {
+      return <Redirect to="/" />
+    }
+    return <Community />
   }
 
   const brandRouterSwitch = () => {
     if (!isLoggedIn) {
       return <Redirect to="/login" />
     }
-    if (sessionType === 'creator') {
+    if (sessionType !== SessionType.BRAND) {
       return <NotFound />
     }
     return (
@@ -210,12 +220,12 @@ const RouterSwitch: React.FC<IRouterSwitchProps> = () => {
           )}
         />
         <Route path="/brand/campaigns/:campaignId/dashboard" render={renderCampaignDashboard} />
-        <Route path="/brand/campaigns/:campaignId/brief" render={renderCampaignBrief} />
+        <Route path="/brand/campaigns/:campaignId/brief" render={renderCampaignForm} />
         <Route path="/brand/myAccount" render={renderBrandAccount} />
         <Route path="/brand/upgrade" render={renderUpgradePlan} />
         <Route path="/brand/messages/:conversationId" component={Conversation} />
         <Route exact path="/brand/messages" component={ConversationsList} />
-        <Route path="/brand/community" component={Community} />
+        <Route path="/brand/community" render={renderCommunity} />
         {/* Handle 404 */}
         <Route component={NotFound} />
       </Switch>
@@ -226,7 +236,7 @@ const RouterSwitch: React.FC<IRouterSwitchProps> = () => {
     if (!isLoggedIn) {
       return <Redirect to="/login" />
     }
-    if (sessionType === 'brand') {
+    if (sessionType !== SessionType.CREATOR) {
       return <NotFound />
     }
     const hasNoNetwork = creator.youtube == null
@@ -262,7 +272,7 @@ const RouterSwitch: React.FC<IRouterSwitchProps> = () => {
             {/* All creator routes */}
             <Route path="/creator" render={creatorRouterSwitch} />
             {/* All other routes */}
-            <Route path="/brandSignup" render={renderBrandSignup} />
+            <Route path="/userSignup" render={renderUserSignup} />
             <Route path="/connectSocialAccount" render={renderConnectSocialAccount} />
             <Route path="/creatorSignup" render={renderCreatorSignup} />
             <Route path="/login" render={renderLogin} />

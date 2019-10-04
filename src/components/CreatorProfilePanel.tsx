@@ -1,12 +1,9 @@
-import React from 'react'
-import { useDispatch } from 'react-redux'
+import React, { useRef } from 'react'
 import styled from 'styled-components'
 import { useOnClickOutside } from '../utils/hooks'
 import CreatorProfile from './CreatorProfile'
 import { shadow } from '../utils/styles'
 import { palette } from '../utils/colors'
-import { hideProfilePanel } from '../actions/display'
-import { TaskFormatType } from '../models/Campaign'
 
 const closeSource = require('../images/icons/close.svg')
 
@@ -50,33 +47,20 @@ const Styles = styled.div`
 interface ICreatorProfilePanelProps {
   creatorId: string
   collabId: string
-  conversationId: string
-  message: string
-  formats: TaskFormatType[]
 }
 
-const CreatorProfilePanel: React.FC<ICreatorProfilePanelProps> = ({
-  creatorId,
-  message,
-  formats,
-  collabId,
-  conversationId,
-}) => {
-  const dispatch = useDispatch()
-  const selfRef = React.useRef()
-  useOnClickOutside(selfRef, () => dispatch(hideProfilePanel()))
+const CreatorProfilePanel: React.FC<ICreatorProfilePanelProps> = ({ creatorId, collabId }) => {
+  const selfRef = useRef()
+  const hidePanel = () => {
+    console.log('hide creator')
+  }
+  useOnClickOutside(selfRef, hidePanel)
   return (
     <Styles ref={selfRef}>
-      <button className="close" onClick={() => dispatch(hideProfilePanel())} type="button">
+      <button className="close" onClick={() => hidePanel()} type="button">
         <img src={closeSource} alt="fermer" />
       </button>
-      <CreatorProfile
-        creatorId={creatorId}
-        conversationId={conversationId}
-        message={message}
-        formats={formats}
-        collabId={collabId}
-      />
+      <CreatorProfile creatorId={creatorId} collabId={collabId} />
     </Styles>
   )
 }

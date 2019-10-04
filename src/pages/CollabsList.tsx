@@ -1,30 +1,48 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
 import { Flex, Box } from '@rebass/grid'
 import { ContainerBox } from '../styles/grid'
 import ErrorBoundary from '../components/ErrorBoundary'
-import IState from '../models/State'
-import { ICollab } from '../models/Collab'
 import CreatorCollabCard from '../components/CreatorCollabCard'
-import { ICampaign } from '../models/Campaign'
 import { usePageTitle, useWindowSize } from '../utils/hooks'
 import { BlueLink, Title } from '../styles/Text'
 import NotificationCard from '../components/NotificationCard'
+import gql from 'graphql-tag'
+import { EXPERIENCE_PRESENTATION_FRAGMENT } from '../components/ExperiencePresentation'
+import { useQuery } from '@apollo/react-hooks'
+import { GetCreatorCollabs } from '../__generated__/GetCreatorCollabs'
+import Loader from '../components/Loader'
+import ErrorCard from '../components/ErrorCard'
 
-interface ICollabsListProps {}
+const GET_CREATOR_COLLABS = gql`
+  query GetCreatorCollabs {
+    collabs {
+      _id
+      status
+      updatedAt
+      campaign {
+        ...ExperiencePresentationFragment
+      }
+    }
+  }
+  ${EXPERIENCE_PRESENTATION_FRAGMENT}
+`
 
-const CollabsList: React.FC<ICollabsListProps> = () => {
+const CollabsList: React.FC<{}> = () => {
   usePageTitle('Vos collabs')
 
   // Get all creator collabs ids
-  const collabs = useSelector<IState, ICollab[]>(state => state.collabs.items)
-  const collabExperiencesIds = collabs.map(_collab => _collab.campaign)
-  // Get experiences that are linked to a collab
-  const experiences = useSelector<IState, ICampaign[]>(state =>
-    state.campaigns.items.filter(_experience => collabExperiencesIds.includes(_experience._id))
+  const { data: { collabs } = { collabs: null }, error, loading } = useQuery<GetCreatorCollabs, {}>(
+    GET_CREATOR_COLLABS
   )
 
   const { width } = useWindowSize()
+
+  if (loading) {
+    return <Loader />
+  }
+  if (error) {
+    return <ErrorCard message="Could not show collabs" />
+  }
 
   return (
     <ContainerBox>
@@ -50,13 +68,7 @@ const CollabsList: React.FC<ICollabsListProps> = () => {
                   px="2rem"
                   key={_collab._id}
                 >
-                  <CreatorCollabCard
-                    experience={experiences.find(
-                      _experience => _experience._id === _collab.campaign
-                    )}
-                    experienceId={_collab.campaign}
-                    collab={_collab}
-                  />
+                  <CreatorCollabCard collab={_collab} />
                 </Box>
               ))}
             </Flex>

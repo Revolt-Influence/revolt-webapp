@@ -1,14 +1,14 @@
-import { useEffect, useLayoutEffect, useState, useRef, useCallback } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import io from 'socket.io-client'
-import { DeviceType } from '../models/Display'
-import { breakpoints } from '../models/Theme'
-import { useSelector, useDispatch } from 'react-redux'
-import IState from '../models/State'
-import { ISession } from '../models/Session'
-import { receiveMessage } from '../actions/conversations'
-import { IMessage } from '../models/Conversation'
+import { useQuery } from '@apollo/react-hooks'
+import { DeviceType } from '../types'
+import { GET_SESSION } from '../components/Session'
+import { GetSession } from '../__generated__/GetSession'
+import { SessionType } from '../__generated__/globalTypes'
+import { MessageFragment } from '../__generated__/MessageFragment'
+import { breakpoints } from '../components/CustomThemeProvider'
 
-function useWindowSize(): { width: number; height: number } {
+export function useWindowSize(): { width: number; height: number } {
   const isClient = typeof window === 'object'
   const getSize = useCallback(
     () => ({
@@ -33,7 +33,7 @@ function useWindowSize(): { width: number; height: number } {
   return windowSize
 }
 
-function useClientSize(): { width: number; height: number } {
+export function useClientSize(): { width: number; height: number } {
   const isClient = typeof window === 'object'
   const getSize = useCallback(
     () => ({
@@ -58,7 +58,7 @@ function useClientSize(): { width: number; height: number } {
   return windowSize
 }
 
-function usePrevious(value: any) {
+export function usePrevious(value: any) {
   const ref = useRef(null)
   useEffect(() => {
     ref.current = value
@@ -66,7 +66,7 @@ function usePrevious(value: any) {
   return ref.current
 }
 
-function useRenderCount(): number {
+export function useRenderCount(): number {
   const renderCount = useRef(0)
   useEffect(() => {
     renderCount.current += 1
@@ -75,7 +75,7 @@ function useRenderCount(): number {
 }
 
 // From usehooks.com
-function useOnClickOutside(
+export function useOnClickOutside(
   ref: React.MutableRefObject<any>,
   handler: (e: React.MouseEvent<any>) => void
 ) {
@@ -100,13 +100,13 @@ function useOnClickOutside(
   }, [ref, handler])
 }
 
-function usePageTitle(title: string) {
+export function usePageTitle(title: string) {
   useEffect(() => {
     document.title = `${title} - Revolt`
   }, [title])
 }
 
-function getRect(element): ClientRect {
+export function getRect(element): ClientRect {
   if (!element) {
     return {
       bottom: 0,
@@ -120,7 +120,7 @@ function getRect(element): ClientRect {
   return element.getBoundingClientRect()
 }
 
-function useRect(ref: React.MutableRefObject<HTMLElement>) {
+export function useRect(ref: React.MutableRefObject<HTMLElement>) {
   const [rect, setRect] = useState<ClientRect>(getRect(ref ? ref.current : null))
 
   const handleResize = useCallback(() => {
@@ -150,7 +150,7 @@ function useRect(ref: React.MutableRefObject<HTMLElement>) {
 }
 
 // Got from usehooks.com
-function useScrollLock(enableLock: boolean = true) {
+export function useScrollLock(enableLock: boolean = true) {
   useLayoutEffect(() => {
     // Get original body overflow
     const originalStyle = window.getComputedStyle(document.body).overflow
@@ -165,37 +165,15 @@ function useScrollLock(enableLock: boolean = true) {
   }, [enableLock]) // Empty array ensures effect is only run on mount and unmount
 }
 
-function useToggle(initialValue: boolean) {
+export function useToggle(initialValue: boolean) {
   const [value, setValue] = useState<boolean>(initialValue)
   const toggleValue = () => setValue(!value)
   return [value, toggleValue] as [boolean, () => void]
 }
 
-// Got from usehooks.com
-function useDebounce(value: unknown, delay: number) {
-  // State and setters for debounced value
-  const [debouncedValue, setDebouncedValue] = useState<typeof value>(value)
-
-  useEffect(() => {
-    // Update debounced value after delay
-    const handler = setTimeout(() => {
-      setDebouncedValue(value)
-    }, delay)
-
-    // Cancel the timeout if value changes (also on delay change or unmount)
-    // This is how we prevent debounced value from updating if value is changed ...
-    // .. within the delay period. Timeout gets cleared and restarted.
-    return () => {
-      clearTimeout(handler)
-    }
-  }, [value, delay]) // Only re-call effect if value or delay changes
-
-  return debouncedValue
-}
-
 const stripeApiKey = process.env.REACT_APP_STRIPE_API_KEY
 
-function useStripe() {
+export function useStripe() {
   // Load Stripe
   const [stripe, setStripe] = useState(null)
   useEffect(() => {
@@ -218,7 +196,7 @@ function useStripe() {
 }
 
 const pixelBreakpoints = breakpoints.map(_breakpoint => parseFloat(_breakpoint) * 16)
-function useDeviceType(): DeviceType {
+export function useDeviceType(): DeviceType {
   const { width } = useWindowSize()
   if (width < pixelBreakpoints[0]) {
     return 'mobile'
@@ -230,20 +208,12 @@ function useDeviceType(): DeviceType {
   return 'desktop'
 }
 
-function useIsAdmin(): boolean {
-  const { isLoggedIn, type, user } = useSelector<IState, ISession>(state => state.session)
-  if (!isLoggedIn || type === 'creator' || user == null || user.plan !== 'admin') {
-    return false
-  }
-  return true
-}
-
 const socketEvents = {
   JOIN_ROOM: 'JOIN_ROOM',
   NEW_MESSAGE: 'NEW_MESSAGE',
 }
 
-function useConversationsSocket() {
+export function useConversationsSocket() {
   // Make sure socket connection gets created only once
   const socketRef = useRef<SocketIOClient.Socket>(null)
   if (socketRef.current == null) {
@@ -251,7 +221,11 @@ function useConversationsSocket() {
   }
 
   // Get connected user ID
-  const { user, isLoggedIn, creator } = useSelector<IState, ISession>(state => state.session)
+  const {
+    data: {
+      session: { user, isLoggedIn, creator },
+    },
+  } = useQuery<GetSession>(GET_SESSION)
   const creatorId = creator && creator._id
   const userId = user && user._id
   // Join room on startup
@@ -263,31 +237,26 @@ function useConversationsSocket() {
   }, [creatorId, isLoggedIn, userId])
 
   // Listen to messages
-  const dispatch = useDispatch()
   useEffect(() => {
     const socket = socketRef.current
-    const handleNewMessage = (newMessage: IMessage) => {
-      // Attach message to the Redux store
-      dispatch(receiveMessage(newMessage))
+    const handleNewMessage = (newMessage: MessageFragment) => {
+      // TODO: Attach message to the Redux store
+      // dispatch(receiveMessage(newMessage))
     }
     socket.on(socketEvents.NEW_MESSAGE, handleNewMessage)
     return () => socket.removeListener(socketEvents.NEW_MESSAGE, handleNewMessage)
-  }, [dispatch])
+  }, [])
 }
 
-export {
-  useWindowSize,
-  usePrevious,
-  useRenderCount,
-  useOnClickOutside,
-  usePageTitle,
-  useRect,
-  useScrollLock,
-  useToggle,
-  useDebounce,
-  useStripe,
-  useDeviceType,
-  useIsAdmin,
-  useConversationsSocket,
-  useClientSize,
+export function useIsAdmin() {
+  const { data: { session } = { session: null }, loading, error } = useQuery<GetSession>(
+    GET_SESSION
+  )
+  if (loading || error) {
+    return false
+  }
+  if (session.sessionType === SessionType.BRAND) {
+    return session.user.isAdmin
+  }
+  return false
 }

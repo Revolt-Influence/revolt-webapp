@@ -1,19 +1,18 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState } from 'react'
+import { Link, useHistory } from 'react-router-dom'
 import { Flex, Box } from '@rebass/grid'
-import { useSelector, useDispatch } from 'react-redux'
 import styled from 'styled-components'
 import { Container, Row } from '../utils/grid'
 import { Title } from '../styles/Text'
 import { MainButtonSubmit } from '../styles/Button'
 import { FormInput, FormInputLabel } from '../styles/Form'
-import { loginUser } from '../actions/session'
 import ErrorCard from '../components/ErrorCard'
-import IState from '../models/State'
-import { IRequestStatus } from '../utils/request'
-
 import { palette } from '../utils/colors'
 import { usePageTitle } from '../utils/hooks'
+import gql from 'graphql-tag'
+import { useMutation } from '@apollo/react-hooks'
+import { LoginMutation, LoginMutationVariables } from '../__generated__/LoginMutation'
+import { GET_SESSION } from '../components/Session'
 
 const Help = styled.p`
   text-align: center;
@@ -27,22 +26,45 @@ const HelpLink = styled.span`
   margin-top: 0.5rem;
 `
 
+const LOGIN_MUTATION = gql`
+  mutation LoginMutation($email: String!, $password: String!) {
+    login(password: $password, email: $email) {
+      isLoggedIn
+      sessionId
+      sessionType
+      user {
+        email
+      }
+      creator {
+        email
+      }
+    }
+  }
+`
+
 const Login: React.FC<{}> = () => {
-  const [email, setEmail] = React.useState<string>('')
-  const [password, setPassword] = React.useState<string>('')
-
   usePageTitle('Se connecter')
+  const history = useHistory()
 
-  // Redux stuff
-  const dispatch = useDispatch()
-  const requestStatus = useSelector<IState, IRequestStatus>(state => state.session.requests.login)
+  // Form state
+  const [email, setEmail] = useState<string>('')
+  const [password, setPassword] = useState<string>('')
+
+  // Server requests
+  const [login, { error, loading }] = useMutation<LoginMutation, LoginMutationVariables>(
+    LOGIN_MUTATION,
+    {
+      onCompleted: () => history.push('/'),
+      refetchQueries: [{ query: GET_SESSION }],
+      awaitRefetchQueries: true,
+    }
+  )
 
   const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    dispatch(loginUser({ email, plainPassword: password }))
+    login({ variables: { email, password } })
   }
 
-  const { hasFailed, isLoading } = requestStatus
   return (
     <Container>
       <Flex flexDirection="column" alignItems="center">
@@ -76,10 +98,10 @@ const Login: React.FC<{}> = () => {
                 <HelpLink>Mot de passe oublié ?</HelpLink>
               </Link>
             </Row>
-            {hasFailed && <ErrorCard message="Email ou mot de passe invalide" />}
+            {error && <ErrorCard message="Email ou mot de passe invalide" />}
             <MainButtonSubmit
-              disabled={isLoading}
-              value={isLoading ? 'Connexion...' : 'Se connecter'}
+              disabled={loading}
+              value={loading ? 'Connexion...' : 'Se connecter'}
             />
           </form>
         </Box>

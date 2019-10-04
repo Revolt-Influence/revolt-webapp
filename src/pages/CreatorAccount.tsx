@@ -10,7 +10,6 @@ import ConnectCreatorYoutube from '../components/ConnectCreatorYoutube'
 import UpdateCreatorContactInfo from '../components/UpdateCreatorContactInfo'
 import Session from '../components/Session'
 import ChangePassword from '../components/ChangePassword'
-import AmbassadorStatusCard from '../components/AmbassadorStatusCard'
 
 const CreatorAccount: React.FC<{}> = () => {
   usePageTitle('Mon compte')
@@ -35,10 +34,6 @@ const CreatorAccount: React.FC<{}> = () => {
           {/* Change password */}
           <SplitView title="Mon mot de passe">
             <ChangePassword />
-          </SplitView>
-          {/* Ambassador program advancement */}
-          <SplitView title="Ambassadeur">
-            <AmbassadorStatusCard />
           </SplitView>
           {/* Session */}
           <SplitView title="Ma session">

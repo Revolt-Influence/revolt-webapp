@@ -1,10 +1,10 @@
 import React from 'react'
 import { Flex } from '@rebass/grid'
-import { IMessageDetailed } from '../models/Conversation'
 import styled, { css } from 'styled-components'
 import { palette } from '../utils/colors'
 import { applyCloudinaryTransformations } from '../utils/images'
 import { shadow } from '../utils/styles'
+import gql from 'graphql-tag'
 
 const MessageBubble = styled(Flex)<{ isFromMe: boolean }>`
   max-width: 65rem;
@@ -55,8 +55,35 @@ const MessageBubble = styled(Flex)<{ isFromMe: boolean }>`
   }
 `
 
+export const MESSAGE_FRAGMENT = gql`
+  fragment MessageFragment on Message {
+    _id
+    text
+    brandAuthor {
+      _id
+    }
+    creatorAuthor {
+      _id
+    }
+    isAdminAuthor
+    createdAt
+    conversation {
+      _id
+    }
+  }
+`
+
+export interface MessageDetailed {
+  _id: string
+  text: string
+  sentAt: number
+  isFromMe: boolean
+  authorName: string
+  authorPicture: string
+}
+
 interface Props {
-  messages: IMessageDetailed[]
+  messages: MessageDetailed[]
 }
 
 const ConversationMessages: React.FC<Props> = ({ messages }) => (

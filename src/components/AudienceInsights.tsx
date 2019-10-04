@@ -1,16 +1,16 @@
 import React from 'react'
-import { PieChart, Pie, Cell, BarChart, Bar, XAxis, Tooltip, ResponsiveContainer } from 'recharts'
-import { Flex, Box } from '@rebass/grid'
+import { BarChart, Bar, XAxis, Tooltip, ResponsiveContainer } from 'recharts'
+import { Box } from '@rebass/grid'
 import { getName } from 'country-list'
 import styled from 'styled-components'
-import { IAudienceMetric } from '../models/Audience'
 import { palette } from '../utils/colors'
-import Tabs from './Tabs'
 import { setFont, shadow } from '../utils/styles'
-import { Dot } from '../styles/Dot'
 import ErrorBoundary from './ErrorBoundary'
+import {
+  GetYoutuber_youtuber_audience,
+  GetYoutuber_youtuber_audience_countries,
+} from '../__generated__/GetYoutuber'
 
-const ANIMATION_DURATION = 1000
 const MAX_LOCATIONS = 6
 
 const Styles = styled.div`
@@ -34,93 +34,34 @@ const Styles = styled.div`
   }
 `
 
-const sortByPercentage = (metricA: IAudienceMetric, metricB: IAudienceMetric): number => {
+const sortByPercentage = (
+  metricA: GetYoutuber_youtuber_audience_countries,
+  metricB: GetYoutuber_youtuber_audience_countries
+): number => {
   if (metricA.percentage < metricB.percentage) return 1
   if (metricA.percentage > metricB.percentage) return -1
   return 0
 }
 
-interface IAudienceInsightsProps {
-  // Base data
-  malePercentage: number
-  femalePercentage: number
-  // Location data
-  topCities?: IAudienceMetric[]
-  topCountries?: IAudienceMetric[]
-  // Audience quality
-  influencersPercentage?: number
-  authenticPercentage?: number
-  massfollowersPercentage?: number
-  suspiciousPercentage?: number
-  // Audience age
-  topAges?: IAudienceMetric[]
+interface Props {
+  youtuberAudience: GetYoutuber_youtuber_audience
 }
 
-const AudienceInsights: React.FC<IAudienceInsightsProps> = ({
-  malePercentage,
-  femalePercentage,
-  topCities,
-  topCountries,
-  influencersPercentage,
-  authenticPercentage,
-  massfollowersPercentage,
-  suspiciousPercentage,
-  topAges,
-}) => {
-  // Tabs state
-  const [locationTab, setLocationTab] = React.useState<'country' | 'city'>('country')
-
+const AudienceInsights: React.FC<Props> = ({ youtuberAudience: { ageGroups, countries } }) => {
   // Prepare Recharts data
-  const scaleGenderPercentage = 100 / (femalePercentage + malePercentage)
-  const formattedMalePercentage = malePercentage * scaleGenderPercentage
-  const formattedFemalePercentage = femalePercentage * scaleGenderPercentage
-  const genderDatas = [
-    { name: 'hommes', value: formattedMalePercentage, color: palette.blue._400 },
-    { name: 'femmes', value: formattedFemalePercentage, color: palette.pink._400 },
-  ]
-  const hasAgeData = topAges != null
+  const hasAgeData = ageGroups
   const ageDatas = hasAgeData
-    ? topAges
+    ? ageGroups
         .map((_topAge, _index) => ({
           ..._topAge,
           name: `${_topAge.name.replace('age', '')} ans`,
         }))
         .sort(sortByPercentage)
     : []
-  const hasFollowerTypesData =
-    influencersPercentage != null &&
-    authenticPercentage != null &&
-    massfollowersPercentage != null &&
-    suspiciousPercentage != null
-  const followerTypesDatas = hasFollowerTypesData
-    ? [
-        {
-          name: 'influenceurs',
-          value: influencersPercentage,
-          color: palette.pink._500,
-        },
-        {
-          name: 'authentiques',
-          value: authenticPercentage,
-          color: palette.pink._400,
-        },
-        {
-          name: 'massfollowers',
-          value: massfollowersPercentage,
-          color: palette.grey._500,
-        },
-        {
-          name: 'comptes suspicieux',
-          value: suspiciousPercentage,
-          color: palette.grey._300,
-        },
-      ]
-    : []
-
-  // Limit to 6 locations
-  const hasCountryData = topCountries != null
+  // Limit to 6 countries
+  const hasCountryData = countries != null
   const countryDatas = hasCountryData
-    ? topCountries
+    ? countries
         .map(_isoCountry => ({
           ..._isoCountry,
           name: getName(_isoCountry.name) || _isoCountry.name,
@@ -128,102 +69,10 @@ const AudienceInsights: React.FC<IAudienceInsightsProps> = ({
         .sort(sortByPercentage)
         .filter((_country, index) => index < MAX_LOCATIONS)
     : []
-  const hasCityData = topCities != null
-  const cityDatas = hasCityData
-    ? topCities
-        .map(_city => ({
-          ..._city,
-          // Don't show country in city name
-          name: _city.name.includes(',')
-            ? _city.name.substr(0, _city.name.indexOf(','))
-            : _city.name,
-        }))
-        .sort(sortByPercentage)
-        .filter((_city, index) => index < MAX_LOCATIONS)
-    : []
-
-  const locationTabItems = [
-    {
-      isActive: locationTab === 'country',
-      name: 'Pays',
-      handleClick: () => setLocationTab('country'),
-    },
-    {
-      isActive: locationTab === 'city',
-      name: 'Ville',
-      handleClick: () => setLocationTab('city'),
-    },
-  ]
 
   return (
     <ErrorBoundary message="Les données n'ont pas pu être affichées">
       <Styles>
-        {/* Gender chart */}
-        <h3 className="subSection">Genre de l'audience</h3>
-        <Flex flexDirection="row" alignItems="center">
-          <PieChart
-            width={180}
-            height={180}
-            margin={{ top: -20, right: -20, bottom: -20, left: -20 }}
-          >
-            <Pie
-              data={genderDatas}
-              dataKey="value"
-              nameKey="gender"
-              animationDuration={ANIMATION_DURATION}
-            >
-              {genderDatas.map(_genderData => (
-                <Cell fill={_genderData.color} key={_genderData.name} />
-              ))}
-            </Pie>
-          </PieChart>
-          <ul className="legend">
-            {genderDatas.map(_genderData => (
-              <li key={_genderData.name}>
-                <Dot color={_genderData.color} />
-                <span>
-                  {Math.round(_genderData.value)}% {_genderData.name}
-                </span>
-              </li>
-            ))}
-          </ul>
-        </Flex>
-
-        {/* Authenticity chart */}
-        {hasFollowerTypesData && (
-          <>
-            <h3 className="subSection">Qualité de l'audience</h3>
-            <Flex flexDirection="row" alignItems="center">
-              <PieChart
-                width={180}
-                height={180}
-                margin={{ top: -20, right: -20, bottom: -20, left: -20 }}
-              >
-                <Pie
-                  data={followerTypesDatas}
-                  dataKey="value"
-                  nameKey="authenticity"
-                  animationDuration={ANIMATION_DURATION}
-                >
-                  {followerTypesDatas.map(_followerType => (
-                    <Cell fill={_followerType.color} key={_followerType.name} />
-                  ))}
-                </Pie>
-              </PieChart>
-              <ul className="legend">
-                {followerTypesDatas.map(_followerType => (
-                  <li key={_followerType.name}>
-                    <Dot color={_followerType.color} />
-                    <span>
-                      {Math.round(_followerType.value)}% {_followerType.name}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </Flex>
-          </>
-        )}
-
         {/* Age data */}
         {hasAgeData && (
           <>
@@ -250,16 +99,12 @@ const AudienceInsights: React.FC<IAudienceInsightsProps> = ({
         )}
 
         {/* Location chart */}
-        {(hasCountryData || hasCityData) && (
+        {hasCountryData && (
           <>
-            <h3 className="subSection">Localisation de l'audience</h3>
-            {hasCountryData && hasCityData && <Tabs items={locationTabItems} noLinks small />}
+            <h3 className="subSection">Pays de l'audience</h3>
             <Box width={1}>
               <ResponsiveContainer width="100%" minHeight="240px">
-                <BarChart
-                  data={locationTab === 'country' ? countryDatas : cityDatas}
-                  margin={{ top: -20 }}
-                >
+                <BarChart data={countryDatas} margin={{ top: -20 }}>
                   <XAxis dataKey="name" />
                   <Tooltip
                     wrapperStyle={{

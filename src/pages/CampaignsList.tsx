@@ -1,42 +1,92 @@
-import React from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useMutation, useQuery } from '@apollo/react-hooks'
 import { Box, Flex } from '@rebass/grid'
-import { withRouter, RouteComponentProps } from 'react-router-dom'
-import { ContainerBox } from '../styles/grid'
-import { ICampaign } from '../models/Campaign'
+import gql from 'graphql-tag'
+import React from 'react'
+import { RouteComponentProps, withRouter } from 'react-router-dom'
+import BrandOnboarding from '../components/BrandOnboarding'
 import CampaignPreviewCard from '../components/CampaignPreviewCard'
 import ErrorCard from '../components/ErrorCard'
-import IState from '../models/State'
-import { Title } from '../styles/Text'
-import { MainButton } from '../styles/Button'
-import { createCampaign } from '../actions/campaigns'
-import { IRequestStatus } from '../utils/request'
-import SuccessCard from '../components/SuccessCard'
-import { usePageTitle, useRenderCount } from '../utils/hooks'
+import { EXPERIENCE_PRESENTATION_FRAGMENT } from '../components/ExperiencePresentation'
+import Loader from '../components/Loader'
 import NotificationCard from '../components/NotificationCard'
-import BrandOnboarding from '../components/BrandOnboarding'
+import { MainButton } from '../styles/Button'
+import { ContainerBox } from '../styles/grid'
+import { Title } from '../styles/Text'
+import { usePageTitle } from '../utils/hooks'
+import { CreateCampaign } from '../__generated__/CreateCampaign'
+import { GetCampaigns } from '../__generated__/GetCampaigns'
+
+const CAMPAIGN_CARD_FRAGMENT = gql`
+  fragment CampaignCardFragment on Campaign {
+    ...ExperiencePresentationFragment
+    collabs {
+      _id
+      status
+    }
+    estimatedBudget
+    trackingProvider
+    targetAudience {
+      ageGroups
+      countries
+      gender
+    }
+    isArchived
+    isReviewed
+    owner {
+      _id
+      email
+    }
+  }
+  ${EXPERIENCE_PRESENTATION_FRAGMENT}
+`
+
+const GET_CAMPAIGNS = gql`
+  query GetCampaigns {
+    campaigns {
+      currentPage
+      totalPages
+      items {
+        ...CampaignCardFragment
+      }
+    }
+  }
+  ${CAMPAIGN_CARD_FRAGMENT}
+`
+
+export const CREATE_CAMPAIGN = gql`
+  mutation CreateCampaign {
+    createCampaign {
+      ...ExperiencePresentationFragment
+      collabs {
+        _id
+        status
+      }
+    }
+  }
+  ${EXPERIENCE_PRESENTATION_FRAGMENT}
+`
 
 const CampaignsList: React.FC<RouteComponentProps> = ({ history }) => {
   usePageTitle('Mes campagnes')
-  // Redux
-  const dispatch = useDispatch()
-  const campaigns = useSelector<IState, ICampaign[]>(state => state.campaigns.items)
-  const createCampaignStatus = useSelector<IState, IRequestStatus>(
-    state => state.campaigns.requests.createCampaign
+  // Fetch data
+  const { data: { campaigns } = { campaigns: null }, loading, error } = useQuery<GetCampaigns, {}>(
+    GET_CAMPAIGNS
   )
+  const [createCampaign, createCampaignStatus] = useMutation<CreateCampaign, {}>(CREATE_CAMPAIGN, {
+    // Go to campaign page if campaign was created
+    onCompleted: createdCampaign => {
+      history.push(`/brand/campaigns/${createdCampaign.createCampaign._id}/brief`)
+    },
+  })
 
-  // Go to campaign page if campaign was created
-  const renderCount = useRenderCount()
-  React.useEffect(() => {
-    // Don't submit the form on first render
-    if (createCampaignStatus.hasSucceeded && renderCount > 0) {
-      window.scrollTo(0, 0)
-      history.push(`/brand/campaigns/${campaigns[campaigns.length - 1]._id}/brief`)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [createCampaignStatus.hasSucceeded])
+  if (loading) {
+    return <Loader />
+  }
+  if (error) {
+    return <ErrorCard message="Could not show campaigns" />
+  }
 
-  if (campaigns.length === 0) {
+  if (campaigns.items.length === 0) {
     return (
       <ContainerBox>
         <BrandOnboarding />
@@ -55,29 +105,24 @@ const CampaignsList: React.FC<RouteComponentProps> = ({ history }) => {
           <Title>Mes campagnes</Title>
           <Box mb={['3rem', 0, 0]}>
             <MainButton
-              onClick={() => dispatch(createCampaign())}
-              disabled={createCampaignStatus.isLoading}
+              onClick={() => createCampaign()}
+              disabled={createCampaignStatus.loading}
               noMargin
             >
-              {createCampaignStatus.isLoading ? "Création d'une campagne..." : 'Créer une campagne'}
+              {createCampaignStatus.loading ? "Création d'une campagne..." : 'Créer une campagne'}
             </MainButton>
           </Box>
         </Flex>
       </ContainerBox>
       <ContainerBox>
-        {createCampaignStatus.hasFailed && (
+        {createCampaignStatus.error && (
           <Box mb="1rem">
             <ErrorCard message="La campagne n'a pas pu être créée" noMargin />
           </Box>
         )}
-        {createCampaignStatus.hasSucceeded && (
-          <Box mb="1rem">
-            <SuccessCard message="La campagne a bien été créée" noMargin />
-          </Box>
-        )}
         <Flex flexDirection="row" flexWrap="wrap" mx={[0, 0, '-2rem']} mt="-3rem" pb="2rem">
-          {campaigns.length > 0 ? (
-            campaigns.map(_campaign => (
+          {campaigns.items.length > 0 ? (
+            campaigns.items.map(_campaign => (
               <Box
                 width={[1, 6 / 12, 4 / 12]}
                 mt="3rem"

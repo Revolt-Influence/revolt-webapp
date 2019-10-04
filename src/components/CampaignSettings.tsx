@@ -1,48 +1,88 @@
 import React from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 import { Flex } from '@rebass/grid'
 import { withRouter, RouteComponentProps } from 'react-router-dom'
-import { ICampaign, ICampaignStatus } from '../models/Campaign'
 import { ContainerBox } from '../styles/grid'
 import SplitView from './SplitView'
 import { MainButton, MainLink } from '../styles/Button'
-import IState from '../models/State'
-import { IRequestStatus } from '../utils/request'
 import ErrorCard from './ErrorCard'
-import { toggleArchiveCampaign, deleteCampaign, reviewCampaign } from '../actions/campaigns'
-import SuccessCard from './SuccessCard'
 import { Dot } from '../styles/Dot'
 import { BoldText } from '../styles/Text'
 import { useIsAdmin } from '../utils/hooks'
+import { useQuery, useMutation } from '@apollo/react-hooks'
+import { GET_CAMPAIGN, CampaignStatus, getCampaignStatus } from '../pages/CampaignDashboard'
+import { GetCampaign, GetCampaignVariables } from '../__generated__/GetCampaign'
+import Loader from './Loader'
+import { TOGGLE_ARCHIVE_CAMPAIGN } from '../pages/CampaignForm'
+import {
+  ToggleArchiveCampaign,
+  ToggleArchiveCampaignVariables,
+} from '../__generated__/ToggleArchiveCampaign'
+import gql from 'graphql-tag'
+import { ReviewCampaign, ReviewCampaignVariables } from '../__generated__/ReviewCampaign'
+import { DeleteCampaign, DeleteCampaignVariables } from '../__generated__/DeleteCampaign'
+
+const REVIEW_CAMPAIGN = gql`
+  mutation ReviewCampaign($campaignId: String!) {
+    reviewCampaign(campaignId: $campaignId) {
+      _id
+      isArchived
+      isReviewed
+    }
+  }
+`
+
+const DELETE_CAMPAIGN = gql`
+  mutation DeleteCampaign($campaignId: String!) {
+    deleteCampaign(campaignId: $campaignId)
+  }
+`
 
 interface ICampaignSettingsProps extends RouteComponentProps {
-  campaign: ICampaign
-  status: ICampaignStatus
+  campaignId: string
 }
 
-const CampaignSettings: React.FC<ICampaignSettingsProps> = ({ campaign, status, history }) => {
-  const dispatch = useDispatch()
-  const archiveStatus = useSelector<IState, IRequestStatus>(
-    state => state.campaigns.requests.toggleArchiveCampaign
-  )
-  const deleteStatus = useSelector<IState, IRequestStatus>(
-    state => state.campaigns.requests.deleteCampaign
-  )
-  const reviewStatus = useSelector<IState, IRequestStatus>(
-    state => state.campaigns.requests.reviewCampaign
-  )
+const CampaignSettings: React.FC<ICampaignSettingsProps> = ({ campaignId, history }) => {
+  // Get campaign query
+  const { data: { campaign } = { campaign: null }, ...getCampaignRequestStatus } = useQuery<
+    GetCampaign,
+    GetCampaignVariables
+  >(GET_CAMPAIGN, { variables: { campaignId } })
+  // Toggle archive mutation
+  const [toggleArchiveCampaign, toggleArchiveCampaignStatus] = useMutation<
+    ToggleArchiveCampaign,
+    ToggleArchiveCampaignVariables
+  >(TOGGLE_ARCHIVE_CAMPAIGN)
+  // Review campaign mutation
+  const [reviewCampaign, reviewCampaignStatus] = useMutation<
+    ReviewCampaign,
+    ReviewCampaignVariables
+  >(REVIEW_CAMPAIGN)
+  // Delete campaign mutation
+  const [deleteCampaign, { loading: deletingCampaign, error: deleteError }] = useMutation<
+    DeleteCampaign,
+    DeleteCampaignVariables
+  >(DELETE_CAMPAIGN, { onCompleted: () => history.push('/') })
+
   const isAdmin = useIsAdmin()
+
+  if (getCampaignRequestStatus.loading) {
+    return <Loader />
+  }
+  if (getCampaignRequestStatus.error) {
+    return <ErrorCard />
+  }
+
+  const status = getCampaignStatus(campaign)
 
   const showToggleArchiveButtonText = () => {
     if (campaign.isArchived) {
-      return archiveStatus.isLoading ? 'Publication de la campagne...' : 'Publier la campagne'
+      return toggleArchiveCampaignStatus.loading
+        ? 'Publication de la campagne...'
+        : 'Publier la campagne'
     }
-    return archiveStatus.isLoading ? 'Archivage de la campagne...' : 'Archiver la campagne'
-  }
-
-  const handleDeleteCampaign = () => {
-    dispatch(deleteCampaign(campaign._id))
-    history.push('/')
+    return toggleArchiveCampaignStatus.loading
+      ? 'Archivage de la campagne...'
+      : 'Archiver la campagne'
   }
 
   const getShowDelete = () => {
@@ -68,20 +108,17 @@ const CampaignSettings: React.FC<ICampaignSettingsProps> = ({ campaign, status, 
           <BoldText>{status.name}</BoldText>
         </Flex>
         <p>{status.description}</p>
-        {archiveStatus.hasFailed && (
+        {toggleArchiveCampaignStatus.error && (
           <ErrorCard message="Vos changements n'ont pas pu être enregistrés" />
         )}
-        {archiveStatus.hasSucceeded && (
-          <SuccessCard message="Vos changements ont bien été enregistrés" />
-        )}
-        {status.name === 'Incomplet' ? (
+        {status.name === CampaignStatus.INCOMPLETE ? (
           <MainLink to={`/brand/campaigns/${campaign._id}/brief`}>Remplir mon brief</MainLink>
         ) : (
-          status.name !== 'En attente de modération' && (
+          status.name !== CampaignStatus.AWAITING_REVIEW && (
             <MainButton
               nature={campaign.isArchived ? 'primary' : 'danger'}
-              disabled={archiveStatus.isLoading}
-              onClick={() => dispatch(toggleArchiveCampaign(campaign._id))}
+              disabled={toggleArchiveCampaignStatus.loading}
+              onClick={() => toggleArchiveCampaign({ variables: { campaignId } })}
               inverted={!campaign.isArchived}
             >
               {showToggleArchiveButtonText()}
@@ -96,12 +133,12 @@ const CampaignSettings: React.FC<ICampaignSettingsProps> = ({ campaign, status, 
             La campagne est actuellement en attente de modération. Si vous la validez, elle
             deviendra accessible à tous les influenceurs.
           </p>
-          {reviewStatus.hasFailed && <ErrorCard message="La campagne n'a pas pu être supprimée" />}
+          {deleteError && <ErrorCard message="La campagne n'a pas pu être supprimée" />}
           <MainButton
-            onClick={() => dispatch(reviewCampaign(campaign._id))}
-            disabled={reviewStatus.isLoading}
+            onClick={() => reviewCampaign({ variables: { campaignId } })}
+            disabled={reviewCampaignStatus.loading}
           >
-            {reviewStatus.isLoading ? 'Validation...' : 'Valider la campagne'}
+            {reviewCampaignStatus.loading ? 'Validation...' : 'Valider la campagne'}
           </MainButton>
         </SplitView>
       )}
@@ -117,14 +154,14 @@ const CampaignSettings: React.FC<ICampaignSettingsProps> = ({ campaign, status, 
       {showDelete && (
         <SplitView title="Supprimer la campagne">
           <p>Cette action est irréversible.</p>
-          {deleteStatus.hasFailed && <ErrorCard message="La campagne n'a pas pu être supprimée" />}
+          {deleteError && <ErrorCard message="La campagne n'a pas pu être supprimée" />}
           <MainButton
             inverted
             nature="danger"
-            disabled={deleteStatus.isLoading}
-            onClick={handleDeleteCampaign}
+            disabled={deletingCampaign}
+            onClick={() => deleteCampaign({ variables: { campaignId } })}
           >
-            {deleteStatus.isLoading ? 'Suppression de la campagne' : 'Supprimer la campagne'}
+            {deletingCampaign ? 'Suppression de la campagne' : 'Supprimer la campagne'}
           </MainButton>
         </SplitView>
       )}

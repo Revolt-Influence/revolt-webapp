@@ -4,6 +4,7 @@ import LimitPopupWrapper from './LimitPopupWrapper'
 import { MainLink } from '../styles/Button'
 import FeaturesList from './FeaturesList'
 import { setFont } from '../utils/styles'
+import { Plan } from '../__generated__/globalTypes'
 
 const FormColumn = styled.div`
   display: flex;
@@ -28,7 +29,7 @@ class FreeLimitPopup extends React.Component<IFreeLimitPopupProps, {}> {
         <FormColumn>
           <div>
             <PopupTitle>Vous avez trouvé une fonctionnalité Premium</PopupTitle>
-            <FeaturesList plan="premium" />
+            <FeaturesList plan={Plan.FREE} />
           </div>
           <MainLink display="inline" to="/upgrade">
             Passer au Premium

@@ -1,18 +1,21 @@
+import { useQuery } from '@apollo/react-hooks'
+import { Box, Flex } from '@rebass/grid'
+import { gql } from 'apollo-boost'
 import React from 'react'
-import { Flex, Box } from '@rebass/grid'
 import styled from 'styled-components'
-import { ICampaign } from '../models/Campaign'
-import SplitView from './SplitView'
-import TaskCard from './TaskCard'
-import CheckList from './CheckList'
-import { setFont } from '../utils/styles'
 import { TextLinkExternal } from '../styles/Button'
 import { LabelText } from '../styles/Text'
 import { palette } from '../utils/colors'
-import ImageWrapper from './ImageWrapper'
-import { getCurrencySymbol } from '../utils/currency'
 import { useWindowSize } from '../utils/hooks'
 import { applyCloudinaryTransformations } from '../utils/images'
+import { setFont } from '../utils/styles'
+import CheckList from './CheckList'
+import ErrorCard from './ErrorCard'
+import ImageWrapper from './ImageWrapper'
+import Loader from './Loader'
+import SplitView from './SplitView'
+import { BRAND_FRAGMENT } from './CampaignFormBrand'
+import { GetExperience, GetExperienceVariables } from '../__generated__/GetExperience'
 
 const Styles = styled.div`
   h3 {
@@ -51,21 +54,62 @@ const ExternalLink = styled(TextLinkExternal)<{ black?: boolean }>`
   ${props => props.black && `color: ${palette.grey._900}`}
 `
 
-interface IExperiencePresentationProps {
-  experience: ICampaign
+const EXPERIENCE_PRESENTATION_FRAGMENT = gql`
+  fragment ExperiencePresentationFragment on Campaign {
+    _id
+    name
+    description
+    brand {
+      ...BrandFragment
+    }
+    product {
+      name
+      description
+      categories
+      website
+      youtubeLink
+      pictures
+      launchedAt
+    }
+    rules
+    createdAt
+  }
+  ${BRAND_FRAGMENT}
+`
+
+const GET_EXPERIENCE = gql`
+  query GetExperience($campaignId: String!) {
+    campaign(id: $campaignId) {
+      ...ExperiencePresentationFragment
+    }
+  }
+  ${EXPERIENCE_PRESENTATION_FRAGMENT}
+`
+
+interface Props {
+  experienceId: string
 }
 
-const ExperiencePresentation: React.FC<IExperiencePresentationProps> = ({ experience }) => {
-  const {
-    brief: { description },
-    brand,
-    gift,
-    task,
-  } = experience.settings
-  const fullLink = brand.link && `${brand.link.startsWith('http') ? '' : 'http://'}${brand.link}`
+const ExperiencePresentation: React.FC<Props> = ({ experienceId }) => {
+  const { data: { campaign: experience } = { campaign: null }, loading, error } = useQuery<
+    GetExperience,
+    GetExperienceVariables
+  >(GET_EXPERIENCE, { variables: { campaignId: experienceId } })
 
   const { width } = useWindowSize()
   const isMobile = width < 600
+
+  if (loading) {
+    return <Loader fullScreen />
+  }
+  if (error) {
+    return <ErrorCard message="L'expérience n'a pas pu être affichée" />
+  }
+
+  const { brand, product, rules } = experience
+
+  const fullLink =
+    brand.website && `${brand.website.startsWith('http') ? '' : 'http://'}${brand.website}`
 
   return (
     <Styles>
@@ -77,8 +121,8 @@ const ExperiencePresentation: React.FC<IExperiencePresentationProps> = ({ experi
         <Box width={[1, 1, 6 / 12]} pr={[0, 0, '15rem']}>
           <SplitView title="Votre cadeau" stacked noBorder>
             <ImageWrapper
-              src={gift.picture}
-              alt={gift.name || 'Cadeau'}
+              src={product.pictures.length > 0 ? product.pictures[0] : null}
+              alt={product.name || 'Cadeau'}
               ratio={4 / 3}
               placeholderText="Pas d'image disponible"
             />
@@ -86,32 +130,22 @@ const ExperiencePresentation: React.FC<IExperiencePresentationProps> = ({ experi
               <LabelText grey withMargin>
                 Nom
               </LabelText>
-              <p>{gift.name}</p>
+              <p>{product.name}</p>
               <LabelText grey withMargin>
                 Description
               </LabelText>
-              <p style={{ whiteSpace: 'pre-line' }}>{gift.details}</p>
+              <p style={{ whiteSpace: 'pre-line' }}>{product.description}</p>
               <LabelText grey withMargin>
                 Lien vers le produit
               </LabelText>
               <ExternalLink
                 // Preprend http:// if needed
                 href={fullLink}
-                title={gift.name}
+                title={product.name}
                 target="_blank"
               >
-                {gift.link}
+                {product.website}
               </ExternalLink>
-              {gift.valueIsShown && (
-                <>
-                  <LabelText grey withMargin>
-                    Prix réel
-                  </LabelText>
-                  <p>
-                    {gift.value} {getCurrencySymbol(gift.currency)}
-                  </p>
-                </>
-              )}
             </Box>
           </SplitView>
         </Box>
@@ -142,12 +176,7 @@ const ExperiencePresentation: React.FC<IExperiencePresentationProps> = ({ experi
           </SplitView>
           <Box>
             <SplitView title="La campagne" ratio={3.5 / 12} stacked>
-              <p style={{ whiteSpace: 'pre-line' }}>{description}</p>
-            </SplitView>
-          </Box>
-          <Box>
-            <SplitView title="Votre revue" ratio={3.5 / 12} stacked>
-              <TaskCard task={task} />
+              <p style={{ whiteSpace: 'pre-line' }}>{experience.description}</p>
             </SplitView>
           </Box>
           <Box>
@@ -155,7 +184,7 @@ const ExperiencePresentation: React.FC<IExperiencePresentationProps> = ({ experi
               <LabelText grey withMargin>
                 Règles
               </LabelText>
-              <CheckList items={task.rules} />
+              <CheckList items={rules} />
             </SplitView>
           </Box>
         </Box>
@@ -164,4 +193,5 @@ const ExperiencePresentation: React.FC<IExperiencePresentationProps> = ({ experi
   )
 }
 
+export { EXPERIENCE_PRESENTATION_FRAGMENT }
 export default ExperiencePresentation

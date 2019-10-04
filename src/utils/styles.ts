@@ -6,7 +6,7 @@ import styled, {
   FlattenSimpleInterpolation,
 } from 'styled-components'
 import { palette, hexToRGBA, paletteColorName } from './colors'
-import { ITheme } from '../models/Theme'
+import { Theme } from '../components/CustomThemeProvider'
 
 const nativeFontStack = "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
 const fontStack = `Montserrat, Gotham, ${nativeFontStack}`
@@ -14,12 +14,12 @@ const fontStack = `Montserrat, Gotham, ${nativeFontStack}`
 function setFont(
   weight: number = 500,
   size: 'small' | 'normal' | 'big' | 'huge'
-): Interpolation<ThemeProps<ITheme>> {
+): Interpolation<ThemeProps<Theme>> {
   return css`
     font-family: ${fontStack};
     font-weight: ${weight};
     font-size: ${desktopTypeScale[size]};
-    @media screen and (max-width: ${props => (props.theme as ITheme).breakpoints[0]}) {
+    @media screen and (max-width: ${props => (props.theme as Theme).breakpoints[0]}) {
       font-size: ${mobileTypeScale[size]};
     }
   `
