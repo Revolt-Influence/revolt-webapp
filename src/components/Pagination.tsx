@@ -99,12 +99,12 @@ const Pagination: React.FC<IPaginationProps> = ({
           disabled={currentPage <= 10}
           onClick={() => handlePageChange(currentPage - 10)}
         >
-          <ArrowButtonIcon src={arrowLeftDouble} alt="10 pages en arrière" />
+          <ArrowButtonIcon src={arrowLeftDouble} alt="10 pages back" />
         </ArrowButton>
       )}
       {/* Previous page button */}
       <ArrowButton disabled={currentPage === 1} onClick={() => handlePageChange(currentPage - 1)}>
-        <ArrowButtonIcon src={arrowLeft} alt="Précédent" />
+        <ArrowButtonIcon src={arrowLeft} alt="previous" />
       </ArrowButton>
       {/* Specific page buttons */}
       {pagesList.map(_pageIndex => (
@@ -126,7 +126,7 @@ const Pagination: React.FC<IPaginationProps> = ({
         disabled={currentPage === totalPages}
         onClick={() => handlePageChange(currentPage + 1)}
       >
-        <ArrowButtonIcon src={arrowRight} alt="Suivant" />
+        <ArrowButtonIcon src={arrowRight} alt="next" />
       </ArrowButton>
       {/* 10 pages forward button */}
       {hasSkipButtons && (
@@ -134,7 +134,7 @@ const Pagination: React.FC<IPaginationProps> = ({
           disabled={currentPage > totalPages - 10}
           onClick={() => handlePageChange(currentPage + 10)}
         >
-          <ArrowButtonIcon src={arrowRightDouble} alt="Avancer de 10 pages" />
+          <ArrowButtonIcon src={arrowRightDouble} alt="10 pages forward" />
         </ArrowButton>
       )}
     </Row>

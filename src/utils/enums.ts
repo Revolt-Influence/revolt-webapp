@@ -4,6 +4,7 @@ import {
   GameCategory,
   TrackingProvider,
   Language,
+  ReviewFormat,
 } from '../__generated__/globalTypes'
 
 export function showGender(gender: Gender): string {
@@ -11,9 +12,9 @@ export function showGender(gender: Gender): string {
     case Gender.ANY:
       return 'Any'
     case Gender.MALE:
-      return 'Males'
+      return 'Male'
     case Gender.FEMALE:
-      return 'Females'
+      return 'Female'
     default:
       return gender
   }
@@ -134,5 +135,14 @@ export function showLanguage(language: Language): string {
       return 'Swedish'
     case Language.OTHER:
       return 'Other language'
+  }
+}
+
+export function showReviewFormat(format: ReviewFormat): string {
+  switch (format) {
+    case ReviewFormat.YOUTUBE_VIDEO:
+      return 'YouTube video'
+    default:
+      return format
   }
 }

@@ -148,8 +148,8 @@ const Navbar: React.FC<{}> = () => {
         {
           logo: userSource,
           path: '/login',
-          name: 'Connexion',
-          description: 'Accédez à votre compte',
+          name: 'Login',
+          description: 'Access your account',
         },
       ]
     }
@@ -158,14 +158,14 @@ const Navbar: React.FC<{}> = () => {
         {
           logo: campaignSource,
           path: '/brand/campaigns',
-          name: 'Mes campagnes',
-          description: 'Voir toutes vos campagnes',
+          name: 'My campaigns',
+          description: 'View all your campaigns',
         },
         {
           logo: messageSource,
           path: '/brand/messages',
           name: 'Messages',
-          description: 'Échangez avec les influenceurs',
+          description: 'Talk to creators',
         },
         // Only show community to admin users
         ...(user && user.isAdmin
@@ -173,16 +173,16 @@ const Navbar: React.FC<{}> = () => {
               {
                 logo: communitySource,
                 path: '/brand/community',
-                name: 'Communauté',
-                description: 'Tous nos influenceurs (admin)',
+                name: 'Community',
+                description: 'All our creators (admin)',
               },
             ]
           : []),
         {
           logo: userSource,
           path: '/brand/myAccount',
-          name: 'Mon compte',
-          description: 'Modifiez votre compte',
+          name: 'My account',
+          description: 'Edit my account',
         },
       ]
     }
@@ -191,26 +191,26 @@ const Navbar: React.FC<{}> = () => {
         {
           logo: experiencesSource,
           path: '/creator/experiences',
-          name: 'Expériences',
-          description: 'Découvrez de nouvelles expériences',
+          name: 'Experiences',
+          description: 'Discover new games',
         },
         {
           logo: collabsSource,
           path: '/creator/collabs',
           name: 'Collabs',
-          description: 'Tous vos partenariats',
+          description: 'All your collabs',
         },
         {
           logo: messageSource,
           path: '/creator/messages',
           name: 'Messages',
-          description: 'Échangez avec les marques',
+          description: 'Talk to brands',
         },
         {
           logo: userSource,
           path: '/creator/myAccount',
-          name: 'Mon compte',
-          description: 'Modifiez votre compte',
+          name: 'My account',
+          description: 'Edit my account',
         },
       ]
     }

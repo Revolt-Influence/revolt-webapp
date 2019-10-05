@@ -50,7 +50,7 @@ const Tag: React.FC<Props> = ({ text, handleRemove }) => (
     <span>{text}</span>
     {handleRemove != null && (
       <button onClick={() => handleRemove()}>
-        <img src={closeSource} alt="fermer" />
+        <img src={closeSource} alt="close" />
       </button>
     )}
   </Styles>

@@ -53,7 +53,7 @@ const OnboardingSlide: React.FunctionComponent<IOnboardingSlideProps> = ({
       alignItems="flex-start"
       justifyContent={['flex-start', 'center', 'center']}
     >
-      <LabelText className="step">Étape {index}</LabelText>
+      <LabelText className="step">Step {index}</LabelText>
       <Title noMargin>{title}</Title>
       {/* <h2 className="title">{title}</h2> */}
       <p className="description">{description}</p>

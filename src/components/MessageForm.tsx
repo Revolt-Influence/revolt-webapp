@@ -71,7 +71,7 @@ const MessageForm: React.FC<Props> = ({ conversationId }) => {
   }
   return (
     <div>
-      {error && <ErrorCard message="Le message n'a pas pu être envoyé" />}
+      {error && <ErrorCard message="Could not send the message" />}
       <Styles flexDirection="row" alignItems="flex-start" justifyContent="space-between" my="1rem">
         <Textarea
           minRows={1}
@@ -79,7 +79,7 @@ const MessageForm: React.FC<Props> = ({ conversationId }) => {
           value={text}
           onChange={e => setText(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="Votre message"
+          placeholder="Your message"
           disabled={loading}
           inputRef={textAreaRef}
           autoFocus
@@ -92,7 +92,7 @@ const MessageForm: React.FC<Props> = ({ conversationId }) => {
             disabled={loading}
             smallMargin
           >
-            {loading ? 'Envoi...' : 'Envoyer'}
+            {loading ? 'Sending...' : 'Send'}
           </TextButton>
         </Box>
       </Styles>

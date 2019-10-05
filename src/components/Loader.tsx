@@ -53,8 +53,8 @@ interface ILoaderProps {
 
 const Loader: React.FC<ILoaderProps> = ({ fullScreen }) => (
   <Styles fullScreen={fullScreen}>
-    <img src={logoSource} alt="Revolt" />
-    <p>Un instant...</p>
+    <img src={logoSource} alt="Revolt Gaming" />
+    <p>One moment...</p>
   </Styles>
 )
 

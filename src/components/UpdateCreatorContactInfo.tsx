@@ -43,7 +43,7 @@ const UpdateCreatorContactInfo: React.FC<{}> = () => {
     <form onSubmit={handleFormSubmit}>
       {/* Edit email */}
       <FormInputLabel noMargin>
-        Adresse email
+        Email address
         <FormInput
           value={email}
           onChange={e => setEmail(e.target.value)}
@@ -52,11 +52,11 @@ const UpdateCreatorContactInfo: React.FC<{}> = () => {
           hasLabel
         />
       </FormInputLabel>
-      {error && <ErrorCard message="Le changement n'a pas pu être enregistré" />}
-      {succeeded && <SuccessCard message="Le changement a bien été enregistré" />}
+      {error && <ErrorCard message="Could not save changes" />}
+      {succeeded && <SuccessCard message="Changes saved" />}
       {/* Submit form */}
       <MainButtonSubmit
-        value={loading ? 'Enregistrement...' : 'Enregistrer mes coordonnées'}
+        value={loading ? 'Saving...' : 'Save'}
         disabled={loading || email === session.creator.email}
       />
     </form>

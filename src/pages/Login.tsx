@@ -43,7 +43,7 @@ const LOGIN_MUTATION = gql`
 `
 
 const Login: React.FC<{}> = () => {
-  usePageTitle('Login')
+  usePageTitle('Log in')
   const history = useHistory()
 
   // Form state
@@ -68,7 +68,7 @@ const Login: React.FC<{}> = () => {
   return (
     <Container>
       <Flex flexDirection="column" alignItems="center">
-        <Title isCentered>Login</Title>
+        <Title isCentered>Log in</Title>
         <Box width={[1, 6 / 12, 5 / 12]}>
           <form onSubmit={handleLogin}>
             <FormInputLabel>
@@ -99,7 +99,7 @@ const Login: React.FC<{}> = () => {
               </Link>
             </Row>
             {error && <ErrorCard message="Invalid email or password" />}
-            <MainButtonSubmit disabled={loading} value={loading ? 'Login...' : 'Login'} />
+            <MainButtonSubmit disabled={loading} value={loading ? 'Logging in...' : 'Log in'} />
           </form>
         </Box>
         <Help>

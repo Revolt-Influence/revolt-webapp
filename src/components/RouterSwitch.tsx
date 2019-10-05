@@ -155,7 +155,7 @@ const RouterSwitch: React.FC<RouteComponentProps> = () => {
       return <Redirect to="/login" />
     }
     return (
-      <ErrorBoundary message="La campagne n'a pas pu être affichée">
+      <ErrorBoundary message="Could not show campaign">
         <CampaignDashboard />
       </ErrorBoundary>
     )

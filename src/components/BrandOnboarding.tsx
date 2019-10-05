@@ -1,56 +1,13 @@
 import React from 'react'
-import styled from 'styled-components'
 import { useHistory } from 'react-router-dom'
-import { Flex } from '@rebass/grid'
-import { MainButton } from '../styles/Button'
-import { setFont } from '../utils/styles'
 import OnboardingSlide from './OnboardingSlide'
 import { useMutation } from '@apollo/react-hooks'
 import { CreateCampaign } from '../__generated__/CreateCampaign'
 import { CREATE_CAMPAIGN } from '../pages/CampaignsList'
 
 const landingIllustration = require('../images/illustrations/landing.png')
-const campaignIllustration = require('../images/illustrations/campaign.svg')
 const propositionsIllustration = require('../images/illustrations/propositions.svg')
 const performancesIllustration = require('../images/illustrations/performances.svg')
-
-const Title = styled.p`
-  ${setFont(600, 'huge')}
-  max-width: 20em;
-  line-height: 1.2em;
-`
-
-const FullPage = styled(Flex)`
-  @media screen and (min-width: ${props => props.theme.breakpoints[0]}) {
-    height: calc(100vh - 70px);
-    padding-top: 0;
-    padding-bottom: 0;
-  }
-
-  main {
-    height: 100%;
-    padding-right: 2rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-
-    p.pitch {
-      margin-top: 20px;
-      margin-bottom: 10px;
-      max-width: 500px;
-    }
-  }
-
-  img.landing {
-    width: 550px;
-    height: auto;
-    align-self: center;
-    @media screen and (max-width: ${props => props.theme.breakpoints[0]}) {
-      display: none;
-    }
-  }
-`
 
 interface ISlidesState {
   step: 'intro' | 'slides'
@@ -100,7 +57,7 @@ const BrandOnboarding: React.FC<{}> = () => {
         'Take 2 minutes to fill your campaign brief. It will be shown to more than 2k streamers.',
       buttonText: 'Next step',
       handleButtonClick: () => slidesDispatch('NEXT_SLIDE'),
-      image: campaignIllustration,
+      image: landingIllustration,
     },
     {
       title: 'Receive collab requests',

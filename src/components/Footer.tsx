@@ -49,18 +49,18 @@ const Footer: React.FunctionComponent<RouteComponentProps> = ({ location }) => {
         <Flex flexDirection="row" width={[1, 1, 6 / 12]} flexWrap="wrap">
           <Box width={[1, 1, 6 / 12]} mb={['2rem', '2rem', 0]}>
             <LabelText className="text" grey>
-              Légal
+              Legal
             </LabelText>
             <Link to="/privacyPolicy" className="text">
-              Politique de confidentialité
+              Privacy policy
             </Link>
             <Link to="/termsAndConditions" className="text">
-              Conditions d'utilisation
+              Terms of use
             </Link>
             <p className="text">Copyright {new Date(Date.now()).getFullYear()}</p>
           </Box>
           <Box width={[1, 1, 6 / 12]}>
-            <LabelText grey>Retrouvez nous</LabelText>
+            <LabelText grey>Follow us</LabelText>
             <TextLinkExternal
               target="_blank"
               href="https://instagram.com/revolt.club"
