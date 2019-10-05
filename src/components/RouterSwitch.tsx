@@ -23,7 +23,6 @@ const BrandAccount = React.lazy(() => import('../pages/BrandAccount'))
 const CreatorAccount = React.lazy(() => import('../pages/CreatorAccount'))
 const NotFound = React.lazy(() => import('../pages/NotFound'))
 const ResetPassword = React.lazy(() => import('../pages/ResetPassword'))
-const Upgrade = React.lazy(() => import('../pages/Upgrade'))
 const CampaignsList = React.lazy(() => import('../pages/CampaignsList'))
 const ExperiencesList = React.lazy(() => import('../pages/ExperiencesList'))
 const CollabsList = React.lazy(() => import('../pages/CollabsList'))
@@ -123,17 +122,6 @@ const RouterSwitch: React.FC<RouteComponentProps> = () => {
     return <CreatorAccount />
   }
 
-  const renderUpgradePlan = () => {
-    // Only allow access if the user is logged in and not Premium
-    if (!isLoggedIn) {
-      return <Redirect to="/login" />
-    }
-    if (user.plan === Plan.PREMIUM) {
-      return <Redirect to="/brand/myAccount" />
-    }
-    return <Upgrade />
-  }
-
   const renderCampaignsList = () => {
     if (!isLoggedIn) {
       return <Redirect to="/login" />
@@ -222,7 +210,6 @@ const RouterSwitch: React.FC<RouteComponentProps> = () => {
         <Route path="/brand/campaigns/:campaignId/dashboard" render={renderCampaignDashboard} />
         <Route path="/brand/campaigns/:campaignId/brief" render={renderCampaignForm} />
         <Route path="/brand/myAccount" render={renderBrandAccount} />
-        <Route path="/brand/upgrade" render={renderUpgradePlan} />
         <Route path="/brand/messages/:conversationId" component={Conversation} />
         <Route exact path="/brand/messages" component={ConversationsList} />
         <Route path="/brand/community" render={renderCommunity} />

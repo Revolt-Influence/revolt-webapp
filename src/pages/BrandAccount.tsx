@@ -6,7 +6,6 @@ import ChangePassword from '../components/ChangePassword'
 import SplitView from '../components/SplitView'
 import { usePageTitle } from '../utils/hooks'
 import { Title } from '../styles/Text'
-import UserPlan from '../components/UserPlan'
 import Session from '../components/Session'
 
 const BrandAccount: React.FC<{}> = () => {
@@ -23,10 +22,6 @@ const BrandAccount: React.FC<{}> = () => {
         {/* Change password */}
         <SplitView title="My password">
           <ChangePassword />
-        </SplitView>
-        {/* Payment info */}
-        <SplitView title="My plan">
-          <UserPlan />
         </SplitView>
         {/* Session */}
         <SplitView title="My session">
