@@ -67,7 +67,7 @@ export const CREATE_CAMPAIGN = gql`
 `
 
 const CampaignsList: React.FC<RouteComponentProps> = ({ history }) => {
-  usePageTitle('Mes campagnes')
+  usePageTitle('My campaigns')
   // Fetch data
   const { data: { campaigns } = { campaigns: null }, loading, error } = useQuery<GetCampaigns, {}>(
     GET_CAMPAIGNS
@@ -102,14 +102,14 @@ const CampaignsList: React.FC<RouteComponentProps> = ({ history }) => {
           justifyContent="space-between"
           alignItems="center"
         >
-          <Title>Mes campagnes</Title>
+          <Title>My campaigns</Title>
           <Box mb={['3rem', 0, 0]}>
             <MainButton
               onClick={() => createCampaign()}
               disabled={createCampaignStatus.loading}
               noMargin
             >
-              {createCampaignStatus.loading ? "Création d'une campagne..." : 'Créer une campagne'}
+              {createCampaignStatus.loading ? 'Creating campaign...' : 'Create a campaign'}
             </MainButton>
           </Box>
         </Flex>
@@ -117,7 +117,7 @@ const CampaignsList: React.FC<RouteComponentProps> = ({ history }) => {
       <ContainerBox>
         {createCampaignStatus.error && (
           <Box mb="1rem">
-            <ErrorCard message="La campagne n'a pas pu être créée" noMargin />
+            <ErrorCard message="Could not create campaign" noMargin />
           </Box>
         )}
         <Flex flexDirection="row" flexWrap="wrap" mx={[0, 0, '-2rem']} mt="-3rem" pb="2rem">
@@ -135,7 +135,7 @@ const CampaignsList: React.FC<RouteComponentProps> = ({ history }) => {
             ))
           ) : (
             <Box mt="2rem" px={[0, 0, '-2rem']}>
-              <NotificationCard message="Pas encore de campagne" nature="info" />
+              <NotificationCard message="No campaigns yet" nature="info" />
             </Box>
           )}
         </Flex>

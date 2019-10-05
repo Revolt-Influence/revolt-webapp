@@ -88,8 +88,7 @@ const CampaignPreviewCard: React.FC<Props> = ({ campaign }) => {
       _collab.status === CollabStatus.SENT ||
       _collab.status === CollabStatus.DONE
   ).length
-  const propositionsCount = collabs.filter(_collab => _collab.status === CollabStatus.APPLIED)
-    .length
+  const requestsCount = collabs.filter(_collab => _collab.status === CollabStatus.REQUEST).length
   const status = getCampaignStatus(campaign)
 
   const showStatusLabel = () => (
@@ -106,15 +105,15 @@ const CampaignPreviewCard: React.FC<Props> = ({ campaign }) => {
           src={product.pictures.length > 0 ? product.pictures[0] : null}
           alt={name}
           ratio={4 / 3}
-          placeholderText="Ajoutez une photo du cadeau dans le brief"
+          placeholderText="Add a game image in the brief"
           showLabel={showStatusLabel}
         />
         <p className="stat">
-          {propositionsCount === 0 && collabsCount === 0
-            ? 'Pas encore de propositions'
-            : `${propositionsCount} proposition${
-                propositionsCount > 1 ? 's' : ''
-              } · ${collabsCount} collab${collabsCount > 1 ? 's' : ''}`}
+          {requestsCount === 0 && collabsCount === 0
+            ? 'No requests'
+            : `${requestsCount} requests${requestsCount > 1 ? 's' : ''} · ${collabsCount} collab${
+                collabsCount > 1 ? 's' : ''
+              }`}
         </p>
         <h3 className="title">{capitalizeFirstLetter(name)}</h3>
       </Style>

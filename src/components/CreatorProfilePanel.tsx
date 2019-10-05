@@ -58,7 +58,7 @@ const CreatorProfilePanel: React.FC<ICreatorProfilePanelProps> = ({ creatorId, c
   return (
     <Styles ref={selfRef}>
       <button className="close" onClick={() => hidePanel()} type="button">
-        <img src={closeSource} alt="fermer" />
+        <img src={closeSource} alt="close" />
       </button>
       <CreatorProfile creatorId={creatorId} collabId={collabId} />
     </Styles>

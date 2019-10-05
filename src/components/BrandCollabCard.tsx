@@ -183,8 +183,8 @@ const BrandCollabCard: React.FC<Props> = ({ collab }) => {
 
   const viewProfileButton = () => (
     <button className="action viewProfile" type="button" onClick={handleShowProfile}>
-      <p>Profil</p>
-      <img src={eyeSource} alt="Voir" />
+      <p>Profile</p>
+      <img src={eyeSource} alt="see" />
     </button>
   )
 
@@ -195,8 +195,8 @@ const BrandCollabCard: React.FC<Props> = ({ collab }) => {
       to={`/brand/messages/${conversation._id}`}
       onClick={e => e.stopPropagation()}
     >
-      <p>Contacter</p>
-      <img src={contactSource} alt="Contacter" />
+      <p>Contact</p>
+      <img src={contactSource} alt="Contact" />
     </Link>
   )
 
@@ -222,8 +222,8 @@ const BrandCollabCard: React.FC<Props> = ({ collab }) => {
                 })
               }}
             >
-              <p>A été envoyé</p>
-              <img src={checkSource} alt="envoyé" />
+              <p>Mark as sent</p>
+              <img src={checkSource} alt="sent" />
             </button>
           </Footer>
         )
@@ -249,11 +249,11 @@ const BrandCollabCard: React.FC<Props> = ({ collab }) => {
   const formatStatus = (): string => {
     switch (status) {
       case CollabStatus.ACCEPTED:
-        return 'accepté'
+        return 'accepted'
       case CollabStatus.SENT:
-        return 'cadeau envoyé'
+        return 'key sent'
       case CollabStatus.DONE:
-        return 'publié'
+        return 'published'
       default:
         return status
     }
@@ -277,8 +277,8 @@ const BrandCollabCard: React.FC<Props> = ({ collab }) => {
         <Network flexDirection="row" justifyContent="flex-start" alignItems="center">
           <img className="networkLogo" src={youtubeSource} alt="YT" />
           <div>
-            <p>{approx(youtube.subscriberCount)} abonnés</p>
-            <p>{approx(youtube.viewCount / youtube.videoCount)} vues potentielles</p>
+            <p>{approx(youtube.subscriberCount)} subscribers</p>
+            <p>{approx(youtube.viewCount / youtube.videoCount)} potential views</p>
           </div>
         </Network>
       )}

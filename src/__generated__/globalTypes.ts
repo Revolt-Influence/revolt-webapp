@@ -25,9 +25,9 @@ export enum AgeGroup {
  */
 export enum CollabStatus {
   ACCEPTED = "ACCEPTED",
-  APPLIED = "APPLIED",
   DENIED = "DENIED",
   DONE = "DONE",
+  REQUEST = "REQUEST",
   SENT = "SENT",
 }
 
@@ -71,6 +71,27 @@ export enum Gender {
   ANY = "ANY",
   FEMALE = "FEMALE",
   MALE = "MALE",
+}
+
+/**
+ * Spoken language or dialect
+ */
+export enum Language {
+  ARABIC = "ARABIC",
+  ENGLISH = "ENGLISH",
+  FRENCH = "FRENCH",
+  GERMAN = "GERMAN",
+  HINDI = "HINDI",
+  INDONESIAN = "INDONESIAN",
+  ITALIAN = "ITALIAN",
+  JAPANESE = "JAPANESE",
+  MANDARIN = "MANDARIN",
+  NORWEGIAN = "NORWEGIAN",
+  OTHER = "OTHER",
+  PORTUGUESE = "PORTUGUESE",
+  RUSSIAN = "RUSSIAN",
+  SPANISH = "SPANISH",
+  SWEDISH = "SWEDISH",
 }
 
 /**
@@ -144,8 +165,8 @@ export interface SignupCreatorInput {
   email: string;
   password: string;
   birthYear: number;
-  country: string;
-  language: string;
+  language: Language;
+  categories: GameCategory[];
   ambassador?: string | null;
 }
 

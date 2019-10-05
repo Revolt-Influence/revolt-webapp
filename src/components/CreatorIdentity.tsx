@@ -61,7 +61,7 @@ const CreatorIdentityProfile: React.FC<{}> = () => {
       <Flex flexDirection="row" flexWrap="wrap">
         <Box width={[1, 1, 6 / 12]} pr={[0, 0, '1rem']}>
           <FormInputLabel>
-            Photo
+            Picture
             <DropImage
               currentImages={[newPicture]}
               handleDrop={urls => setNewPicture(urls[0])}
@@ -71,22 +71,20 @@ const CreatorIdentityProfile: React.FC<{}> = () => {
         </Box>
         <Box width={[1, 1, 6 / 12]} pl={[0, 0, '1rem']}>
           <FormInputLabel>
-            Nom d'affichage
+            Display name
             <FormInput
               value={newName}
               onChange={e => setNewName(e.target.value)}
-              placeholder="Votre nom"
+              placeholder="Your pseudo"
               hasLabel
             />
           </FormInputLabel>
         </Box>
       </Flex>
-      {updateCreatorProfileStatus.error && (
-        <ErrorCard message="Votre profil n'a pas pu être modifié" />
-      )}
-      {succeeded && <SuccessCard message="Votre profil a bien été modifié" />}
+      {updateCreatorProfileStatus.error && <ErrorCard message="Could not save your profile" />}
+      {succeeded && <SuccessCard message="Your profile was saved" />}
       <MainButtonSubmit
-        value={updateCreatorProfileStatus.loading ? 'Enregistrement...' : 'Enregistrer'}
+        value={updateCreatorProfileStatus.loading ? 'Saving...' : 'Save'}
         disabled={updateCreatorProfileStatus.loading}
       />
     </form>

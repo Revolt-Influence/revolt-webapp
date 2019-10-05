@@ -105,7 +105,7 @@ const Dropdown: React.FC<IDropdownProps> = ({
         <Selection>
           <p>{capitalizeFirstLetter(selection)}</p>
           <SmallIcon>
-            <img src={expanded ? arrowUp : arrowDown} alt={expanded ? 'fermer' : 'ouvrir'} />
+            <img src={expanded ? arrowUp : arrowDown} alt={expanded ? 'close' : 'open'} />
           </SmallIcon>
         </Selection>
         {expanded ? (

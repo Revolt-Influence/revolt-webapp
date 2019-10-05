@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Link, withRouter, RouteComponentProps } from 'react-router-dom'
+import { Link, useHistory, useLocation } from 'react-router-dom'
 import { Flex, Box } from '@rebass/grid'
 import queryString from 'query-string'
 import styled from 'styled-components'
@@ -19,9 +19,18 @@ import {
   SignupCreatorMutation,
   SignupCreatorMutationVariables,
 } from '../__generated__/SignupCreatorMutation'
+import { Language, GameCategory } from '../__generated__/globalTypes'
+import GameCategoriesForm from '../components/GameCategoriesForm'
+import { showLanguage } from '../utils/enums'
 
 const checkboxEmpty = require('../images/icons/checkboxEmpty.svg')
 const checkboxChecked = require('../images/icons/checkboxChecked.svg')
+
+// Move "other" to the end
+const allPossibleLanguages = [
+  ...Object.values(Language).filter(_language => _language !== Language.OTHER),
+  Language.OTHER,
+] as Language[]
 
 const Help = styled.p`
   text-align: center;
@@ -42,9 +51,13 @@ const SIGNUP_CREATOR_MUTATION = gql`
   ${SESSION_FRAGMENT}
 `
 
-const CreatorSignup: React.FC<RouteComponentProps> = ({ location }) => {
-  usePageTitle("S'inscrire en tant qu'influenceur")
+const CreatorSignup: React.FC<{}> = () => {
+  usePageTitle('Influencer signup')
   const currentYear = new Date().getFullYear()
+
+  // Router stuff
+  const history = useHistory()
+  const location = useLocation()
 
   const [signupCreator, { loading, error }] = useMutation<
     SignupCreatorMutation,
@@ -52,52 +65,46 @@ const CreatorSignup: React.FC<RouteComponentProps> = ({ location }) => {
   >(SIGNUP_CREATOR_MUTATION, {
     refetchQueries: [{ query: GET_SESSION }],
     awaitRefetchQueries: true,
+    onCompleted: () => history.push('/'),
   })
 
   // Form data
   const [email, setEmail] = useState<string>('')
   const [password, setPassword] = useState<string>('')
-  const [phone, setPhone] = useState<string>('')
   const [birthYear, setBirthYear] = useState<number>(currentYear - 25)
-  const [language, setLanguage] = useState<string>('French')
-  const [country, setCountry] = useState<string>('France')
+  const [language, setLanguage] = useState<Language>(Language.ENGLISH)
+  const [categories, setCategories] = useState<GameCategory[]>([])
   const [acceptsTerms, setAcceptsTerms] = useState<boolean>(false)
-  const [hasTermsError, setHasTermsError] = useState<boolean>(false)
 
   // Check if there's an ambassador
   const parsedQuery = queryString.parse(location.search)
   const hasQueryParams = Object.entries(parsedQuery).length > 0
   const ambassador = hasQueryParams ? (parsedQuery as any).ambassador : null
 
+  const allowSubmit = email && password && language && categories.length > 0 && acceptsTerms
+
   const handleSubmit = (e: React.FormEvent<HTMLDivElement>) => {
     e.preventDefault()
-    if (!acceptsTerms) {
-      setHasTermsError(true)
-    } else {
-      signupCreator({
-        variables: {
-          creator: {
-            email,
-            password,
-            country,
-            language,
-            birthYear,
-            ambassador,
-          },
+    signupCreator({
+      variables: {
+        creator: {
+          email,
+          password,
+          language,
+          categories,
+          birthYear,
+          ambassador,
         },
-      })
-    }
+      },
+    })
   }
 
   return (
     <Container>
       <Box my="3rem">
         <Title isCentered noMargin>
-          Rejoignez la communauté
+          Join the community
         </Title>
-        <p style={{ marginTop: '1.5rem', textAlign: 'center' }}>
-          Recevez gratuitement des produits de créateurs indépendants
-        </p>
       </Box>
       <Flex flexDirection="column" alignItems="center" mt="1.5rem">
         <Box as="form" width={[1, 10 / 12, 6 / 12]} onSubmit={handleSubmit}>
@@ -109,14 +116,14 @@ const CreatorSignup: React.FC<RouteComponentProps> = ({ location }) => {
               onChange={e => setEmail(e.target.value)}
               value={email}
               pattern={emailRegex}
-              placeholder="Votre email"
+              placeholder="Your email"
               required
               hasLabel
             />
           </FormInputLabel>
           {/* Password */}
           <FormInputLabel>
-            Mot de passe
+            Password
             <FormInput
               type="password"
               onChange={e => setPassword(e.target.value)}
@@ -127,23 +134,17 @@ const CreatorSignup: React.FC<RouteComponentProps> = ({ location }) => {
               hasLabel
             />
           </FormInputLabel>
-          {/* Phone number */}
-          <FormInputLabel>
-            Numéro de téléphone
-            <FormInput
-              type="tel"
-              onChange={e => setPhone(e.target.value)}
-              value={phone}
-              placeholder="Votre numéro de téléphone"
-              required
-              hasLabel
-            />
-          </FormInputLabel>
+          {/* Game categories */}
+          <FormInputLabel>Favorite games</FormInputLabel>
+          <GameCategoriesForm
+            selectedCategories={categories}
+            handleNewSelectedCategories={newCategories => setCategories(newCategories)}
+          />
           <Flex flexDirection="row" justifyContent="space-between" flexWrap="wrap">
             <Box width={[1, 1, 6 / 12]} pr={[0, 0, '1rem']}>
-              {/* Phone number */}
+              {/* Birth year */}
               <FormInputLabel withMargin>
-                Année de naissance
+                Birth year
                 <FormSelect
                   fullWidth
                   value={birthYear}
@@ -159,44 +160,23 @@ const CreatorSignup: React.FC<RouteComponentProps> = ({ location }) => {
                 </FormSelect>
               </FormInputLabel>
             </Box>
-          </Flex>
-          <Flex flexDirection="row" justifyContent="space-between" flexWrap="wrap">
-            {/* <Box width={[1, 1, 6 / 12]} pr={[0, 0, '1rem']}>
-              <FormInputLabel>
-                Langue
+            <Box width={[1, 1, 6 / 12]} pr={[0, 0, '1rem']}>
+              <FormInputLabel withMargin>
+                Your content's language
                 <FormSelect
                   fullWidth
                   value={language}
-                  onChange={e => setLanguage(e.target.value)}
+                  onChange={e => setLanguage(e.target.value as Language)}
                   required
                 >
-                  {allLanguages.map(_language => (
+                  {allPossibleLanguages.map(_language => (
                     <option value={_language} key={_language}>
-                      {_language}
+                      {showLanguage(_language)}
                     </option>
                   ))}
                 </FormSelect>
               </FormInputLabel>
             </Box>
-            <Box width={[1, 1, 6 / 12]} pl={[0, 0, '1rem']}>
-              <FormInputLabel>
-                Pays
-                <FormSelect
-                  fullWidth
-                  value={country}
-                  onChange={e => setCountry(e.target.value)}
-                  required
-                >
-                  <option value="France">France</option>
-                  <option value="United States of America">United States of America</option>
-                  {allCountries.map(_country => (
-                    <option value={_country} key={_country}>
-                      {_country}
-                    </option>
-                  ))}
-                </FormSelect>
-              </FormInputLabel>
-            </Box> */}
           </Flex>
           {/* Terms and conditions */}
           <Flex
@@ -208,32 +188,29 @@ const CreatorSignup: React.FC<RouteComponentProps> = ({ location }) => {
             <IconButtonWrapper style={{ marginRight: 10, height: '22px' }}>
               <img
                 src={acceptsTerms ? checkboxChecked : checkboxEmpty}
-                alt={acceptsTerms ? 'Oui' : 'Non'}
+                alt={acceptsTerms ? 'Yes' : 'No'}
               />
             </IconButtonWrapper>
             <p style={{ cursor: 'default' }}>
-              J'accepte les{' '}
-              <TextLinkExternal href="/tersAndConditions" target="_blank">
-                conditions d'utilisation
+              I accept the{' '}
+              <TextLinkExternal href="/termsAndConditions" target="_blank">
+                terms of use
               </TextLinkExternal>
             </p>
           </Flex>
           {/* Error states */}
-          {hasTermsError && (
-            <ErrorCard message="Vous devez accepter les conditions pour continuer" />
-          )}
-          {error && <ErrorCard message="Le compte n'a pas pu être créé" />}
+          {error && <ErrorCard message="Could not sign up. This email may be used already" />}
           {/* Button submit */}
           <MainButtonSubmit
             type="submit"
-            disabled={loading}
-            value={loading ? 'Création du compte...' : 'Créer mon compte'}
+            disabled={loading || !allowSubmit}
+            value={loading ? 'Signing up...' : 'Sign up'}
           />
         </Box>
         <Help>
-          Vous avez déjà un compte ?{' '}
+          Alreadt have an account?{' '}
           <HelpLink>
-            <Link to="/login">Se connecter</Link>
+            <Link to="/login">Login</Link>
           </HelpLink>
         </Help>
       </Flex>
@@ -241,4 +218,4 @@ const CreatorSignup: React.FC<RouteComponentProps> = ({ location }) => {
   )
 }
 
-export default withRouter(CreatorSignup)
+export default CreatorSignup

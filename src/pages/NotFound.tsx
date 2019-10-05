@@ -21,10 +21,10 @@ const Styles = styled(ContainerBox)`
 const NotFound = () => (
   <Styles py={['3rem', '3rem', '3rem']}>
     <Flex flexDirection="column" alignItems="center" justifyContent="flex-start">
-      <h1>Cette page n'existe pas</h1>
+      <h1>This page does not exist</h1>
       <img className="illustration" src={illustrationSource} alt="404" />
       <MainLink display="inline" to="/">
-        Retourner à l'accueil
+        Go back home
       </MainLink>
     </Flex>
   </Styles>

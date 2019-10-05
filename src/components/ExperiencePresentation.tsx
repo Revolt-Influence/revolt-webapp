@@ -103,7 +103,7 @@ const ExperiencePresentation: React.FC<Props> = ({ experienceId }) => {
     return <Loader fullScreen />
   }
   if (error) {
-    return <ErrorCard message="L'expérience n'a pas pu être affichée" />
+    return <ErrorCard message="Could not show experience" />
   }
 
   const { brand, product, rules } = experience
@@ -119,16 +119,16 @@ const ExperiencePresentation: React.FC<Props> = ({ experienceId }) => {
       >
         {/* Left column on desktop */}
         <Box width={[1, 1, 6 / 12]} pr={[0, 0, '15rem']}>
-          <SplitView title="Votre cadeau" stacked noBorder>
+          <SplitView title="The game" stacked noBorder>
             <ImageWrapper
               src={product.pictures.length > 0 ? product.pictures[0] : null}
               alt={product.name || 'Cadeau'}
               ratio={4 / 3}
-              placeholderText="Pas d'image disponible"
+              placeholderText="No image available"
             />
             <Box mt="2rem">
               <LabelText grey withMargin>
-                Nom
+                Name
               </LabelText>
               <p>{product.name}</p>
               <LabelText grey withMargin>
@@ -136,7 +136,7 @@ const ExperiencePresentation: React.FC<Props> = ({ experienceId }) => {
               </LabelText>
               <p style={{ whiteSpace: 'pre-line' }}>{product.description}</p>
               <LabelText grey withMargin>
-                Lien vers le produit
+                Game website
               </LabelText>
               <ExternalLink
                 // Preprend http:// if needed
@@ -151,7 +151,7 @@ const ExperiencePresentation: React.FC<Props> = ({ experienceId }) => {
         </Box>
         {/* Right column on desktop */}
         <Box width={[1, 1, 6 / 12]}>
-          <SplitView title="La marque" ratio={3.5 / 12} stacked noBorder={!isMobile}>
+          <SplitView title="The studio" ratio={3.5 / 12} stacked noBorder={!isMobile}>
             <Flex justifyContent="space-between" alignItems="flex-start" flexWrap="wrap">
               <Box width={2 / 12} pr="1rem">
                 <img
@@ -163,10 +163,10 @@ const ExperiencePresentation: React.FC<Props> = ({ experienceId }) => {
                 />
               </Box>
               <Box width={10 / 12} pl="1rem">
-                <LabelText grey>Nom</LabelText>
+                <LabelText grey>Name</LabelText>
                 <p>{brand.name}</p>
                 <LabelText grey withMargin>
-                  Site web
+                  Website
                 </LabelText>
                 <ExternalLink href={fullLink} title={brand.name} target="_blank" black>
                   {fullLink}
@@ -175,15 +175,12 @@ const ExperiencePresentation: React.FC<Props> = ({ experienceId }) => {
             </Flex>
           </SplitView>
           <Box>
-            <SplitView title="La campagne" ratio={3.5 / 12} stacked>
+            <SplitView title="The campaign" ratio={3.5 / 12} stacked>
               <p style={{ whiteSpace: 'pre-line' }}>{experience.description}</p>
             </SplitView>
           </Box>
           <Box>
-            <SplitView title="Conditions" ratio={3.5 / 12} stacked>
-              <LabelText grey withMargin>
-                Règles
-              </LabelText>
+            <SplitView title="Rules" ratio={3.5 / 12} stacked>
               <CheckList items={rules} />
             </SplitView>
           </Box>

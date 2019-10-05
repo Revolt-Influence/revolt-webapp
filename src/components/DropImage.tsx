@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef, useEffect } from 'react'
+import React, { useState, useCallback } from 'react'
 import { useDropzone, DropzoneOptions } from 'react-dropzone'
 import styled from 'styled-components'
 import { MainButton } from '../styles/Button'
@@ -88,16 +88,9 @@ const DropImage: React.FC<Props> = ({
   idealSize,
   allowMultiple,
 }) => {
-  // const [newImages, setNewImages] = useState<{ name: string; data: string }[]>([])
   const [error, setError] = useState(null)
   const [isUploading, setIsUploading] = useState<boolean>(false)
   const { width } = useWindowSize()
-
-  // const newImagesRef = useRef<{ name: string; data: string }[]>(newImages)
-
-  // useEffect(() => {
-  //   newImagesRef.current = newImages
-  // }, [newImages])
 
   // Handle drop/select function
   const onDrop = useCallback(

@@ -1,14 +1,11 @@
-import { useMutation, useQuery } from '@apollo/react-hooks'
-import gql from 'graphql-tag'
 import React, { useState } from 'react'
+import { useMutation } from '@apollo/react-hooks'
+import gql from 'graphql-tag'
 import { MainButtonSubmit } from '../styles/Button'
 import { FormInputLabel, FormTextarea } from '../styles/Form'
 import { ApplyToExperience, ApplyToExperienceVariables } from '../__generated__/ApplyToExperience'
-import { GetSession } from '../__generated__/GetSession'
 import CheckBox from './CheckBox'
 import ErrorCard from './ErrorCard'
-import Loader from './Loader'
-import { GET_SESSION } from './Session'
 import SplitView from './SplitView'
 import SuccessCard from './SuccessCard'
 
@@ -28,12 +25,6 @@ interface Props {
 }
 
 const ExperienceForm: React.FC<Props> = ({ brand, experienceId }) => {
-  const {
-    data: { session } = { session: null },
-    loading: sessionLoading,
-    error: sessionError,
-  } = useQuery<GetSession, {}>(GET_SESSION)
-
   const [
     applyToExperience,
     {
@@ -45,13 +36,6 @@ const ExperienceForm: React.FC<Props> = ({ brand, experienceId }) => {
 
   const [message, setMessage] = useState<string>('')
   const [acceptsTerms, setAcceptsTerms] = useState<boolean>(false)
-
-  if (sessionLoading) {
-    return <Loader fullScreen />
-  }
-  if (sessionError) {
-    return <ErrorCard />
-  }
 
   const checkIfAllowSubmit = () => {
     if (!acceptsTerms || message.length === 0) {
@@ -69,28 +53,28 @@ const ExperienceForm: React.FC<Props> = ({ brand, experienceId }) => {
   return (
     <SplitView title="Postuler" ratio={4 / 12} noBorder>
       <FormInputLabel>
-        Message de motivation pour {brand}
+        Motivation message for {brand}
         <FormTextarea
           hasLabel
           value={message}
           onChange={e => setMessage(e.target.value)}
-          placeholder="Les candidatures avec un message de motivation ont plus de chances d'être sélectionnées"
+          placeholder="Requests with a message a more likely to be accepted"
         />
       </FormInputLabel>
       <CheckBox
         handleClick={() => setAcceptsTerms(!acceptsTerms)}
-        text={`En cochant cette case, vous vous engagez contractuellement à réaliser les livrables attendus dans les délais, dès lors que ${brand} valide le partenariat.`}
+        text={`By checking this box, you are contractually committing to publishing a review of the game if ${brand} accepts the collabs`}
         isChecked={acceptsTerms}
       />
-      {applyError && <ErrorCard message="Votre candidature n'a pas pu être enregistrée" />}
+      {applyError && <ErrorCard message="Could not apply to the collab" />}
       {createdCollab && (
         <SuccessCard
-          message={`Votre candidature a bien été enregistrée. ${brand} vous contactera si vous êtes sélectionné`}
+          message={`Your collab request was saved. ${brand} will contact you if you are selected`}
         />
       )}
       <MainButtonSubmit
         type="submit"
-        value={applyLoading ? 'Envoi de votre demande...' : 'Postuler'}
+        value={applyLoading ? 'Applying..' : 'Apply'}
         disabled={!allowSubmit || applyLoading}
         onClick={handleSubmit}
       />

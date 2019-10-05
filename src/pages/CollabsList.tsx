@@ -28,7 +28,7 @@ const GET_CREATOR_COLLABS = gql`
 `
 
 const CollabsList: React.FC<{}> = () => {
-  usePageTitle('Vos collabs')
+  usePageTitle('Your collabs')
 
   // Get all creator collabs ids
   const { data: { collabs } = { collabs: null }, error, loading } = useQuery<GetCreatorCollabs, {}>(
@@ -46,16 +46,16 @@ const CollabsList: React.FC<{}> = () => {
 
   return (
     <ContainerBox>
-      <ErrorBoundary message="Les collabs n'ont pas pu être affichées">
+      <ErrorBoundary message="Could not show collabs">
         <>
           <Title isCentered={width < 960}>Mes collabs</Title>
           {collabs.length === 0 ? (
             <ContainerBox mt="2rem">
-              <NotificationCard message="Vous n'avez pas encore de collabs." nature="info" />
+              <NotificationCard message="You don't have any collabs yet" nature="info" />
               <Box mt="1rem">
-                Pour commencer une collab, allez sur la page{' '}
-                <BlueLink to="/creator/experiences">Expériences</BlueLink> pour postuler à une
-                expérience.
+                To start a collab, go to the{' '}
+                <BlueLink to="/creator/experiences">Experiences</BlueLink> and apply to an
+                experience.
               </Box>
             </ContainerBox>
           ) : (

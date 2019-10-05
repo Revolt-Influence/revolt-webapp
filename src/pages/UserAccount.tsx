@@ -6,30 +6,25 @@ import ChangePassword from '../components/ChangePassword'
 import SplitView from '../components/SplitView'
 import { usePageTitle } from '../utils/hooks'
 import { Title } from '../styles/Text'
-import UserPlan from '../components/UserPlan'
 import Session from '../components/Session'
 
-const BrandAccount: React.FC<{}> = () => {
-  usePageTitle('Mon compte')
+const UserAccount: React.FC<{}> = () => {
+  usePageTitle('My account')
 
   return (
     <Container>
-      <Title>Mon compte</Title>
+      <Title>My account</Title>
       <Box width={[1, 10 / 12, 10 / 12]}>
         {/* Contact info */}
-        <SplitView title="Changer mes coordonnées">
+        <SplitView title="My contact info">
           <UpdateUserInfo />
         </SplitView>
         {/* Change password */}
-        <SplitView title="Mon mot de passe">
+        <SplitView title="My password">
           <ChangePassword />
         </SplitView>
-        {/* Payment info */}
-        <SplitView title="Mon offre">
-          <UserPlan />
-        </SplitView>
         {/* Session */}
-        <SplitView title="Ma session">
+        <SplitView title="My session">
           <Session />
         </SplitView>
       </Box>
@@ -37,4 +32,4 @@ const BrandAccount: React.FC<{}> = () => {
   )
 }
 
-export default BrandAccount
+export default UserAccount

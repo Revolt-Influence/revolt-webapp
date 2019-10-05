@@ -16,7 +16,7 @@ import {
 import ErrorCard from '../components/ErrorCard'
 
 const ConversationsList: React.FC<RouteComponentProps> = ({ match }) => {
-  usePageTitle('Mes messages')
+  usePageTitle('My messages')
   const deviceType = useDeviceType()
 
   // Fetch coversations if they don't exist
@@ -36,10 +36,7 @@ const ConversationsList: React.FC<RouteComponentProps> = ({ match }) => {
   if (paginatedConversations.items.length === 0) {
     return (
       <ContainerBox pt="2rem">
-        <NotificationCard
-          nature="info"
-          message="Vous n'avez pas encore de conversation sur Revolt"
-        />
+        <NotificationCard nature="info" message="You don't have any conversations yet" />
       </ContainerBox>
     )
   }
@@ -51,9 +48,9 @@ const ConversationsList: React.FC<RouteComponentProps> = ({ match }) => {
   }
 
   return (
-    <ErrorBoundary message="Les messages n'ont pas pu être affichés">
+    <ErrorBoundary message="Could not load messages">
       <ContainerBox>
-        <Title>Mes messages</Title>
+        <Title>My messages</Title>
         <ConversationsListPreview />
       </ContainerBox>
     </ErrorBoundary>

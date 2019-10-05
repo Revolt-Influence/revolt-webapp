@@ -13,13 +13,13 @@ export interface UpdateCreatorProfile_updateCreatorProfile {
    */
   _id: string;
   /**
-   * Creator-defined named, can be a full name or a pseudo
+   * Creator display name, can be a full name or a pseudo
    */
-  name: string;
+  name: string | null;
   /**
    * Cloudinary URL of a picture got from user upload or a social network
    */
-  picture: string;
+  picture: string | null;
 }
 
 export interface UpdateCreatorProfile {

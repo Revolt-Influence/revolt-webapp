@@ -15,6 +15,7 @@ import ErrorCard from './ErrorCard'
 import Loader from './Loader'
 import SplitView from './SplitView'
 import SuccessCard from './SuccessCard'
+import { showReviewFormat } from '../utils/enums'
 
 const SUBMIT_COLLAB_REVIEW = gql`
   mutation SubmitCollabReview($review: SubmitCollabReviewInput!, $collabId: String!) {
@@ -77,20 +78,11 @@ const SubmitCreatorReviews: React.FC<Props> = ({ collabId }) => {
     })
   }
 
-  const displayFormat = (format: ReviewFormat): string => {
-    switch (format) {
-      case ReviewFormat.YOUTUBE_VIDEO:
-        return 'Vidéo YouTube'
-      default:
-        return format
-    }
-  }
-
   return (
     <SplitView title="Mes revues" ratio={3.5 / 12} noBorder>
       <form onSubmit={handleSubmit}>
         <FormInputLabel>
-          Lien de votre {displayFormat(review.format)}
+          Lien de votre {showReviewFormat(review.format)}
           <FormInput
             value={review.link}
             onChange={e => updateLink(e.target.value)}
@@ -102,12 +94,12 @@ const SubmitCreatorReviews: React.FC<Props> = ({ collabId }) => {
         <CheckBox
           isChecked={hasRespected}
           handleClick={() => setHasRespected(!hasRespected)}
-          text="J'ai bien respecté les règles de la campagne"
+          text="I have respected the campaign rules"
         />
-        {succeeded && <SuccessCard message="Your post was saved" />}
-        {error && <ErrorCard message="Could not saved your post" />}
+        {succeeded && <SuccessCard message="Your review was saved" />}
+        {error && <ErrorCard message="Could not saved your review" />}
         <MainButtonSubmit
-          value={loading ? 'Submitting' : 'Submit my review'}
+          value={loading ? 'Submitting...' : 'Submit my review'}
           type="submit"
           disabled={!allowSubmit || loading}
         />

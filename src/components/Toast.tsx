@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styled, { css } from 'styled-components'
 import { shadow } from '../utils/styles'
 import { palette } from '../utils/colors'
@@ -62,7 +62,7 @@ interface IToastProps {
 const Toast: React.FunctionComponent<IToastProps> = ({ disappear, nature, text }) => {
   const [isShown, setIsShown] = React.useState<boolean>(true)
 
-  React.useEffect(() => {
+  useEffect(() => {
     const timeout = window.setTimeout(() => {
       // Timeout end
       if (disappear && isShown) {

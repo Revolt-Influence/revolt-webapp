@@ -27,13 +27,13 @@ export interface GetCampaignCollabs_campaign_collabs_creator_youtube {
 export interface GetCampaignCollabs_campaign_collabs_creator {
   __typename: "Creator";
   /**
-   * Creator-defined named, can be a full name or a pseudo
+   * Creator display name, can be a full name or a pseudo
    */
-  name: string;
+  name: string | null;
   /**
    * Cloudinary URL of a picture got from user upload or a social network
    */
-  picture: string;
+  picture: string | null;
   /**
    * Youtube account linked to the creator
    */

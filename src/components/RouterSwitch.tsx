@@ -1,11 +1,11 @@
+import React, { Suspense, lazy } from 'react'
 import { useQuery } from '@apollo/react-hooks'
-import React, { Suspense } from 'react'
 import { Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom'
 import styled from 'styled-components'
 import Landing from '../pages/Landing'
 import { useClientSize } from '../utils/hooks'
 import { GetSession } from '../__generated__/GetSession'
-import { Plan, SessionType } from '../__generated__/globalTypes'
+import { SessionType } from '../__generated__/globalTypes'
 import ErrorBoundary from './ErrorBoundary'
 import ErrorCard from './ErrorCard'
 import Footer from './Footer'
@@ -14,28 +14,27 @@ import Navbar from './Navbar'
 import { GET_SESSION } from './Session'
 import { ContainerBox } from '../styles/grid'
 
-const CampaignDashboard = React.lazy(() => import('../pages/CampaignDashboard'))
-const UserSignup = React.lazy(() => import('../pages/UserSignup'))
-const CreatorSignup = React.lazy(() => import('../pages/CreatorSignup'))
-const Login = React.lazy(() => import('../pages/Login'))
-const ForgotPassword = React.lazy(() => import('../pages/ForgotPassword'))
-const BrandAccount = React.lazy(() => import('../pages/BrandAccount'))
-const CreatorAccount = React.lazy(() => import('../pages/CreatorAccount'))
-const NotFound = React.lazy(() => import('../pages/NotFound'))
-const ResetPassword = React.lazy(() => import('../pages/ResetPassword'))
-const Upgrade = React.lazy(() => import('../pages/Upgrade'))
-const CampaignsList = React.lazy(() => import('../pages/CampaignsList'))
-const ExperiencesList = React.lazy(() => import('../pages/ExperiencesList'))
-const CollabsList = React.lazy(() => import('../pages/CollabsList'))
-const Experience = React.lazy(() => import('../pages/Experience'))
-const CampaignForm = React.lazy(() => import('../pages/CampaignForm'))
-const ConnectSocialAccount = React.lazy(() => import('../pages/ConnectSocialAccount'))
-const AmbassadorProgram = React.lazy(() => import('../pages/AmbassadorProgram'))
-const PrivacyPolicy = React.lazy(() => import('../pages/PrivacyPolicy'))
-const TermsAndConditions = React.lazy(() => import('../pages/TermsAndConditions'))
-const Conversation = React.lazy(() => import('../pages/Conversation'))
-const ConversationsList = React.lazy(() => import('../pages/ConversationsList'))
-const Community = React.lazy(() => import('../pages/Community'))
+const CampaignDashboard = lazy(() => import('../pages/CampaignDashboard'))
+const UserSignup = lazy(() => import('../pages/UserSignup'))
+const CreatorSignup = lazy(() => import('../pages/CreatorSignup'))
+const Login = lazy(() => import('../pages/Login'))
+const ForgotPassword = lazy(() => import('../pages/ForgotPassword'))
+const UserAccount = lazy(() => import('../pages/UserAccount'))
+const CreatorAccount = lazy(() => import('../pages/CreatorAccount'))
+const NotFound = lazy(() => import('../pages/NotFound'))
+const ResetPassword = lazy(() => import('../pages/ResetPassword'))
+const CampaignsList = lazy(() => import('../pages/CampaignsList'))
+const ExperiencesList = lazy(() => import('../pages/ExperiencesList'))
+const CollabsList = lazy(() => import('../pages/CollabsList'))
+const Experience = lazy(() => import('../pages/Experience'))
+const CampaignForm = lazy(() => import('../pages/CampaignForm'))
+const ConnectSocialAccount = lazy(() => import('../pages/ConnectSocialAccount'))
+const AmbassadorProgram = lazy(() => import('../pages/AmbassadorProgram'))
+const PrivacyPolicy = lazy(() => import('../pages/PrivacyPolicy'))
+const TermsAndConditions = lazy(() => import('../pages/TermsAndConditions'))
+const Conversation = lazy(() => import('../pages/Conversation'))
+const ConversationsList = lazy(() => import('../pages/ConversationsList'))
+const Community = lazy(() => import('../pages/Community'))
 
 const Layout = styled.div<{ minHeight: number }>`
   display: flex;
@@ -107,12 +106,12 @@ const RouterSwitch: React.FC<RouteComponentProps> = () => {
     return <Login />
   }
 
-  const renderBrandAccount = () => {
+  const renderUserAccount = () => {
     // Only allow access if the user is logged in
     if (!isLoggedIn) {
       return <Redirect to="/login" />
     }
-    return <BrandAccount />
+    return <UserAccount />
   }
 
   const renderCreatorAccount = () => {
@@ -121,17 +120,6 @@ const RouterSwitch: React.FC<RouteComponentProps> = () => {
       return <Redirect to="/login" />
     }
     return <CreatorAccount />
-  }
-
-  const renderUpgradePlan = () => {
-    // Only allow access if the user is logged in and not Premium
-    if (!isLoggedIn) {
-      return <Redirect to="/login" />
-    }
-    if (user.plan === Plan.PREMIUM) {
-      return <Redirect to="/brand/myAccount" />
-    }
-    return <Upgrade />
   }
 
   const renderCampaignsList = () => {
@@ -167,7 +155,7 @@ const RouterSwitch: React.FC<RouteComponentProps> = () => {
       return <Redirect to="/login" />
     }
     return (
-      <ErrorBoundary message="La campagne n'a pas pu être affichée">
+      <ErrorBoundary message="Could not show campaign">
         <CampaignDashboard />
       </ErrorBoundary>
     )
@@ -221,8 +209,7 @@ const RouterSwitch: React.FC<RouteComponentProps> = () => {
         />
         <Route path="/brand/campaigns/:campaignId/dashboard" render={renderCampaignDashboard} />
         <Route path="/brand/campaigns/:campaignId/brief" render={renderCampaignForm} />
-        <Route path="/brand/myAccount" render={renderBrandAccount} />
-        <Route path="/brand/upgrade" render={renderUpgradePlan} />
+        <Route path="/brand/myAccount" render={renderUserAccount} />
         <Route path="/brand/messages/:conversationId" component={Conversation} />
         <Route exact path="/brand/messages" component={ConversationsList} />
         <Route path="/brand/community" render={renderCommunity} />

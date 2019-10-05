@@ -17,13 +17,13 @@ const Styles = styled(Flex)`
 
 const AmbassadorProgramCard: React.FunctionComponent<{}> = () => (
   <Styles flexDirection="column" alignItems="center" py={['2rem', '2rem', '6.8rem']}>
-    <SubTitle noMargin>Invitez vos amis</SubTitle>
+    <SubTitle noMargin>Invite your friends</SubTitle>
     <p className="description">
-      Gagnez 5€ par influenceur
+      Win 5€ per streamer
       <br />
-      inscrit sur Revolt
+      signed up on Revolt
     </p>
-    <MainLink to="/creator/ambassador">Devenir ambassadeur</MainLink>
+    <MainLink to="/creator/ambassador">Become an embassador</MainLink>
   </Styles>
 )
 

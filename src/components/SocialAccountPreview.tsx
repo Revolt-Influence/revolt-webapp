@@ -61,7 +61,7 @@ const SocialAccountPreview: React.FC<ISocialAccountPreviewProps> = ({
         <IconButtonWrapper as="div">
           <img
             src={arrowSource}
-            alt={isOpen ? 'fermer' : 'ouvrir'}
+            alt={isOpen ? 'close' : 'open'}
             style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0)' }}
           />
         </IconButtonWrapper>

@@ -30,7 +30,7 @@ const CheckBox: React.FC<ICheckBoxProps> = ({
     style={disabled ? { opacity: 0.5, cursor: 'not-allowed' } : null}
   >
     <IconButtonWrapper as="div" style={{ marginRight: 10, height: '22px' }}>
-      <img src={isChecked ? checkboxChecked : checkboxEmpty} alt={isChecked ? 'Oui' : 'Non'} />
+      <img src={isChecked ? checkboxChecked : checkboxEmpty} alt={isChecked ? 'yes' : 'no'} />
     </IconButtonWrapper>
     <p style={{ cursor: 'default' }}>{text}</p>
   </Flex>

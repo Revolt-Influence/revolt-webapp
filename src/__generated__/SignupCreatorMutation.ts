@@ -40,13 +40,13 @@ export interface SignupCreatorMutation_signupCreator_creator {
    */
   _id: string;
   /**
-   * Creator-defined named, can be a full name or a pseudo
+   * Creator display name, can be a full name or a pseudo
    */
-  name: string;
+  name: string | null;
   /**
    * Cloudinary URL of a picture got from user upload or a social network
    */
-  picture: string;
+  picture: string | null;
   /**
    * The email is used for login and notifications
    */

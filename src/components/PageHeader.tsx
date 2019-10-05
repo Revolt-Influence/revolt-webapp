@@ -62,7 +62,7 @@ const PageHeader: React.FC<IPageHeaderProps> = ({
       mb={noMargin ? 0 : marginBottom}
     >
       <BackButton onClick={goBack}>
-        <img src={backIcon} alt="Retour" />
+        <img src={backIcon} alt="back" />
       </BackButton>
       <Title noMargin>{title}</Title>
     </Flex>

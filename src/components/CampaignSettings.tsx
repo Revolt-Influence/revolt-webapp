@@ -76,13 +76,9 @@ const CampaignSettings: React.FC<ICampaignSettingsProps> = ({ campaignId, histor
 
   const showToggleArchiveButtonText = () => {
     if (campaign.isArchived) {
-      return toggleArchiveCampaignStatus.loading
-        ? 'Publication de la campagne...'
-        : 'Publier la campagne'
+      return toggleArchiveCampaignStatus.loading ? 'Publishing campaign...' : 'Publish campaign'
     }
-    return toggleArchiveCampaignStatus.loading
-      ? 'Archivage de la campagne...'
-      : 'Archiver la campagne'
+    return toggleArchiveCampaignStatus.loading ? 'Archiving campaign...' : 'Archive campaign'
   }
 
   const getShowDelete = () => {
@@ -108,11 +104,9 @@ const CampaignSettings: React.FC<ICampaignSettingsProps> = ({ campaignId, histor
           <BoldText>{status.name}</BoldText>
         </Flex>
         <p>{status.description}</p>
-        {toggleArchiveCampaignStatus.error && (
-          <ErrorCard message="Vos changements n'ont pas pu être enregistrés" />
-        )}
+        {toggleArchiveCampaignStatus.error && <ErrorCard message="Could not save your changes" />}
         {status.name === CampaignStatus.INCOMPLETE ? (
-          <MainLink to={`/brand/campaigns/${campaign._id}/brief`}>Remplir mon brief</MainLink>
+          <MainLink to={`/brand/campaigns/${campaign._id}/brief`}>Fill my brief</MainLink>
         ) : (
           status.name !== CampaignStatus.AWAITING_REVIEW && (
             <MainButton
@@ -128,40 +122,40 @@ const CampaignSettings: React.FC<ICampaignSettingsProps> = ({ campaignId, histor
       </SplitView>
       {/* Review campaign (admin only) */}
       {isAdmin && !campaign.isReviewed && !campaign.isArchived && (
-        <SplitView title="Valider la campagne">
+        <SplitView title="Accept the campaign">
           <p>
             La campagne est actuellement en attente de modération. Si vous la validez, elle
             deviendra accessible à tous les influenceurs.
           </p>
-          {deleteError && <ErrorCard message="La campagne n'a pas pu être supprimée" />}
+          {reviewCampaignStatus.error && <ErrorCard message="Could not accept the campaign" />}
           <MainButton
             onClick={() => reviewCampaign({ variables: { campaignId } })}
             disabled={reviewCampaignStatus.loading}
           >
-            {reviewCampaignStatus.loading ? 'Validation...' : 'Valider la campagne'}
+            {reviewCampaignStatus.loading ? 'Accepting...' : 'Accept the campaign'}
           </MainButton>
         </SplitView>
       )}
       {/* Campaign owner (admin only) */}
       {isAdmin && (
-        <SplitView title="Propriétaire">
+        <SplitView title="Owner">
           <p>
-            Le propriétaire de cette campagne est <BoldText>{campaign.owner}</BoldText>
+            Le propriétaire de cette campagne est <BoldText>{campaign.owner.email}</BoldText>
           </p>
         </SplitView>
       )}
       {/* Delete campaign */}
       {showDelete && (
-        <SplitView title="Supprimer la campagne">
+        <SplitView title="Delete the campaign">
           <p>Cette action est irréversible.</p>
-          {deleteError && <ErrorCard message="La campagne n'a pas pu être supprimée" />}
+          {deleteError && <ErrorCard message="Could not delete the campaign" />}
           <MainButton
             inverted
             nature="danger"
             disabled={deletingCampaign}
             onClick={() => deleteCampaign({ variables: { campaignId } })}
           >
-            {deletingCampaign ? 'Suppression de la campagne' : 'Supprimer la campagne'}
+            {deletingCampaign ? 'Deleting the campaign...' : 'Delete the campaign'}
           </MainButton>
         </SplitView>
       )}

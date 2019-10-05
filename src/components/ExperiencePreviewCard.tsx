@@ -63,7 +63,7 @@ const ExperiencePreviewCard: React.FC<IExperiencePreviewCardProps> = ({ experien
           src={product.pictures[0]}
           alt={experience.name}
           ratio={4 / 3}
-          placeholderText="Pas de photo du cadeau"
+          placeholderText="No game picture"
         />
         <h3 className="title">{capitalizeFirstLetter(experience.name)}</h3>
         <div className="brand">

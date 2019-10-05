@@ -72,7 +72,11 @@ const Experience: React.FC<Props> = ({ match }) => {
     return <Loader fullScreen />
   }
   if (error) {
-    return <ErrorCard message="Could not show experience" />
+    return (
+      <ContainerBox>
+        <ErrorCard message="Could not show experience" />
+      </ContainerBox>
+    )
   }
 
   // Check if it's already in a collab
@@ -83,7 +87,7 @@ const Experience: React.FC<Props> = ({ match }) => {
   if (experience == null) {
     return (
       <ContainerBox>
-        <ErrorCard message="L'expérience n'a pas pu être affichée" />
+        <ErrorCard message="Could not show experience" />
       </ContainerBox>
     )
   }
@@ -97,7 +101,7 @@ const Experience: React.FC<Props> = ({ match }) => {
 
   const showActionButton = () => {
     // Fresh new campaign, suggest applying
-    if (tab === 'presentation' && !alreadyInCollab) {
+    if (tab === ExperienceTab.PRESENTATION && !alreadyInCollab) {
       return (
         <MainButton
           onClick={() => changeTab(ExperienceTab.APPLY)}
@@ -123,20 +127,20 @@ const Experience: React.FC<Props> = ({ match }) => {
   }
 
   const showCurrentTab = () => {
-    if (tab === 'presentation') {
+    if (tab === ExperienceTab.PRESENTATION) {
       return showPresentation()
     }
 
     // Apply to campaign
-    if (tab === 'apply') {
+    if (tab === ExperienceTab.APPLY) {
       return <ExperienceForm brand={experience.brand.name} experienceId={experience._id} />
     }
 
     // Submit review
-    if (tab === 'submit') {
+    if (tab === ExperienceTab.SUBMIT) {
       if (
         alreadyInCollab &&
-        linkedCollab.status !== CollabStatus.APPLIED &&
+        linkedCollab.status !== CollabStatus.REQUEST &&
         linkedCollab.status !== CollabStatus.DENIED
       ) {
         return <SubmitCreatorReviews collabId={linkedCollab._id} />
@@ -148,7 +152,7 @@ const Experience: React.FC<Props> = ({ match }) => {
   }
 
   return (
-    <ErrorBoundary message="L'expérience n'a pas pu être affichée">
+    <ErrorBoundary message="Could not show experience">
       <ContainerBox>
         {/* Page header */}
         <Flex
@@ -168,7 +172,7 @@ const Experience: React.FC<Props> = ({ match }) => {
           <Box mt="2rem">
             <NotificationCard
               nature="info"
-              message="Votre profil n'a pas encore été validé par notre équipe. Vous ne pouvez donc pas encore postuler aux expériences"
+              message="Your profile hasn't been verified by our team. You can't apply to experiences yet"
             />
           </Box>
         )}
@@ -179,7 +183,7 @@ const Experience: React.FC<Props> = ({ match }) => {
         <Flex justifyContent="center">{showActionButton()}</Flex>
 
         {/* Go back to main tab (presentation) if not on main tab */}
-        {tab !== 'presentation' && (
+        {tab !== ExperienceTab.PRESENTATION && (
           <Flex justifyContent="center" mt="2rem">
             <TextButton onClick={() => changeTab(ExperienceTab.PRESENTATION)}>
               Retour à l'expérience

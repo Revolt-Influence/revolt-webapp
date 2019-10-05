@@ -31,6 +31,8 @@ const YOUTUBER_PROFILE_FRAGMENT = gql`
         name
         percentage
       }
+      malePercentage
+      femalePercentage
     }
   }
 `

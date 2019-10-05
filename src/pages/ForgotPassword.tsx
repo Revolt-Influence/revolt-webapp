@@ -39,29 +39,29 @@ const ForgotPassword: React.FC<{}> = () => {
     <Container>
       <Box my="3rem">
         <Title isCentered noMargin>
-          Mot de passe oublié{' '}
+          Forgot password
         </Title>
         <p style={{ marginTop: '1.5rem', textAlign: 'center' }}>
-          Recevez un lien par mail pour le réinitialiser
+          Get a link by email to reset your passsword
         </p>
       </Box>
       <Flex flexDirection="column" alignItems="center" mt="1.5rem">
         <Box width={[1, 6 / 12, 5 / 12]} as="form" onSubmit={handleSubmit}>
           <FormInputLabel>
-            Adresse email
+            Email address
             <FormInput
               type="email"
-              placeholder="Votre adresse email"
+              placeholder="Your email address"
               value={email}
               onChange={e => setEmail(e.target.value)}
               hasLabel
             />
           </FormInputLabel>
-          {succeeded ? <SuccessCard message="Vous avez reçu un lien par email" /> : null}
-          {error ? <ErrorCard message="Le mail n'a pas pu être envoyé" /> : null}
+          {succeeded ? <SuccessCard message="You have received a link by email" /> : null}
+          {error ? <ErrorCard message="Could not send the email" /> : null}
           <MainButtonSubmit
             disabled={loading}
-            value={loading ? 'Envoi du mail...' : 'Réinitialiser mon mot de passe'}
+            value={loading ? 'Sending the email...' : 'Reset my password'}
           />
         </Box>
       </Flex>

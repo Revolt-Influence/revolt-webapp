@@ -11,9 +11,9 @@ import { ReviewFormat } from "./globalTypes";
 export interface GetCampaignReviews_campaign_reviews_creator {
   __typename: "Creator";
   /**
-   * Creator-defined named, can be a full name or a pseudo
+   * Creator display name, can be a full name or a pseudo
    */
-  name: string;
+  name: string | null;
 }
 
 export interface GetCampaignReviews_campaign_reviews {

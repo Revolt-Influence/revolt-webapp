@@ -139,7 +139,7 @@ const Conversation: React.FC<RouteComponentProps<Match>> = ({ match }) => {
     getSpecificConversation()
   }
 
-  const pageTitle = `Parler à ${recipientName}${
+  const pageTitle = `Talk to ${recipientName}${
     isAdmin ? ` et ${conversation && conversation.brand.name}` : ''
   }`
 
@@ -196,7 +196,7 @@ const Conversation: React.FC<RouteComponentProps<Match>> = ({ match }) => {
     return <Loader fullScreen />
   }
   if (error || getSpecificConversationStatus.error) {
-    return <ErrorCard message="Vos messages n'ont pas pu être chargés" />
+    return <ErrorCard message="Your messages could not be loaded" />
   }
 
   const detailedMessages = getDetailedMessages()

@@ -43,7 +43,7 @@ const LOGIN_MUTATION = gql`
 `
 
 const Login: React.FC<{}> = () => {
-  usePageTitle('Se connecter')
+  usePageTitle('Log in')
   const history = useHistory()
 
   // Form state
@@ -68,7 +68,7 @@ const Login: React.FC<{}> = () => {
   return (
     <Container>
       <Flex flexDirection="column" alignItems="center">
-        <Title isCentered>Se connecter</Title>
+        <Title isCentered>Log in</Title>
         <Box width={[1, 6 / 12, 5 / 12]}>
           <form onSubmit={handleLogin}>
             <FormInputLabel>
@@ -77,38 +77,35 @@ const Login: React.FC<{}> = () => {
                 type="email"
                 onChange={e => setEmail(e.target.value)}
                 value={email}
-                placeholder="Votre email"
+                placeholder="Your email"
                 hasLabel
                 required
               />
             </FormInputLabel>
             <FormInputLabel>
-              Mot de passe
+              Password
               <FormInput
                 type="password"
                 onChange={e => setPassword(e.target.value)}
                 value={password}
-                placeholder="Votre mot de passe"
+                placeholder="Your password"
                 hasLabel
                 required
               />
             </FormInputLabel>
             <Row justify="flex-end">
               <Link to="/forgotPassword">
-                <HelpLink>Mot de passe oublié ?</HelpLink>
+                <HelpLink>Forgot your password?</HelpLink>
               </Link>
             </Row>
-            {error && <ErrorCard message="Email ou mot de passe invalide" />}
-            <MainButtonSubmit
-              disabled={loading}
-              value={loading ? 'Connexion...' : 'Se connecter'}
-            />
+            {error && <ErrorCard message="Invalid email or password" />}
+            <MainButtonSubmit disabled={loading} value={loading ? 'Logging in...' : 'Log in'} />
           </form>
         </Box>
         <Help>
-          Vous n'avez pas encore de compte ?{' '}
+          Don't have an account yet?{' '}
           <HelpLink>
-            <Link to="/">S'inscrire</Link>
+            <Link to="/">Sign up</Link>
           </HelpLink>
         </Help>
       </Flex>
