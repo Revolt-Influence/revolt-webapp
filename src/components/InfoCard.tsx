@@ -7,14 +7,14 @@ interface Props {
   noMargin?: boolean
 }
 
-const ErrorCard: React.FC<Props> = ({ message, noMargin }) => (
+const InfoCard: React.FC<Props> = ({ message, noMargin }) => (
   <Box mt={noMargin ? 0 : '2rem'}>
-    <NotificationCard nature="error" message={message} />
+    <NotificationCard nature="info" message={message} />
   </Box>
 )
 
-ErrorCard.defaultProps = {
+InfoCard.defaultProps = {
   message: 'Something went wrong',
 }
 
-export default ErrorCard
+export default InfoCard

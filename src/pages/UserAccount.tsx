@@ -8,12 +8,12 @@ import { usePageTitle } from '../utils/hooks'
 import { Title } from '../styles/Text'
 import Session from '../components/Session'
 
-const BrandAccount: React.FC<{}> = () => {
+const UserAccount: React.FC<{}> = () => {
   usePageTitle('My account')
 
   return (
     <Container>
-      <Title>Mon compte</Title>
+      <Title>My account</Title>
       <Box width={[1, 10 / 12, 10 / 12]}>
         {/* Contact info */}
         <SplitView title="My contact info">
@@ -32,4 +32,4 @@ const BrandAccount: React.FC<{}> = () => {
   )
 }
 
-export default BrandAccount
+export default UserAccount

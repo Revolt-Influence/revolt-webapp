@@ -88,7 +88,7 @@ const CampaignPreviewCard: React.FC<Props> = ({ campaign }) => {
       _collab.status === CollabStatus.SENT ||
       _collab.status === CollabStatus.DONE
   ).length
-  const requestsCount = collabs.filter(_collab => _collab.status === CollabStatus.APPLIED).length
+  const requestsCount = collabs.filter(_collab => _collab.status === CollabStatus.REQUEST).length
   const status = getCampaignStatus(campaign)
 
   const showStatusLabel = () => (

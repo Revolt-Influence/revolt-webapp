@@ -87,7 +87,7 @@ const Session: React.FC<{}> = () => {
 
   return (
     <div>
-      <Box mb="1rem">Vous êtes connecté en tant que {email}</Box>
+      <Box mb="1rem">You are connected as {email}</Box>
       {logoutStatus.error ? <ErrorCard message="Could not logout" /> : null}
       <MainButton onClick={() => logout()} disabled={logoutStatus.loading} noMargin inverted>
         {logoutStatus.loading ? 'Logging out...' : 'Log out'}

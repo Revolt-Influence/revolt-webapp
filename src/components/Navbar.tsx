@@ -158,7 +158,7 @@ const Navbar: React.FC<{}> = () => {
         {
           logo: campaignSource,
           path: '/brand/campaigns',
-          name: 'My campaigns',
+          name: 'Campaigns',
           description: 'View all your campaigns',
         },
         {

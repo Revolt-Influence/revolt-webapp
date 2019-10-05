@@ -25,9 +25,9 @@ export enum AgeGroup {
  */
 export enum CollabStatus {
   ACCEPTED = "ACCEPTED",
-  APPLIED = "APPLIED",
   DENIED = "DENIED",
   DONE = "DONE",
+  REQUEST = "REQUEST",
   SENT = "SENT",
 }
 

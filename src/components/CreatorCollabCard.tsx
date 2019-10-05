@@ -81,7 +81,7 @@ interface Props {
 const CreatorCollabCard: React.FC<Props> = ({ collab }) => {
   const formatStatus = (): { name: string; color: paletteColorName } => {
     switch (collab.status) {
-      case CollabStatus.APPLIED:
+      case CollabStatus.REQUEST:
         return {
           name: 'waiting for brand answer',
           color: 'grey',

@@ -7,7 +7,6 @@ import CampaignCollabs from '../components/CampaignCollabs'
 import CampaignCollabRequests from '../components/CampaignCollabRequests'
 import CampaignReviews from '../components/CampaignReviews'
 import CampaignSettings from '../components/CampaignSettings'
-import NotificationCard from '../components/NotificationCard'
 import PageHeader from '../components/PageHeader'
 import Tabs, { ITabItem } from '../components/Tabs'
 import { ContainerBox } from '../styles/grid'
@@ -23,6 +22,7 @@ import {
 import Loader from '../components/Loader'
 import ErrorCard from '../components/ErrorCard'
 import { BRAND_FRAGMENT } from '../components/CampaignFormBrand'
+import InfoCard from '../components/InfoCard'
 
 export enum CampaignStatus {
   ARCHIVED = 'Not published',
@@ -210,14 +210,10 @@ const CampaignDashboard: React.FC<Props> = ({ match, location }) => {
       {status.name !== CampaignStatus.ONLINE && (
         <ContainerBox mb="2rem" mt="-1rem">
           {status.name === CampaignStatus.AWAITING_REVIEW && (
-            <NotificationCard message={status.description} nature="info" />
+            <InfoCard message={status.description} />
           )}
-          {status.name === CampaignStatus.ARCHIVED && (
-            <NotificationCard message={status.description} nature="info" />
-          )}
-          {status.name === CampaignStatus.INCOMPLETE && (
-            <NotificationCard message={status.description} nature="info" />
-          )}
+          {status.name === CampaignStatus.ARCHIVED && <InfoCard message={status.description} />}
+          {status.name === CampaignStatus.INCOMPLETE && <InfoCard message={status.description} />}
         </ContainerBox>
       )}
       <Box mt={[0, 0, '-2rem']}>

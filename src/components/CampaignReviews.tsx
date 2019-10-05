@@ -14,8 +14,8 @@ import {
 import ErrorBoundary from './ErrorBoundary'
 import ErrorCard from './ErrorCard'
 import Loader from './Loader'
-import NotificationCard from './NotificationCard'
 import ReviewCard from './ReviewCard'
+import InfoCard from './InfoCard'
 
 const Stats = styled(Box)`
   background: ${palette.pink._100};
@@ -125,7 +125,7 @@ const CampaignReviews: React.FC<Props> = ({ campaignId }) => {
           >
             {reviews.length === 0 && (
               <Box px="2rem">
-                <NotificationCard nature="info" message="You don't have reviews yet" />
+                <InfoCard message="You don't have reviews yet" />
               </Box>
             )}
             {reviews.map((_review, index) => (

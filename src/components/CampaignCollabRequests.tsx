@@ -7,7 +7,6 @@ import { useToggle } from '../utils/hooks'
 import CreatorProfile, { CREATOR_PROFILE_FRAGMENT } from './CreatorProfile'
 import ErrorBoundary from './ErrorBoundary'
 import CheckBox from './CheckBox'
-import NotificationCard from './NotificationCard'
 import FullHeightColumns from './FullHeightColumns'
 import SelectableCard from './SelectableCard'
 import gql from 'graphql-tag'
@@ -24,6 +23,7 @@ import {
   ReviewCollabApplication,
   ReviewCollabApplicationVariables,
 } from '../__generated__/ReviewCollabApplication'
+import InfoCard from './InfoCard'
 
 moment.locale('fr')
 
@@ -71,7 +71,7 @@ const CampaignPropositions: React.FC<Props> = ({ campaignId }) => {
     GetCampaignRequestedCollabsVariables
   >(GET_CAMPAIGN_REQUESTED_COLLABS, { variables: { campaignId } })
   const collabsApplied = campaign
-    ? campaign.collabs.filter(_collab => _collab.status === CollabStatus.APPLIED)
+    ? campaign.collabs.filter(_collab => _collab.status === CollabStatus.REQUEST)
     : []
   const collabsDenied = campaign
     ? campaign.collabs.filter(_collab => _collab.status === CollabStatus.DENIED)
@@ -127,11 +127,7 @@ const CampaignPropositions: React.FC<Props> = ({ campaignId }) => {
         <FullHeightColumns
           leftComponent={() => (
             <>
-              {collabsApplied.length === 0 && (
-                <Box mt="1rem">
-                  <NotificationCard nature="info" message="You don't have new requests" />
-                </Box>
-              )}
+              {collabsApplied.length === 0 && <InfoCard message="You don't have new requests" />}
               {collabsApplied
                 .sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1))
                 .map(showPropositionPreview)}

@@ -140,7 +140,7 @@ const Experience: React.FC<Props> = ({ match }) => {
     if (tab === ExperienceTab.SUBMIT) {
       if (
         alreadyInCollab &&
-        linkedCollab.status !== CollabStatus.APPLIED &&
+        linkedCollab.status !== CollabStatus.REQUEST &&
         linkedCollab.status !== CollabStatus.DENIED
       ) {
         return <SubmitCreatorReviews collabId={linkedCollab._id} />
