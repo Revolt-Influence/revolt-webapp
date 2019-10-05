@@ -62,7 +62,7 @@ const ConversationsListPreview: React.FC<RouteComponentProps<IMatch>> = ({ match
     }))
 
   return (
-    <ErrorBoundary message="Les messages n'ont pas pu être affichés">
+    <ErrorBoundary message="Could not show messages">
       <Box width={1}>
         {paginatedConversations.currentPage > 1 && (
           <Box mb="1rem">

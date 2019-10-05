@@ -16,11 +16,10 @@ const CampaignBriefPreview: React.FC<ICampaignBriefPreviewProps> = ({ campaign }
     <ContainerBox>
       <NotificationCard
         nature="info"
-        message="Voici le brief que les influenceurs verront. Ils rempliront un formulaire s'ils sont
-        intéressés, et vous le recevrez dans l'onglet Propositions."
+        message="This is the brief influencers will see. They will send you a collab request if they are interested."
       />
       <MainLink to={`/brand/campaigns/${campaign._id}/brief`} inverted>
-        Modifier mon brief
+        Edit my brief
       </MainLink>
       {status.name !== CampaignStatus.INCOMPLETE && (
         <ExperiencePresentation experienceId={campaign._id} />

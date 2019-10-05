@@ -70,9 +70,9 @@ const ConnectCreatorYoutube: React.FC<{}> = () => {
   const getErrorMessage = (message: string | boolean): string => {
     switch (message) {
       case errorNames.notEnoughFollowers:
-        return "Vous n'avez pas encore 1k abonnés"
+        return "You don't have 1000 subscribers"
       default:
-        return "Nous n'avons pas pu connecter votre chaîne. Veillez à bien accorder les permissions demandées"
+        return 'We could not connect your account. Make sure you accept the required permissions'
     }
   }
 
@@ -83,7 +83,7 @@ const ConnectCreatorYoutube: React.FC<{}> = () => {
         Votre chaîne va être vérifiée par notre équipe. Elle doit respecter les règles suivantes :
       </p>
       <Box mt="1.5rem">
-        <CheckList items={['Plus de 1000 abonnés', 'Au moins 10 vidéos']} />
+        <CheckList items={['At least 1k subscribers', 'At least 10 videos']} />
       </Box>
       {(error || attachCreatorYoutubeStatus.error) && (
         <ErrorCard message={getErrorMessage(attachCreatorYoutubeStatus.error.message)} />
@@ -101,9 +101,7 @@ const ConnectCreatorYoutube: React.FC<{}> = () => {
             onClick={renderProps.onClick}
             disabled={renderProps.disabled || attachCreatorYoutubeStatus.loading}
           >
-            {attachCreatorYoutubeStatus.loading
-              ? 'Connexion de la chaîne...'
-              : 'Connecter ma chaîne'}
+            {attachCreatorYoutubeStatus.loading ? 'Connecting channel...' : 'Connect my channel'}
           </MainButton>
         )}
       />

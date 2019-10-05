@@ -53,28 +53,28 @@ const ExperienceForm: React.FC<Props> = ({ brand, experienceId }) => {
   return (
     <SplitView title="Postuler" ratio={4 / 12} noBorder>
       <FormInputLabel>
-        Message de motivation pour {brand}
+        Motivation message for {brand}
         <FormTextarea
           hasLabel
           value={message}
           onChange={e => setMessage(e.target.value)}
-          placeholder="Les candidatures avec un message de motivation ont plus de chances d'être sélectionnées"
+          placeholder="Requests with a message a more likely to be accepted"
         />
       </FormInputLabel>
       <CheckBox
         handleClick={() => setAcceptsTerms(!acceptsTerms)}
-        text={`En cochant cette case, vous vous engagez contractuellement à réaliser les livrables attendus dans les délais, dès lors que ${brand} valide le partenariat.`}
+        text={`By checking this box, you are contractually committing to publishing a review of the game if ${brand} accepts the collabs`}
         isChecked={acceptsTerms}
       />
-      {applyError && <ErrorCard message="Votre candidature n'a pas pu être enregistrée" />}
+      {applyError && <ErrorCard message="Could not apply to the collab" />}
       {createdCollab && (
         <SuccessCard
-          message={`Votre candidature a bien été enregistrée. ${brand} vous contactera si vous êtes sélectionné`}
+          message={`Your collab request was saved. ${brand} will contact you if you are selected`}
         />
       )}
       <MainButtonSubmit
         type="submit"
-        value={applyLoading ? 'Envoi de votre demande...' : 'Postuler'}
+        value={applyLoading ? 'Applying..' : 'Apply'}
         disabled={!allowSubmit || applyLoading}
         onClick={handleSubmit}
       />

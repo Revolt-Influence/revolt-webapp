@@ -83,22 +83,22 @@ const CreatorCollabCard: React.FC<Props> = ({ collab }) => {
     switch (collab.status) {
       case CollabStatus.APPLIED:
         return {
-          name: 'en attente de la marque',
+          name: 'waiting for brand answer',
           color: 'grey',
         }
       case CollabStatus.ACCEPTED:
         return {
-          name: 'produit pas encore envoyé',
+          name: 'game not given yet',
           color: 'blue',
         }
       case CollabStatus.SENT:
         return {
-          name: 'en attente de publication',
+          name: 'waiting for your review',
           color: 'orange',
         }
       case CollabStatus.DONE:
         return {
-          name: 'terminé',
+          name: 'collab complete',
           color: 'green',
         }
       default:

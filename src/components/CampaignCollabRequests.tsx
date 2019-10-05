@@ -123,16 +123,13 @@ const CampaignPropositions: React.FC<Props> = ({ campaignId }) => {
 
   return (
     <ContainerBox mt="-2rem">
-      <ErrorBoundary message="Les propositions n'ont pas pu être affichées">
+      <ErrorBoundary message="Could not show collab requests">
         <FullHeightColumns
           leftComponent={() => (
             <>
               {collabsApplied.length === 0 && (
                 <Box mt="1rem">
-                  <NotificationCard
-                    nature="info"
-                    message="Vous n'avez pas de nouvelle proposition"
-                  />
+                  <NotificationCard nature="info" message="You don't have new requests" />
                 </Box>
               )}
               {collabsApplied
@@ -140,7 +137,7 @@ const CampaignPropositions: React.FC<Props> = ({ campaignId }) => {
                 .map(showPropositionPreview)}
               <Box mb="1rem" px="2rem">
                 <CheckBox
-                  text="Afficher les propositions refusées"
+                  text="Show denied requests"
                   isChecked={showRefused}
                   handleClick={toggleShowRefused}
                 />

@@ -40,6 +40,14 @@ export interface GetYoutuber_youtuber_audience {
    * ISO 3166-1-alpha-2 codes of countries and their percentage
    */
   countries: GetYoutuber_youtuber_audience_countries[];
+  /**
+   * Percentage of male subscribers, between 0 and 100
+   */
+  malePercentage: number;
+  /**
+   * Percentage of female subscribers, between 0 and 100
+   */
+  femalePercentage: number;
 }
 
 export interface GetYoutuber_youtuber {

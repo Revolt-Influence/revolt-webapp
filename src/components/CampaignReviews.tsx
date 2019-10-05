@@ -83,7 +83,7 @@ const CampaignReviews: React.FC<Props> = ({ campaignId }) => {
       value: approx(totalLikes),
     },
     {
-      name: 'Commentaires',
+      name: 'Comments',
       value: approx(totalComments),
     },
     {
@@ -98,7 +98,7 @@ const CampaignReviews: React.FC<Props> = ({ campaignId }) => {
 
   return (
     <ContainerBox>
-      <ErrorBoundary message="Les revues n'ont pas pu être affichées">
+      <ErrorBoundary message="Could not load reviews">
         <>
           <Stats pt="0.1rem" mt={['2rem', '2rem', '2rem']}>
             <Flex
@@ -125,7 +125,7 @@ const CampaignReviews: React.FC<Props> = ({ campaignId }) => {
           >
             {reviews.length === 0 && (
               <Box px="2rem">
-                <NotificationCard nature="info" message="Vous n'avez pas encore de revue" />
+                <NotificationCard nature="info" message="You don't have reviews yet" />
               </Box>
             )}
             {reviews.map((_review, index) => (

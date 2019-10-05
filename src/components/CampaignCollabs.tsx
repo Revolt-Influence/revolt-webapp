@@ -147,7 +147,7 @@ const CampaignCollabs: React.FC<ICampaignCollabsProps> = ({ campaignId }) => {
     return <Loader fullScreen />
   }
   if (error) {
-    return <ErrorCard message="Collabs could not be loaded" />
+    return <ErrorCard message="Could not load collabs" />
   }
 
   const { collabs } = campaign
@@ -157,7 +157,7 @@ const CampaignCollabs: React.FC<ICampaignCollabsProps> = ({ campaignId }) => {
 
   return (
     <Container>
-      <ErrorBoundary message="Les partenariats n'ont pas pu être affichés">
+      <ErrorBoundary message="Could not show collabs">
         <Flex
           flexDirection="row"
           flexWrap="wrap"
@@ -168,16 +168,13 @@ const CampaignCollabs: React.FC<ICampaignCollabsProps> = ({ campaignId }) => {
             <Column status={CollabStatus.ACCEPTED}>
               <Row className="header" justify="space-between" verticalAlign="center">
                 <h2>
-                  Produit pas encore envoyé <span>({acceptedCollabs.length})</span>
+                  Game not given <span>({acceptedCollabs.length})</span>
                 </h2>
               </Row>
               <p className="help">
-                Vous avez accepté la collab, mais n'avez pas encore envoyé le produit à
-                l'influenceur.
+                You have accepted the collab, but haven't given the game to the influencer
               </p>
-              {acceptedCollabs.length === 0 && (
-                <p className="noResult">Pas encore de propositions.</p>
-              )}
+              {acceptedCollabs.length === 0 && <p className="noResult">No collabs.</p>}
               {acceptedCollabs.map(_collab => (
                 <BrandCollabCard collab={_collab} key={_collab._id} />
               ))}
@@ -187,13 +184,11 @@ const CampaignCollabs: React.FC<ICampaignCollabsProps> = ({ campaignId }) => {
             <Column status={CollabStatus.SENT}>
               <Row className="header" justify="space-between" verticalAlign="center">
                 <h2>
-                  En attente de publication <span>({sentCollabs.length})</span>
+                  Review in production <span>({sentCollabs.length})</span>
                 </h2>
               </Row>
-              <p className="help">
-                Le produit est envoyé mais l'influenceur n'a pas encore publié ses revues.
-              </p>
-              {sentCollabs.length === 0 && <p className="noResult">Pas de collab en cours.</p>}
+              <p className="help">The game was given, the influencer is now making his review.</p>
+              {sentCollabs.length === 0 && <p className="noResult">No collabs.</p>}
               {sentCollabs.map(_collab => (
                 <BrandCollabCard collab={_collab} />
               ))}
@@ -203,15 +198,11 @@ const CampaignCollabs: React.FC<ICampaignCollabsProps> = ({ campaignId }) => {
             <Column status={CollabStatus.DONE}>
               <Row className="header" justify="space-between" verticalAlign="center">
                 <h2>
-                  Collabs terminées <span>({doneCollabs.length})</span>
+                  Review published <span>({doneCollabs.length})</span>
                 </h2>
               </Row>
-              <p className="help">
-                Les revues ont été publiées. Vous pouvez les voir dans l'onglet Revues.
-              </p>
-              {doneCollabs.length === 0 && (
-                <p className="noResult">Pas encore de collabs terminées.</p>
-              )}
+              <p className="help">The reviews are live. You can see them in the Reviews tab</p>
+              {doneCollabs.length === 0 && <p className="noResult">No collabs.</p>}
               {doneCollabs.map(_collab => (
                 <BrandCollabCard collab={_collab} key={_collab._id} />
               ))}

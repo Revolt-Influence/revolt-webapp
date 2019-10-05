@@ -13,7 +13,7 @@ export interface GetCampaignReviews_campaign_reviews_creator {
   /**
    * Creator display name, can be a full name or a pseudo
    */
-  name: string;
+  name: string | null;
 }
 
 export interface GetCampaignReviews_campaign_reviews {

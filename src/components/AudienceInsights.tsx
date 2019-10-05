@@ -71,12 +71,12 @@ const AudienceInsights: React.FC<Props> = ({ youtuberAudience: { ageGroups, coun
     : []
 
   return (
-    <ErrorBoundary message="Les données n'ont pas pu être affichées">
+    <ErrorBoundary message="Could not show audience insights">
       <Styles>
         {/* Age data */}
         {hasAgeData && (
           <>
-            <h3 className="subSection">Âge de l'audience</h3>
+            <h3 className="subSection">Audience age</h3>
             <Box width={1}>
               <ResponsiveContainer width="100%" minHeight="240px">
                 <BarChart data={ageDatas} margin={{ top: -20 }}>
@@ -101,7 +101,7 @@ const AudienceInsights: React.FC<Props> = ({ youtuberAudience: { ageGroups, coun
         {/* Location chart */}
         {hasCountryData && (
           <>
-            <h3 className="subSection">Pays de l'audience</h3>
+            <h3 className="subSection">Audience countries</h3>
             <Box width={1}>
               <ResponsiveContainer width="100%" minHeight="240px">
                 <BarChart data={countryDatas} margin={{ top: -20 }}>

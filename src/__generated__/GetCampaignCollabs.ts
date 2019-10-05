@@ -29,11 +29,11 @@ export interface GetCampaignCollabs_campaign_collabs_creator {
   /**
    * Creator display name, can be a full name or a pseudo
    */
-  name: string;
+  name: string | null;
   /**
    * Cloudinary URL of a picture got from user upload or a social network
    */
-  picture: string;
+  picture: string | null;
   /**
    * Youtube account linked to the creator
    */

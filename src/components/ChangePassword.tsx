@@ -87,35 +87,35 @@ const ChangePassword: React.FC<{}> = () => {
     <FormWrapper onSubmit={handleFormSubmit}>
       {/* Current password */}
       <FormInputLabel noMargin>
-        Mot de passe actuel
+        Current password
         <FormInput
           value={currentPassword}
           onChange={e => setCurrentPassword(e.target.value)}
           type="password"
-          placeholder="Votre mot de passe actuel"
+          placeholder="Current password"
           required
           hasLabel
         />
       </FormInputLabel>
       {/* New password */}
       <FormInputLabel>
-        Nouveau mot de passe
+        New password
         <FormInput
           type="password"
           value={newPassword}
           onChange={e => setNewPassword(e.target.value)}
           pattern=".{6,}"
-          placeholder="Au moins 6 caractères"
+          placeholder="At least 6 characters"
           required
           hasLabel
         />
       </FormInputLabel>
-      {error && <ErrorCard message="Votre mot de passe n'a pas pu être changé" />}
-      {succeeded && <SuccessCard message="Votre mot de passe a bien été changé" />}
+      {error && <ErrorCard message="Could not change your password" />}
+      {succeeded && <SuccessCard message="Your password was changed" />}
       {/* Submit form */}
       <MainButtonSubmit
         type="submit"
-        value={isLoading ? 'Changement du mot de passe...' : 'Changer de mot de passe'}
+        value={isLoading ? 'Changing password...' : 'Change password'}
         disabled={newPassword.length === 0}
       />
     </FormWrapper>

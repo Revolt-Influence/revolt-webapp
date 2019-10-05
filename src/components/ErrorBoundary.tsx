@@ -24,16 +24,6 @@ class ErrorBoundary extends React.Component<IErrorBoundaryProps, IErrorBoundaryS
         Object.keys(info).forEach(key => {
           scope.setExtra(key, info[key])
         })
-        // scope.setTag('isLoggedIn', isLoggedIn ? 'true' : 'false')
-        // if (isLoggedIn) {
-        //   if (user != null) {
-        //     scope.setTag('plan', user.plan)
-        //     scope.setExtra('email', user.email)
-        //   }
-        //   if (creator != null) {
-        //     scope.setExtra('email', creator.email)
-        //   }
-        // }
         Sentry.captureException(error)
       })
     }

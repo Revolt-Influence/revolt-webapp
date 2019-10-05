@@ -127,8 +127,8 @@ export const CREATOR_PROFILE_FRAGMENT = gql`
     _id
     name
     picture
-    country
     birthYear
+    language
     youtube {
       ...YoutuberProfileFragment
     }
@@ -166,11 +166,6 @@ interface Props {
   handleRefuse?: () => any
 }
 
-interface AdvertisingPerformance {
-  type: 'Mauvaise' | 'Normale' | 'Bonne'
-  color: string
-}
-
 const CreatorProfile: React.FC<Props> = ({ creatorId, collabId, handleAccept, handleRefuse }) => {
   const {
     data: { creator } = { creator: null },
@@ -196,11 +191,11 @@ const CreatorProfile: React.FC<Props> = ({ creatorId, collabId, handleAccept, ha
   const getStatusDropdownSelected = (): string => {
     switch (collab.status) {
       case CollabStatus.ACCEPTED:
-        return 'Accepté'
+        return 'Accepted'
       case CollabStatus.DENIED:
-        return 'Refusé'
+        return 'Denied'
       case CollabStatus.SENT:
-        return 'Produit envoyé'
+        return 'Product sent'
       default:
         return collab.status
     }
@@ -209,14 +204,14 @@ const CreatorProfile: React.FC<Props> = ({ creatorId, collabId, handleAccept, ha
   const statusDropdownSelected = getStatusDropdownSelected()
 
   if (creatorLoading || collabLoading) {
-    return <p>Chargement du profil...</p>
+    return <p>Loading profile...</p>
   }
   if (creatorError || collabError) {
-    return <ErrorCard message="Le profil n'a pas pu être chargé" noMargin />
+    return <ErrorCard message="Could not load profile" noMargin />
   }
 
   // Destructure creator data
-  const { birthYear, country, name, picture } = creator
+  const { birthYear, name, picture, language } = creator
   const { youtube } = creator
   const hasYoutube = youtube != null
 
@@ -226,8 +221,8 @@ const CreatorProfile: React.FC<Props> = ({ creatorId, collabId, handleAccept, ha
       className="action contact"
       type="button"
     >
-      <p>Contacter</p>
-      <img src={contactSource} alt="Email" />
+      <p>Contact</p>
+      <img src={contactSource} alt="contact" />
     </Link>
   )
 
@@ -242,13 +237,13 @@ const CreatorProfile: React.FC<Props> = ({ creatorId, collabId, handleAccept, ha
         <div>
           <h1 className="name">{name}</h1>
           <p>
-            {yearToAge(birthYear)} ans, {country}
+            {yearToAge(birthYear)} years old, speaks {language}
           </p>
         </div>
       </Flex>
       {collab && (
         <p className="message">
-          <span className="label">Message :</span> {collab.message}
+          <span className="label">Message:</span> {collab.message}
         </p>
       )}
       <Flex flexDirection="row" justifyContent="space-between" mt="2rem">
@@ -256,12 +251,12 @@ const CreatorProfile: React.FC<Props> = ({ creatorId, collabId, handleAccept, ha
           <>
             <Flex flexDirection="row" justifyContent="space-between">
               <button className="action accept" type="button" onClick={handleAccept}>
-                <p>Accepter</p>
-                <img src={checkSource} alt="Accept" />
+                <p>Accept</p>
+                <img src={checkSource} alt="accept" />
               </button>
               <button className="action refuse" type="button" onClick={handleRefuse}>
-                <p>Refuser</p>
-                <img src={closeSource} alt="Refuse" />
+                <p>Deny</p>
+                <img src={closeSource} alt="deny" />
               </button>
             </Flex>
             {collab && showContactButton()}
