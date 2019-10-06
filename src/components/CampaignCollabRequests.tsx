@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Box } from '@rebass/grid'
 import moment from 'moment'
-import 'moment/locale/fr'
 import { ContainerBox } from '../styles/grid'
 import { useToggle } from '../utils/hooks'
 import CreatorProfile from './CreatorProfile'
@@ -25,8 +24,6 @@ import {
 } from '../__generated__/ReviewCollabApplication'
 import InfoCard from './InfoCard'
 import { YOUTUBER_PROFILE_FRAGMENT } from './YoutubePreview'
-
-moment.locale('fr')
 
 const placeholderImage = 'https://dummyimage.com/40x40/d8dee3/D8DEE3.jpg'
 

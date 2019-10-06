@@ -94,9 +94,7 @@ const Conversation: React.FC<RouteComponentProps<Match>> = ({ match }) => {
 
   // Scroll to the bottom of messages
   useEffect(() => {
-    // messagesRef.current.scrollTop = messagesRef.current.scrollHeight
     if (!!messagesRef.current) {
-      // messagesRef.current.scrollIntoView(false)
       messagesRef.current.scrollTop = messagesRef.current.scrollHeight
     }
   }, [conversation])
@@ -196,7 +194,11 @@ const Conversation: React.FC<RouteComponentProps<Match>> = ({ match }) => {
     return <Loader fullScreen />
   }
   if (error || getSpecificConversationStatus.error) {
-    return <ErrorCard message="Your messages could not be loaded" />
+    return (
+      <ContainerBox>
+        <ErrorCard message="Your messages could not be loaded" />
+      </ContainerBox>
+    )
   }
 
   const detailedMessages = getDetailedMessages()

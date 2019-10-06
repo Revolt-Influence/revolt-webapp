@@ -140,6 +140,7 @@ export const GET_CREATOR = gql`
   query Creator($creatorId: String!) {
     creator(id: $creatorId) {
       ...CreatorProfileFragment
+      status
     }
   }
   ${CREATOR_PROFILE_FRAGMENT}
@@ -171,7 +172,7 @@ const CreatorProfile: React.FC<Props> = ({ creatorId, collabId, handleAccept, ha
     data: { creator } = { creator: null },
     loading: creatorLoading,
     error: creatorError,
-  } = useQuery<Creator, CreatorVariables>(GET_CREATOR)
+  } = useQuery<Creator, CreatorVariables>(GET_CREATOR, { variables: { creatorId } })
 
   const [
     fetchCollab,
@@ -200,8 +201,6 @@ const CreatorProfile: React.FC<Props> = ({ creatorId, collabId, handleAccept, ha
         return collab.status
     }
   }
-
-  const statusDropdownSelected = getStatusDropdownSelected()
 
   if (creatorLoading || collabLoading) {
     return <p>Loading profile...</p>
@@ -273,7 +272,7 @@ const CreatorProfile: React.FC<Props> = ({ creatorId, collabId, handleAccept, ha
                     ReviewCollabDecision.MARK_AS_SENT,
                   ] as ReviewCollabDecision[]
                 }
-                selection={statusDropdownSelected}
+                selection={getStatusDropdownSelected()}
                 handleChange={(newSelection: ReviewCollabDecision) => {
                   reviewCollabApplication({
                     variables: {

@@ -1,7 +1,6 @@
 import React from 'react'
 import approx from 'approximate-number'
 import moment from 'moment'
-import 'moment/locale/fr'
 import styled, { css } from 'styled-components'
 import { Flex } from '@rebass/grid'
 import { palette } from '../utils/colors'
@@ -17,8 +16,6 @@ import {
   ReviewCollabApplicationVariables,
 } from '../__generated__/ReviewCollabApplication'
 import { GetCampaignCollabs_campaign_collabs } from '../__generated__/GetCampaignCollabs'
-
-moment.locale('fr')
 
 const eyeSource = require('../images/icons/eye_white.svg')
 const checkSource = require('../images/icons/check_white.svg')

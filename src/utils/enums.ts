@@ -5,6 +5,7 @@ import {
   TrackingProvider,
   Language,
   ReviewFormat,
+  CreatorStatus,
 } from '../__generated__/globalTypes'
 
 export function showGender(gender: Gender): string {
@@ -144,5 +145,18 @@ export function showReviewFormat(format: ReviewFormat): string {
       return 'YouTube video'
     default:
       return format
+  }
+}
+
+export function showCreatorStatus(status: CreatorStatus): string {
+  switch (status) {
+    case CreatorStatus.BLOCKED:
+      return 'Blocked'
+    case CreatorStatus.UNVERIFIED:
+      return 'Unverified'
+    case CreatorStatus.VERIFIED:
+      return 'Verified'
+    default:
+      return status
   }
 }

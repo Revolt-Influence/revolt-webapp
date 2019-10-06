@@ -158,9 +158,6 @@ const DropImage: React.FC<Props> = ({
         width > 700 &&
         currentImages.length === 0 &&
         `Drop ${allowMultiple ? 'images' : 'an image'} here`}
-      {!isUploading &&
-        currentImages.length !== 0 &&
-        `Your image${allowMultiple ? 's are' : ' is'} ready`}
       {isUploading && `Uploading your image${allowMultiple ? 's' : ''}...`}
       {idealSize && <p className="details">Ideal size: {idealSize}</p>}
       <input

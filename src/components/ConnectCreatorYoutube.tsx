@@ -58,7 +58,7 @@ const ConnectCreatorYoutube: React.FC<{}> = () => {
   if (session.creator.youtube != null) {
     return (
       <>
-        <p>Vous avez bien connecté votre chaîne YouTube.</p>
+        <p>You have linked your YouTube channel</p>
         <Box mt="1rem">
           <YoutubePreview youtuberId={session.creator.youtube._id} />
         </Box>
