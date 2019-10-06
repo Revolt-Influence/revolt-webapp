@@ -16,8 +16,11 @@ import {
 } from '../__generated__/OpenCreatorPanel'
 import { CloseCreatorPanel_closeCreatorPanel } from '../__generated__/CloseCreatorPanel'
 
+const PANEL_ID = 'panel_ID'
+
 const typeDefs = gql`
   type CreatorPanel {
+    id: ID!
     isOpen: Boolean!
     creatorId: String
     collabId: String
@@ -40,12 +43,14 @@ const resolvers = {
       info
     ): OpenCreatorPanel_openCreatorPanel => ({
       __typename: 'CreatorPanel',
+      id: PANEL_ID,
       isOpen: true,
       creatorId: args.creatorId,
       collabId: args.collabId,
     }),
     closeCreatorPanel: (parent, args: {}): CloseCreatorPanel_closeCreatorPanel => ({
       __typename: 'CreatorPanel',
+      id: PANEL_ID,
       isOpen: false,
       creatorId: null,
       collabId: null,
@@ -55,6 +60,7 @@ const resolvers = {
 
 const defaultCreatorPanel: GetCreatorPanel_creatorPanel = {
   __typename: 'CreatorPanel',
+  id: PANEL_ID,
   isOpen: false,
   creatorId: null,
   collabId: null,

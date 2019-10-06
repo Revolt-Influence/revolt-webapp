@@ -216,16 +216,17 @@ const CreatorProfile: React.FC<Props> = ({ creatorId, collabId, handleAccept, ha
   const { youtube } = creator
   const hasYoutube = youtube != null
 
-  const showContactButton = () => (
-    <Link
-      to={`/brand/messages/${collab.conversation._id}`}
-      className="action contact"
-      type="button"
-    >
-      <p>Contact</p>
-      <img src={contactSource} alt="contact" />
-    </Link>
-  )
+  const showContactButton = () =>
+    collab ? (
+      <Link
+        to={`/brand/messages/${collab.conversation._id}`}
+        className="action contact"
+        type="button"
+      >
+        <p>Contact</p>
+        <img src={contactSource} alt="contact" />
+      </Link>
+    ) : null
 
   return (
     <Styles>
@@ -289,7 +290,7 @@ const CreatorProfile: React.FC<Props> = ({ creatorId, collabId, handleAccept, ha
         )}
       </Flex>
       {/* Networks preview */}
-      {youtube && <h2 className="section">Plateformes</h2>}
+      {youtube && <h2 className="section">Platforms</h2>}
       <section>{hasYoutube && <YoutubePreview youtuberId={youtube._id} />}</section>
       {/* Youtube analytics */}
       {youtube && (
@@ -297,7 +298,7 @@ const CreatorProfile: React.FC<Props> = ({ creatorId, collabId, handleAccept, ha
           {youtube.audience && (
             <>
               {/* Gender chart */}
-              <h2 className="section">Audience YouTube</h2>
+              <h2 className="section">YouTube audience</h2>
               <AudienceInsights youtuberAudience={youtube.audience} />
             </>
           )}

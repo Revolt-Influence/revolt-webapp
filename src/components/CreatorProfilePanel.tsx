@@ -5,7 +5,7 @@ import CreatorProfile from './CreatorProfile'
 import { shadow } from '../utils/styles'
 import { palette } from '../utils/colors'
 import gql from 'graphql-tag'
-import { useQuery, useMutation, useApolloClient } from '@apollo/react-hooks'
+import { useQuery, useMutation } from '@apollo/react-hooks'
 import { GetCreatorPanel } from '../__generated__/GetCreatorPanel'
 import { CloseCreatorPanel } from '../__generated__/CloseCreatorPanel'
 
@@ -52,6 +52,7 @@ const Styles = styled.div`
 export const GET_CREATOR_PANEL = gql`
   query GetCreatorPanel {
     creatorPanel @client {
+      id
       isOpen
       creatorId
       collabId
@@ -62,6 +63,7 @@ export const GET_CREATOR_PANEL = gql`
 export const OPEN_CREATOR_PANEL = gql`
   mutation OpenCreatorPanel($creatorId: String!, $collabId: String) {
     openCreatorPanel(creatorId: $creatorId, collabId: $collabId) @client {
+      id
       isOpen
       creatorId
       collabId
@@ -72,6 +74,7 @@ export const OPEN_CREATOR_PANEL = gql`
 const CLOSE_CREATOR_PANEL = gql`
   mutation CloseCreatorPanel {
     closeCreatorPanel @client {
+      id
       isOpen
       creatorId
       collabId

@@ -8,6 +8,7 @@
 
 export interface OpenCreatorPanel_openCreatorPanel {
   __typename: "CreatorPanel";
+  id: string;
   isOpen: boolean;
   creatorId: string | null;
   collabId: string | null;
