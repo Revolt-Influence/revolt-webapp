@@ -248,9 +248,9 @@ const BrandCollabCard: React.FC<Props> = ({ collab }) => {
       case CollabStatus.ACCEPTED:
         return 'accepted'
       case CollabStatus.SENT:
-        return 'key sent'
+        return 'game sent'
       case CollabStatus.DONE:
-        return 'published'
+        return 'review published'
       default:
         return status
     }

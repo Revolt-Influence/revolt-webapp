@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useCallback, useState } from 'react'
+import React, { useRef, useEffect, useCallback } from 'react'
 import { SubTitle, Title } from '../styles/Text'
 import { usePageTitle, useDeviceType, useConversationsSocket } from '../utils/hooks'
 import { Flex, Box } from '@rebass/grid'

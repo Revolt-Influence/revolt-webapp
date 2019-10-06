@@ -9,6 +9,7 @@ const closeSource = require('../images/icons/close.svg')
 
 const Styles = styled.div`
   position: fixed;
+  z-index: 100;
   top: 0;
   right: 0;
   background: ${palette.grey._50};
@@ -20,8 +21,8 @@ const Styles = styled.div`
   overflow-y: scroll;
 
   button.close {
-    z-index: 300;
     position: absolute;
+    z-index: 200;
     top: 2rem;
     right: 2rem;
     background: ${palette.grey._200};
@@ -46,7 +47,7 @@ const Styles = styled.div`
 
 interface ICreatorProfilePanelProps {
   creatorId: string
-  collabId: string
+  collabId?: string
 }
 
 const CreatorProfilePanel: React.FC<ICreatorProfilePanelProps> = ({ creatorId, collabId }) => {
