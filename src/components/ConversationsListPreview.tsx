@@ -67,7 +67,7 @@ const ConversationsListPreview: React.FC<RouteComponentProps<IMatch>> = ({ match
         {paginatedConversations.currentPage > 1 && (
           <Box mb="1rem">
             <TextButton onClick={() => setPage(page - 1)} noMargin>
-              Voir les plus récents
+              See newer messages
             </TextButton>
           </Box>
         )}
@@ -85,7 +85,7 @@ const ConversationsListPreview: React.FC<RouteComponentProps<IMatch>> = ({ match
         ))}
         {paginatedConversations.totalPages > paginatedConversations.currentPage && (
           <TextButton onClick={() => setPage(page + 1)} noMargin>
-            Voir les plus anciens
+            See older messages
           </TextButton>
         )}
       </Box>

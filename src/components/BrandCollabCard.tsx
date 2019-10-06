@@ -214,7 +214,7 @@ const BrandCollabCard: React.FC<Props> = ({ collab }) => {
                 reviewCollabApplication({
                   variables: {
                     collabId: _id,
-                    decision: ReviewCollabDecision.ACCEPT,
+                    decision: ReviewCollabDecision.MARK_AS_SENT,
                   },
                 })
               }}

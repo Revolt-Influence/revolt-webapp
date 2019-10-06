@@ -1,5 +1,5 @@
 import React from 'react'
-import { useDeviceType, usePageTitle } from '../utils/hooks'
+import { useDeviceType, usePageTitle, useConversationsSocket } from '../utils/hooks'
 import { Redirect, withRouter, RouteComponentProps } from 'react-router'
 import ConversationsListPreview from '../components/ConversationsListPreview'
 import { Title } from '../styles/Text'
@@ -25,6 +25,8 @@ const ConversationsList: React.FC<RouteComponentProps> = ({ match }) => {
     loading,
     error,
   } = useQuery<GetConversationsList, GetConversationsListVariables>(GET_CONVERSATIONS_LIST)
+
+  useConversationsSocket()
 
   if (loading) {
     return <Loader fullScreen />

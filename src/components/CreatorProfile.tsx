@@ -1,7 +1,7 @@
 import { useLazyQuery, useMutation, useQuery } from '@apollo/react-hooks'
 import { Flex } from '@rebass/grid'
 import { gql } from 'apollo-boost'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { palette } from '../utils/colors'
@@ -179,10 +179,12 @@ const CreatorProfile: React.FC<Props> = ({ creatorId, collabId, handleAccept, ha
     { data: { collab } = { collab: null }, loading: collabLoading, error: collabError },
   ] = useLazyQuery<GetCollab, GetCollabVariables>(GET_COLLAB)
 
-  if (collabId) {
-    // Only get collab data if an ID is specified
-    fetchCollab({ variables: { collabId } })
-  }
+  useEffect(() => {
+    if (collabId) {
+      // Only get collab data if an ID is specified
+      fetchCollab({ variables: { collabId } })
+    }
+  }, [collabId, fetchCollab])
 
   const [reviewCollabApplication] = useMutation<
     ReviewCollabApplication,

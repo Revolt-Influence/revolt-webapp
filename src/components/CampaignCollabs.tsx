@@ -15,6 +15,7 @@ import {
   GetCampaignCollabs,
   GetCampaignCollabsVariables,
 } from '../__generated__/GetCampaignCollabs'
+import { ContainerBox } from '../styles/grid'
 
 const Column = styled.section<{ status: CollabStatus }>`
   padding-top: 2rem;
@@ -147,7 +148,11 @@ const CampaignCollabs: React.FC<ICampaignCollabsProps> = ({ campaignId }) => {
     return <Loader fullScreen />
   }
   if (error) {
-    return <ErrorCard message="Could not load collabs" />
+    return (
+      <ContainerBox>
+        <ErrorCard message="Could not load collabs" />
+      </ContainerBox>
+    )
   }
 
   const { collabs } = campaign
