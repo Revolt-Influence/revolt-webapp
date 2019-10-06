@@ -48,7 +48,7 @@ const CollabsList: React.FC<{}> = () => {
     <ContainerBox>
       <ErrorBoundary message="Could not show collabs">
         <>
-          <Title isCentered={width < 960}>Mes collabs</Title>
+          <Title isCentered={width < 960}>My collabs</Title>
           {collabs.length === 0 ? (
             <ContainerBox mt="2rem">
               <NotificationCard message="You don't have any collabs yet" nature="info" />

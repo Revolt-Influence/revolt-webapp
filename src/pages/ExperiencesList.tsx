@@ -1,8 +1,8 @@
-import { useLazyQuery, useQuery } from '@apollo/react-hooks'
+import React from 'react'
+import { useQuery } from '@apollo/react-hooks'
 import { Box, Flex } from '@rebass/grid'
 import gql from 'graphql-tag'
 import queryString from 'query-string'
-import React, { useEffect } from 'react'
 import { RouteComponentProps, withRouter } from 'react-router-dom'
 import AmbassadorProgramCard from '../components/AmbassadorProgramCard'
 import ErrorBoundary from '../components/ErrorBoundary'
@@ -44,22 +44,13 @@ const ExperiencesList: React.FC<RouteComponentProps> = ({ location, history }) =
   const hasQueryParams = Object.entries(parsedQuery).length > 0
   const urlCurrentPage = hasQueryParams ? parseInt((parsedQuery as any).page) : 1
 
-  const [
-    getExperiencesPage,
-    { data: { campaigns: experiences } = { campaigns: null }, loading, error },
-  ] = useLazyQuery<GetExperiencesPage, GetExperiencesPageVariables>(GET_EXPERIENCES_PAGE)
+  const { data: { campaigns: experiences } = { campaigns: null }, loading, error } = useQuery<
+    GetExperiencesPage,
+    GetExperiencesPageVariables
+  >(GET_EXPERIENCES_PAGE, { variables: { page: urlCurrentPage } })
   const { data: { session } = { session: null } } = useQuery<GetSession>(GET_SESSION)
 
   const deviceType = useDeviceType()
-
-  const experiencesCurrentPage = experiences && experiences.currentPage
-
-  // Check if a fetch is necessary based on current page
-  useEffect(() => {
-    if (urlCurrentPage !== experiencesCurrentPage) {
-      getExperiencesPage({ variables: { page: urlCurrentPage } })
-    }
-  }, [urlCurrentPage, location.search, getExperiencesPage, experiencesCurrentPage])
 
   if (loading) {
     return <Loader />
@@ -76,13 +67,13 @@ const ExperiencesList: React.FC<RouteComponentProps> = ({ location, history }) =
     <ContainerBox>
       <ErrorBoundary message="Could not show experiences">
         <>
-          <Title isCentered={deviceType !== 'desktop'}>Expériences</Title>
+          <Title isCentered={deviceType !== 'desktop'}>Experiences</Title>
           <>
             {session.creator.status === CreatorStatus.UNVERIFIED && (
               <Box mb="2rem" px={['2rem', 0, 0]}>
                 <NotificationCard
                   nature="info"
-                  message="Votre profil n'a pas encore été validé par notre équipe. Vous ne pouvez donc pas encore postuler aux expériences"
+                  message="Your profile hasn't been veriried by our team yet. You can't apply to experiences for now"
                 />
               </Box>
             )}
@@ -90,7 +81,7 @@ const ExperiencesList: React.FC<RouteComponentProps> = ({ location, history }) =
               <Box mb="2rem" px={['2rem', 0, 0]}>
                 <NotificationCard
                   nature="info"
-                  message="Votre profil n'a pas été validé par notre équipe. Vous ne pouvez donc pas postuler aux expériences"
+                  message="Your profile hasn't been veriried by our team. You can't apply to experiences"
                 />
               </Box>
             )}
@@ -113,10 +104,8 @@ const ExperiencesList: React.FC<RouteComponentProps> = ({ location, history }) =
               ))}
               {experiences.items.length === 0 && (
                 <ContainerBox mt="3rem">
-                  <NotificationCard message="Pas de nouvelle expérience disponible" nature="info" />
-                  <Box mt="1rem">
-                    On dirait que vous avez postulé à toutes les expériences. Revenez plus tard !
-                  </Box>
+                  <NotificationCard message="No new game available" nature="info" />
+                  <Box mt="1rem">Looks like you've applied to all games. Come back later!</Box>
                 </ContainerBox>
               )}
             </Flex>
