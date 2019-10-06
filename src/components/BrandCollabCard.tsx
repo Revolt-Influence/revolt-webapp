@@ -16,7 +16,7 @@ import {
   ReviewCollabApplicationVariables,
 } from '../__generated__/ReviewCollabApplication'
 import { GetCampaignCollabs_campaign_collabs } from '../__generated__/GetCampaignCollabs'
-import { OPEN_CREATOR_PANEL } from './CreatorProfilePanel'
+import { OPEN_CREATOR_PANEL, GET_CREATOR_PANEL } from './CreatorProfilePanel'
 import { OpenCreatorPanel, OpenCreatorPanelVariables } from '../__generated__/OpenCreatorPanel'
 
 const eyeSource = require('../images/icons/eye_white.svg')
@@ -171,7 +171,8 @@ const BrandCollabCard: React.FC<Props> = ({ collab }) => {
 
   // Prepare open creator profile panel
   const [openCreatorPanel] = useMutation<OpenCreatorPanel, OpenCreatorPanelVariables>(
-    OPEN_CREATOR_PANEL
+    OPEN_CREATOR_PANEL,
+    { refetchQueries: [{ query: GET_CREATOR_PANEL }] }
   )
 
   const handleShowProfile = () => {

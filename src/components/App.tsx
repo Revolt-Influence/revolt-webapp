@@ -47,8 +47,8 @@ const resolvers = {
     closeCreatorPanel: (parent, args: {}): CloseCreatorPanel_closeCreatorPanel => ({
       __typename: 'CreatorPanel',
       isOpen: false,
-      creatorId: undefined,
-      collabId: undefined,
+      creatorId: null,
+      collabId: null,
     }),
   },
 }
@@ -56,15 +56,17 @@ const resolvers = {
 const defaultCreatorPanel: GetCreatorPanel_creatorPanel = {
   __typename: 'CreatorPanel',
   isOpen: false,
-  creatorId: undefined,
-  collabId: undefined,
+  creatorId: null,
+  collabId: null,
 }
 
-// const cache = new InMemoryCache()
+const cache = new InMemoryCache()
 
-// cache.writeData({ data: {
-//   creatorPanel
-// } })
+cache.writeData({
+  data: {
+    creatorPanel: defaultCreatorPanel,
+  },
+})
 
 // Create Apollo client
 const client = new ApolloClient({
@@ -72,14 +74,7 @@ const client = new ApolloClient({
   credentials: 'include',
   resolvers,
   typeDefs,
-  clientState: { defaults: { creatorPanel: defaultCreatorPanel } },
-  // cache,
-
-  // clientState: {
-  //   resolvers,
-  //   typeDefs,
-  //   defaults: { creatorPanel: defaultCreatorPanel },
-  // },
+  cache,
 })
 
 const App: React.FC = () => {

@@ -5,7 +5,7 @@ import CreatorProfile from './CreatorProfile'
 import { shadow } from '../utils/styles'
 import { palette } from '../utils/colors'
 import gql from 'graphql-tag'
-import { useQuery, useMutation } from '@apollo/react-hooks'
+import { useQuery, useMutation, useApolloClient } from '@apollo/react-hooks'
 import { GetCreatorPanel } from '../__generated__/GetCreatorPanel'
 import { CloseCreatorPanel } from '../__generated__/CloseCreatorPanel'
 
@@ -49,7 +49,7 @@ const Styles = styled.div`
   }
 `
 
-const GET_CREATOR_PANEL = gql`
+export const GET_CREATOR_PANEL = gql`
   query GetCreatorPanel {
     creatorPanel @client {
       isOpen
@@ -84,17 +84,21 @@ const CreatorProfilePanel: React.FC<{}> = () => {
   const { data } = useQuery<GetCreatorPanel>(GET_CREATOR_PANEL)
   // Prepare close panel
   const [closePanel] = useMutation<CloseCreatorPanel>(CLOSE_CREATOR_PANEL)
+  // const client = useApolloClient()
 
   // Handle close on click outside
   const selfRef = useRef()
   const handleClosePanel = () => {
     closePanel()
+    // client.writeData({
+    //   data: { profilePanel: { isOpen: false, creatorId: undefined, collabId: undefined } },
+    // })
   }
   useOnClickOutside(selfRef, handleClosePanel)
   console.log(data)
 
   // Don't show panel if not open
-  if (!data.creatorPanel.isOpen) return null
+  if (!data || !data.creatorPanel.isOpen) return null
 
   // Otherwise show panel
   return (
@@ -102,7 +106,10 @@ const CreatorProfilePanel: React.FC<{}> = () => {
       <button className="close" onClick={() => handleClosePanel()} type="button">
         <img src={closeSource} alt="close" />
       </button>
-      <CreatorProfile creatorId={creatorPanel.creatorId} collabId={creatorPanel.collabId} />
+      <CreatorProfile
+        creatorId={data.creatorPanel.creatorId}
+        collabId={data.creatorPanel.collabId}
+      />
     </Styles>
   )
 }

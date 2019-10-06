@@ -196,7 +196,7 @@ const CampaignCollabs: React.FC<ICampaignCollabsProps> = ({ campaignId }) => {
               <p className="help">The game was given, the influencer is now making his review.</p>
               {sentCollabs.length === 0 && <p className="noResult">No collabs.</p>}
               {sentCollabs.map(_collab => (
-                <BrandCollabCard collab={_collab} />
+                <BrandCollabCard collab={_collab} key={_collab._id} />
               ))}
             </Column>
           </Box>
