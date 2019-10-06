@@ -4,7 +4,7 @@ import moment from 'moment'
 import 'moment/locale/fr'
 import { ContainerBox } from '../styles/grid'
 import { useToggle } from '../utils/hooks'
-import CreatorProfile, { CREATOR_PROFILE_FRAGMENT } from './CreatorProfile'
+import CreatorProfile from './CreatorProfile'
 import ErrorBoundary from './ErrorBoundary'
 import CheckBox from './CheckBox'
 import FullHeightColumns from './FullHeightColumns'
@@ -24,6 +24,7 @@ import {
   ReviewCollabApplicationVariables,
 } from '../__generated__/ReviewCollabApplication'
 import InfoCard from './InfoCard'
+import { YOUTUBER_PROFILE_FRAGMENT } from './YoutubePreview'
 
 moment.locale('fr')
 
@@ -42,12 +43,20 @@ const GET_CAMPAIGN_REQUESTED_COLLABS = gql`
           _id
         }
         creator {
-          ...CreatorProfileFragment
+          # Using CreatorProfileFragment made webpack crash (probably a circular dep or something)
+          _id
+          name
+          picture
+          birthYear
+          language
+          youtube {
+            ...YoutuberProfileFragment
+          }
         }
       }
     }
   }
-  ${CREATOR_PROFILE_FRAGMENT}
+  ${YOUTUBER_PROFILE_FRAGMENT}
 `
 
 export const REVIEW_COLLAB_APPLICATION = gql`

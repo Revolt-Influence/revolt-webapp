@@ -52,12 +52,14 @@ const ExperiencesList: React.FC<RouteComponentProps> = ({ location, history }) =
 
   const deviceType = useDeviceType()
 
+  const experiencesCurrentPage = experiences && experiences.currentPage
+
   // Check if a fetch is necessary based on current page
   useEffect(() => {
-    if (urlCurrentPage !== experiences.currentPage) {
+    if (urlCurrentPage !== experiencesCurrentPage) {
       getExperiencesPage({ variables: { page: urlCurrentPage } })
     }
-  }, [urlCurrentPage, location.search, getExperiencesPage, experiences.currentPage])
+  }, [urlCurrentPage, location.search, getExperiencesPage, experiencesCurrentPage])
 
   if (loading) {
     return <Loader />
