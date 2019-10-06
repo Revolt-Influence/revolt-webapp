@@ -9,6 +9,8 @@ import { Status } from '../styles/Status'
 import ImageWrapper from './ImageWrapper'
 import { GetCreatorCollabs_collabs } from '../__generated__/GetCreatorCollabs'
 import { CollabStatus } from '../__generated__/globalTypes'
+import gql from 'graphql-tag'
+import { EXPERIENCE_PRESENTATION_FRAGMENT } from './ExperiencePresentation'
 
 const Style = styled(Box)`
   h3.title {
@@ -73,6 +75,18 @@ const Style = styled(Box)`
 //     }
 //   }}
 // `
+
+export const CREATOR_COLLAB_FRAGMENT = gql`
+  fragment CreatorCollabFragment on Collab {
+    _id
+    status
+    updatedAt
+    campaign {
+      ...ExperiencePresentationFragment
+    }
+  }
+  ${EXPERIENCE_PRESENTATION_FRAGMENT}
+`
 
 interface Props {
   collab: GetCreatorCollabs_collabs

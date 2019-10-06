@@ -51,7 +51,7 @@ const ExperienceForm: React.FC<Props> = ({ brand, experienceId }) => {
   }
 
   return (
-    <SplitView title="Postuler" ratio={4 / 12} noBorder>
+    <SplitView title="Apply" ratio={4 / 12} noBorder>
       <FormInputLabel>
         Motivation message for {brand}
         <FormTextarea

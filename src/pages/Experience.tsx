@@ -108,7 +108,7 @@ const Experience: React.FC<Props> = ({ match }) => {
           noMargin
           disabled={session.creator.status !== CreatorStatus.VERIFIED}
         >
-          Postuler à l'expérience
+          Apply
         </MainButton>
       )
     }
@@ -186,7 +186,7 @@ const Experience: React.FC<Props> = ({ match }) => {
         {tab !== ExperienceTab.PRESENTATION && (
           <Flex justifyContent="center" mt="2rem">
             <TextButton onClick={() => changeTab(ExperienceTab.PRESENTATION)}>
-              Retour à l'expérience
+              Back to experience presentation
             </TextButton>
           </Flex>
         )}

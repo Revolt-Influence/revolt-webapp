@@ -151,7 +151,10 @@ const ExperiencePresentation: React.FC<Props> = ({ experienceId }) => {
         </Box>
         {/* Right column on desktop */}
         <Box width={[1, 1, 6 / 12]}>
-          <SplitView title="The studio" ratio={3.5 / 12} stacked noBorder={!isMobile}>
+          <SplitView title="The campaign" ratio={3.5 / 12} stacked noBorder={!isMobile}>
+            <p style={{ whiteSpace: 'pre-line' }}>{experience.description}</p>
+          </SplitView>
+          <SplitView title="The studio" ratio={3.5 / 12} stacked>
             <Flex justifyContent="space-between" alignItems="flex-start" flexWrap="wrap">
               <Box width={2 / 12} pr="1rem">
                 <img
@@ -174,11 +177,6 @@ const ExperiencePresentation: React.FC<Props> = ({ experienceId }) => {
               </Box>
             </Flex>
           </SplitView>
-          <Box>
-            <SplitView title="The campaign" ratio={3.5 / 12} stacked>
-              <p style={{ whiteSpace: 'pre-line' }}>{experience.description}</p>
-            </SplitView>
-          </Box>
           <Box>
             <SplitView title="Rules" ratio={3.5 / 12} stacked>
               <CheckList items={rules} />
