@@ -16,6 +16,8 @@ import {
   ReviewCollabApplicationVariables,
 } from '../__generated__/ReviewCollabApplication'
 import { GetCampaignCollabs_campaign_collabs } from '../__generated__/GetCampaignCollabs'
+import { OPEN_CREATOR_PANEL } from './CreatorProfilePanel'
+import { OpenCreatorPanel, OpenCreatorPanelVariables } from '../__generated__/OpenCreatorPanel'
 
 const eyeSource = require('../images/icons/eye_white.svg')
 const checkSource = require('../images/icons/check_white.svg')
@@ -160,22 +162,20 @@ interface Props {
 
 const BrandCollabCard: React.FC<Props> = ({ collab }) => {
   const { conversation, status, creator, updatedAt, _id } = collab
+
+  // Prepare review collab
   const [reviewCollabApplication, { loading }] = useMutation<
     ReviewCollabApplication,
     ReviewCollabApplicationVariables
   >(REVIEW_COLLAB_APPLICATION)
 
+  // Prepare open creator profile panel
+  const [openCreatorPanel] = useMutation<OpenCreatorPanel, OpenCreatorPanelVariables>(
+    OPEN_CREATOR_PANEL
+  )
+
   const handleShowProfile = () => {
-    window.alert('TODO')
-    // dispatch(
-    //   showProfilePanel({
-    //     creatorId: (creator as ICreator)._id,
-    //     message: proposition.message,
-    //     formats: proposition.formats,
-    //     collabId: collab._id,
-    //     conversationId: collab.conversation,
-    //   })
-    // )
+    openCreatorPanel({ variables: { creatorId: creator._id, collabId: collab._id } })
   }
 
   const viewProfileButton = () => (

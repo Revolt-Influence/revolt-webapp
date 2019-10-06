@@ -2,7 +2,7 @@ import { createGlobalStyle } from 'styled-components'
 import reset from 'styled-reset'
 import { palette } from '../utils/colors'
 import { setFont, setOutline } from '../utils/styles'
-import { Theme } from './CustomThemeProvider'
+import { Theme } from '../components/CustomThemeProvider'
 
 export const GlobalStyle = createGlobalStyle`
   ${reset}

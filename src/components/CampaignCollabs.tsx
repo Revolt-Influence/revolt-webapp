@@ -120,6 +120,7 @@ const GET_CAMPAIGN_COLLABS = gql`
         message
         updatedAt
         creator {
+          _id
           name
           picture
           youtube {

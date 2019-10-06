@@ -27,6 +27,10 @@ export interface GetCampaignCollabs_campaign_collabs_creator_youtube {
 export interface GetCampaignCollabs_campaign_collabs_creator {
   __typename: "Creator";
   /**
+   * Mongoose generated ID
+   */
+  _id: string;
+  /**
    * Creator display name, can be a full name or a pseudo
    */
   name: string | null;

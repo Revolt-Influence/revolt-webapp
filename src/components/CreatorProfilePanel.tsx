@@ -4,6 +4,10 @@ import { useOnClickOutside } from '../utils/hooks'
 import CreatorProfile from './CreatorProfile'
 import { shadow } from '../utils/styles'
 import { palette } from '../utils/colors'
+import gql from 'graphql-tag'
+import { useQuery, useMutation } from '@apollo/react-hooks'
+import { GetCreatorPanel } from '../__generated__/GetCreatorPanel'
+import { CloseCreatorPanel } from '../__generated__/CloseCreatorPanel'
 
 const closeSource = require('../images/icons/close.svg')
 
@@ -45,23 +49,60 @@ const Styles = styled.div`
   }
 `
 
-interface ICreatorProfilePanelProps {
-  creatorId: string
-  collabId?: string
-}
-
-const CreatorProfilePanel: React.FC<ICreatorProfilePanelProps> = ({ creatorId, collabId }) => {
-  const selfRef = useRef()
-  const hidePanel = () => {
-    console.log('hide creator')
+const GET_CREATOR_PANEL = gql`
+  query GetCreatorPanel {
+    creatorPanel @client {
+      isOpen
+      creatorId
+      collabId
+    }
   }
-  useOnClickOutside(selfRef, hidePanel)
+`
+
+export const OPEN_CREATOR_PANEL = gql`
+  mutation OpenCreatorPanel($creatorId: String!, $collabId: String) {
+    openCreatorPanel(creatorId: $creatorId, collabId: $collabId) @client {
+      isOpen
+      creatorId
+      collabId
+    }
+  }
+`
+
+const CLOSE_CREATOR_PANEL = gql`
+  mutation CloseCreatorPanel {
+    closeCreatorPanel @client {
+      isOpen
+      creatorId
+      collabId
+    }
+  }
+`
+
+const CreatorProfilePanel: React.FC<{}> = () => {
+  // Get panel data
+  const { data } = useQuery<GetCreatorPanel>(GET_CREATOR_PANEL)
+  // Prepare close panel
+  const [closePanel] = useMutation<CloseCreatorPanel>(CLOSE_CREATOR_PANEL)
+
+  // Handle close on click outside
+  const selfRef = useRef()
+  const handleClosePanel = () => {
+    closePanel()
+  }
+  useOnClickOutside(selfRef, handleClosePanel)
+  console.log(data)
+
+  // Don't show panel if not open
+  if (!data.creatorPanel.isOpen) return null
+
+  // Otherwise show panel
   return (
     <Styles ref={selfRef}>
-      <button className="close" onClick={() => hidePanel()} type="button">
+      <button className="close" onClick={() => handleClosePanel()} type="button">
         <img src={closeSource} alt="close" />
       </button>
-      <CreatorProfile creatorId={creatorId} collabId={collabId} />
+      <CreatorProfile creatorId={creatorPanel.creatorId} collabId={creatorPanel.collabId} />
     </Styles>
   )
 }

@@ -1,24 +1,85 @@
 import React, { useEffect } from 'react'
 import { ApolloProvider } from '@apollo/react-hooks'
 import * as Sentry from '@sentry/browser' // must be imported with *
-import ApolloClient from 'apollo-boost'
+import ApolloClient, { gql, InMemoryCache } from 'apollo-boost'
 import TagManager from 'react-gtm-module'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 import { LastLocationProvider } from 'react-router-last-location'
 import RouterSwitch from './RouterSwitch'
-import PopupsPortal from './PopupsPortal'
 import CustomThemeProvider from './CustomThemeProvider'
 import { GlobalStyle } from '../styles/Global'
 import CreatorProfilePanel from './CreatorProfilePanel'
+import { GetCreatorPanel_creatorPanel } from '../__generated__/GetCreatorPanel'
+import {
+  OpenCreatorPanelVariables,
+  OpenCreatorPanel_openCreatorPanel,
+} from '../__generated__/OpenCreatorPanel'
+import { CloseCreatorPanel_closeCreatorPanel } from '../__generated__/CloseCreatorPanel'
+
+const typeDefs = gql`
+  type CreatorPanel {
+    isOpen: Boolean!
+    creatorId: String
+    collabId: String
+  }
+  extend type Query {
+    creatorPanel: CreatorPanel
+  }
+  extend type Mutation {
+    openCreatorPanel(creatorId: String!, collabId: String): CreatorPanel
+    closeCreatorPanel: CreatorPanel
+  }
+`
+
+const resolvers = {
+  Mutation: {
+    openCreatorPanel: (
+      parent,
+      args: OpenCreatorPanelVariables,
+      context,
+      info
+    ): OpenCreatorPanel_openCreatorPanel => ({
+      __typename: 'CreatorPanel',
+      isOpen: true,
+      creatorId: args.creatorId,
+      collabId: args.collabId,
+    }),
+    closeCreatorPanel: (parent, args: {}): CloseCreatorPanel_closeCreatorPanel => ({
+      __typename: 'CreatorPanel',
+      isOpen: false,
+      creatorId: undefined,
+      collabId: undefined,
+    }),
+  },
+}
+
+const defaultCreatorPanel: GetCreatorPanel_creatorPanel = {
+  __typename: 'CreatorPanel',
+  isOpen: false,
+  creatorId: undefined,
+  collabId: undefined,
+}
+
+// const cache = new InMemoryCache()
+
+// cache.writeData({ data: {
+//   creatorPanel
+// } })
 
 // Create Apollo client
 const client = new ApolloClient({
   uri: `${process.env.REACT_APP_BACKEND_URL}/graphql`,
   credentials: 'include',
-  clientState: {
-    resolvers: {},
-    defaults: {},
-  },
+  resolvers,
+  typeDefs,
+  clientState: { defaults: { creatorPanel: defaultCreatorPanel } },
+  // cache,
+
+  // clientState: {
+  //   resolvers,
+  //   typeDefs,
+  //   defaults: { creatorPanel: defaultCreatorPanel },
+  // },
 })
 
 const App: React.FC = () => {
@@ -42,8 +103,7 @@ const App: React.FC = () => {
             <GlobalStyle />
             <LastLocationProvider watchOnlyPathname>
               {/* Show items that don't depend on the router */}
-              <PopupsPortal />
-              {/* <CreatorProfilePanel /> */}
+              <CreatorProfilePanel />
               {/* Show the right page */}
               <Route component={RouterSwitch} />
             </LastLocationProvider>

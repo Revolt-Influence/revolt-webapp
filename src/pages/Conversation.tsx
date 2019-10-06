@@ -126,7 +126,6 @@ const Conversation: React.FC<RouteComponentProps<Match>> = ({ match }) => {
     }
   }, [conversation])
 
-  // TODO
   useConversationsSocket()
 
   // Get session data to know what info to show
