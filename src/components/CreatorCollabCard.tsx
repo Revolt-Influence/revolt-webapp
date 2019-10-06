@@ -7,8 +7,10 @@ import { palette, paletteColorName } from '../utils/colors'
 import { shadow, setFont } from '../utils/styles'
 import { Status } from '../styles/Status'
 import ImageWrapper from './ImageWrapper'
-import { GetCreatorCollabs_collabs } from '../__generated__/GetCreatorCollabs'
 import { CollabStatus } from '../__generated__/globalTypes'
+import gql from 'graphql-tag'
+import { EXPERIENCE_PRESENTATION_FRAGMENT } from './ExperiencePresentation'
+import { CreatorCollabFragment } from '../__generated__/CreatorCollabFragment'
 
 const Style = styled(Box)`
   h3.title {
@@ -50,32 +52,20 @@ const Style = styled(Box)`
   }
 `
 
-// const Deadline = styled.p<{ color: paletteColorName }>`
-//   ${setFont(600, 'normal')}
-//   ${props => {
-//     switch (props.color) {
-//       case 'red':
-//         return css`
-//           color: ${palette.red._700};
-//         `
-//       case 'green':
-//         return css`
-//           color: ${palette.green._700};
-//         `
-//       case 'orange':
-//         return css`
-//           color: ${palette.orange._700};
-//         `
-//       default:
-//         return css`
-//           color: ${palette.grey._700};
-//         `
-//     }
-//   }}
-// `
+export const CREATOR_COLLAB_FRAGMENT = gql`
+  fragment CreatorCollabFragment on Collab {
+    _id
+    status
+    updatedAt
+    campaign {
+      ...ExperiencePresentationFragment
+    }
+  }
+  ${EXPERIENCE_PRESENTATION_FRAGMENT}
+`
 
 interface Props {
-  collab: GetCreatorCollabs_collabs
+  collab: CreatorCollabFragment
 }
 
 const CreatorCollabCard: React.FC<Props> = ({ collab }) => {
@@ -83,7 +73,7 @@ const CreatorCollabCard: React.FC<Props> = ({ collab }) => {
     switch (collab.status) {
       case CollabStatus.REQUEST:
         return {
-          name: 'waiting for brand answer',
+          name: 'waiting for an answer',
           color: 'grey',
         }
       case CollabStatus.ACCEPTED:

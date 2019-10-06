@@ -2,36 +2,30 @@ import React from 'react'
 import { Flex, Box } from '@rebass/grid'
 import { ContainerBox } from '../styles/grid'
 import ErrorBoundary from '../components/ErrorBoundary'
-import CreatorCollabCard from '../components/CreatorCollabCard'
+import CreatorCollabCard, { CREATOR_COLLAB_FRAGMENT } from '../components/CreatorCollabCard'
 import { usePageTitle, useWindowSize } from '../utils/hooks'
 import { BlueLink, Title } from '../styles/Text'
 import NotificationCard from '../components/NotificationCard'
 import gql from 'graphql-tag'
-import { EXPERIENCE_PRESENTATION_FRAGMENT } from '../components/ExperiencePresentation'
 import { useQuery } from '@apollo/react-hooks'
 import { GetCreatorCollabs } from '../__generated__/GetCreatorCollabs'
 import Loader from '../components/Loader'
 import ErrorCard from '../components/ErrorCard'
 
-const GET_CREATOR_COLLABS = gql`
+export const GET_CREATOR_COLLABS = gql`
   query GetCreatorCollabs {
     collabs {
-      _id
-      status
-      updatedAt
-      campaign {
-        ...ExperiencePresentationFragment
-      }
+      ...CreatorCollabFragment
     }
   }
-  ${EXPERIENCE_PRESENTATION_FRAGMENT}
+  ${CREATOR_COLLAB_FRAGMENT}
 `
 
 const CollabsList: React.FC<{}> = () => {
   usePageTitle('Your collabs')
 
   // Get all creator collabs ids
-  const { data: { collabs } = { collabs: null }, error, loading } = useQuery<GetCreatorCollabs, {}>(
+  const { data: { collabs } = { collabs: null }, error, loading } = useQuery<GetCreatorCollabs>(
     GET_CREATOR_COLLABS
   )
 
@@ -48,7 +42,7 @@ const CollabsList: React.FC<{}> = () => {
     <ContainerBox>
       <ErrorBoundary message="Could not show collabs">
         <>
-          <Title isCentered={width < 960}>Mes collabs</Title>
+          <Title isCentered={width < 960}>My collabs</Title>
           {collabs.length === 0 ? (
             <ContainerBox mt="2rem">
               <NotificationCard message="You don't have any collabs yet" nature="info" />

@@ -110,7 +110,7 @@ const CampaignFormProduct: React.FC<Prop> = ({ product, campaignId }) => {
               Game promo images
               <DropImage
                 handleDrop={newPhotos => handleUpdateProduct({ pictures: newPhotos })}
-                preset="campaign_gift"
+                preset="campaign_product"
                 allowMultiple
                 currentImages={productInput.pictures}
                 idealSize="800x600 pixels (4:3)"

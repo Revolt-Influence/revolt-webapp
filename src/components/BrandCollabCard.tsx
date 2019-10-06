@@ -1,7 +1,6 @@
 import React from 'react'
 import approx from 'approximate-number'
 import moment from 'moment'
-import 'moment/locale/fr'
 import styled, { css } from 'styled-components'
 import { Flex } from '@rebass/grid'
 import { palette } from '../utils/colors'
@@ -17,8 +16,8 @@ import {
   ReviewCollabApplicationVariables,
 } from '../__generated__/ReviewCollabApplication'
 import { GetCampaignCollabs_campaign_collabs } from '../__generated__/GetCampaignCollabs'
-
-moment.locale('fr')
+import { OPEN_CREATOR_PANEL } from './CreatorProfilePanel'
+import { OpenCreatorPanel, OpenCreatorPanelVariables } from '../__generated__/OpenCreatorPanel'
 
 const eyeSource = require('../images/icons/eye_white.svg')
 const checkSource = require('../images/icons/check_white.svg')
@@ -163,22 +162,20 @@ interface Props {
 
 const BrandCollabCard: React.FC<Props> = ({ collab }) => {
   const { conversation, status, creator, updatedAt, _id } = collab
+
+  // Prepare review collab
   const [reviewCollabApplication, { loading }] = useMutation<
     ReviewCollabApplication,
     ReviewCollabApplicationVariables
   >(REVIEW_COLLAB_APPLICATION)
 
+  // Prepare open creator profile panel
+  const [openCreatorPanel] = useMutation<OpenCreatorPanel, OpenCreatorPanelVariables>(
+    OPEN_CREATOR_PANEL
+  )
+
   const handleShowProfile = () => {
-    window.alert('TODO')
-    // dispatch(
-    //   showProfilePanel({
-    //     creatorId: (creator as ICreator)._id,
-    //     message: proposition.message,
-    //     formats: proposition.formats,
-    //     collabId: collab._id,
-    //     conversationId: collab.conversation,
-    //   })
-    // )
+    openCreatorPanel({ variables: { creatorId: creator._id, collabId: collab._id } })
   }
 
   const viewProfileButton = () => (
@@ -217,7 +214,7 @@ const BrandCollabCard: React.FC<Props> = ({ collab }) => {
                 reviewCollabApplication({
                   variables: {
                     collabId: _id,
-                    decision: ReviewCollabDecision.ACCEPT,
+                    decision: ReviewCollabDecision.MARK_AS_SENT,
                   },
                 })
               }}
@@ -251,9 +248,9 @@ const BrandCollabCard: React.FC<Props> = ({ collab }) => {
       case CollabStatus.ACCEPTED:
         return 'accepted'
       case CollabStatus.SENT:
-        return 'key sent'
+        return 'game sent'
       case CollabStatus.DONE:
-        return 'published'
+        return 'review published'
       default:
         return status
     }

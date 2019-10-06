@@ -1,15 +1,12 @@
 import { Box, Flex } from '@rebass/grid'
 import approx from 'approximate-number'
 import moment from 'moment'
-import 'moment/locale/fr'
 import React from 'react'
 import styled from 'styled-components'
 import { palette } from '../utils/colors'
 import { setFont, shadow } from '../utils/styles'
 import { GetCampaignReviews_campaign_reviews } from '../__generated__/GetCampaignReviews'
 import { ReviewFormat } from '../__generated__/globalTypes'
-
-moment.locale('fr')
 
 const likeIcon = require('../images/icons/like.svg')
 const commentIcon = require('../images/icons/comment.svg')

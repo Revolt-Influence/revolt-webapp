@@ -58,6 +58,7 @@ const Session: React.FC<{}> = () => {
     data: { session } = { session: null },
     loading: sessionLoading,
     error: sessionError,
+    client,
   } = useQuery<GetSession>(GET_SESSION)
   const getEmail = () => {
     switch (session.sessionType) {
@@ -73,7 +74,12 @@ const Session: React.FC<{}> = () => {
 
   // Prepare logout
   const [logout, logoutStatus] = useMutation<Logout>(LOGOUT, {
-    onCompleted: () => history.push('/'),
+    onCompleted: () => {
+      // Reset the cache
+      client.resetStore()
+      // Redirect home
+      history.push('/')
+    },
     refetchQueries: [{ query: GET_SESSION }],
     awaitRefetchQueries: true,
   })

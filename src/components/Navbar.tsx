@@ -252,7 +252,7 @@ const Navbar: React.FC<{}> = () => {
   )
 
   if (loading) {
-    return <Loader />
+    return <Loader fullScreen />
   }
   if (error) {
     return <ErrorCard />

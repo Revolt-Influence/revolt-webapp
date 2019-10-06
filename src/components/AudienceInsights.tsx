@@ -1,6 +1,6 @@
 import React from 'react'
-import { BarChart, Bar, XAxis, Tooltip, ResponsiveContainer } from 'recharts'
-import { Box } from '@rebass/grid'
+import { BarChart, Bar, XAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts'
+import { Box, Flex } from '@rebass/grid'
 import { getName } from 'country-list'
 import styled from 'styled-components'
 import { palette } from '../utils/colors'
@@ -10,7 +10,9 @@ import {
   GetYoutuber_youtuber_audience,
   GetYoutuber_youtuber_audience_countries,
 } from '../__generated__/GetYoutuber'
+import { Dot } from '../styles/Dot'
 
+const ANIMATION_DURATION = 1000
 const MAX_LOCATIONS = 6
 
 const Styles = styled.div`
@@ -47,8 +49,10 @@ interface Props {
   youtuberAudience: GetYoutuber_youtuber_audience
 }
 
-const AudienceInsights: React.FC<Props> = ({ youtuberAudience: { ageGroups, countries } }) => {
-  // Prepare Recharts data
+const AudienceInsights: React.FC<Props> = ({
+  youtuberAudience: { ageGroups, countries, malePercentage, femalePercentage },
+}) => {
+  // Prepare age data
   const hasAgeData = ageGroups
   const ageDatas = hasAgeData
     ? ageGroups
@@ -58,7 +62,8 @@ const AudienceInsights: React.FC<Props> = ({ youtuberAudience: { ageGroups, coun
         }))
         .sort(sortByPercentage)
     : []
-  // Limit to 6 countries
+
+  // Prepare country data
   const hasCountryData = countries != null
   const countryDatas = hasCountryData
     ? countries
@@ -67,12 +72,53 @@ const AudienceInsights: React.FC<Props> = ({ youtuberAudience: { ageGroups, coun
           name: getName(_isoCountry.name) || _isoCountry.name,
         }))
         .sort(sortByPercentage)
+        // Limit to 6 countries
         .filter((_country, index) => index < MAX_LOCATIONS)
     : []
+
+  // Prepare gender data
+  const scaleGenderPercentage = 100 / (femalePercentage + malePercentage)
+  const formattedMalePercentage = malePercentage * scaleGenderPercentage
+  const formattedFemalePercentage = femalePercentage * scaleGenderPercentage
+  const genderDatas = [
+    { name: 'hommes', value: formattedMalePercentage, color: palette.blue._400 },
+    { name: 'femmes', value: formattedFemalePercentage, color: palette.pink._400 },
+  ]
 
   return (
     <ErrorBoundary message="Could not show audience insights">
       <Styles>
+        {/* Gender chart */}
+        <h3 className="subSection">Audience gender</h3>
+        <Flex flexDirection="row" alignItems="center">
+          <PieChart
+            width={180}
+            height={180}
+            margin={{ top: -20, right: -20, bottom: -20, left: -20 }}
+          >
+            <Pie
+              data={genderDatas}
+              dataKey="value"
+              nameKey="gender"
+              animationDuration={ANIMATION_DURATION}
+            >
+              {genderDatas.map(_genderData => (
+                <Cell fill={_genderData.color} key={_genderData.name} />
+              ))}
+            </Pie>
+          </PieChart>
+          <ul className="legend">
+            {genderDatas.map(_genderData => (
+              <li key={_genderData.name}>
+                <Dot color={_genderData.color} />
+                <span>
+                  {Math.round(_genderData.value)}% {_genderData.name}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </Flex>
+
         {/* Age data */}
         {hasAgeData && (
           <>

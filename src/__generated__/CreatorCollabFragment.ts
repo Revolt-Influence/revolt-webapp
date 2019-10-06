@@ -5,10 +5,10 @@
 import { CollabStatus, GameCategory } from "./globalTypes";
 
 // ====================================================
-// GraphQL mutation operation: ApplyToExperience
+// GraphQL fragment: CreatorCollabFragment
 // ====================================================
 
-export interface ApplyToExperience_applyToExperience_campaign_brand {
+export interface CreatorCollabFragment_campaign_brand {
   __typename: "Brand";
   /**
    * Mongoose generated ID
@@ -25,7 +25,7 @@ export interface ApplyToExperience_applyToExperience_campaign_brand {
   website: string;
 }
 
-export interface ApplyToExperience_applyToExperience_campaign_product {
+export interface CreatorCollabFragment_campaign_product {
   __typename: "CampaignProduct";
   /**
    * Name of the product
@@ -57,7 +57,7 @@ export interface ApplyToExperience_applyToExperience_campaign_product {
   launchedAt: any;
 }
 
-export interface ApplyToExperience_applyToExperience_campaign {
+export interface CreatorCollabFragment_campaign {
   __typename: "Campaign";
   /**
    * Mongoose generated ID
@@ -74,11 +74,11 @@ export interface ApplyToExperience_applyToExperience_campaign {
   /**
    * The brand that published the campaign
    */
-  brand: ApplyToExperience_applyToExperience_campaign_brand | null;
+  brand: CreatorCollabFragment_campaign_brand | null;
   /**
    * What the creator will receive
    */
-  product: ApplyToExperience_applyToExperience_campaign_product;
+  product: CreatorCollabFragment_campaign_product;
   /**
    * Rules that creators must respect to receive the gift
    */
@@ -86,7 +86,7 @@ export interface ApplyToExperience_applyToExperience_campaign {
   createdAt: any;
 }
 
-export interface ApplyToExperience_applyToExperience {
+export interface CreatorCollabFragment {
   __typename: "Collab";
   /**
    * Mongoose generated ID
@@ -100,17 +100,5 @@ export interface ApplyToExperience_applyToExperience {
   /**
    * The campaign the collab is a part of
    */
-  campaign: ApplyToExperience_applyToExperience_campaign;
-}
-
-export interface ApplyToExperience {
-  /**
-   * Creates a collab
-   */
-  applyToExperience: ApplyToExperience_applyToExperience;
-}
-
-export interface ApplyToExperienceVariables {
-  message: string;
-  experienceId: string;
+  campaign: CreatorCollabFragment_campaign;
 }

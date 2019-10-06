@@ -8,15 +8,17 @@ import CheckBox from './CheckBox'
 import ErrorCard from './ErrorCard'
 import SplitView from './SplitView'
 import SuccessCard from './SuccessCard'
+import { CREATOR_COLLAB_FRAGMENT } from './CreatorCollabCard'
+import { GET_CREATOR_COLLABS } from '../pages/CollabsList'
 
 const APPLY_TO_EXPERIENCE = gql`
   mutation ApplyToExperience($message: String!, $experienceId: String!) {
     applyToExperience(message: $message, experienceId: $experienceId) {
       # Get data of created collab
-      _id
-      status
+      ...CreatorCollabFragment
     }
   }
+  ${CREATOR_COLLAB_FRAGMENT}
 `
 
 interface Props {
@@ -32,7 +34,9 @@ const ExperienceForm: React.FC<Props> = ({ brand, experienceId }) => {
       error: applyError,
       data: { applyToExperience: createdCollab } = { applyToExperience: null },
     },
-  ] = useMutation<ApplyToExperience, ApplyToExperienceVariables>(APPLY_TO_EXPERIENCE)
+  ] = useMutation<ApplyToExperience, ApplyToExperienceVariables>(APPLY_TO_EXPERIENCE, {
+    refetchQueries: [{ query: GET_CREATOR_COLLABS }],
+  })
 
   const [message, setMessage] = useState<string>('')
   const [acceptsTerms, setAcceptsTerms] = useState<boolean>(false)
@@ -51,7 +55,7 @@ const ExperienceForm: React.FC<Props> = ({ brand, experienceId }) => {
   }
 
   return (
-    <SplitView title="Postuler" ratio={4 / 12} noBorder>
+    <SplitView title="Apply" ratio={4 / 12} noBorder>
       <FormInputLabel>
         Motivation message for {brand}
         <FormTextarea

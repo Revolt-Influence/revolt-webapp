@@ -7,7 +7,6 @@ import { gql } from 'apollo-boost'
 import { useQuery } from '@apollo/react-hooks'
 import { GetYoutuber, GetYoutuberVariables } from '../__generated__/GetYoutuber'
 import ErrorCard from './ErrorCard'
-import Loader from './Loader'
 
 const youtubeSource = require('../images/icons/youtube_color.svg')
 
@@ -55,7 +54,7 @@ const YoutubePreview: React.FC<Props> = ({ youtuberId }) => {
     variables: { youtuberId },
   })
   if (loading) {
-    return <Loader fullScreen />
+    return <p>Loading...</p>
   }
   if (error) {
     return <ErrorCard message="Could not preview YouTube channel" />

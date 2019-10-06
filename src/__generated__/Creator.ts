@@ -2,7 +2,7 @@
 /* eslint-disable */
 // This file was automatically generated and should not be edited.
 
-import { Language } from "./globalTypes";
+import { Language, CreatorStatus } from "./globalTypes";
 
 // ====================================================
 // GraphQL query operation: Creator
@@ -98,6 +98,10 @@ export interface Creator_creator {
    * Youtube account linked to the creator
    */
   youtube: Creator_creator_youtube | null;
+  /**
+   * Whether the influencer was validated by an admin
+   */
+  status: CreatorStatus;
 }
 
 export interface Creator {

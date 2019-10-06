@@ -26,7 +26,6 @@ function dateToAge(birthday: string): number {
 function yearToAge(birthYear: number): number {
   const currentYear = new Date().getFullYear()
   const age = currentYear - birthYear
-  // TODO: separate years in the middle to have a more accurate age guess
   return age
 }
 

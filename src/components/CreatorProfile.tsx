@@ -1,7 +1,7 @@
 import { useLazyQuery, useMutation, useQuery } from '@apollo/react-hooks'
 import { Flex } from '@rebass/grid'
 import { gql } from 'apollo-boost'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { palette } from '../utils/colors'
@@ -140,6 +140,7 @@ export const GET_CREATOR = gql`
   query Creator($creatorId: String!) {
     creator(id: $creatorId) {
       ...CreatorProfileFragment
+      status
     }
   }
   ${CREATOR_PROFILE_FRAGMENT}
@@ -171,17 +172,19 @@ const CreatorProfile: React.FC<Props> = ({ creatorId, collabId, handleAccept, ha
     data: { creator } = { creator: null },
     loading: creatorLoading,
     error: creatorError,
-  } = useQuery<Creator, CreatorVariables>(GET_CREATOR)
+  } = useQuery<Creator, CreatorVariables>(GET_CREATOR, { variables: { creatorId } })
 
   const [
     fetchCollab,
     { data: { collab } = { collab: null }, loading: collabLoading, error: collabError },
   ] = useLazyQuery<GetCollab, GetCollabVariables>(GET_COLLAB)
 
-  if (collabId) {
-    // Only get collab data if an ID is specified
-    fetchCollab({ variables: { collabId } })
-  }
+  useEffect(() => {
+    if (collabId) {
+      // Only get collab data if an ID is specified
+      fetchCollab({ variables: { collabId } })
+    }
+  }, [collabId, fetchCollab])
 
   const [reviewCollabApplication] = useMutation<
     ReviewCollabApplication,
@@ -201,8 +204,6 @@ const CreatorProfile: React.FC<Props> = ({ creatorId, collabId, handleAccept, ha
     }
   }
 
-  const statusDropdownSelected = getStatusDropdownSelected()
-
   if (creatorLoading || collabLoading) {
     return <p>Loading profile...</p>
   }
@@ -215,16 +216,17 @@ const CreatorProfile: React.FC<Props> = ({ creatorId, collabId, handleAccept, ha
   const { youtube } = creator
   const hasYoutube = youtube != null
 
-  const showContactButton = () => (
-    <Link
-      to={`/brand/messages/${collab.conversation._id}`}
-      className="action contact"
-      type="button"
-    >
-      <p>Contact</p>
-      <img src={contactSource} alt="contact" />
-    </Link>
-  )
+  const showContactButton = () =>
+    collab ? (
+      <Link
+        to={`/brand/messages/${collab.conversation._id}`}
+        className="action contact"
+        type="button"
+      >
+        <p>Contact</p>
+        <img src={contactSource} alt="contact" />
+      </Link>
+    ) : null
 
   return (
     <Styles>
@@ -273,7 +275,7 @@ const CreatorProfile: React.FC<Props> = ({ creatorId, collabId, handleAccept, ha
                     ReviewCollabDecision.MARK_AS_SENT,
                   ] as ReviewCollabDecision[]
                 }
-                selection={statusDropdownSelected}
+                selection={getStatusDropdownSelected()}
                 handleChange={(newSelection: ReviewCollabDecision) => {
                   reviewCollabApplication({
                     variables: {
@@ -288,7 +290,7 @@ const CreatorProfile: React.FC<Props> = ({ creatorId, collabId, handleAccept, ha
         )}
       </Flex>
       {/* Networks preview */}
-      {youtube && <h2 className="section">Plateformes</h2>}
+      {youtube && <h2 className="section">Platforms</h2>}
       <section>{hasYoutube && <YoutubePreview youtuberId={youtube._id} />}</section>
       {/* Youtube analytics */}
       {youtube && (
@@ -296,7 +298,7 @@ const CreatorProfile: React.FC<Props> = ({ creatorId, collabId, handleAccept, ha
           {youtube.audience && (
             <>
               {/* Gender chart */}
-              <h2 className="section">Audience YouTube</h2>
+              <h2 className="section">YouTube audience</h2>
               <AudienceInsights youtuberAudience={youtube.audience} />
             </>
           )}

@@ -98,7 +98,7 @@ const CampaignSettings: React.FC<ICampaignSettingsProps> = ({ campaignId, histor
   return (
     <ContainerBox>
       {/* Archive campaign */}
-      <SplitView title="Statut de la campagne" noBorder>
+      <SplitView title="Campaign status" noBorder>
         <Flex flexDirection="row" alignItems="center" mb="1rem">
           <Dot color={status.color} />
           <BoldText>{status.name}</BoldText>
@@ -124,8 +124,8 @@ const CampaignSettings: React.FC<ICampaignSettingsProps> = ({ campaignId, histor
       {isAdmin && !campaign.isReviewed && !campaign.isArchived && (
         <SplitView title="Accept the campaign">
           <p>
-            La campagne est actuellement en attente de modération. Si vous la validez, elle
-            deviendra accessible à tous les influenceurs.
+            The campaign is awaiting moderation. If you accept it, it will become visible to all
+            influencers
           </p>
           {reviewCampaignStatus.error && <ErrorCard message="Could not accept the campaign" />}
           <MainButton
@@ -140,14 +140,14 @@ const CampaignSettings: React.FC<ICampaignSettingsProps> = ({ campaignId, histor
       {isAdmin && (
         <SplitView title="Owner">
           <p>
-            Le propriétaire de cette campagne est <BoldText>{campaign.owner.email}</BoldText>
+            The creator of the campaign is <BoldText>{campaign.owner.email}</BoldText>
           </p>
         </SplitView>
       )}
       {/* Delete campaign */}
       {showDelete && (
         <SplitView title="Delete the campaign">
-          <p>Cette action est irréversible.</p>
+          <p>This cannot be undone.</p>
           {deleteError && <ErrorCard message="Could not delete the campaign" />}
           <MainButton
             inverted

@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useCallback } from 'react'
 import { SubTitle, Title } from '../styles/Text'
-import { usePageTitle, useDeviceType } from '../utils/hooks'
+import { usePageTitle, useDeviceType, useConversationsSocket } from '../utils/hooks'
 import { Flex, Box } from '@rebass/grid'
 import ConversationsListPreview from '../components/ConversationsListPreview'
 import { RouteComponentProps } from 'react-router'
@@ -25,6 +25,7 @@ import { GET_SESSION } from '../components/Session'
 import { GetSession } from '../__generated__/GetSession'
 import { SessionType } from '../__generated__/globalTypes'
 import { GetConversation, GetConversationVariables } from '../__generated__/GetConversation'
+import { ConversationFragment } from '../__generated__/ConversationFragment'
 
 const CONVERSATION_FRAGMENT = gql`
   fragment ConversationFragment on Conversation {
@@ -60,7 +61,7 @@ export const GET_CONVERSATIONS_LIST = gql`
   ${CONVERSATION_FRAGMENT}
 `
 
-const GET_CONVERSATION = gql`
+export const GET_CONVERSATION = gql`
   query GetConversation($conversationId: String!) {
     conversation(id: $conversationId) {
       ...ConversationFragment
@@ -79,14 +80,40 @@ const Conversation: React.FC<RouteComponentProps<Match>> = ({ match }) => {
   // Scroll messages to the bottom
   const messagesRef = useRef<HTMLElement>(null)
 
+  // Prepare optional query to get specific conversion if it's not in the list
+  const [getSpecificConversation, getSpecificConversationStatus] = useLazyQuery<
+    GetConversation,
+    GetConversationVariables
+  >(GET_CONVERSATION)
+
   // Fetch conversations on mount
   const {
     data: { conversations: paginatedConversations } = { conversations: null },
     loading,
     error,
-  } = useQuery<GetConversationsList, GetConversationsListVariables>(GET_CONVERSATIONS_LIST)
+  } = useQuery<GetConversationsList, GetConversationsListVariables>(GET_CONVERSATIONS_LIST, {
+    onCompleted: paginatedConvs => {
+      const urlConversation = paginatedConvs.conversations.items.find(
+        _conv => _conv._id === conversationId
+      )
+      // Fetch the specific URL conversation if it's not in the list
+      if (!urlConversation) {
+        getSpecificConversation({ variables: { conversationId } })
+      }
+    },
+  })
 
-  const conversations = loading || error ? [] : paginatedConversations.items
+  // Join conversations page and specific conversation
+  const getConversations = (): ConversationFragment[] => {
+    if (error || loading) {
+      return []
+    }
+    if (getSpecificConversationStatus.data) {
+      return [getSpecificConversationStatus.data.conversation, ...paginatedConversations.items]
+    }
+    return paginatedConversations.items
+  }
+  const conversations = getConversations()
 
   // Get the selected conversation based on URL
   const { conversationId } = match.params
@@ -94,25 +121,12 @@ const Conversation: React.FC<RouteComponentProps<Match>> = ({ match }) => {
 
   // Scroll to the bottom of messages
   useEffect(() => {
-    // messagesRef.current.scrollTop = messagesRef.current.scrollHeight
     if (!!messagesRef.current) {
-      // messagesRef.current.scrollIntoView(false)
       messagesRef.current.scrollTop = messagesRef.current.scrollHeight
     }
   }, [conversation])
 
-  // TODO
-  // useConversationsSocket()
-
-  // Prepare optional query to get specific conversion
-  const [getSpecificConversation, getSpecificConversationStatus] = useLazyQuery<
-    GetConversation,
-    GetConversationVariables
-  >(GET_CONVERSATION, {
-    onCompleted: ({ conversation: specificConversation }) => {
-      conversations.push(specificConversation)
-    },
-  })
+  useConversationsSocket()
 
   // Get session data to know what info to show
   const { data: { session } = { session: null } } = useQuery<GetSession>(GET_SESSION)
@@ -135,9 +149,11 @@ const Conversation: React.FC<RouteComponentProps<Match>> = ({ match }) => {
   usePageTitle('Conversations')
 
   // Fetch the specific conversation if it's not in the paginated list
-  if (conversation == null) {
-    getSpecificConversation()
-  }
+  // useEffect(() => {
+  //   if (conversation == null) {
+  //     getSpecificConversation({ variables: { conversationId } })
+  //   }
+  // }, [conversation, conversationId, getSpecificConversation])
 
   const pageTitle = `Talk to ${recipientName}${
     isAdmin ? ` et ${conversation && conversation.brand.name}` : ''
@@ -196,7 +212,11 @@ const Conversation: React.FC<RouteComponentProps<Match>> = ({ match }) => {
     return <Loader fullScreen />
   }
   if (error || getSpecificConversationStatus.error) {
-    return <ErrorCard message="Your messages could not be loaded" />
+    return (
+      <ContainerBox>
+        <ErrorCard message="Your messages could not be loaded" />
+      </ContainerBox>
+    )
   }
 
   const detailedMessages = getDetailedMessages()
@@ -247,7 +267,7 @@ const Conversation: React.FC<RouteComponentProps<Match>> = ({ match }) => {
             flexDirection="column"
             style={{ height: '100%', maxHeight: '100%' }}
           >
-            <Title>Mes messages</Title>
+            <Title>My messages</Title>
             <Box flex={1} style={{ overflowY: 'scroll' }} pb="1rem">
               <ConversationsListPreview />
             </Box>

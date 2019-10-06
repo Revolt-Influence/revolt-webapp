@@ -1,94 +1,86 @@
+import React, { useEffect } from 'react'
 import { ApolloProvider } from '@apollo/react-hooks'
 import * as Sentry from '@sentry/browser' // must be imported with *
-import ApolloClient from 'apollo-boost'
-import React, { useEffect } from 'react'
+import ApolloClient, { gql, InMemoryCache } from 'apollo-boost'
 import TagManager from 'react-gtm-module'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 import { LastLocationProvider } from 'react-router-last-location'
-import { createGlobalStyle } from 'styled-components'
-import reset from 'styled-reset'
-import { palette } from '../utils/colors'
-import { setFont, setOutline } from '../utils/styles'
-import CustomThemeProvider, { Theme } from './CustomThemeProvider'
 import RouterSwitch from './RouterSwitch'
+import CustomThemeProvider from './CustomThemeProvider'
+import { GlobalStyle } from '../styles/Global'
+import CreatorProfilePanel from './CreatorProfilePanel'
+import { GetCreatorPanel_creatorPanel } from '../__generated__/GetCreatorPanel'
+import {
+  OpenCreatorPanelVariables,
+  OpenCreatorPanel_openCreatorPanel,
+} from '../__generated__/OpenCreatorPanel'
+import { CloseCreatorPanel_closeCreatorPanel } from '../__generated__/CloseCreatorPanel'
 
-export const GlobalStyle = createGlobalStyle`
-  ${reset}
-  html {
-    font-size: 10px;
-    @media screen and (max-width: ${props => (props.theme as Theme).breakpoints[1]}) {
-      font-size: 9px;
-    }
-  }
-  body, html {
-    padding: 0;
-    width: 100%;
-    background: ${palette.grey._50};
-    color: ${palette.grey._900};
-    text-rendering: optimizeLegibility !important;
-    -moz-osx-font-smoothing: grayscale;
-    -webkit-font-smoothing: subpixel-antialiased;
-    -webkit-text-stroke: 1px transparent;
-    line-height: 2.5rem;
-  }
-  body {
-    ${setFont(500, 'normal')}
-  }
-  * {
-    box-sizing: border-box;
-    &:focus-visible {
-      ${setOutline('blue', { isBold: true })}
-    }
-  }
+const PANEL_ID = 'panel_ID'
 
-  button {
-    display: inline-block;
-    border: none;
-    padding: 0;
-    margin: 0;
-    font-family: inherit;
-    font-size: inherit;
-    line-height: inherit;
-    all: unset;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    box-sizing: border-box;
-    cursor: pointer;
-    &:focus-visible {
-      ${setOutline('blue')}
-    }
+const typeDefs = gql`
+  type CreatorPanel {
+    id: ID!
+    isOpen: Boolean!
+    creatorId: String
+    collabId: String
   }
-  input {
-    ${setFont(500, 'normal')}
-    &[type=submit] {
-      outline: unset;
-      ${setFont(600, 'normal')}
-    }
-    -webkit-appearance: none;
-    -webkit-border-radius:0px;
+  extend type Query {
+    creatorPanel: CreatorPanel
   }
-  h1 {
-    ${setFont(600, 'huge')}
-  }
-  a {
-    color: unset;
-    text-decoration: none;
-    &:focus-visible {
-      ${setOutline('blue')}
-    }
-  }
-  input:not([type="submit"]):focus-visible, textarea:focus-visible, select:focus-visible {
-    ${setOutline('blue')}
-  }
-  input[type="submit"]:focus-visible {
-    ${setOutline('blue', { isBold: true })}
+  extend type Mutation {
+    openCreatorPanel(creatorId: String!, collabId: String): CreatorPanel
+    closeCreatorPanel: CreatorPanel
   }
 `
+
+const resolvers = {
+  Mutation: {
+    openCreatorPanel: (
+      parent,
+      args: OpenCreatorPanelVariables,
+      context,
+      info
+    ): OpenCreatorPanel_openCreatorPanel => ({
+      __typename: 'CreatorPanel',
+      id: PANEL_ID,
+      isOpen: true,
+      creatorId: args.creatorId,
+      collabId: args.collabId,
+    }),
+    closeCreatorPanel: (parent, args: {}): CloseCreatorPanel_closeCreatorPanel => ({
+      __typename: 'CreatorPanel',
+      id: PANEL_ID,
+      isOpen: false,
+      creatorId: null,
+      collabId: null,
+    }),
+  },
+}
+
+const defaultCreatorPanel: GetCreatorPanel_creatorPanel = {
+  __typename: 'CreatorPanel',
+  id: PANEL_ID,
+  isOpen: false,
+  creatorId: null,
+  collabId: null,
+}
+
+const cache = new InMemoryCache()
+
+cache.writeData({
+  data: {
+    creatorPanel: defaultCreatorPanel,
+  },
+})
 
 // Create Apollo client
 const client = new ApolloClient({
   uri: `${process.env.REACT_APP_BACKEND_URL}/graphql`,
   credentials: 'include',
+  resolvers,
+  typeDefs,
+  cache,
 })
 
 const App: React.FC = () => {
@@ -111,6 +103,8 @@ const App: React.FC = () => {
           <>
             <GlobalStyle />
             <LastLocationProvider watchOnlyPathname>
+              {/* Show items that don't depend on the router */}
+              <CreatorProfilePanel />
               {/* Show the right page */}
               <Route component={RouterSwitch} />
             </LastLocationProvider>

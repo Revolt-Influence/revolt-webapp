@@ -21,7 +21,6 @@ import {
 } from '../__generated__/GetCampaign'
 import Loader from '../components/Loader'
 import ErrorCard from '../components/ErrorCard'
-import { BRAND_FRAGMENT } from '../components/CampaignFormBrand'
 import InfoCard from '../components/InfoCard'
 
 export enum CampaignStatus {
@@ -107,7 +106,10 @@ export const GET_CAMPAIGN = gql`
         launchedAt
       }
       brand {
-        ...BrandFragment
+        _id
+        name
+        logo
+        website
       }
       targetAudience {
         gender
@@ -123,7 +125,6 @@ export const GET_CAMPAIGN = gql`
       }
     }
   }
-  ${BRAND_FRAGMENT}
 `
 
 interface MatchParams {

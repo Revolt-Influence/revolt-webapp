@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import moment from 'moment'
-import 'moment/locale/fr'
 import { usePageTitle } from '../utils/hooks'
 import { withRouter, RouteComponentProps } from 'react-router-dom'
 import { ContainerBox } from '../styles/grid'
@@ -19,8 +18,7 @@ import { GetCreatorsPage, GetCreatorsPageVariables } from '../__generated__/GetC
 import { CreatorStatus } from '../__generated__/globalTypes'
 import ErrorCard from '../components/ErrorCard'
 import { SetCreatorStatus, SetCreatorStatusVariables } from '../__generated__/SetCreatorStatus'
-
-moment.locale('fr')
+import { showCreatorStatus } from '../utils/enums'
 
 const GET_CREATORS_PAGE = gql`
   query GetCreatorsPage($page: Float!, $status: CreatorStatus!) {
@@ -58,6 +56,7 @@ const Community: React.FC<RouteComponentProps> = ({ location }) => {
     GetCreatorsPageVariables
   >(GET_CREATORS_PAGE, {
     variables: { page: currentPage, status: filter },
+    fetchPolicy: 'network-only',
     onCompleted: ({ creators: _paginatedCreators }) => {
       if (_paginatedCreators.items.length > 0) {
         // Set the first one if it exists
@@ -70,7 +69,13 @@ const Community: React.FC<RouteComponentProps> = ({ location }) => {
   })
 
   const [setCreatorStatus] = useMutation<SetCreatorStatus, SetCreatorStatusVariables>(
-    SET_CREATOR_STATUS
+    SET_CREATOR_STATUS,
+    {
+      refetchQueries: [
+        { query: GET_CREATORS_PAGE, variables: { page: currentPage, status: filter } },
+      ],
+      awaitRefetchQueries: true,
+    }
   )
 
   if (loading) {
@@ -78,19 +83,6 @@ const Community: React.FC<RouteComponentProps> = ({ location }) => {
   }
   if (error) {
     return <ErrorCard />
-  }
-
-  const translateStatus = (status: CreatorStatus): string => {
-    switch (status) {
-      case CreatorStatus.UNVERIFIED:
-        return 'Unverified'
-      case CreatorStatus.VERIFIED:
-        return 'Verified'
-      case CreatorStatus.BLOCKED:
-        return 'Blocked'
-      default:
-        return status
-    }
   }
 
   const handleFilterChange = (newFilter: CreatorStatus) => {
@@ -129,7 +121,7 @@ const Community: React.FC<RouteComponentProps> = ({ location }) => {
               <Title>Community</Title>
               <Box flex={1} style={{ overflowY: 'scroll' }} pb="1rem">
                 <Dropdown
-                  name="Statut"
+                  name="Status"
                   selection={filter}
                   options={
                     [
@@ -152,7 +144,7 @@ const Community: React.FC<RouteComponentProps> = ({ location }) => {
                     key={_creator._id}
                     title={_creator.name}
                     picture={_creator.picture}
-                    description={`${translateStatus(_creator.status)} · signed up ${moment(
+                    description={`${showCreatorStatus(_creator.status)} · signed up ${moment(
                       _creator.createdAt
                     ).fromNow()}`}
                     handleClick={() => setSelectedId(_creator._id)}
@@ -172,7 +164,7 @@ const Community: React.FC<RouteComponentProps> = ({ location }) => {
                 <CreatorProfile
                   creatorId={selectedId}
                   handleAccept={() => handleSetStatus(CreatorStatus.VERIFIED)}
-                  handleRefuse={() => handleSetStatus(CreatorStatus.UNVERIFIED)}
+                  handleRefuse={() => handleSetStatus(CreatorStatus.BLOCKED)}
                 />
               )}
             </Box>

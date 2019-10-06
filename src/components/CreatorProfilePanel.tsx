@@ -4,11 +4,16 @@ import { useOnClickOutside } from '../utils/hooks'
 import CreatorProfile from './CreatorProfile'
 import { shadow } from '../utils/styles'
 import { palette } from '../utils/colors'
+import gql from 'graphql-tag'
+import { useQuery, useMutation } from '@apollo/react-hooks'
+import { GetCreatorPanel } from '../__generated__/GetCreatorPanel'
+import { CloseCreatorPanel } from '../__generated__/CloseCreatorPanel'
 
 const closeSource = require('../images/icons/close.svg')
 
 const Styles = styled.div`
   position: fixed;
+  z-index: 100;
   top: 0;
   right: 0;
   background: ${palette.grey._50};
@@ -20,8 +25,8 @@ const Styles = styled.div`
   overflow-y: scroll;
 
   button.close {
-    z-index: 300;
     position: absolute;
+    z-index: 200;
     top: 2rem;
     right: 2rem;
     background: ${palette.grey._200};
@@ -44,23 +49,70 @@ const Styles = styled.div`
   }
 `
 
-interface ICreatorProfilePanelProps {
-  creatorId: string
-  collabId: string
-}
-
-const CreatorProfilePanel: React.FC<ICreatorProfilePanelProps> = ({ creatorId, collabId }) => {
-  const selfRef = useRef()
-  const hidePanel = () => {
-    console.log('hide creator')
+export const GET_CREATOR_PANEL = gql`
+  query GetCreatorPanel {
+    creatorPanel @client {
+      id
+      isOpen
+      creatorId
+      collabId
+    }
   }
-  useOnClickOutside(selfRef, hidePanel)
+`
+
+export const OPEN_CREATOR_PANEL = gql`
+  mutation OpenCreatorPanel($creatorId: String!, $collabId: String) {
+    openCreatorPanel(creatorId: $creatorId, collabId: $collabId) @client {
+      id
+      isOpen
+      creatorId
+      collabId
+    }
+  }
+`
+
+const CLOSE_CREATOR_PANEL = gql`
+  mutation CloseCreatorPanel {
+    closeCreatorPanel @client {
+      id
+      isOpen
+      creatorId
+      collabId
+    }
+  }
+`
+
+const CreatorProfilePanel: React.FC<{}> = () => {
+  // Get panel data
+  const { data } = useQuery<GetCreatorPanel>(GET_CREATOR_PANEL)
+  // Prepare close panel
+  const [closePanel] = useMutation<CloseCreatorPanel>(CLOSE_CREATOR_PANEL)
+  // const client = useApolloClient()
+
+  // Handle close on click outside
+  const selfRef = useRef()
+  const handleClosePanel = () => {
+    closePanel()
+    // client.writeData({
+    //   data: { profilePanel: { isOpen: false, creatorId: undefined, collabId: undefined } },
+    // })
+  }
+  useOnClickOutside(selfRef, handleClosePanel)
+  console.log(data)
+
+  // Don't show panel if not open
+  if (!data || !data.creatorPanel.isOpen) return null
+
+  // Otherwise show panel
   return (
     <Styles ref={selfRef}>
-      <button className="close" onClick={() => hidePanel()} type="button">
+      <button className="close" onClick={() => handleClosePanel()} type="button">
         <img src={closeSource} alt="close" />
       </button>
-      <CreatorProfile creatorId={creatorId} collabId={collabId} />
+      <CreatorProfile
+        creatorId={data.creatorPanel.creatorId}
+        collabId={data.creatorPanel.collabId}
+      />
     </Styles>
   )
 }

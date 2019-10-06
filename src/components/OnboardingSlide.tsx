@@ -20,7 +20,7 @@ const Styles = styled(Flex)`
 
   .illustration {
     flex: 1;
-    max-width: 800px;
+    max-width: 600px;
     height: auto;
   }
 `

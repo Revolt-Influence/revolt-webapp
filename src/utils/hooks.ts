@@ -7,6 +7,12 @@ import { GetSession } from '../__generated__/GetSession'
 import { SessionType } from '../__generated__/globalTypes'
 import { MessageFragment } from '../__generated__/MessageFragment'
 import { breakpoints } from '../components/CustomThemeProvider'
+import { GET_CONVERSATIONS_LIST, GET_CONVERSATION } from '../pages/Conversation'
+import { GetConversation, GetConversationVariables } from '../__generated__/GetConversation'
+import {
+  GetConversationsList,
+  GetConversationsListVariables,
+} from '../__generated__/GetConversationsList'
 
 export function useWindowSize(): { width: number; height: number } {
   const isClient = typeof window === 'object'
@@ -225,6 +231,7 @@ export function useConversationsSocket() {
     data: {
       session: { user, isLoggedIn, creator },
     },
+    client,
   } = useQuery<GetSession>(GET_SESSION)
   const creatorId = creator && creator._id
   const userId = user && user._id
@@ -240,12 +247,72 @@ export function useConversationsSocket() {
   useEffect(() => {
     const socket = socketRef.current
     const handleNewMessage = (newMessage: MessageFragment) => {
-      // TODO: Attach message to the Redux store
-      // dispatch(receiveMessage(newMessage))
+      // When a new message arrives, add it to the Apollo cache for 2 queries.
+      // Provide all the fields required by the Apollo cache
+      const fullMessage: MessageFragment = {
+        ...newMessage,
+        __typename: 'Message',
+        conversation: {
+          ...newMessage.conversation,
+          __typename: 'Conversation',
+        },
+        brandAuthor: newMessage.brandAuthor
+          ? {
+              ...newMessage.brandAuthor,
+              __typename: 'Brand',
+            }
+          : null,
+        creatorAuthor: newMessage.creatorAuthor
+          ? {
+              ...newMessage.creatorAuthor,
+              __typename: 'Creator',
+            }
+          : null,
+      }
+
+      // Add the message to the "conversations list" query
+      // Wrap in a try catch because the cache may not exist for this query
+      try {
+        // Get current query result
+        const conversationsListData = client.readQuery<
+          GetConversationsList,
+          GetConversationsListVariables
+        >({
+          query: GET_CONVERSATIONS_LIST,
+        })
+        // Add new message to the result
+        conversationsListData.conversations.items
+          .find(_conv => _conv._id === newMessage.conversation._id)
+          .messages.push(fullMessage)
+        // Write modified result to the cache
+        client.writeQuery<GetConversationsList>({
+          query: GET_CONVERSATIONS_LIST,
+          data: conversationsListData,
+        })
+      } catch (e) {}
+
+      // Add the message to the "specific conversation" query
+      // Again, try catch because the cache may not exist for this query
+      try {
+        // Get current query result
+        const specificConversationData = client.readQuery<
+          GetConversation,
+          GetConversationVariables
+        >({ query: GET_CONVERSATION, variables: { conversationId: fullMessage.conversation._id } })
+        // Add new message to the result
+        specificConversationData.conversation.messages.push(fullMessage)
+        // Write modified result to the cache
+        client.writeQuery<GetConversation, GetConversationVariables>({
+          query: GET_CONVERSATION,
+          variables: { conversationId: newMessage._id },
+          data: specificConversationData,
+        })
+      } catch (e) {}
     }
+
     socket.on(socketEvents.NEW_MESSAGE, handleNewMessage)
     return () => socket.removeListener(socketEvents.NEW_MESSAGE, handleNewMessage)
-  }, [])
+  }, [client, client.writeData])
 }
 
 export function useIsAdmin() {
