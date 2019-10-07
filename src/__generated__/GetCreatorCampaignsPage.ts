@@ -5,10 +5,10 @@
 import { GameCategory } from "./globalTypes";
 
 // ====================================================
-// GraphQL query operation: GetExperience
+// GraphQL query operation: GetCreatorCampaignsPage
 // ====================================================
 
-export interface GetExperience_campaign_brand {
+export interface GetCreatorCampaignsPage_campaigns_items_brand {
   __typename: "Brand";
   /**
    * Mongoose generated ID
@@ -25,7 +25,7 @@ export interface GetExperience_campaign_brand {
   website: string;
 }
 
-export interface GetExperience_campaign_product {
+export interface GetCreatorCampaignsPage_campaigns_items_product {
   __typename: "CampaignProduct";
   /**
    * Name of the product
@@ -57,7 +57,7 @@ export interface GetExperience_campaign_product {
   launchedAt: any;
 }
 
-export interface GetExperience_campaign {
+export interface GetCreatorCampaignsPage_campaigns_items {
   __typename: "Campaign";
   /**
    * Mongoose generated ID
@@ -70,11 +70,11 @@ export interface GetExperience_campaign {
   /**
    * The brand that published the campaign
    */
-  brand: GetExperience_campaign_brand | null;
+  brand: GetCreatorCampaignsPage_campaigns_items_brand | null;
   /**
    * What the creator will receive
    */
-  product: GetExperience_campaign_product;
+  product: GetCreatorCampaignsPage_campaigns_items_product;
   /**
    * Rules that creators must respect to receive the gift
    */
@@ -82,13 +82,20 @@ export interface GetExperience_campaign {
   createdAt: any;
 }
 
-export interface GetExperience {
-  /**
-   * Get campaign by ID
-   */
-  campaign: GetExperience_campaign;
+export interface GetCreatorCampaignsPage_campaigns {
+  __typename: "PaginatedCampaignResponse";
+  currentPage: number;
+  totalPages: number;
+  items: GetCreatorCampaignsPage_campaigns_items[];
 }
 
-export interface GetExperienceVariables {
-  campaignId: string;
+export interface GetCreatorCampaignsPage {
+  /**
+   * Get page of campaigns, different if brand or a user
+   */
+  campaigns: GetCreatorCampaignsPage_campaigns;
+}
+
+export interface GetCreatorCampaignsPageVariables {
+  page?: number | null;
 }

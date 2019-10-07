@@ -99,6 +99,22 @@ export function showTrackingProvider(provider: TrackingProvider): string {
       return 'Other'
     case TrackingProvider.UNITY_ANALYTICS:
       return 'Unity Analytics'
+    case TrackingProvider.ADJUST:
+      return 'Adjust'
+    case TrackingProvider.APPSFLYER:
+      return 'AppsFlyer'
+    case TrackingProvider.BUFFPANEL:
+      return 'BuffPanel'
+    case TrackingProvider.CUSTOM_LINK:
+      return 'Custom tracked link'
+    case TrackingProvider.KOCHAVA:
+      return 'Kochava'
+    case TrackingProvider.SINGULAR:
+      return 'Singular'
+    case TrackingProvider.TENJIN:
+      return 'Tenjin'
+    case TrackingProvider.TUNE:
+      return 'TUNE'
     default:
       return provider
   }

@@ -156,7 +156,7 @@ export interface GetCampaigns_campaigns {
 
 export interface GetCampaigns {
   /**
-   * Get page of campaigns or experiences depending on whether the session is a brand or a user
+   * Get page of campaigns, different if brand or a user
    */
   campaigns: GetCampaigns_campaigns;
 }

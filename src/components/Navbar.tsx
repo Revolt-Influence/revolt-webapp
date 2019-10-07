@@ -17,7 +17,7 @@ const logoSource = require('../images/logos/logo_light.svg')
 const userSource = require('../images/icons/user_black.svg')
 const campaignSource = require('../images/icons/campaign_black.svg')
 const collabsSource = require('../images/icons/star_black.svg')
-const experiencesSource = require('../images/icons/shop_black.svg')
+const gameSource = require('../images/icons/game.svg')
 const hamburgerSource = require('../images/icons/menu_black.svg')
 const closeSource = require('../images/icons/close.svg')
 const messageSource = require('../images/icons/message_black.svg')
@@ -189,9 +189,9 @@ const Navbar: React.FC<{}> = () => {
     if (sessionType === SessionType.CREATOR) {
       return [
         {
-          logo: experiencesSource,
-          path: '/creator/experiences',
-          name: 'Experiences',
+          logo: gameSource,
+          path: '/creator/games',
+          name: 'Games',
           description: 'Discover new games',
         },
         {

@@ -194,7 +194,7 @@ const CampaignDashboard: React.FC<Props> = ({ match, location }) => {
   }
 
   if (loading) {
-    return <Loader />
+    return <Loader fullScreen />
   }
   if (error) {
     return <ErrorCard message="Could not show campaign" />

@@ -79,15 +79,14 @@ const ConnectCreatorYoutube: React.FC<{}> = () => {
   // Link Youtube account
   return (
     <div>
-      <p>
-        Votre chaîne va être vérifiée par notre équipe. Elle doit respecter les règles suivantes :
-      </p>
+      <p>Your channel will be reviewed by our team. It must respect the following rules:</p>
       <Box mt="1.5rem">
         <CheckList items={['At least 1k subscribers', 'At least 10 videos']} />
       </Box>
-      {(error || attachCreatorYoutubeStatus.error) && (
+      {attachCreatorYoutubeStatus.error && (
         <ErrorCard message={getErrorMessage(attachCreatorYoutubeStatus.error.message)} />
       )}
+      {error && <ErrorCard />}
       <GoogleLogin
         clientId="1084044949036-9vs7ckrse27t3c1kep4k24l8i9rv906k.apps.googleusercontent.com"
         onSuccess={handleAuthSuccess}

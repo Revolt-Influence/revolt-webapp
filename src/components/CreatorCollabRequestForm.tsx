@@ -3,7 +3,7 @@ import { useMutation } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 import { MainButtonSubmit } from '../styles/Button'
 import { FormInputLabel, FormTextarea } from '../styles/Form'
-import { ApplyToExperience, ApplyToExperienceVariables } from '../__generated__/ApplyToExperience'
+import { ApplyToCampaign, ApplyToCampaignVariables } from '../__generated__/ApplyToCampaign'
 import CheckBox from './CheckBox'
 import ErrorCard from './ErrorCard'
 import SplitView from './SplitView'
@@ -11,9 +11,9 @@ import SuccessCard from './SuccessCard'
 import { CREATOR_COLLAB_FRAGMENT } from './CreatorCollabCard'
 import { GET_CREATOR_COLLABS } from '../pages/CollabsList'
 
-const APPLY_TO_EXPERIENCE = gql`
-  mutation ApplyToExperience($message: String!, $experienceId: String!) {
-    applyToExperience(message: $message, experienceId: $experienceId) {
+const APPLY_TO_CAMPAIGN = gql`
+  mutation ApplyToCampaign($message: String!, $campaignId: String!) {
+    applyToCampaign(message: $message, campaignId: $campaignId) {
       # Get data of created collab
       ...CreatorCollabFragment
     }
@@ -23,18 +23,18 @@ const APPLY_TO_EXPERIENCE = gql`
 
 interface Props {
   brand: string
-  experienceId: string
+  campaignId: string
 }
 
-const ExperienceForm: React.FC<Props> = ({ brand, experienceId }) => {
+const CreatorCollabRequestForm: React.FC<Props> = ({ brand, campaignId }) => {
   const [
-    applyToExperience,
+    applyToCampaign,
     {
       loading: applyLoading,
       error: applyError,
-      data: { applyToExperience: createdCollab } = { applyToExperience: null },
+      data: { applyToCampaign: createdCollab } = { applyToCampaign: null },
     },
-  ] = useMutation<ApplyToExperience, ApplyToExperienceVariables>(APPLY_TO_EXPERIENCE, {
+  ] = useMutation<ApplyToCampaign, ApplyToCampaignVariables>(APPLY_TO_CAMPAIGN, {
     refetchQueries: [{ query: GET_CREATOR_COLLABS }],
   })
 
@@ -51,7 +51,7 @@ const ExperienceForm: React.FC<Props> = ({ brand, experienceId }) => {
 
   const handleSubmit = (e: React.MouseEvent<HTMLInputElement>) => {
     e.preventDefault()
-    applyToExperience({ variables: { experienceId, message } })
+    applyToCampaign({ variables: { campaignId, message } })
   }
 
   return (
@@ -86,4 +86,4 @@ const ExperienceForm: React.FC<Props> = ({ brand, experienceId }) => {
   )
 }
 
-export default ExperienceForm
+export default CreatorCollabRequestForm

@@ -11,6 +11,10 @@ import { ReviewFormat } from "./globalTypes";
 export interface GetCampaignReviews_campaign_reviews_creator {
   __typename: "Creator";
   /**
+   * Mongoose generated ID
+   */
+  _id: string;
+  /**
    * Creator display name, can be a full name or a pseudo
    */
   name: string | null;
@@ -18,6 +22,10 @@ export interface GetCampaignReviews_campaign_reviews_creator {
 
 export interface GetCampaignReviews_campaign_reviews {
   __typename: "Review";
+  /**
+   * Mongoose generated ID
+   */
+  _id: string;
   /**
    * Platform of the review
    */

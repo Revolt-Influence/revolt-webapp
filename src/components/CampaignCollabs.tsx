@@ -124,6 +124,7 @@ const GET_CAMPAIGN_COLLABS = gql`
           name
           picture
           youtube {
+            _id
             viewCount
             subscriberCount
             videoCount

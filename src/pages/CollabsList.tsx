@@ -47,9 +47,8 @@ const CollabsList: React.FC<{}> = () => {
             <ContainerBox mt="2rem">
               <NotificationCard message="You don't have any collabs yet" nature="info" />
               <Box mt="1rem">
-                To start a collab, go to the{' '}
-                <BlueLink to="/creator/experiences">Experiences</BlueLink> and apply to an
-                experience.
+                To start a collab, go to the <BlueLink to="/creator/games">Games tab</BlueLink> and
+                apply to a campaign.
               </Box>
             </ContainerBox>
           ) : (

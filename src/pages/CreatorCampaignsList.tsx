@@ -7,8 +7,8 @@ import { RouteComponentProps, withRouter } from 'react-router-dom'
 import AmbassadorProgramCard from '../components/AmbassadorProgramCard'
 import ErrorBoundary from '../components/ErrorBoundary'
 import ErrorCard from '../components/ErrorCard'
-import { EXPERIENCE_PRESENTATION_FRAGMENT } from '../components/ExperiencePresentation'
-import ExperiencePreviewCard from '../components/ExperiencePreviewCard'
+import { CREATOR_CAMPAIGN_PRESENTATION_FRAGMENT } from '../components/CreatorCampaignPresentation'
+import CreatorCampaignCard from '../components/CreatorCampaignCard'
 import Loader from '../components/Loader'
 import NotificationCard from '../components/NotificationCard'
 import Pagination from '../components/Pagination'
@@ -17,37 +17,37 @@ import { ContainerBox } from '../styles/grid'
 import { Title } from '../styles/Text'
 import { useDeviceType, usePageTitle } from '../utils/hooks'
 import {
-  GetExperiencesPage,
-  GetExperiencesPageVariables,
-} from '../__generated__/GetExperiencesPage'
+  GetCreatorCampaignsPage,
+  GetCreatorCampaignsPageVariables,
+} from '../__generated__/GetCreatorCampaignsPage'
 import { GetSession } from '../__generated__/GetSession'
 import { CreatorStatus } from '../__generated__/globalTypes'
 
-const GET_EXPERIENCES_PAGE = gql`
-  query GetExperiencesPage($page: Float) {
+const GET_CREATOR_CAMPAIGNS_PAGE = gql`
+  query GetCreatorCampaignsPage($page: Float) {
     campaigns(page: $page) {
       currentPage
       totalPages
       items {
-        ...ExperiencePresentationFragment
+        ...CreatorCampaignPresentationFragment
       }
     }
   }
-  ${EXPERIENCE_PRESENTATION_FRAGMENT}
+  ${CREATOR_CAMPAIGN_PRESENTATION_FRAGMENT}
 `
 
-const ExperiencesList: React.FC<RouteComponentProps> = ({ location, history }) => {
-  usePageTitle('Experiences')
+const CreatorCampaignsList: React.FC<RouteComponentProps> = ({ location, history }) => {
+  usePageTitle('Games')
 
   // Get current page from URL
   const parsedQuery = queryString.parse(location.search)
   const hasQueryParams = Object.entries(parsedQuery).length > 0
   const urlCurrentPage = hasQueryParams ? parseInt((parsedQuery as any).page) : 1
 
-  const { data: { campaigns: experiences } = { campaigns: null }, loading, error } = useQuery<
-    GetExperiencesPage,
-    GetExperiencesPageVariables
-  >(GET_EXPERIENCES_PAGE, { variables: { page: urlCurrentPage } })
+  const { data: { campaigns } = { campaigns: null }, loading, error } = useQuery<
+    GetCreatorCampaignsPage,
+    GetCreatorCampaignsPageVariables
+  >(GET_CREATOR_CAMPAIGNS_PAGE, { variables: { page: urlCurrentPage } })
   const { data: { session } = { session: null } } = useQuery<GetSession>(GET_SESSION)
 
   const deviceType = useDeviceType()
@@ -58,22 +58,22 @@ const ExperiencesList: React.FC<RouteComponentProps> = ({ location, history }) =
   if (error) {
     return (
       <ContainerBox>
-        <ErrorCard message="Could not show experiences" />
+        <ErrorCard message="Could not show games" />
       </ContainerBox>
     )
   }
 
   return (
     <ContainerBox>
-      <ErrorBoundary message="Could not show experiences">
+      <ErrorBoundary message="Could not show games">
         <>
-          <Title isCentered={deviceType !== 'desktop'}>Experiences</Title>
+          <Title isCentered={deviceType !== 'desktop'}>Games</Title>
           <>
             {session.creator.status === CreatorStatus.UNVERIFIED && (
               <Box mb="2rem" px={['2rem', 0, 0]}>
                 <NotificationCard
                   nature="info"
-                  message="Your profile hasn't been veriried by our team yet. You can't apply to experiences for now"
+                  message="Your profile hasn't been veriried by our team yet. You can't apply to receive games for now"
                 />
               </Box>
             )}
@@ -81,7 +81,7 @@ const ExperiencesList: React.FC<RouteComponentProps> = ({ location, history }) =
               <Box mb="2rem" px={['2rem', 0, 0]}>
                 <NotificationCard
                   nature="info"
-                  message="Your profile hasn't been veriried by our team. You can't apply to experiences"
+                  message="Your profile hasn't been veriried by our team. You can't apply to receive games"
                 />
               </Box>
             )}
@@ -90,31 +90,31 @@ const ExperiencesList: React.FC<RouteComponentProps> = ({ location, history }) =
               <Box width={[1, 6 / 12, 4 / 12]} mt="3rem" mx={['auto', 'unset', 'unset']} px="2rem">
                 <AmbassadorProgramCard />
               </Box>
-              {/* List of experiences */}
-              {experiences.items.map(_experience => (
+              {/* List of games */}
+              {campaigns.items.map(_campaign => (
                 <Box
                   width={[1, 6 / 12, 4 / 12]}
                   mt="3rem"
                   mx={['auto', 'unset', 'unset']}
                   px="2rem"
-                  key={_experience._id}
+                  key={_campaign._id}
                 >
-                  <ExperiencePreviewCard experience={_experience} />
+                  <CreatorCampaignCard campaign={_campaign} />
                 </Box>
               ))}
-              {experiences.items.length === 0 && (
+              {campaigns.items.length === 0 && (
                 <ContainerBox mt="3rem">
                   <NotificationCard message="No new game available" nature="info" />
                   <Box mt="1rem">Looks like you've applied to all games. Come back later!</Box>
                 </ContainerBox>
               )}
             </Flex>
-            {experiences.totalPages > 1 && (
+            {campaigns.totalPages > 1 && (
               <Pagination
                 optionsBreadth={1}
-                totalPages={experiences.totalPages}
+                totalPages={campaigns.totalPages}
                 handlePageChange={page => {
-                  history.push({ pathname: '/creator/experiences', search: `?page=${page}` })
+                  history.push({ pathname: '/creator/campaigns', search: `?page=${page}` })
                 }}
                 currentPage={urlCurrentPage}
               />
@@ -126,4 +126,4 @@ const ExperiencesList: React.FC<RouteComponentProps> = ({ location, history }) =
   )
 }
 
-export default withRouter(ExperiencesList)
+export default withRouter(CreatorCampaignsList)

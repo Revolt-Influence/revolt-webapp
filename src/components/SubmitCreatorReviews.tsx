@@ -50,17 +50,18 @@ const SubmitCreatorReviews: React.FC<Props> = ({ collabId }) => {
     SubmitCollabReview,
     SubmitCollabReviewVariables
   >(SUBMIT_COLLAB_REVIEW, { onCompleted: () => setSucceeded(true) })
-  const alreadyDone = collab.status === CollabStatus.DONE
-
-  if (alreadyDone) {
-    return <ErrorCard message="You have already posted your review" />
-  }
 
   if (collabRequestStatus.loading) {
     return <Loader />
   }
   if (collabRequestStatus.error) {
     return <ErrorCard />
+  }
+
+  const alreadyDone = collab.status === CollabStatus.DONE
+
+  if (alreadyDone) {
+    return <ErrorCard message="You have already posted your review" />
   }
 
   const updateLink = (newLink: string) => {
@@ -79,10 +80,10 @@ const SubmitCreatorReviews: React.FC<Props> = ({ collabId }) => {
   }
 
   return (
-    <SplitView title="Mes revues" ratio={3.5 / 12} noBorder>
+    <SplitView title="My review" ratio={3.5 / 12} noBorder>
       <form onSubmit={handleSubmit}>
         <FormInputLabel>
-          Lien de votre {showReviewFormat(review.format)}
+          Link of your {showReviewFormat(review.format)}
           <FormInput
             value={review.link}
             onChange={e => updateLink(e.target.value)}

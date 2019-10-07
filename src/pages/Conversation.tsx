@@ -191,7 +191,7 @@ const Conversation: React.FC<RouteComponentProps<Match>> = ({ match }) => {
             // Cloudinary Revolt logo (cloudinary because then we can apply cloudinary
             // transformations like for the other brand logos)
             picture:
-              'https://res.cloudinary.com/influencerz/image/upload/v1568799334/brands/Logo_carre%CC%81_plein.png',
+              'https://res.cloudinary.com/revolt/image/upload/v1570460549/brands/revolt_square.png',
           }
         }
       }

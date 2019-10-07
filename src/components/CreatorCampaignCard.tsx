@@ -6,8 +6,8 @@ import { palette } from '../utils/colors'
 import { applyCloudinaryTransformations } from '../utils/images'
 import { capitalizeFirstLetter } from '../utils/strings'
 import { setFont, shadow } from '../utils/styles'
-import { GetExperience_campaign } from '../__generated__/GetExperience'
 import ImageWrapper from './ImageWrapper'
+import { GetCreatorCampaign_campaign } from '../__generated__/GetCreatorCampaign'
 
 const Style = styled(Box)`
   h3.title {
@@ -50,14 +50,14 @@ const Style = styled(Box)`
   }
 `
 
-interface IExperiencePreviewCardProps {
-  experience: GetExperience_campaign
+interface Props {
+  campaign: GetCreatorCampaign_campaign
 }
 
-const ExperiencePreviewCard: React.FC<IExperiencePreviewCardProps> = ({ experience }) => {
-  const { product, brand } = experience
+const CreatorCampaignCard: React.FC<Props> = ({ campaign }) => {
+  const { product, brand } = campaign
   return (
-    <Link to={`/creator/experiences/${experience._id}`} onClick={() => window.scrollTo(0, 0)}>
+    <Link to={`/creator/games/${campaign._id}`} onClick={() => window.scrollTo(0, 0)}>
       <Style>
         <ImageWrapper
           src={product.pictures[0]}
@@ -83,4 +83,4 @@ const ExperiencePreviewCard: React.FC<IExperiencePreviewCardProps> = ({ experien
   )
 }
 
-export default ExperiencePreviewCard
+export default CreatorCampaignCard

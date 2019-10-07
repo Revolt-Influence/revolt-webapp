@@ -1,7 +1,7 @@
 import { Box, Flex } from '@rebass/grid'
 import approx from 'approximate-number'
 import moment from 'moment'
-import React from 'react'
+import React, { useCallback, useState } from 'react'
 import styled from 'styled-components'
 import { palette } from '../utils/colors'
 import { setFont, shadow } from '../utils/styles'
@@ -70,11 +70,24 @@ const ReviewCard: React.FC<IReviewCardProps> = ({ review }) => {
   }
   const iframeUrl = getIframeUrl()
 
+  const [frameWidth, setFrameWidth] = useState(0)
+  const measuredRef = useCallback((node: HTMLElement) => {
+    if (node != null) {
+      setFrameWidth(node.offsetWidth)
+    }
+  }, [])
+
   return (
     <a href={review.link} title={`view ${review.format}`} target="_blank" rel="noopener noreferrer">
-      <Styles p={[0, 0, 0]} mt={[0, 0, 0]}>
+      <Styles p={[0, 0, 0]} mt={[0, 0, 0]} ref={measuredRef}>
         {iframeUrl ? (
-          <iframe title={review.link} src={iframeUrl} />
+          <iframe
+            title={review.link}
+            src={iframeUrl}
+            width={`${frameWidth}px`}
+            height={`${(frameWidth * 9) / 16}px`}
+            style={{ borderRadius: '8px' }}
+          />
         ) : (
           <p>Could not preview the review</p>
         )}

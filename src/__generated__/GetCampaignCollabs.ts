@@ -19,6 +19,10 @@ export interface GetCampaignCollabs_campaign_collabs_conversation {
 
 export interface GetCampaignCollabs_campaign_collabs_creator_youtube {
   __typename: "Youtuber";
+  /**
+   * Mongoose generated ID
+   */
+  _id: string;
   viewCount: number;
   subscriberCount: number;
   videoCount: number;

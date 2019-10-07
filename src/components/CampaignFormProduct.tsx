@@ -95,7 +95,7 @@ const CampaignFormProduct: React.FC<Prop> = ({ product, campaignId }) => {
             </FormInputLabel>
             {/* Link to more details */}
             <FormInputLabel>
-              Game landing pages
+              Game landing page
               <FormInput
                 value={productInput.website}
                 onChange={e => handleUpdateProduct({ website: e.target.value })}
@@ -138,7 +138,7 @@ const CampaignFormProduct: React.FC<Prop> = ({ product, campaignId }) => {
         </FormInputLabel>
         {/* Promo video */}
         <FormInputLabel>
-          YouTube promo video
+          YouTube promo video (optional)
           <FormInput
             type="url"
             value={productInput.youtubeLink}
