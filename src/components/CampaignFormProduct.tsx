@@ -23,7 +23,7 @@ const UPDATE_CAMPAIGN_PRODUCT = gql`
       _id
       product {
         name
-        description
+        pitch
         website
         pictures
         youtubeLink
@@ -128,11 +128,11 @@ const CampaignFormProduct: React.FC<Prop> = ({ product, campaignId }) => {
         />
         {/* Other info */}
         <FormInputLabel>
-          Description
+          Game pitch
           <FormTextarea
-            value={productInput.description}
+            value={productInput.pitch}
             rows={4}
-            onChange={e => handleUpdateProduct({ description: e.target.value })}
+            onChange={e => handleUpdateProduct({ pitch: e.target.value })}
             hasLabel
           />
         </FormInputLabel>

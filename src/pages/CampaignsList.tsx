@@ -40,7 +40,7 @@ const CAMPAIGN_CARD_FRAGMENT = gql`
   ${EXPERIENCE_PRESENTATION_FRAGMENT}
 `
 
-const GET_CAMPAIGNS = gql`
+export const GET_CAMPAIGNS = gql`
   query GetCampaigns {
     campaigns {
       currentPage
@@ -77,6 +77,8 @@ const CampaignsList: React.FC<RouteComponentProps> = ({ history }) => {
     onCompleted: createdCampaign => {
       history.push(`/brand/campaigns/${createdCampaign.createCampaign._id}/brief`)
     },
+    // Add created campaign to cache
+    refetchQueries: [{ query: GET_CAMPAIGNS }],
   })
 
   if (loading) {

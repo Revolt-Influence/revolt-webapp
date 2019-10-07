@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom'
 import OnboardingSlide from './OnboardingSlide'
 import { useMutation } from '@apollo/react-hooks'
 import { CreateCampaign } from '../__generated__/CreateCampaign'
-import { CREATE_CAMPAIGN } from '../pages/CampaignsList'
+import { CREATE_CAMPAIGN, GET_CAMPAIGNS } from '../pages/CampaignsList'
 
 const landingIllustration = require('../images/illustrations/landing.svg')
 const propositionsIllustration = require('../images/illustrations/propositions.svg')
@@ -45,6 +45,8 @@ const BrandOnboarding: React.FC<{}> = () => {
     onCompleted: ({ createCampaign: { _id } }) => {
       history.push(`/brand/campaigns/${_id}/brief`)
     },
+    // Add created campaign to cache
+    refetchQueries: [{ query: GET_CAMPAIGNS }],
   })
   // Store current status in state
   const [slidesState, slidesDispatch] = React.useReducer(slidesReducer, initialSlidesState)

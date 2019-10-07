@@ -66,7 +66,7 @@ const Experience: React.FC<Props> = ({ match }) => {
   })
   const [tab, setTab] = useState<ExperienceTab>(ExperienceTab.PRESENTATION)
 
-  usePageTitle(experience && experience.name)
+  usePageTitle(experience && experience.product.name)
 
   if (loading) {
     return <Loader fullScreen />
@@ -119,7 +119,7 @@ const Experience: React.FC<Props> = ({ match }) => {
     ) {
       return (
         <MainButton onClick={() => changeTab(ExperienceTab.SUBMIT)} noMargin>
-          Post my review
+          Submit my review
         </MainButton>
       )
     }
@@ -162,7 +162,7 @@ const Experience: React.FC<Props> = ({ match }) => {
           style={width > 1150 ? { borderBottom: `3px solid ${palette.grey._200}` } : null}
         >
           <PageHeader
-            title={experience.name}
+            title={experience.product.name}
             destination={alreadyInCollab ? '/creator/collabs' : '/creator/experiences'}
           />
           {showActionButton()}

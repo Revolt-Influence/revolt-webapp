@@ -81,7 +81,7 @@ interface Props {
 }
 
 const CampaignPreviewCard: React.FC<Props> = ({ campaign }) => {
-  const { collabs, product, name } = campaign
+  const { collabs, product } = campaign
   const collabsCount = collabs.filter(
     _collab =>
       _collab.status === CollabStatus.ACCEPTED ||
@@ -103,7 +103,7 @@ const CampaignPreviewCard: React.FC<Props> = ({ campaign }) => {
       <Style mt={[0, 0, 0]} p={[0, 0, 0]}>
         <ImageWrapper
           src={product.pictures.length > 0 ? product.pictures[0] : null}
-          alt={name}
+          alt={product.name}
           ratio={4 / 3}
           placeholderText="Add a game image in the brief"
           showLabel={showStatusLabel}
@@ -115,7 +115,7 @@ const CampaignPreviewCard: React.FC<Props> = ({ campaign }) => {
                 collabsCount > 1 ? 's' : ''
               }`}
         </p>
-        <h3 className="title">{capitalizeFirstLetter(name)}</h3>
+        <h3 className="title">{capitalizeFirstLetter(product.name)}</h3>
       </Style>
     </Link>
   )

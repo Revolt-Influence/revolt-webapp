@@ -208,7 +208,7 @@ const CreatorSignup: React.FC<{}> = () => {
           />
         </Box>
         <Help>
-          Alreadt have an account?{' '}
+          Already have an account?{' '}
           <HelpLink>
             <Link to="/login">Login</Link>
           </HelpLink>

@@ -15,9 +15,9 @@ export interface GetCampaign_campaign_product {
    */
   name: string;
   /**
-   * Paragraph of info about the product
+   * Marketing description of the game
    */
-  description: string;
+  pitch: string;
   /**
    * Link to more info about the product
    */
@@ -89,13 +89,9 @@ export interface GetCampaign_campaign {
    */
   _id: string;
   /**
-   * The campaign name that is promoted to the creators
-   */
-  name: string;
-  /**
    * More info about the campaign and its goals
    */
-  description: string;
+  goal: string;
   /**
    * Total amount of money that will be given to creators
    */

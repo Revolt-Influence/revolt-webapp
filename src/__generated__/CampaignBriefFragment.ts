@@ -15,13 +15,9 @@ export interface CampaignBriefFragment {
    */
   _id: string;
   /**
-   * The campaign name that is promoted to the creators
-   */
-  name: string;
-  /**
    * More info about the campaign and its goals
    */
-  description: string;
+  goal: string;
   /**
    * Rules that creators must respect to receive the gift
    */

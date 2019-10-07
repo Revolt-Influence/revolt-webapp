@@ -61,11 +61,11 @@ const ExperiencePreviewCard: React.FC<IExperiencePreviewCardProps> = ({ experien
       <Style>
         <ImageWrapper
           src={product.pictures[0]}
-          alt={experience.name}
+          alt={product.name}
           ratio={4 / 3}
           placeholderText="No game picture"
         />
-        <h3 className="title">{capitalizeFirstLetter(experience.name)}</h3>
+        <h3 className="title">{capitalizeFirstLetter(product.name)}</h3>
         <div className="brand">
           <Flex flexDirection="row" alignItems="center" justifyContent="flex-start">
             <img

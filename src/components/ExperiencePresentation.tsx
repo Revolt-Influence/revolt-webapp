@@ -57,14 +57,13 @@ const ExternalLink = styled(TextLinkExternal)<{ black?: boolean }>`
 const EXPERIENCE_PRESENTATION_FRAGMENT = gql`
   fragment ExperiencePresentationFragment on Campaign {
     _id
-    name
-    description
+    goal
     brand {
       ...BrandFragment
     }
     product {
       name
-      description
+      pitch
       categories
       website
       youtubeLink
@@ -127,14 +126,7 @@ const ExperiencePresentation: React.FC<Props> = ({ experienceId }) => {
               placeholderText="No image available"
             />
             <Box mt="2rem">
-              <LabelText grey withMargin>
-                Name
-              </LabelText>
-              <p>{product.name}</p>
-              <LabelText grey withMargin>
-                Description
-              </LabelText>
-              <p style={{ whiteSpace: 'pre-line' }}>{product.description}</p>
+              <p style={{ whiteSpace: 'pre-line' }}>{product.pitch}</p>
               <LabelText grey withMargin>
                 Game website
               </LabelText>
@@ -152,7 +144,7 @@ const ExperiencePresentation: React.FC<Props> = ({ experienceId }) => {
         {/* Right column on desktop */}
         <Box width={[1, 1, 6 / 12]}>
           <SplitView title="The campaign" ratio={3.5 / 12} stacked noBorder={!isMobile}>
-            <p style={{ whiteSpace: 'pre-line' }}>{experience.description}</p>
+            <p style={{ whiteSpace: 'pre-line' }}>{experience.goal}</p>
           </SplitView>
           <SplitView title="The studio" ratio={3.5 / 12} stacked>
             <Flex justifyContent="space-between" alignItems="flex-start" flexWrap="wrap">

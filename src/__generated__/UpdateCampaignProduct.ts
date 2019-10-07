@@ -15,9 +15,9 @@ export interface UpdateCampaignProduct_updateCampaignProduct_product {
    */
   name: string;
   /**
-   * Paragraph of info about the product
+   * Marketing description of the game
    */
-  description: string;
+  pitch: string;
   /**
    * Link to more info about the product
    */

@@ -178,7 +178,7 @@ const CampaignForm: React.FC<RouteComponentProps<MatchParams>> = ({ match }) => 
                   <>
                     <GlobalStyle />
                     <Box px="1rem">
-                      <Title>{campaign.name}</Title>
+                      <Title>{product.name}</Title>
                       <Box mt="-3rem">
                         <ExperiencePresentation experienceId={campaign._id} />
                       </Box>

@@ -78,7 +78,7 @@ const CreatorCollabCard: React.FC<Props> = ({ collab }) => {
         }
       case CollabStatus.ACCEPTED:
         return {
-          name: 'game not given yet',
+          name: 'game not sent yet',
           color: 'blue',
         }
       case CollabStatus.SENT:
@@ -105,8 +105,12 @@ const CreatorCollabCard: React.FC<Props> = ({ collab }) => {
   return (
     <Link to={`/creator/experiences/${experience._id}`}>
       <Style mt={[0, 0, 0]} p={[0, 0, 0]}>
-        <ImageWrapper src={experience.product.pictures[0]} alt={experience.name} ratio={4 / 3} />
-        <h3 className="title">{capitalizeFirstLetter(experience.name)}</h3>
+        <ImageWrapper
+          src={experience.product.pictures[0]}
+          alt={experience.product.name}
+          ratio={4 / 3}
+        />
+        <h3 className="title">{capitalizeFirstLetter(experience.product.name)}</h3>
         <div className="brand">
           <Flex flexDirection="row" alignItems="center" justifyContent="flex-start">
             <img className="logo" src={experience.brand.logo} alt={experience.brand.name} />
