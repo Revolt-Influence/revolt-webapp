@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { ContainerBox } from '../styles/grid'
 import { Title } from '../styles/Text'
 import SplitView from '../components/SplitView'
@@ -7,7 +7,7 @@ import { usePageTitle } from '../utils/hooks'
 
 const ConnectSocialAccount: React.FC<{}> = () => {
   usePageTitle('Connect an account')
-  React.useEffect(() => {
+  useEffect(() => {
     window.scrollTo(0, 0)
   }, [])
   return (

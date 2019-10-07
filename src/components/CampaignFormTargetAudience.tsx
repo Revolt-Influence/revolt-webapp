@@ -59,7 +59,6 @@ const CampaignFormTargetAudience: React.FC<Prop> = ({ targetAudience, campaignId
   }, CAMPAIGN_SAVE_DEBOUNCE)
 
   const handleUpdateTargetAudience = (update: Partial<CampaignAudienceInput>) => {
-    console.log('update', { targetAudienceInput, update })
     setHasSaved(false)
     setTargetAudienceInput({ ...targetAudienceInput, ...update })
     debouncedCallback()
@@ -98,10 +97,8 @@ const CampaignFormTargetAudience: React.FC<Prop> = ({ targetAudience, campaignId
   }
 
   const handleAddCountry = (countryToAdd: string) => {
-    console.log(countryToAdd)
     // If selection is noPreference, clear all countries
     if (countryToAdd === noPreferenceKey) {
-      console.log('reset', noPreferenceKey)
       handleUpdateTargetAudience({ countries: [] })
     } else {
       // Otherwise add the country

@@ -5,10 +5,10 @@
 import { GameCategory } from "./globalTypes";
 
 // ====================================================
-// GraphQL query operation: GetExperiencesPage
+// GraphQL query operation: GetCreatorCampaign
 // ====================================================
 
-export interface GetExperiencesPage_campaigns_items_brand {
+export interface GetCreatorCampaign_campaign_brand {
   __typename: "Brand";
   /**
    * Mongoose generated ID
@@ -25,16 +25,16 @@ export interface GetExperiencesPage_campaigns_items_brand {
   website: string;
 }
 
-export interface GetExperiencesPage_campaigns_items_product {
+export interface GetCreatorCampaign_campaign_product {
   __typename: "CampaignProduct";
   /**
    * Name of the product
    */
   name: string;
   /**
-   * Paragraph of info about the product
+   * Marketing description of the game
    */
-  description: string;
+  pitch: string;
   /**
    * Game categories that best describe the game
    */
@@ -57,28 +57,24 @@ export interface GetExperiencesPage_campaigns_items_product {
   launchedAt: any;
 }
 
-export interface GetExperiencesPage_campaigns_items {
+export interface GetCreatorCampaign_campaign {
   __typename: "Campaign";
   /**
    * Mongoose generated ID
    */
   _id: string;
   /**
-   * The campaign name that is promoted to the creators
-   */
-  name: string;
-  /**
    * More info about the campaign and its goals
    */
-  description: string;
+  goal: string;
   /**
    * The brand that published the campaign
    */
-  brand: GetExperiencesPage_campaigns_items_brand | null;
+  brand: GetCreatorCampaign_campaign_brand | null;
   /**
    * What the creator will receive
    */
-  product: GetExperiencesPage_campaigns_items_product;
+  product: GetCreatorCampaign_campaign_product;
   /**
    * Rules that creators must respect to receive the gift
    */
@@ -86,20 +82,13 @@ export interface GetExperiencesPage_campaigns_items {
   createdAt: any;
 }
 
-export interface GetExperiencesPage_campaigns {
-  __typename: "PaginatedCampaignResponse";
-  currentPage: number;
-  totalPages: number;
-  items: GetExperiencesPage_campaigns_items[];
-}
-
-export interface GetExperiencesPage {
+export interface GetCreatorCampaign {
   /**
-   * Get page of campaigns or experiences depending on whether the session is a brand or a user
+   * Get campaign by ID
    */
-  campaigns: GetExperiencesPage_campaigns;
+  campaign: GetCreatorCampaign_campaign;
 }
 
-export interface GetExperiencesPageVariables {
-  page?: number | null;
+export interface GetCreatorCampaignVariables {
+  campaignId: string;
 }

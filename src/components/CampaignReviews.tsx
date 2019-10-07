@@ -39,12 +39,14 @@ const GET_CAMPAIGN_REVIEWS = gql`
     campaign(id: $campaignId) {
       _id
       reviews {
+        _id
         format
         commentCount
         createdAt
         likeCount
         link
         creator {
+          _id
           name
         }
       }

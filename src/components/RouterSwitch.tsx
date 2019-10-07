@@ -24,9 +24,9 @@ const CreatorAccount = lazy(() => import('../pages/CreatorAccount'))
 const NotFound = lazy(() => import('../pages/NotFound'))
 const ResetPassword = lazy(() => import('../pages/ResetPassword'))
 const CampaignsList = lazy(() => import('../pages/CampaignsList'))
-const ExperiencesList = lazy(() => import('../pages/ExperiencesList'))
 const CollabsList = lazy(() => import('../pages/CollabsList'))
-const Experience = lazy(() => import('../pages/Experience'))
+const CreatorCampaignsList = lazy(() => import('../pages/CreatorCampaignsList'))
+const CreatorCampaign = lazy(() => import('../pages/CreatorCampaign'))
 const CampaignForm = lazy(() => import('../pages/CampaignForm'))
 const ConnectSocialAccount = lazy(() => import('../pages/ConnectSocialAccount'))
 const AmbassadorProgram = lazy(() => import('../pages/AmbassadorProgram'))
@@ -129,11 +129,11 @@ const RouterSwitch: React.FC<RouteComponentProps> = () => {
     return <CampaignsList />
   }
 
-  const renderExperiencesList = () => {
+  const renderCreatorCampaignsList = () => {
     if (!isLoggedIn) {
       return <Redirect to="/login" />
     }
-    return <ExperiencesList />
+    return <CreatorCampaignsList />
   }
 
   const renderCollabsList = () => {
@@ -143,11 +143,11 @@ const RouterSwitch: React.FC<RouteComponentProps> = () => {
     return <CollabsList />
   }
 
-  const renderExperience = () => {
+  const renderCreatorCampaign = () => {
     if (!isLoggedIn) {
       return <Redirect to="/login" />
     }
-    return <Experience />
+    return <CreatorCampaign />
   }
 
   const renderCampaignDashboard = () => {
@@ -232,10 +232,10 @@ const RouterSwitch: React.FC<RouteComponentProps> = () => {
     }
     return (
       <Switch>
-        <Route exact path="/creator" render={() => <Redirect to="/creator/experiences" />} />
-        <Route exact path="/creator/experiences" render={renderExperiencesList} />
+        <Route exact path="/creator" render={() => <Redirect to="/creator/games" />} />
+        <Route exact path="/creator/games" render={renderCreatorCampaignsList} />
         <Route exact path="/creator/collabs" render={renderCollabsList} />
-        <Route exact path="/creator/experiences/:campaignId" render={renderExperience} />
+        <Route exact path="/creator/games/:campaignId" render={renderCreatorCampaign} />
         <Route exact path="/creator/ambassador" component={AmbassadorProgram} />
         <Route path="/creator/myAccount" render={renderCreatorAccount} />
         <Route path="/creator/messages/:conversationId" component={Conversation} />

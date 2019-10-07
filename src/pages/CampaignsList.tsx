@@ -6,7 +6,6 @@ import { RouteComponentProps, withRouter } from 'react-router-dom'
 import BrandOnboarding from '../components/BrandOnboarding'
 import CampaignPreviewCard from '../components/CampaignPreviewCard'
 import ErrorCard from '../components/ErrorCard'
-import { EXPERIENCE_PRESENTATION_FRAGMENT } from '../components/ExperiencePresentation'
 import Loader from '../components/Loader'
 import NotificationCard from '../components/NotificationCard'
 import { MainButton } from '../styles/Button'
@@ -15,10 +14,11 @@ import { Title } from '../styles/Text'
 import { usePageTitle } from '../utils/hooks'
 import { CreateCampaign } from '../__generated__/CreateCampaign'
 import { GetCampaigns } from '../__generated__/GetCampaigns'
+import { CREATOR_CAMPAIGN_PRESENTATION_FRAGMENT } from '../components/CreatorCampaignPresentation'
 
 const CAMPAIGN_CARD_FRAGMENT = gql`
   fragment CampaignCardFragment on Campaign {
-    ...ExperiencePresentationFragment
+    ...CreatorCampaignPresentationFragment
     collabs {
       _id
       status
@@ -37,10 +37,10 @@ const CAMPAIGN_CARD_FRAGMENT = gql`
       email
     }
   }
-  ${EXPERIENCE_PRESENTATION_FRAGMENT}
+  ${CREATOR_CAMPAIGN_PRESENTATION_FRAGMENT}
 `
 
-const GET_CAMPAIGNS = gql`
+export const GET_CAMPAIGNS = gql`
   query GetCampaigns {
     campaigns {
       currentPage
@@ -56,14 +56,14 @@ const GET_CAMPAIGNS = gql`
 export const CREATE_CAMPAIGN = gql`
   mutation CreateCampaign {
     createCampaign {
-      ...ExperiencePresentationFragment
+      ...CreatorCampaignPresentationFragment
       collabs {
         _id
         status
       }
     }
   }
-  ${EXPERIENCE_PRESENTATION_FRAGMENT}
+  ${CREATOR_CAMPAIGN_PRESENTATION_FRAGMENT}
 `
 
 const CampaignsList: React.FC<RouteComponentProps> = ({ history }) => {
@@ -77,6 +77,8 @@ const CampaignsList: React.FC<RouteComponentProps> = ({ history }) => {
     onCompleted: createdCampaign => {
       history.push(`/brand/campaigns/${createdCampaign.createCampaign._id}/brief`)
     },
+    // Add created campaign to cache
+    refetchQueries: [{ query: GET_CAMPAIGNS }],
   })
 
   if (loading) {

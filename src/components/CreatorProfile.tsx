@@ -264,7 +264,8 @@ const CreatorProfile: React.FC<Props> = ({ creatorId, collabId, handleAccept, ha
             {collab && showContactButton()}
           </>
         ) : (
-          collabId && (
+          collabId &&
+          collab && (
             <>
               {showContactButton()}
               <Dropdown

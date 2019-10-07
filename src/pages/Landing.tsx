@@ -6,7 +6,7 @@ import { Container } from '../utils/grid'
 import { setFont } from '../utils/styles'
 import { usePageTitle } from '../utils/hooks'
 
-const illustrationSource = require('../images/illustrations/landing.png')
+const illustrationSource = require('../images/illustrations/landing.svg')
 
 const Title = styled.p`
   ${setFont(600, 'huge')}

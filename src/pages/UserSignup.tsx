@@ -90,13 +90,15 @@ const UserSignup: React.FC<{}> = () => {
         <Title isCentered noMargin>
           Create an account
         </Title>
-        <p style={{ marginTop: '1.5rem', textAlign: 'center' }}>No credit card necessary</p>
+        <p style={{ marginTop: '1.5rem', textAlign: 'center' }}>
+          No credit card necessary. Free forever
+        </p>
       </Box>
       <Flex flexDirection="column" alignItems="center" mt="2rem">
         <Box as="form" onSubmit={handleFormSubmit} width={[1, 10 / 12, 6 / 12]}>
           {/* Email */}
           <FormInputLabel>
-            Email
+            Professional email
             <FormInput
               type="email"
               onChange={e => setEmail(e.target.value)}

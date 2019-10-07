@@ -32,9 +32,9 @@ export interface GetCampaigns_campaigns_items_product {
    */
   name: string;
   /**
-   * Paragraph of info about the product
+   * Marketing description of the game
    */
-  description: string;
+  pitch: string;
   /**
    * Game categories that best describe the game
    */
@@ -101,13 +101,9 @@ export interface GetCampaigns_campaigns_items {
    */
   _id: string;
   /**
-   * The campaign name that is promoted to the creators
-   */
-  name: string;
-  /**
    * More info about the campaign and its goals
    */
-  description: string;
+  goal: string;
   /**
    * The brand that published the campaign
    */
@@ -160,7 +156,7 @@ export interface GetCampaigns_campaigns {
 
 export interface GetCampaigns {
   /**
-   * Get page of campaigns or experiences depending on whether the session is a brand or a user
+   * Get page of campaigns, different if brand or a user
    */
   campaigns: GetCampaigns_campaigns;
 }

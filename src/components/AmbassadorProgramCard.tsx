@@ -23,7 +23,7 @@ const AmbassadorProgramCard: React.FunctionComponent<{}> = () => (
       <br />
       signed up on Revolt
     </p>
-    <MainLink to="/creator/ambassador">Become an embassador</MainLink>
+    <MainLink to="/creator/ambassador">Become an ambassador</MainLink>
   </Styles>
 )
 

@@ -93,12 +93,8 @@ const CreatorProfilePanel: React.FC<{}> = () => {
   const selfRef = useRef()
   const handleClosePanel = () => {
     closePanel()
-    // client.writeData({
-    //   data: { profilePanel: { isOpen: false, creatorId: undefined, collabId: undefined } },
-    // })
   }
   useOnClickOutside(selfRef, handleClosePanel)
-  console.log(data)
 
   // Don't show panel if not open
   if (!data || !data.creatorPanel.isOpen) return null

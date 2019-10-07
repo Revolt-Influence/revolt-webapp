@@ -47,15 +47,13 @@ interface CampaignStatusInfo {
 const getCampaignStatus = (campaign: GetCampaign_campaign): CampaignStatusInfo => {
   if (
     !campaign ||
-    !campaign.name ||
-    !campaign.description ||
+    !campaign.goal ||
     !campaign.estimatedBudget ||
     !campaign.product ||
     !campaign.product.name ||
-    !campaign.product.description ||
+    !campaign.product.pitch ||
     !campaign.product.pictures ||
     !campaign.product.website ||
-    !campaign.product.youtubeLink ||
     !campaign.targetAudience == null ||
     !campaign.targetAudience.ageGroups == null ||
     !campaign.targetAudience.countries == null ||
@@ -83,7 +81,7 @@ const getCampaignStatus = (campaign: GetCampaign_campaign): CampaignStatusInfo =
   }
   return {
     name: CampaignStatus.AWAITING_REVIEW,
-    description: 'Our team is analyzing your campaign, we will get back to you shortly.',
+    description: 'Our team is reviewing your campaign, we will get back to you shortly.',
     color: palette.orange._500,
   }
 }
@@ -92,13 +90,12 @@ export const GET_CAMPAIGN = gql`
   query GetCampaign($campaignId: String!) {
     campaign(id: $campaignId) {
       _id
-      name
-      description
+      goal
       estimatedBudget
       trackingProvider
       product {
         name
-        description
+        pitch
         website
         pictures
         youtubeLink
@@ -141,7 +138,7 @@ const CampaignDashboard: React.FC<Props> = ({ match, location }) => {
     GetCampaignVariables
   >(GET_CAMPAIGN, { variables: { campaignId } })
 
-  usePageTitle(campaign && campaign.name)
+  usePageTitle(campaign && campaign.product && campaign.product.name)
   // Get current page from URL
   const parsedQuery = queryString.parse(location.search)
   const hasQueryParams = Object.entries(parsedQuery).length > 0
@@ -197,7 +194,7 @@ const CampaignDashboard: React.FC<Props> = ({ match, location }) => {
   }
 
   if (loading) {
-    return <Loader />
+    return <Loader fullScreen />
   }
   if (error) {
     return <ErrorCard message="Could not show campaign" />
@@ -206,7 +203,7 @@ const CampaignDashboard: React.FC<Props> = ({ match, location }) => {
   return (
     <main>
       <ContainerBox>
-        <PageHeader title={campaign.name} destination="/brand" />
+        <PageHeader title={campaign.product.name} destination="/brand" />
       </ContainerBox>
       {status.name !== CampaignStatus.ONLINE && (
         <ContainerBox mb="2rem" mt="-1rem">

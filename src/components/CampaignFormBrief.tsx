@@ -20,8 +20,7 @@ const possibleTrackingProviders = Object.values(TrackingProvider) as TrackingPro
 export const CAMPAIGN_BRIEF_FRAGMENT = gql`
   fragment CampaignBriefFragment on Campaign {
     _id
-    name
-    description
+    goal
     rules
     estimatedBudget
     trackingProvider
@@ -74,24 +73,12 @@ const CampaignFormBrief: React.FC<Prop> = ({ brief }) => {
         {hasSaved && <Toast nature="success" text="Changes saved" disappear />}
         {error && <Toast nature="error" text="Could not save changes" disappear />}
         {/* Form */}
-        <Box width={[1, 1, 6 / 12]} pr={[0, 0, '2rem']}>
-          <FormInputLabel>
-            Campaign name
-            <FormInput
-              value={briefInput.name}
-              onChange={e => handleUpdateBrief({ name: e.target.value })}
-              placeholder="My campaign"
-              hasLabel
-              required
-            />
-          </FormInputLabel>
-        </Box>
         <FormInputLabel>
           Campaign goal
           <FormTextarea
             rows={4}
-            value={briefInput.description}
-            onChange={e => handleUpdateBrief({ description: e.target.value })}
+            value={briefInput.goal}
+            onChange={e => handleUpdateBrief({ goal: e.target.value })}
             hasLabel
             required
           />

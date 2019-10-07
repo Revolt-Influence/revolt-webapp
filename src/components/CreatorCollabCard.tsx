@@ -9,7 +9,7 @@ import { Status } from '../styles/Status'
 import ImageWrapper from './ImageWrapper'
 import { CollabStatus } from '../__generated__/globalTypes'
 import gql from 'graphql-tag'
-import { EXPERIENCE_PRESENTATION_FRAGMENT } from './ExperiencePresentation'
+import { CREATOR_CAMPAIGN_PRESENTATION_FRAGMENT } from './CreatorCampaignPresentation'
 import { CreatorCollabFragment } from '../__generated__/CreatorCollabFragment'
 
 const Style = styled(Box)`
@@ -58,10 +58,10 @@ export const CREATOR_COLLAB_FRAGMENT = gql`
     status
     updatedAt
     campaign {
-      ...ExperiencePresentationFragment
+      ...CreatorCampaignPresentationFragment
     }
   }
-  ${EXPERIENCE_PRESENTATION_FRAGMENT}
+  ${CREATOR_CAMPAIGN_PRESENTATION_FRAGMENT}
 `
 
 interface Props {
@@ -78,7 +78,7 @@ const CreatorCollabCard: React.FC<Props> = ({ collab }) => {
         }
       case CollabStatus.ACCEPTED:
         return {
-          name: 'game not given yet',
+          name: 'game not sent yet',
           color: 'blue',
         }
       case CollabStatus.SENT:
@@ -100,17 +100,21 @@ const CreatorCollabCard: React.FC<Props> = ({ collab }) => {
   }
   const status = formatStatus()
 
-  const { campaign: experience } = collab
+  const { campaign } = collab
 
   return (
-    <Link to={`/creator/experiences/${experience._id}`}>
+    <Link to={`/creator/games/${campaign._id}`}>
       <Style mt={[0, 0, 0]} p={[0, 0, 0]}>
-        <ImageWrapper src={experience.product.pictures[0]} alt={experience.name} ratio={4 / 3} />
-        <h3 className="title">{capitalizeFirstLetter(experience.name)}</h3>
+        <ImageWrapper
+          src={campaign.product.pictures[0]}
+          alt={campaign.product.name}
+          ratio={4 / 3}
+        />
+        <h3 className="title">{capitalizeFirstLetter(campaign.product.name)}</h3>
         <div className="brand">
           <Flex flexDirection="row" alignItems="center" justifyContent="flex-start">
-            <img className="logo" src={experience.brand.logo} alt={experience.brand.name} />
-            <p>{experience.brand.name}</p>
+            <img className="logo" src={campaign.brand.logo} alt={campaign.brand.name} />
+            <p>{campaign.brand.name}</p>
           </Flex>
         </div>
         <Flex flexDirection="row" alignItems="center" justifyContent="space-between" mt="1rem">

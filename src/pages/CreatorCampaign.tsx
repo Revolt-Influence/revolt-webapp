@@ -2,11 +2,11 @@ import React, { useState } from 'react'
 import { RouteComponentProps, withRouter } from 'react-router-dom'
 import { Flex, Box } from '@rebass/grid'
 import ErrorCard from '../components/ErrorCard'
-import ExperienceForm from '../components/ExperienceForm'
+import CreatorCollabRequestForm from '../components/CreatorCollabRequestForm'
 import { ContainerBox } from '../styles/grid'
-import ExperiencePresentation, {
-  EXPERIENCE_PRESENTATION_FRAGMENT,
-} from '../components/ExperiencePresentation'
+import CreatorCampaignPresentation, {
+  CREATOR_CAMPAIGN_PRESENTATION_FRAGMENT,
+} from '../components/CreatorCampaignPresentation'
 import PageHeader from '../components/PageHeader'
 import ErrorBoundary from '../components/ErrorBoundary'
 import SubmitCreatorReviews from '../components/SubmitCreatorReviews'
@@ -17,17 +17,20 @@ import { palette } from '../utils/colors'
 import NotificationCard from '../components/NotificationCard'
 import gql from 'graphql-tag'
 import { useQuery } from '@apollo/react-hooks'
-import { GetExperiencePage, GetExperiencePageVariables } from '../__generated__/GetExperiencePage'
+import {
+  GetCreatorCampaignPage,
+  GetCreatorCampaignPageVariables,
+} from '../__generated__/GetCreatorCampaignPage'
 import { CreatorStatus, CollabStatus } from '../__generated__/globalTypes'
 
-enum ExperienceTab {
+enum GameTab {
   PRESENTATION = 'presentation',
   APPLY = 'apply',
   SUBMIT = 'submit',
 }
 
-const GET_EXPERIENCE_PAGE = gql`
-  query GetExperiencePage($campaignId: String!) {
+const GET_CREATOR_CAMPAIGN_PAGE = gql`
+  query GetCreatorCampaignPage($campaignId: String!) {
     session {
       creator {
         _id
@@ -35,7 +38,7 @@ const GET_EXPERIENCE_PAGE = gql`
       }
     }
     campaign(id: $campaignId) {
-      ...ExperiencePresentationFragment
+      ...CreatorCampaignPresentationFragment
     }
     collabs {
       _id
@@ -45,28 +48,28 @@ const GET_EXPERIENCE_PAGE = gql`
       }
     }
   }
-  ${EXPERIENCE_PRESENTATION_FRAGMENT}
+  ${CREATOR_CAMPAIGN_PRESENTATION_FRAGMENT}
 `
 
 interface Props extends RouteComponentProps<{ campaignId: string }> {}
 
-const Experience: React.FC<Props> = ({ match }) => {
+const CreatorCampaign: React.FC<Props> = ({ match }) => {
   const { campaignId } = match.params
   const { width } = useWindowSize()
   const {
-    data: { session, campaign: experience, collabs } = {
+    data: { session, campaign, collabs } = {
       session: null,
       campaign: null,
       collabs: null,
     },
     loading,
     error,
-  } = useQuery<GetExperiencePage, GetExperiencePageVariables>(GET_EXPERIENCE_PAGE, {
+  } = useQuery<GetCreatorCampaignPage, GetCreatorCampaignPageVariables>(GET_CREATOR_CAMPAIGN_PAGE, {
     variables: { campaignId },
   })
-  const [tab, setTab] = useState<ExperienceTab>(ExperienceTab.PRESENTATION)
+  const [tab, setTab] = useState<GameTab>(GameTab.PRESENTATION)
 
-  usePageTitle(experience && experience.name)
+  usePageTitle(campaign && campaign.product.name)
 
   if (loading) {
     return <Loader fullScreen />
@@ -74,7 +77,7 @@ const Experience: React.FC<Props> = ({ match }) => {
   if (error) {
     return (
       <ContainerBox>
-        <ErrorCard message="Could not show experience" />
+        <ErrorCard message="Could not show game" />
       </ContainerBox>
     )
   }
@@ -83,28 +86,28 @@ const Experience: React.FC<Props> = ({ match }) => {
   const linkedCollab = collabs.find(_collab => _collab.campaign._id === campaignId)
   const alreadyInCollab = linkedCollab != null
 
-  // Handle case where no experience is defined
-  if (experience == null) {
+  // Handle case where no campaign is defined
+  if (campaign == null) {
     return (
       <ContainerBox>
-        <ErrorCard message="Could not show experience" />
+        <ErrorCard message="Could not show game" />
       </ContainerBox>
     )
   }
 
-  const showPresentation = () => <ExperiencePresentation experienceId={experience._id} />
+  const showPresentation = () => <CreatorCampaignPresentation campaignId={campaign._id} />
 
-  const changeTab = (newTab: typeof tab) => {
+  const changeTab = (newTab: GameTab) => {
     window.scrollTo(0, 0)
     setTab(newTab)
   }
 
   const showActionButton = () => {
     // Fresh new campaign, suggest applying
-    if (tab === ExperienceTab.PRESENTATION && !alreadyInCollab) {
+    if (tab === GameTab.PRESENTATION && !alreadyInCollab) {
       return (
         <MainButton
-          onClick={() => changeTab(ExperienceTab.APPLY)}
+          onClick={() => changeTab(GameTab.APPLY)}
           noMargin
           disabled={session.creator.status !== CreatorStatus.VERIFIED}
         >
@@ -113,13 +116,13 @@ const Experience: React.FC<Props> = ({ match }) => {
       )
     }
     if (
-      tab === ExperienceTab.PRESENTATION &&
+      tab === GameTab.PRESENTATION &&
       alreadyInCollab &&
       (linkedCollab.status === CollabStatus.SENT || linkedCollab.status === CollabStatus.ACCEPTED)
     ) {
       return (
-        <MainButton onClick={() => changeTab(ExperienceTab.SUBMIT)} noMargin>
-          Poster ma revue
+        <MainButton onClick={() => changeTab(GameTab.SUBMIT)} noMargin>
+          Submit my review
         </MainButton>
       )
     }
@@ -127,17 +130,17 @@ const Experience: React.FC<Props> = ({ match }) => {
   }
 
   const showCurrentTab = () => {
-    if (tab === ExperienceTab.PRESENTATION) {
+    if (tab === GameTab.PRESENTATION) {
       return showPresentation()
     }
 
     // Apply to campaign
-    if (tab === ExperienceTab.APPLY) {
-      return <ExperienceForm brand={experience.brand.name} experienceId={experience._id} />
+    if (tab === GameTab.APPLY) {
+      return <CreatorCollabRequestForm brand={campaign.brand.name} campaignId={campaign._id} />
     }
 
     // Submit review
-    if (tab === ExperienceTab.SUBMIT) {
+    if (tab === GameTab.SUBMIT) {
       if (
         alreadyInCollab &&
         linkedCollab.status !== CollabStatus.REQUEST &&
@@ -152,7 +155,7 @@ const Experience: React.FC<Props> = ({ match }) => {
   }
 
   return (
-    <ErrorBoundary message="Could not show experience">
+    <ErrorBoundary message="Could not show game">
       <ContainerBox>
         {/* Page header */}
         <Flex
@@ -162,8 +165,8 @@ const Experience: React.FC<Props> = ({ match }) => {
           style={width > 1150 ? { borderBottom: `3px solid ${palette.grey._200}` } : null}
         >
           <PageHeader
-            title={experience.name}
-            destination={alreadyInCollab ? '/creator/collabs' : '/creator/experiences'}
+            title={campaign.product.name}
+            destination={alreadyInCollab ? '/creator/collabs' : '/creator/games'}
           />
           {showActionButton()}
         </Flex>
@@ -172,7 +175,7 @@ const Experience: React.FC<Props> = ({ match }) => {
           <Box mt="2rem">
             <NotificationCard
               nature="info"
-              message="Your profile hasn't been verified by our team. You can't apply to experiences yet"
+              message="Your profile hasn't been verified by our team. You can't apply to games yet"
             />
           </Box>
         )}
@@ -183,10 +186,10 @@ const Experience: React.FC<Props> = ({ match }) => {
         <Flex justifyContent="center">{showActionButton()}</Flex>
 
         {/* Go back to main tab (presentation) if not on main tab */}
-        {tab !== ExperienceTab.PRESENTATION && (
+        {tab !== GameTab.PRESENTATION && (
           <Flex justifyContent="center" mt="2rem">
-            <TextButton onClick={() => changeTab(ExperienceTab.PRESENTATION)}>
-              Back to experience presentation
+            <TextButton onClick={() => changeTab(GameTab.PRESENTATION)}>
+              Back to the game presentation
             </TextButton>
           </Flex>
         )}
@@ -195,4 +198,4 @@ const Experience: React.FC<Props> = ({ match }) => {
   )
 }
 
-export default withRouter(Experience)
+export default withRouter(CreatorCampaign)

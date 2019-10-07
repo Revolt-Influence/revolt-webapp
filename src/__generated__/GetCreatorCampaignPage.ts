@@ -5,10 +5,10 @@
 import { CreatorStatus, GameCategory, CollabStatus } from "./globalTypes";
 
 // ====================================================
-// GraphQL query operation: GetExperiencePage
+// GraphQL query operation: GetCreatorCampaignPage
 // ====================================================
 
-export interface GetExperiencePage_session_creator {
+export interface GetCreatorCampaignPage_session_creator {
   __typename: "Creator";
   /**
    * Mongoose generated ID
@@ -20,15 +20,15 @@ export interface GetExperiencePage_session_creator {
   status: CreatorStatus;
 }
 
-export interface GetExperiencePage_session {
+export interface GetCreatorCampaignPage_session {
   __typename: "Session";
   /**
    * The creator that _may_ be logged in
    */
-  creator: GetExperiencePage_session_creator | null;
+  creator: GetCreatorCampaignPage_session_creator | null;
 }
 
-export interface GetExperiencePage_campaign_brand {
+export interface GetCreatorCampaignPage_campaign_brand {
   __typename: "Brand";
   /**
    * Mongoose generated ID
@@ -45,16 +45,16 @@ export interface GetExperiencePage_campaign_brand {
   website: string;
 }
 
-export interface GetExperiencePage_campaign_product {
+export interface GetCreatorCampaignPage_campaign_product {
   __typename: "CampaignProduct";
   /**
    * Name of the product
    */
   name: string;
   /**
-   * Paragraph of info about the product
+   * Marketing description of the game
    */
-  description: string;
+  pitch: string;
   /**
    * Game categories that best describe the game
    */
@@ -77,28 +77,24 @@ export interface GetExperiencePage_campaign_product {
   launchedAt: any;
 }
 
-export interface GetExperiencePage_campaign {
+export interface GetCreatorCampaignPage_campaign {
   __typename: "Campaign";
   /**
    * Mongoose generated ID
    */
   _id: string;
   /**
-   * The campaign name that is promoted to the creators
-   */
-  name: string;
-  /**
    * More info about the campaign and its goals
    */
-  description: string;
+  goal: string;
   /**
    * The brand that published the campaign
    */
-  brand: GetExperiencePage_campaign_brand | null;
+  brand: GetCreatorCampaignPage_campaign_brand | null;
   /**
    * What the creator will receive
    */
-  product: GetExperiencePage_campaign_product;
+  product: GetCreatorCampaignPage_campaign_product;
   /**
    * Rules that creators must respect to receive the gift
    */
@@ -106,7 +102,7 @@ export interface GetExperiencePage_campaign {
   createdAt: any;
 }
 
-export interface GetExperiencePage_collabs_campaign {
+export interface GetCreatorCampaignPage_collabs_campaign {
   __typename: "Campaign";
   /**
    * Mongoose generated ID
@@ -114,7 +110,7 @@ export interface GetExperiencePage_collabs_campaign {
   _id: string;
 }
 
-export interface GetExperiencePage_collabs {
+export interface GetCreatorCampaignPage_collabs {
   __typename: "Collab";
   /**
    * Mongoose generated ID
@@ -127,24 +123,24 @@ export interface GetExperiencePage_collabs {
   /**
    * The campaign the collab is a part of
    */
-  campaign: GetExperiencePage_collabs_campaign;
+  campaign: GetCreatorCampaignPage_collabs_campaign;
 }
 
-export interface GetExperiencePage {
+export interface GetCreatorCampaignPage {
   /**
    * Check if a session exists, could be a creator or a brand user
    */
-  session: GetExperiencePage_session;
+  session: GetCreatorCampaignPage_session;
   /**
    * Get campaign by ID
    */
-  campaign: GetExperiencePage_campaign;
+  campaign: GetCreatorCampaignPage_campaign;
   /**
    * Get list of creator collabs
    */
-  collabs: GetExperiencePage_collabs[];
+  collabs: GetCreatorCampaignPage_collabs[];
 }
 
-export interface GetExperiencePageVariables {
+export interface GetCreatorCampaignPageVariables {
   campaignId: string;
 }

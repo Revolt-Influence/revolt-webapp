@@ -130,10 +130,18 @@ export enum SessionType {
  * Platforms that provide analytics for game
  */
 export enum TrackingProvider {
+  ADJUST = "ADJUST",
+  APPSFLYER = "APPSFLYER",
+  BUFFPANEL = "BUFFPANEL",
+  CUSTOM_LINK = "CUSTOM_LINK",
   GAME_ANALYTICS = "GAME_ANALYTICS",
   GOOGLE_ANALYTICS = "GOOGLE_ANALYTICS",
+  KOCHAVA = "KOCHAVA",
   NONE = "NONE",
   OTHER = "OTHER",
+  SINGULAR = "SINGULAR",
+  TENJIN = "TENJIN",
+  TUNE = "TUNE",
   UNITY_ANALYTICS = "UNITY_ANALYTICS",
 }
 
@@ -144,8 +152,7 @@ export interface CampaignAudienceInput {
 }
 
 export interface CampaignBriefInput {
-  name: string;
-  description: string;
+  goal: string;
   rules: string[];
   estimatedBudget?: number | null;
   trackingProvider: TrackingProvider;
@@ -153,7 +160,7 @@ export interface CampaignBriefInput {
 
 export interface CampaignProductInput {
   name: string;
-  description: string;
+  pitch: string;
   website: string;
   pictures: string[];
   launchedAt: any;

@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 // Absolute URL so that it works in an iframe
 const checkIconSource =
-  'https://res.cloudinary.com/influencerz/image/upload/v1565364436/icons/added_white.svg'
+  'https://res.cloudinary.com/revolt/image/upload/v1569512887/icons/added_green.svg'
 
 const Feature = styled.div`
   display: flex;

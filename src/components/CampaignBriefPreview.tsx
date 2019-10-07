@@ -1,7 +1,7 @@
 import React from 'react'
 import { ContainerBox } from '../styles/grid'
 import { MainLink } from '../styles/Button'
-import ExperiencePresentation from './ExperiencePresentation'
+import CreatorCampaignPresentation from './CreatorCampaignPresentation'
 import { GetCampaign_campaign } from '../__generated__/GetCampaign'
 import { getCampaignStatus, CampaignStatus } from '../pages/CampaignDashboard'
 import InfoCard from './InfoCard'
@@ -19,7 +19,7 @@ const CampaignBriefPreview: React.FC<ICampaignBriefPreviewProps> = ({ campaign }
         Edit my brief
       </MainLink>
       {status.name !== CampaignStatus.INCOMPLETE && (
-        <ExperiencePresentation experienceId={campaign._id} />
+        <CreatorCampaignPresentation campaignId={campaign._id} />
       )}
     </ContainerBox>
   )

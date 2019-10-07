@@ -2,13 +2,13 @@
 /* eslint-disable */
 // This file was automatically generated and should not be edited.
 
-import { GameCategory } from "./globalTypes";
+import { CollabStatus, GameCategory } from "./globalTypes";
 
 // ====================================================
-// GraphQL query operation: GetExperience
+// GraphQL mutation operation: ApplyToCampaign
 // ====================================================
 
-export interface GetExperience_campaign_brand {
+export interface ApplyToCampaign_applyToCampaign_campaign_brand {
   __typename: "Brand";
   /**
    * Mongoose generated ID
@@ -25,16 +25,16 @@ export interface GetExperience_campaign_brand {
   website: string;
 }
 
-export interface GetExperience_campaign_product {
+export interface ApplyToCampaign_applyToCampaign_campaign_product {
   __typename: "CampaignProduct";
   /**
    * Name of the product
    */
   name: string;
   /**
-   * Paragraph of info about the product
+   * Marketing description of the game
    */
-  description: string;
+  pitch: string;
   /**
    * Game categories that best describe the game
    */
@@ -57,28 +57,24 @@ export interface GetExperience_campaign_product {
   launchedAt: any;
 }
 
-export interface GetExperience_campaign {
+export interface ApplyToCampaign_applyToCampaign_campaign {
   __typename: "Campaign";
   /**
    * Mongoose generated ID
    */
   _id: string;
   /**
-   * The campaign name that is promoted to the creators
-   */
-  name: string;
-  /**
    * More info about the campaign and its goals
    */
-  description: string;
+  goal: string;
   /**
    * The brand that published the campaign
    */
-  brand: GetExperience_campaign_brand | null;
+  brand: ApplyToCampaign_applyToCampaign_campaign_brand | null;
   /**
    * What the creator will receive
    */
-  product: GetExperience_campaign_product;
+  product: ApplyToCampaign_applyToCampaign_campaign_product;
   /**
    * Rules that creators must respect to receive the gift
    */
@@ -86,13 +82,31 @@ export interface GetExperience_campaign {
   createdAt: any;
 }
 
-export interface GetExperience {
+export interface ApplyToCampaign_applyToCampaign {
+  __typename: "Collab";
   /**
-   * Get campaign by ID
+   * Mongoose generated ID
    */
-  campaign: GetExperience_campaign;
+  _id: string;
+  /**
+   * Advancement of the collab
+   */
+  status: CollabStatus;
+  updatedAt: any;
+  /**
+   * The campaign the collab is a part of
+   */
+  campaign: ApplyToCampaign_applyToCampaign_campaign;
 }
 
-export interface GetExperienceVariables {
+export interface ApplyToCampaign {
+  /**
+   * Creates a collab request
+   */
+  applyToCampaign: ApplyToCampaign_applyToCampaign;
+}
+
+export interface ApplyToCampaignVariables {
+  message: string;
   campaignId: string;
 }

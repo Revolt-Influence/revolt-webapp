@@ -8,7 +8,7 @@ import ErrorCard from '../components/ErrorCard'
 import { MainButton } from '../styles/Button'
 import { usePageTitle, useClientSize } from '../utils/hooks'
 import PhoneMockup from '../components/PhoneMockup'
-import ExperiencePresentation from '../components/ExperiencePresentation'
+import CreatorCampaignPresentation from '../components/CreatorCampaignPresentation'
 import { Title, SubTitle } from '../styles/Text'
 import PageHeader from '../components/PageHeader'
 import { ContainerBox } from '../styles/grid'
@@ -178,9 +178,9 @@ const CampaignForm: React.FC<RouteComponentProps<MatchParams>> = ({ match }) => 
                   <>
                     <GlobalStyle />
                     <Box px="1rem">
-                      <Title>{campaign.name}</Title>
+                      <Title>{product.name}</Title>
                       <Box mt="-3rem">
-                        <ExperiencePresentation experienceId={campaign._id} />
+                        <CreatorCampaignPresentation campaignId={campaign._id} />
                       </Box>
                     </Box>
                   </>

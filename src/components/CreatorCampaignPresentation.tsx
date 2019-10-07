@@ -15,7 +15,10 @@ import ImageWrapper from './ImageWrapper'
 import Loader from './Loader'
 import SplitView from './SplitView'
 import { BRAND_FRAGMENT } from './CampaignFormBrand'
-import { GetExperience, GetExperienceVariables } from '../__generated__/GetExperience'
+import {
+  GetCreatorCampaign,
+  GetCreatorCampaignVariables,
+} from '../__generated__/GetCreatorCampaign'
 
 const Styles = styled.div`
   h3 {
@@ -54,17 +57,16 @@ const ExternalLink = styled(TextLinkExternal)<{ black?: boolean }>`
   ${props => props.black && `color: ${palette.grey._900}`}
 `
 
-const EXPERIENCE_PRESENTATION_FRAGMENT = gql`
-  fragment ExperiencePresentationFragment on Campaign {
+export const CREATOR_CAMPAIGN_PRESENTATION_FRAGMENT = gql`
+  fragment CreatorCampaignPresentationFragment on Campaign {
     _id
-    name
-    description
+    goal
     brand {
       ...BrandFragment
     }
     product {
       name
-      description
+      pitch
       categories
       website
       youtubeLink
@@ -77,24 +79,24 @@ const EXPERIENCE_PRESENTATION_FRAGMENT = gql`
   ${BRAND_FRAGMENT}
 `
 
-const GET_EXPERIENCE = gql`
-  query GetExperience($campaignId: String!) {
+const GET_CREATOR_CAMPAIGN = gql`
+  query GetCreatorCampaign($campaignId: String!) {
     campaign(id: $campaignId) {
-      ...ExperiencePresentationFragment
+      ...CreatorCampaignPresentationFragment
     }
   }
-  ${EXPERIENCE_PRESENTATION_FRAGMENT}
+  ${CREATOR_CAMPAIGN_PRESENTATION_FRAGMENT}
 `
 
 interface Props {
-  experienceId: string
+  campaignId: string
 }
 
-const ExperiencePresentation: React.FC<Props> = ({ experienceId }) => {
-  const { data: { campaign: experience } = { campaign: null }, loading, error } = useQuery<
-    GetExperience,
-    GetExperienceVariables
-  >(GET_EXPERIENCE, { variables: { campaignId: experienceId } })
+const CreatorCampaignPresentation: React.FC<Props> = ({ campaignId }) => {
+  const { data: { campaign } = { campaign: null }, loading, error } = useQuery<
+    GetCreatorCampaign,
+    GetCreatorCampaignVariables
+  >(GET_CREATOR_CAMPAIGN, { variables: { campaignId } })
 
   const { width } = useWindowSize()
   const isMobile = width < 600
@@ -103,10 +105,10 @@ const ExperiencePresentation: React.FC<Props> = ({ experienceId }) => {
     return <Loader fullScreen />
   }
   if (error) {
-    return <ErrorCard message="Could not show experience" />
+    return <ErrorCard message="Could not show game" />
   }
 
-  const { brand, product, rules } = experience
+  const { brand, product, rules } = campaign
 
   const fullLink =
     brand.website && `${brand.website.startsWith('http') ? '' : 'http://'}${brand.website}`
@@ -127,14 +129,7 @@ const ExperiencePresentation: React.FC<Props> = ({ experienceId }) => {
               placeholderText="No image available"
             />
             <Box mt="2rem">
-              <LabelText grey withMargin>
-                Name
-              </LabelText>
-              <p>{product.name}</p>
-              <LabelText grey withMargin>
-                Description
-              </LabelText>
-              <p style={{ whiteSpace: 'pre-line' }}>{product.description}</p>
+              <p style={{ whiteSpace: 'pre-line' }}>{product.pitch}</p>
               <LabelText grey withMargin>
                 Game website
               </LabelText>
@@ -152,9 +147,9 @@ const ExperiencePresentation: React.FC<Props> = ({ experienceId }) => {
         {/* Right column on desktop */}
         <Box width={[1, 1, 6 / 12]}>
           <SplitView title="The campaign" ratio={3.5 / 12} stacked noBorder={!isMobile}>
-            <p style={{ whiteSpace: 'pre-line' }}>{experience.description}</p>
+            <p style={{ whiteSpace: 'pre-line' }}>{campaign.goal}</p>
           </SplitView>
-          <SplitView title="The studio" ratio={3.5 / 12} stacked>
+          <SplitView title="The publisher" ratio={3.5 / 12} stacked>
             <Flex justifyContent="space-between" alignItems="flex-start" flexWrap="wrap">
               <Box width={2 / 12} pr="1rem">
                 <img
@@ -188,5 +183,4 @@ const ExperiencePresentation: React.FC<Props> = ({ experienceId }) => {
   )
 }
 
-export { EXPERIENCE_PRESENTATION_FRAGMENT }
-export default ExperiencePresentation
+export default CreatorCampaignPresentation
