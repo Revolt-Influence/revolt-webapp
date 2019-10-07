@@ -26,6 +26,11 @@ const Styles = styled(Box)`
     }
   }
 
+  iframe {
+    box-shadow: ${shadow._200};
+    border-radius: 8px;
+  }
+
   .statIcon {
     width: 1.8rem;
     height: 1.8rem;
@@ -86,7 +91,6 @@ const ReviewCard: React.FC<IReviewCardProps> = ({ review }) => {
             src={iframeUrl}
             width={`${frameWidth}px`}
             height={`${(frameWidth * 9) / 16}px`}
-            style={{ borderRadius: '8px' }}
           />
         ) : (
           <p>Could not preview the review</p>

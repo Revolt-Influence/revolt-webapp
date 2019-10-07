@@ -81,7 +81,6 @@ const CampaignFormBrand: React.FC<Props> = ({ brand }) => {
               <FormInput
                 value={brandInput.name}
                 onChange={e => handleUpdateBrand({ name: e.target.value })}
-                placeholder="Adidas"
                 hasLabel
                 required
               />
@@ -91,7 +90,7 @@ const CampaignFormBrand: React.FC<Props> = ({ brand }) => {
               <FormInput
                 value={brandInput.website}
                 onChange={e => handleUpdateBrand({ website: e.target.value })}
-                placeholder="https://yoursite.com"
+                placeholder="https..."
                 hasLabel
                 required
               />

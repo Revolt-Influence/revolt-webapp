@@ -13,7 +13,8 @@ export interface Theme {
   breakpoints: string[]
 }
 
-export const breakpoints = ['60em', '75em', '80em']
+export const breakpoints = ['50em', '60em', '75em']
+// export const breakpoints = ['60em', '75em', '80em']
 
 const CustomThemeProvider: React.FC<IProps> = ({ children }) => {
   // Check if user is a brand or an influencer

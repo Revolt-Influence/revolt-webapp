@@ -13,7 +13,6 @@ import SubmitCreatorReviews from '../components/SubmitCreatorReviews'
 import { usePageTitle, useWindowSize } from '../utils/hooks'
 import Loader from '../components/Loader'
 import { MainButton, TextButton } from '../styles/Button'
-import { palette } from '../utils/colors'
 import NotificationCard from '../components/NotificationCard'
 import gql from 'graphql-tag'
 import { useQuery } from '@apollo/react-hooks'
@@ -55,7 +54,6 @@ interface Props extends RouteComponentProps<{ campaignId: string }> {}
 
 const CreatorCampaign: React.FC<Props> = ({ match }) => {
   const { campaignId } = match.params
-  const { width } = useWindowSize()
   const {
     data: { session, campaign, collabs } = {
       session: null,
@@ -162,7 +160,6 @@ const CreatorCampaign: React.FC<Props> = ({ match }) => {
           flexDirection={['column', 'row', 'row']}
           justifyContent="space-between"
           alignItems={['flex-start', 'center', 'center']}
-          style={width > 1150 ? { borderBottom: `3px solid ${palette.grey._200}` } : null}
         >
           <PageHeader
             title={campaign.product.name}
