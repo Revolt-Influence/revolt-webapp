@@ -93,9 +93,9 @@ const CampaignFormProduct: React.FC<Prop> = ({ product, campaignId }) => {
                 hasLabel
               />
             </FormInputLabel>
+            {/* Link to more details */}
             <FormInputLabel>
-              Link to more details
-              {/* Link to more details */}
+              Game landing pages
               <FormInput
                 value={productInput.website}
                 onChange={e => handleUpdateProduct({ website: e.target.value })}

@@ -17,7 +17,7 @@ export const breakpoints = ['60em', '75em', '80em']
 
 const CustomThemeProvider: React.FC<IProps> = ({ children }) => {
   // Check if user is a brand or an influencer
-  const getThemes = () => ({ primary: palette.pink, accent: palette.blue })
+  const getThemes = () => ({ primary: palette.blue, accent: palette.pink })
   // Select theme based on user type
   const theme: Theme = {
     ...getThemes(),

@@ -60,17 +60,13 @@ const Footer: React.FunctionComponent<RouteComponentProps> = ({ location }) => {
             <p className="text">Copyright {new Date(Date.now()).getFullYear()}</p>
           </Box>
           <Box width={[1, 1, 6 / 12]}>
-            <LabelText grey>Follow us</LabelText>
-            <TextLinkExternal
-              target="_blank"
-              href="https://instagram.com/revolt.club"
-              className="text"
-            >
-              Instagram
+            <LabelText grey>Join us</LabelText>
+            <TextLinkExternal target="_blank" href="https://discord.gg/sruZ2pe" className="text">
+              Discord
             </TextLinkExternal>
             <TextLinkExternal
               target="_blank"
-              href="https://twitter.com/RevoltInfluence"
+              href="https://twitter.com/Revoltgamingco"
               className="text"
             >
               Twitter

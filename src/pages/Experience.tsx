@@ -119,7 +119,7 @@ const Experience: React.FC<Props> = ({ match }) => {
     ) {
       return (
         <MainButton onClick={() => changeTab(ExperienceTab.SUBMIT)} noMargin>
-          Poster ma revue
+          Post my review
         </MainButton>
       )
     }

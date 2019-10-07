@@ -128,7 +128,7 @@ const CreatorSignup: React.FC<{}> = () => {
               type="password"
               onChange={e => setPassword(e.target.value)}
               value={password}
-              placeholder="Au moins 6 caractères"
+              placeholder="At least 6 characters"
               pattern=".{6,}"
               required
               hasLabel

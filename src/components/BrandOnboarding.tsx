@@ -5,7 +5,7 @@ import { useMutation } from '@apollo/react-hooks'
 import { CreateCampaign } from '../__generated__/CreateCampaign'
 import { CREATE_CAMPAIGN } from '../pages/CampaignsList'
 
-const landingIllustration = require('../images/illustrations/landing.png')
+const landingIllustration = require('../images/illustrations/landing.svg')
 const propositionsIllustration = require('../images/illustrations/propositions.svg')
 const performancesIllustration = require('../images/illustrations/performances.svg')
 
