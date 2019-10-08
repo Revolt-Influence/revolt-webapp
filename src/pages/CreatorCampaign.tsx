@@ -10,7 +10,7 @@ import CreatorCampaignPresentation, {
 import PageHeader from '../components/PageHeader'
 import ErrorBoundary from '../components/ErrorBoundary'
 import SubmitCreatorReviews from '../components/SubmitCreatorReviews'
-import { usePageTitle, useWindowSize } from '../utils/hooks'
+import { usePageTitle } from '../utils/hooks'
 import Loader from '../components/Loader'
 import { MainButton, TextButton } from '../styles/Button'
 import NotificationCard from '../components/NotificationCard'
@@ -169,7 +169,7 @@ const CreatorCampaign: React.FC<Props> = ({ match }) => {
         </Flex>
         {/* Eventual info message */}
         {session.creator.status !== CreatorStatus.VERIFIED && (
-          <Box mt="2rem">
+          <Box mt={['1rem', 0, 0]}>
             <NotificationCard
               nature="info"
               message="Your profile hasn't been verified by our team. You can't apply to games yet"

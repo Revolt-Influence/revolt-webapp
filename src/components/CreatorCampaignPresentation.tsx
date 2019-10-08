@@ -120,7 +120,7 @@ const CreatorCampaignPresentation: React.FC<Props> = ({ campaignId }) => {
         justifyContent={['flex-start', 'flex-start', 'space-between']}
       >
         {/* Left column on desktop */}
-        <Box width={[1, 1, 6 / 12]} pr={[0, 0, '15rem']} mt="-3rem">
+        <Box width={[1, 1, 6 / 12]} pr={[0, 0, '15rem']} my="-2rem">
           <SplitView title="The game" stacked noBorder>
             <ImageWrapper
               src={product.pictures.length > 0 ? product.pictures[0] : null}
@@ -145,7 +145,7 @@ const CreatorCampaignPresentation: React.FC<Props> = ({ campaignId }) => {
           </SplitView>
         </Box>
         {/* Right column on desktop */}
-        <Box width={[1, 1, 6 / 12]} mt="-3rem">
+        <Box width={[1, 1, 6 / 12]} mt="-2rem">
           <SplitView title="The campaign" ratio={3.5 / 12} stacked noBorder={!isMobile}>
             <p style={{ whiteSpace: 'pre-line' }}>{campaign.goal}</p>
           </SplitView>

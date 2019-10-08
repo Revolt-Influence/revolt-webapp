@@ -73,7 +73,7 @@ const CreatorCampaignsList: React.FC<RouteComponentProps> = ({ location, history
               <Box mb="2rem" px={['2rem', 0, 0]}>
                 <NotificationCard
                   nature="info"
-                  message="Your profile hasn't been veriried by our team yet. You can't apply to receive games for now"
+                  message="Your profile hasn't been verified by our team yet. You can't apply to receive games for now"
                 />
               </Box>
             )}
@@ -81,7 +81,7 @@ const CreatorCampaignsList: React.FC<RouteComponentProps> = ({ location, history
               <Box mb="2rem" px={['2rem', 0, 0]}>
                 <NotificationCard
                   nature="info"
-                  message="Your profile hasn't been veriried by our team. You can't apply to receive games"
+                  message="Your profile hasn't been verified by our team. You can't apply to receive games"
                 />
               </Box>
             )}

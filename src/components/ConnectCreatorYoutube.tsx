@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { GoogleLogin, GoogleLoginResponseOffline } from 'react-google-login'
 import { Box } from '@rebass/grid'
 import CheckList from './CheckList'
@@ -35,7 +35,7 @@ const ConnectCreatorYoutube: React.FC<{}> = () => {
     AttachCreatorYoutube,
     AttachCreatorYoutubeVariables
   >(ATTACH_CREATOR_YOUTUBE)
-  const [error, setError] = React.useState(null)
+  const [error, setError] = useState(null)
 
   if (sessionStatus.loading) {
     return <Loader />
