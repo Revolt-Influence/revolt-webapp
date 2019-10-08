@@ -54,15 +54,15 @@ const Landing: React.FC<{}> = () => {
     <Container>
       <FullPage flexDirection={['column', 'row', 'row']} justifyContent="space-between">
         <main>
-          <Title>Engage the right audience, sell more games.</Title>
+          <Title>Welcome to Revolt Gaming</Title>
           <p className="pitch">
-            We analyze the content of over 250K Youtube, Twitch and Mixer streamers to find the
-            creators that will match perfectly for your game.
+            The influencer marketing platform that allows creators and video game publishers to
+            create better, together.
           </p>
           <Flex flexDirection={['column', 'row', 'row']}>
             {/* The Box is necessary for some weird CSS reason */}
             <Box>
-              <MainLink to="/userSignup">I'm a brand</MainLink>
+              <MainLink to="/userSignup">I'm a game publisher</MainLink>
             </Box>
             <Box ml={[0, '2rem', '2rem']}>
               <MainLink

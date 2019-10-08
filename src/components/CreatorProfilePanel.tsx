@@ -91,7 +91,9 @@ const CreatorProfilePanel: React.FC<{}> = () => {
 
   // Handle close on click outside
   const selfRef = useRef()
-  const handleClosePanel = () => {
+  const handleClosePanel = (e: React.MouseEvent<any>): void => {
+    e.stopPropagation()
+    e.preventDefault()
     closePanel()
   }
   useOnClickOutside(selfRef, handleClosePanel)
@@ -102,7 +104,7 @@ const CreatorProfilePanel: React.FC<{}> = () => {
   // Otherwise show panel
   return (
     <Styles ref={selfRef}>
-      <button className="close" onClick={() => handleClosePanel()} type="button">
+      <button className="close" onClick={() => closePanel()} type="button">
         <img src={closeSource} alt="close" />
       </button>
       <CreatorProfile

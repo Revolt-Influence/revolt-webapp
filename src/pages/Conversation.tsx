@@ -148,15 +148,8 @@ const Conversation: React.FC<RouteComponentProps<Match>> = ({ match }) => {
   const recipientName = getRecipientName()
   usePageTitle('Conversations')
 
-  // Fetch the specific conversation if it's not in the paginated list
-  // useEffect(() => {
-  //   if (conversation == null) {
-  //     getSpecificConversation({ variables: { conversationId } })
-  //   }
-  // }, [conversation, conversationId, getSpecificConversation])
-
   const pageTitle = `Talk to ${recipientName}${
-    isAdmin ? ` et ${conversation && conversation.brand.name}` : ''
+    isAdmin ? ` and ${conversation && conversation.brand.name}` : ''
   }`
 
   const getDetailedMessages = useCallback((): MessageDetailed[] => {
