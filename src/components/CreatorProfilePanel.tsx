@@ -30,8 +30,8 @@ const Styles = styled.div`
     top: 2rem;
     right: 2rem;
     background: ${palette.grey._200};
-    width: 32px;
-    height: 32px;
+    width: 3.2rem;
+    height: 3.2rem;
     padding: 9px;
     display: flex;
     flex-direction: column;
@@ -43,8 +43,8 @@ const Styles = styled.div`
       background: ${palette.grey._300};
     }
     > img {
-      width: 24px;
-      height: 24px;
+      width: 2.4rem;
+      height: 2.4rem;
     }
   }
 `

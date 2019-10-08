@@ -1,14 +1,15 @@
 import React, { useState, useCallback } from 'react'
 import { useDropzone, DropzoneOptions } from 'react-dropzone'
+import { SortableContainer, SortableElement } from 'react-sortable-hoc'
+import arrayMove from 'array-move'
 import styled from 'styled-components'
 import { MainButton } from '../styles/Button'
 import { request } from '../utils/request'
-import { setOutline, shadow } from '../utils/styles'
+import { setOutline } from '../utils/styles'
 import { palette } from '../utils/colors'
 import { truncateString } from '../utils/strings'
 import { useWindowSize } from '../utils/hooks'
 import ErrorCard from './ErrorCard'
-import { Flex } from '@rebass/grid'
 
 const closeSource = require('../images/icons/close.svg')
 
@@ -59,7 +60,7 @@ const DropStyles = styled.div`
 
 const DroppedImagePreview = styled.div`
   position: relative;
-  display: flex;
+  display: inline-flex;
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
@@ -69,10 +70,9 @@ const DroppedImagePreview = styled.div`
     margin-right: 2rem;
   }
   img.preview {
-    /* width: 10rem; */
     max-width: 10rem;
-    /* height: 7.5rem; */
     max-height: 7.5rem;
+    min-height: 3rem;
     object-fit: contain;
   }
   margin-bottom: 1rem;
@@ -80,23 +80,18 @@ const DroppedImagePreview = styled.div`
     ${truncateString('200px')}
   }
   button.close {
-    position: absolute;
-    z-index: 200;
-    top: -1.5rem;
-    left: calc(100% - 1.5rem);
-    background: ${palette.grey._50};
-    box-shadow: ${shadow._200};
-    width: 3rem;
-    height: 3rem;
+    background: ${palette.grey._200};
+    width: 3.2rem;
+    height: 3.2rem;
     padding: 9px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     border-radius: 50%;
-    transition: 0.3s all ease-in-out;
+    transition: 0.3s background ease-in-out;
     &:hover {
-      box-shadow: ${shadow._400};
+      background: ${palette.grey._300};
     }
     > img.close {
       width: 2.4rem;
@@ -125,6 +120,26 @@ const DropImage: React.FC<Props> = ({
   const [error, setError] = useState(null)
   const [isUploading, setIsUploading] = useState<boolean>(false)
   const { width } = useWindowSize()
+
+  // react-sortable-hoc stuff
+  const SortableItem = SortableElement(({ image }: { image: string }) => (
+    <DroppedImagePreview key={image}>
+      <img className="preview" src={image} alt="Game promo" />
+      <button className="close" onClick={e => handleRemoveImage(e, image)} type="button">
+        <img src={closeSource} alt="close" className="close" />
+      </button>
+    </DroppedImagePreview>
+  ))
+
+  const SortableList = SortableContainer(({ images }: { images: string[] }) => (
+    <ul>
+      {images.map((_image, index) => (
+        <div key={`item-${index}`}>
+          <SortableItem index={index} image={_image} />
+        </div>
+      ))}
+    </ul>
+  ))
 
   // Handle drop/select function
   const onDrop = useCallback(
@@ -178,58 +193,45 @@ const DropImage: React.FC<Props> = ({
     handleDrop(currentImages.filter(_image => _image !== imageToRemove))
   }
 
+  const handleSortEnd = ({ oldIndex, newIndex }: { oldIndex: number; newIndex: number }) => {
+    const sortedImages = arrayMove<string>(currentImages, oldIndex, newIndex)
+    handleDrop(sortedImages)
+  }
+
   return (
-    <DropStyles
-      {...getRootProps()}
-      isDragActive={isDragActive}
-      isDragReject={isDragReject}
-      isUploading={isUploading}
-    >
-      {error ? (
-        <ErrorCard message="Upload failed" />
-      ) : (
-        // Show current or new image
-        <Flex flexDirection="row" justifyContent="center" flexWrap="wrap">
-          {currentImages.map(_currentImage => (
-            <DroppedImagePreview key={_currentImage}>
-              <img className="preview" src={_currentImage} alt="Game promo" />
-              {/* Remove button only is multiple allowed */}
-              {allowMultiple && (
-                <button
-                  className="close"
-                  onClick={e => handleRemoveImage(e, _currentImage)}
-                  type="button"
-                >
-                  <img src={closeSource} alt="close" className="close" />
-                </button>
-              )}
-            </DroppedImagePreview>
-          ))}
-        </Flex>
-      )}
-      {/* Don't suggest drag and drop on mobile */}
-      {!isUploading &&
-        width > 700 &&
-        currentImages.length === 0 &&
-        `Drop ${allowMultiple ? 'images' : 'an image'} here`}
-      {isUploading && `Uploading your image${allowMultiple ? 's' : ''}...`}
-      {idealSize && <p className="details">Ideal size: {idealSize}</p>}
-      <input
-        {...getInputProps()}
-        style={{
-          display: 'block !important',
-          opacity: 0,
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-        }}
-      />
-      <MainButton type="button" display="inline" smaller inverted>
-        Add {allowMultiple ? 'images' : 'an image'}
-      </MainButton>
-    </DropStyles>
+    <div>
+      <SortableList images={currentImages} onSortEnd={handleSortEnd} />
+      <DropStyles
+        {...getRootProps()}
+        isDragActive={isDragActive}
+        isDragReject={isDragReject}
+        isUploading={isUploading}
+      >
+        {error && <ErrorCard message="Upload failed" />}
+        {/* Don't suggest drag and drop on mobile */}
+        {!isUploading &&
+          width > 700 &&
+          currentImages.length === 0 &&
+          `Drop ${allowMultiple ? 'images' : 'an image'} here`}
+        {isUploading && `Uploading your image${allowMultiple ? 's' : ''}...`}
+        {idealSize && <p className="details">Ideal size: {idealSize}</p>}
+        <input
+          {...getInputProps()}
+          style={{
+            display: 'block !important',
+            opacity: 0,
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+          }}
+        />
+        <MainButton type="button" display="inline" smaller inverted>
+          Add an image
+        </MainButton>
+      </DropStyles>
+    </div>
   )
 }
 
