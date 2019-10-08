@@ -2,7 +2,7 @@
 /* eslint-disable */
 // This file was automatically generated and should not be edited.
 
-import { TrackingProvider, GameCategory, Gender, AgeGroup } from "./globalTypes";
+import { TrackingProvider, PublishingPlatform, GameCategory, Gender, AgeGroup } from "./globalTypes";
 
 // ====================================================
 // GraphQL query operation: GetCampaign
@@ -100,6 +100,10 @@ export interface GetCampaign_campaign {
    * Solution used to provide game analytics
    */
   trackingProvider: TrackingProvider;
+  /**
+   * Where the game can be downloaded
+   */
+  publishingPlatforms: PublishingPlatform[];
   /**
    * What the creator will receive
    */

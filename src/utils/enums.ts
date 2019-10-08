@@ -6,6 +6,7 @@ import {
   Language,
   ReviewFormat,
   CreatorStatus,
+  PublishingPlatform,
 } from '../__generated__/globalTypes'
 
 export function showGender(gender: Gender): string {
@@ -174,5 +175,36 @@ export function showCreatorStatus(status: CreatorStatus): string {
       return 'Verified'
     default:
       return status
+  }
+}
+
+export function showPublishingPlatform(platform: PublishingPlatform): string {
+  switch (platform) {
+    case PublishingPlatform.APP_STORE:
+      return 'Apple App Store'
+    case PublishingPlatform.EPIC:
+      return 'Epic Games Store'
+    case PublishingPlatform.ESHOP:
+      return 'Nintendo eShop'
+    case PublishingPlatform.GAME_JOLT:
+      return 'Game Jolt'
+    case PublishingPlatform.HUMBLE_BUNDLE:
+      return 'Humble Bundle'
+    case PublishingPlatform.ITCH:
+      return 'Itch.io'
+    case PublishingPlatform.KARTRIDGE:
+      return 'Kartridge'
+    case PublishingPlatform.MICROSOFT_STORE:
+      return 'Microsoft Store (Xbox)'
+    case PublishingPlatform.ORIGIN:
+      return 'Origin'
+    case PublishingPlatform.PLAY_STATION_STORE:
+      return 'PlayStation Store'
+    case PublishingPlatform.PLAY_STORE:
+      return 'Google Play Store'
+    case PublishingPlatform.STEAM:
+      return 'Steam'
+    default:
+      return platform
   }
 }

@@ -6,7 +6,7 @@ import styled from 'styled-components'
 import { Container } from '../utils/grid'
 import { Title } from '../styles/Text'
 import { FormInput, FormInputLabel } from '../styles/Form'
-import { MainButtonSubmit } from '../styles/Button'
+import { MainButtonSubmit, TextLinkExternal } from '../styles/Button'
 import ErrorCard from '../components/ErrorCard'
 import { emailRegex } from '../utils/strings'
 import { palette } from '../utils/colors'
@@ -18,6 +18,10 @@ import {
   SignupUserMutation,
   SignupUserMutationVariables,
 } from '../__generated__/SignupUserMutation'
+import { IconButtonWrapper } from '../styles/Icon'
+
+const checkboxEmpty = require('../images/icons/checkboxEmpty.svg')
+const checkboxChecked = require('../images/icons/checkboxChecked.svg')
 
 const Help = styled.p`
   text-align: center;
@@ -45,6 +49,7 @@ const UserSignup: React.FC<{}> = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [company, setCompany] = useState('')
+  const [acceptsTerms, setAcceptsTerms] = useState(false)
 
   // Router state
   const location = useLocation()
@@ -83,7 +88,7 @@ const UserSignup: React.FC<{}> = () => {
     window.scrollTo(0, 0)
   }
 
-  const allowSubmit = password.length >= 6 && !!email && !!company
+  const allowSubmit = password.length >= 6 && !!email && !!company && acceptsTerms
   return (
     <Container>
       <Box my="3rem">
@@ -91,7 +96,7 @@ const UserSignup: React.FC<{}> = () => {
           Create an account
         </Title>
         <p style={{ marginTop: '1.5rem', textAlign: 'center' }}>
-          No credit card necessary. Free forever
+          No credit card necessary. Free forever plan
         </p>
       </Box>
       <Flex flexDirection="column" alignItems="center" mt="2rem">
@@ -133,6 +138,25 @@ const UserSignup: React.FC<{}> = () => {
               hasLabel
             />
           </FormInputLabel>
+          <Flex
+            flexDirection="row"
+            mt="1rem"
+            alignItems="flex-start"
+            onClick={() => setAcceptsTerms(!acceptsTerms)}
+          >
+            <IconButtonWrapper style={{ marginRight: 10, height: '22px' }}>
+              <img
+                src={acceptsTerms ? checkboxChecked : checkboxEmpty}
+                alt={acceptsTerms ? 'Yes' : 'No'}
+              />
+            </IconButtonWrapper>
+            <p style={{ cursor: 'default' }}>
+              I accept the{' '}
+              <TextLinkExternal href="/termsAndConditions" target="_blank">
+                terms of use
+              </TextLinkExternal>
+            </p>
+          </Flex>
           {error && <ErrorCard message="Could not sign up. The email may already be used" />}
           {/* Button submit */}
           <MainButtonSubmit

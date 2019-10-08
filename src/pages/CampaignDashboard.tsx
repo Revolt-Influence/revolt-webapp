@@ -93,6 +93,7 @@ export const GET_CAMPAIGN = gql`
       goal
       estimatedBudget
       trackingProvider
+      publishingPlatforms
       product {
         name
         pitch

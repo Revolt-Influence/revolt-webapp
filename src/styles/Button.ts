@@ -180,7 +180,7 @@ const buttonStyles = css<IMainButtonProps>`
       `
     }
     return css`
-      padding: 1.5rem 2rem;
+      padding: ${props.inverted ? '1.3rem' : '1.5rem'} 2rem;
     `
   }}
 
@@ -201,6 +201,10 @@ MainButton.defaultProps = {
 }
 
 const MainLink = styled(Link)`
+  ${buttonStyles}
+`
+
+export const MainLinkExternal = styled.a`
   ${buttonStyles}
 `
 
