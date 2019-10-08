@@ -10,6 +10,7 @@ import { palette } from '../utils/colors'
 import { truncateString } from '../utils/strings'
 import { useWindowSize } from '../utils/hooks'
 import ErrorCard from './ErrorCard'
+import { Flex } from '@rebass/grid'
 
 const closeSource = require('../images/icons/close.svg')
 
@@ -60,7 +61,7 @@ const DropStyles = styled.div`
 
 const DroppedImagePreview = styled.div`
   position: relative;
-  display: inline-flex;
+  display: flex;
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
@@ -132,13 +133,11 @@ const DropImage: React.FC<Props> = ({
   ))
 
   const SortableList = SortableContainer(({ images }: { images: string[] }) => (
-    <ul>
+    <Flex>
       {images.map((_image, index) => (
-        <div key={`item-${index}`}>
-          <SortableItem index={index} image={_image} />
-        </div>
+        <SortableItem key={`item-${index}`} index={index} image={_image} />
       ))}
-    </ul>
+    </Flex>
   ))
 
   // Handle drop/select function
@@ -200,7 +199,13 @@ const DropImage: React.FC<Props> = ({
 
   return (
     <div>
-      <SortableList images={currentImages} onSortEnd={handleSortEnd} />
+      <SortableList
+        images={currentImages}
+        onSortEnd={handleSortEnd}
+        axis="x"
+        lockAxis="x"
+        lockToContainerEdges
+      />
       <DropStyles
         {...getRootProps()}
         isDragActive={isDragActive}
