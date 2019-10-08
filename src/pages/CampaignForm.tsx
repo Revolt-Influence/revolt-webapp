@@ -67,7 +67,7 @@ interface MatchParams {
   campaignId: string
 }
 
-const CampaignForm: React.FC<RouteComponentProps<MatchParams>> = ({ match }) => {
+const CampaignForm: React.FC<RouteComponentProps<MatchParams>> = ({ match, history }) => {
   usePageTitle('Campaign brief')
   const { campaignId } = match.params
 
@@ -79,7 +79,9 @@ const CampaignForm: React.FC<RouteComponentProps<MatchParams>> = ({ match }) => 
   const [toggleArchiveCampaign, toggleArchiveCampaignStatus] = useMutation<
     ToggleArchiveCampaign,
     ToggleArchiveCampaignVariables
-  >(TOGGLE_ARCHIVE_CAMPAIGN)
+  >(TOGGLE_ARCHIVE_CAMPAIGN, {
+    onCompleted: () => history.push(`/brand/campaigns/${campaignId}/dashboard?tab=brief`),
+  })
 
   // Calculate available vertical space
   const [topDistance, setTopDistance] = useState<number>(0)
@@ -89,7 +91,6 @@ const CampaignForm: React.FC<RouteComponentProps<MatchParams>> = ({ match }) => 
     }
   }, [])
 
-  // const box = useRect(selfRef)
   const { height } = useClientSize()
   const availableHeight = height - topDistance
 

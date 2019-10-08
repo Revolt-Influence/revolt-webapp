@@ -82,7 +82,6 @@ const CampaignFormBrand: React.FC<Props> = ({ brand }) => {
                 value={brandInput.name}
                 onChange={e => handleUpdateBrand({ name: e.target.value })}
                 hasLabel
-                required
               />
             </FormInputLabel>
             <FormInputLabel>

@@ -4,7 +4,7 @@ import { Box, Flex } from '@rebass/grid'
 import copy from 'copy-to-clipboard'
 import { LabelText } from '../styles/Text'
 import { ContainerBox } from '../styles/grid'
-import { MainButton } from '../styles/Button'
+import { MainButton, MainLinkExternal } from '../styles/Button'
 import OrderedList from '../components/OrderedList'
 import { usePageTitle } from '../utils/hooks'
 import { setFont } from '../utils/styles'
@@ -69,9 +69,21 @@ const AmbassadorProgram: React.FunctionComponent<{}> = () => {
           <OrderedList items={creatorSteps} />
           <LabelText withMargin>Link to share</LabelText>
           <p className="link">{creatorLink}</p>
-          <MainButton onClick={handleCreatorCopy} smaller inverted>
-            {creatorCopyButtonText}
-          </MainButton>
+          <Flex>
+            <Box mr="1rem">
+              <MainLinkExternal
+                target="_blank"
+                href={`https://twitter.com/intent/tweet?text=${encodeURI(
+                  'Hey ! Just discovered Revolt Gaming it’s a very cool platform to find partnerships as a Twitch/Youtube streamer, check it out: '
+                )}&url=${creatorLink}`}
+              >
+                Tweet my link
+              </MainLinkExternal>
+            </Box>
+            <MainButton onClick={handleCreatorCopy} inverted>
+              {creatorCopyButtonText}
+            </MainButton>
+          </Flex>
         </Box>
         <Box width={[0, 0, 4 / 12]}>
           <img src={illustrationSource} alt="ambassador" className="illustration" />
