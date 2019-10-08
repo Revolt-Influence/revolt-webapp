@@ -3,12 +3,14 @@ import { useDropzone, DropzoneOptions } from 'react-dropzone'
 import styled from 'styled-components'
 import { MainButton } from '../styles/Button'
 import { request } from '../utils/request'
-import { setOutline } from '../utils/styles'
+import { setOutline, shadow } from '../utils/styles'
 import { palette } from '../utils/colors'
 import { truncateString } from '../utils/strings'
 import { useWindowSize } from '../utils/hooks'
 import ErrorCard from './ErrorCard'
 import { Flex } from '@rebass/grid'
+
+const closeSource = require('../images/icons/close.svg')
 
 interface IDropProps {
   isDragReject: boolean
@@ -32,10 +34,10 @@ const DropStyles = styled.div`
   justify-content: center;
   align-items: center;
   position: relative;
-  padding: 20px 0;
+  padding: 2.5rem 0;
   margin-top: 4px;
   border-width: 2px;
-  border-radius: 5px;
+  border-radius: 8px;
   border: 2px solid ${palette.grey._200};
   ${(props: IDropProps) => {
     if (props.isDragActive) {
@@ -56,20 +58,50 @@ const DropStyles = styled.div`
 `
 
 const DroppedImagePreview = styled.div`
+  position: relative;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  img {
-    width: 8rem;
-    max-width: 100%;
-    height: 5rem;
+  border-radius: 4px;
+  border: 2px solid ${palette.grey._200};
+  &:not(:last-child) {
+    margin-right: 2rem;
+  }
+  img.preview {
+    /* width: 10rem; */
+    max-width: 10rem;
+    /* height: 7.5rem; */
+    max-height: 7.5rem;
     object-fit: contain;
-    margin-right: 1rem;
   }
   margin-bottom: 1rem;
   p {
     ${truncateString('200px')}
+  }
+  button.close {
+    position: absolute;
+    z-index: 200;
+    top: -1.5rem;
+    left: calc(100% - 1.5rem);
+    background: ${palette.grey._50};
+    box-shadow: ${shadow._200};
+    width: 3rem;
+    height: 3rem;
+    padding: 9px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    transition: 0.3s all ease-in-out;
+    &:hover {
+      box-shadow: ${shadow._400};
+    }
+    > img.close {
+      width: 2.4rem;
+      height: 2.4rem;
+    }
   }
 `
 
@@ -77,6 +109,7 @@ interface Props {
   handleDrop: (urls: string[]) => void
   preset: string
   allowMultiple?: boolean
+  maxImages?: number
   currentImages: string[]
   idealSize?: string
 }
@@ -87,6 +120,7 @@ const DropImage: React.FC<Props> = ({
   currentImages,
   idealSize,
   allowMultiple,
+  maxImages,
 }) => {
   const [error, setError] = useState(null)
   const [isUploading, setIsUploading] = useState<boolean>(false)
@@ -116,7 +150,9 @@ const DropImage: React.FC<Props> = ({
             }
           )
           const cloudinaryUrls = await Promise.all(uploadImagesPromises)
-          handleDrop(cloudinaryUrls)
+          // Add new images to the current ones
+          const imagesToSave = [...currentImages, ...cloudinaryUrls].slice(0, maxImages)
+          handleDrop(imagesToSave)
           setIsUploading(false)
         }
       }
@@ -124,7 +160,7 @@ const DropImage: React.FC<Props> = ({
       // Actually run the function
       handleAcceptedFiles(newAcceptedFiles)
     },
-    [handleDrop, preset]
+    [currentImages, handleDrop, maxImages, preset]
   )
 
   const dropSettings: DropzoneOptions = {
@@ -133,6 +169,14 @@ const DropImage: React.FC<Props> = ({
     onDrop,
   }
   const { getRootProps, getInputProps, isDragActive, isDragReject } = useDropzone(dropSettings)
+
+  const handleRemoveImage = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    imageToRemove: string
+  ) => {
+    e.stopPropagation()
+    handleDrop(currentImages.filter(_image => _image !== imageToRemove))
+  }
 
   return (
     <DropStyles
@@ -148,7 +192,17 @@ const DropImage: React.FC<Props> = ({
         <Flex flexDirection="row" justifyContent="center" flexWrap="wrap">
           {currentImages.map(_currentImage => (
             <DroppedImagePreview key={_currentImage}>
-              <img src={_currentImage} alt="Game promo" />
+              <img className="preview" src={_currentImage} alt="Game promo" />
+              {/* Remove button only is multiple allowed */}
+              {allowMultiple && (
+                <button
+                  className="close"
+                  onClick={e => handleRemoveImage(e, _currentImage)}
+                  type="button"
+                >
+                  <img src={closeSource} alt="close" className="close" />
+                </button>
+              )}
             </DroppedImagePreview>
           ))}
         </Flex>
@@ -173,10 +227,14 @@ const DropImage: React.FC<Props> = ({
         }}
       />
       <MainButton type="button" display="inline" smaller inverted>
-        Select {allowMultiple ? 'images' : 'an image'}
+        Add {allowMultiple ? 'images' : 'an image'}
       </MainButton>
     </DropStyles>
   )
+}
+
+DropImage.defaultProps = {
+  maxImages: 4,
 }
 
 export default DropImage

@@ -113,6 +113,7 @@ const CampaignFormProduct: React.FC<Prop> = ({ product, campaignId }) => {
                 preset="campaign_product"
                 allowMultiple
                 currentImages={productInput.pictures}
+                maxImages={4}
                 idealSize="800x600 pixels (4:3)"
               />
             </FormInputLabel>
