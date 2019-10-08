@@ -2,7 +2,7 @@
 /* eslint-disable */
 // This file was automatically generated and should not be edited.
 
-import { TrackingProvider } from "./globalTypes";
+import { TrackingProvider, PublishingPlatform } from "./globalTypes";
 
 // ====================================================
 // GraphQL fragment: CampaignBriefFragment
@@ -30,4 +30,8 @@ export interface CampaignBriefFragment {
    * Solution used to provide game analytics
    */
   trackingProvider: TrackingProvider;
+  /**
+   * Where the game can be downloaded
+   */
+  publishingPlatforms: PublishingPlatform[];
 }

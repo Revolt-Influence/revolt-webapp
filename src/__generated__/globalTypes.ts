@@ -103,6 +103,24 @@ export enum Plan {
 }
 
 /**
+ * All the platforms where a game can be published
+ */
+export enum PublishingPlatform {
+  APP_STORE = "APP_STORE",
+  EPIC = "EPIC",
+  ESHOP = "ESHOP",
+  GAME_JOLT = "GAME_JOLT",
+  HUMBLE_BUNDLE = "HUMBLE_BUNDLE",
+  ITCH = "ITCH",
+  KARTRIDGE = "KARTRIDGE",
+  MICROSOFT_STORE = "MICROSOFT_STORE",
+  ORIGIN = "ORIGIN",
+  PLAY_STATION_STORE = "PLAY_STATION_STORE",
+  PLAY_STORE = "PLAY_STORE",
+  STEAM = "STEAM",
+}
+
+/**
  * Whether a brand accepts a collab
  */
 export enum ReviewCollabDecision {
@@ -156,6 +174,7 @@ export interface CampaignBriefInput {
   rules: string[];
   estimatedBudget?: number | null;
   trackingProvider: TrackingProvider;
+  publishingPlatforms: PublishingPlatform[];
 }
 
 export interface CampaignProductInput {

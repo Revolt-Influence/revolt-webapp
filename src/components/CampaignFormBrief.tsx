@@ -1,11 +1,15 @@
 import React, { useState } from 'react'
-import { Box } from '@rebass/grid'
+import { Box, Flex } from '@rebass/grid'
 import gql from 'graphql-tag'
 import { FormInputLabel, FormInput, FormTextarea, FormSelect } from '../styles/Form'
 import SplitView from './SplitView'
 import { CAMPAIGN_SAVE_DEBOUNCE } from '../pages/CampaignForm'
 import { useDebouncedCallback } from 'use-debounce/lib'
-import { CampaignBriefInput, TrackingProvider } from '../__generated__/globalTypes'
+import {
+  CampaignBriefInput,
+  TrackingProvider,
+  PublishingPlatform,
+} from '../__generated__/globalTypes'
 import { useMutation } from '@apollo/react-hooks'
 import Toast from './Toast'
 import { CampaignBriefFragment } from '../__generated__/CampaignBriefFragment'
@@ -13,9 +17,11 @@ import {
   UpdateCampaignBrief,
   UpdateCampaignBriefVariables,
 } from '../__generated__/UpdateCampaignBrief'
-import { showTrackingProvider } from '../utils/enums'
+import { showTrackingProvider, showPublishingPlatform } from '../utils/enums'
+import CheckBox from './CheckBox'
 
 const possibleTrackingProviders = Object.values(TrackingProvider) as TrackingProvider[]
+const possiblePublishingPlatforms = Object.values(PublishingPlatform) as PublishingPlatform[]
 
 export const CAMPAIGN_BRIEF_FRAGMENT = gql`
   fragment CampaignBriefFragment on Campaign {
@@ -24,6 +30,7 @@ export const CAMPAIGN_BRIEF_FRAGMENT = gql`
     rules
     estimatedBudget
     trackingProvider
+    publishingPlatforms
   }
 `
 
@@ -66,6 +73,21 @@ const CampaignFormBrief: React.FC<Prop> = ({ brief }) => {
     }
   )
 
+  const handleTogglePublishingPlatform = (platformToToggle: PublishingPlatform) => {
+    const wasCheckedBefore = briefInput.publishingPlatforms.includes(platformToToggle)
+    let newPlatforms: PublishingPlatform[]
+    if (wasCheckedBefore) {
+      // Remove from selection
+      newPlatforms = briefInput.publishingPlatforms.filter(
+        _platform => _platform !== platformToToggle
+      )
+    } else {
+      // Add to selection
+      newPlatforms = [...briefInput.publishingPlatforms, platformToToggle]
+    }
+    handleUpdateBrief({ publishingPlatforms: newPlatforms })
+  }
+
   return (
     <SplitView title="About the campaign" ratio={4 / 12} stacked>
       <>
@@ -102,6 +124,19 @@ const CampaignFormBrief: React.FC<Prop> = ({ brief }) => {
             </FormSelect>
           </FormInputLabel>
         </Box>
+        {/* Publishing platforms */}
+        <FormInputLabel withMargin>Publishing platforms</FormInputLabel>
+        <Flex flexDirection="row" flexWrap="wrap">
+          {possiblePublishingPlatforms.map(_platform => (
+            <Box key={_platform} width={[6 / 12, 6 / 12, 4 / 12]}>
+              <CheckBox
+                text={showPublishingPlatform(_platform)}
+                isChecked={briefInput.publishingPlatforms.includes(_platform)}
+                handleClick={() => handleTogglePublishingPlatform(_platform)}
+              />
+            </Box>
+          ))}
+        </Flex>
 
         <Box width={[1, 1, 8 / 12]} pr={[0, 0, '2rem']}>
           <FormInputLabel withMargin>

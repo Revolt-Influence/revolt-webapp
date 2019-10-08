@@ -2,7 +2,7 @@
 /* eslint-disable */
 // This file was automatically generated and should not be edited.
 
-import { GameCategory, CollabStatus, TrackingProvider, AgeGroup, Gender } from "./globalTypes";
+import { GameCategory, CollabStatus, TrackingProvider, PublishingPlatform, AgeGroup, Gender } from "./globalTypes";
 
 // ====================================================
 // GraphQL fragment: CampaignCardFragment
@@ -129,6 +129,10 @@ export interface CampaignCardFragment {
    * Solution used to provide game analytics
    */
   trackingProvider: TrackingProvider;
+  /**
+   * Where the game can be downloaded
+   */
+  publishingPlatforms: PublishingPlatform[];
   /**
    * The ideal audience the brand wants to reach
    */

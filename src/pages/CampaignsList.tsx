@@ -25,6 +25,7 @@ const CAMPAIGN_CARD_FRAGMENT = gql`
     }
     estimatedBudget
     trackingProvider
+    publishingPlatforms
     targetAudience {
       ageGroups
       countries

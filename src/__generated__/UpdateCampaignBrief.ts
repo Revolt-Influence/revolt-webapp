@@ -2,7 +2,7 @@
 /* eslint-disable */
 // This file was automatically generated and should not be edited.
 
-import { CampaignBriefInput, TrackingProvider } from "./globalTypes";
+import { CampaignBriefInput, TrackingProvider, PublishingPlatform } from "./globalTypes";
 
 // ====================================================
 // GraphQL mutation operation: UpdateCampaignBrief
@@ -30,6 +30,10 @@ export interface UpdateCampaignBrief_updateCampaignBrief {
    * Solution used to provide game analytics
    */
   trackingProvider: TrackingProvider;
+  /**
+   * Where the game can be downloaded
+   */
+  publishingPlatforms: PublishingPlatform[];
 }
 
 export interface UpdateCampaignBrief {

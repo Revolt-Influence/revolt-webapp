@@ -96,7 +96,7 @@ const UserSignup: React.FC<{}> = () => {
           Create an account
         </Title>
         <p style={{ marginTop: '1.5rem', textAlign: 'center' }}>
-          No credit card necessary. Free forever
+          No credit card necessary. Free forever plan
         </p>
       </Box>
       <Flex flexDirection="column" alignItems="center" mt="2rem">
