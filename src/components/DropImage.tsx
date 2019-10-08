@@ -60,23 +60,24 @@ const DropStyles = styled.div`
 `
 
 const DroppedImagePreview = styled.div`
-  position: relative;
-  display: flex;
+  display: inline-flex;
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
   border-radius: 4px;
-  border: 2px solid ${palette.grey._200};
-  &:not(:last-child) {
+  margin-bottom: 1rem;
+  p.index {
     margin-right: 2rem;
+    color: ${palette.pink._500};
   }
   img.preview {
+    border: 2px solid ${palette.grey._200};
+    height: 4rem;
+    max-height: 4rem;
+    width: auto;
     max-width: 10rem;
-    max-height: 7.5rem;
-    min-height: 3rem;
     object-fit: contain;
   }
-  margin-bottom: 1rem;
   p {
     ${truncateString('200px')}
   }
@@ -84,6 +85,7 @@ const DroppedImagePreview = styled.div`
     background: ${palette.grey._200};
     width: 3.2rem;
     height: 3.2rem;
+    margin-left: 2rem;
     padding: 9px;
     display: flex;
     flex-direction: column;
@@ -123,8 +125,9 @@ const DropImage: React.FC<Props> = ({
   const { width } = useWindowSize()
 
   // react-sortable-hoc stuff
-  const SortableItem = SortableElement(({ image }: { image: string }) => (
+  const SortableItem = SortableElement(({ image, _index }: { image: string; _index: number }) => (
     <DroppedImagePreview key={image}>
+      {allowMultiple && <p className="index">{_index + 1}.</p>}
       <img className="preview" src={image} alt="Game promo" />
       <button className="close" onClick={e => handleRemoveImage(e, image)} type="button">
         <img src={closeSource} alt="close" className="close" />
@@ -133,9 +136,9 @@ const DropImage: React.FC<Props> = ({
   ))
 
   const SortableList = SortableContainer(({ images }: { images: string[] }) => (
-    <Flex>
-      {images.map((_image, index) => (
-        <SortableItem key={`item-${index}`} index={index} image={_image} />
+    <Flex flexDirection="column" pt="1rem">
+      {images.map((_image, _index) => (
+        <SortableItem key={_index} index={_index} _index={_index} image={_image} />
       ))}
     </Flex>
   ))
@@ -199,13 +202,7 @@ const DropImage: React.FC<Props> = ({
 
   return (
     <div>
-      <SortableList
-        images={currentImages}
-        onSortEnd={handleSortEnd}
-        axis="x"
-        lockAxis="x"
-        lockToContainerEdges
-      />
+      <SortableList images={currentImages} onSortEnd={handleSortEnd} />
       <DropStyles
         {...getRootProps()}
         isDragActive={isDragActive}
