@@ -1898,10 +1898,10 @@
     "@types/history" "*"
     "@types/react" "*"
 
-"@types/react-slick@^0.23.4":
-  version "0.23.4"
-  resolved "https://registry.yarnpkg.com/@types/react-slick/-/react-slick-0.23.4.tgz#c97e2a9e7e3d1933c68593b8e82752fab1e8ce53"
-  integrity sha512-vXoIy4GUfB7/YgqubR4H7RALo+pRdMYCeLgWwV3MPwl5pggTlEkFBTF19R7u+LJc85uMqC7RfsbkqPLMQ4ab+A==
+"@types/react-slick@0.23.1":
+  version "0.23.1"
+  resolved "https://registry.yarnpkg.com/@types/react-slick/-/react-slick-0.23.1.tgz#fcc1beaad47c4e8b6da02b6568e1430bf8790a0b"
+  integrity sha512-gCLWPKgLmak1Ip4X6eJECRef+pT8ZyKJXOK8/wrSxYq0BAzGUuFbNOAe1U4epzytuttyPOg5MCG4CO2PcpuxWw==
   dependencies:
     "@types/react" "*"
 
@@ -10900,10 +10900,10 @@ react-scrolllock@^3.0.2:
   dependencies:
     exenv "^1.2.2"
 
-react-slick@^0.25.2:
-  version "0.25.2"
-  resolved "https://registry.yarnpkg.com/react-slick/-/react-slick-0.25.2.tgz#56331b67d47d8bcfe2dceb6acab1c8fd5bd1f6bc"
-  integrity sha512-8MNH/NFX/R7zF6W/w+FS5VXNyDusF+XDW1OU0SzODEU7wqYB+ZTGAiNJ++zVNAVqCAHdyCybScaUB+FCZOmBBw==
+react-slick@0.23.1:
+  version "0.23.1"
+  resolved "https://registry.yarnpkg.com/react-slick/-/react-slick-0.23.1.tgz#15791c4107f0ba3a5688d5bd97b7b7ceaa0dd181"
+  integrity sha512-vn4E+JeTUrjRgXDEV0QEiWo3fNdB6Lg/e8eMYSh3OjuadqYBsgn0OfbqNxVJs7cv1VmSKm14razHEbpRFP/mvw==
   dependencies:
     classnames "^2.2.5"
     enquire.js "^2.1.6"

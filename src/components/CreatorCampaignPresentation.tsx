@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import { useQuery } from '@apollo/react-hooks'
 import { Box, Flex } from '@rebass/grid'
 import Slider from 'react-slick'
@@ -101,8 +101,8 @@ const CreatorCampaignPresentation: React.FC<Props> = ({ campaignId }) => {
   >(GET_CREATOR_CAMPAIGN, { variables: { campaignId } })
 
   const deviceType = useDeviceType()
-  const mainSlider = useRef<Slider>(null)
-  const previewSlider = useRef<Slider>(null)
+  const [mainSlider, setMainSlider] = useState<Slider>(null)
+  const [previewSlider, setPreviewSlider] = useState<Slider>(null)
 
   if (loading) {
     return <Loader fullScreen />
@@ -128,8 +128,8 @@ const CreatorCampaignPresentation: React.FC<Props> = ({ campaignId }) => {
             <Slider
               infinite
               easing="ease-in-out"
-              ref={mainSlider}
-              asNavFor={previewSlider.current}
+              ref={slider => setMainSlider(slider)}
+              asNavFor={previewSlider}
               focusOnSelect
             >
               {product.pictures.map(_picture => (
@@ -148,8 +148,8 @@ const CreatorCampaignPresentation: React.FC<Props> = ({ campaignId }) => {
               slidesToShow={3}
               arrows
               easing="ease-in-out"
-              ref={previewSlider}
-              asNavFor={mainSlider.current}
+              ref={slider => setPreviewSlider(slider)}
+              asNavFor={mainSlider}
             >
               {product.pictures.map((_picture, _index) => (
                 <p key={_picture}>{_index + 1}</p>
