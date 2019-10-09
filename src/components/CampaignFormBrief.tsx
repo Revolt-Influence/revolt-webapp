@@ -159,10 +159,10 @@ const CampaignFormBrief: React.FC<Prop> = ({ brief }) => {
             </Box>
           ))}
         </Flex>
-
+        {/* Campaign budget */}
         <Box width={[1, 1, 8 / 12]} pr={[0, 0, '2rem']}>
           <FormInputLabel withMargin>
-            Total campaign budget estimation (in US Dollars)
+            Total campaign budget estimation (in US Dollars, optional)
             <FormInput
               value={briefInput.estimatedBudget}
               onChange={e => handleUpdateBrief({ estimatedBudget: parseFloat(e.target.value) })}

@@ -47,8 +47,6 @@ interface CampaignStatusInfo {
 const getCampaignStatus = (campaign: GetCampaign_campaign): CampaignStatusInfo => {
   if (
     !campaign ||
-    !campaign.goal ||
-    !campaign.estimatedBudget ||
     !campaign.product ||
     !campaign.product.name ||
     !campaign.product.pitch ||
@@ -90,7 +88,6 @@ export const GET_CAMPAIGN = gql`
   query GetCampaign($campaignId: String!) {
     campaign(id: $campaignId) {
       _id
-      goal
       estimatedBudget
       trackingProvider
       publishingPlatforms
@@ -107,7 +104,6 @@ export const GET_CAMPAIGN = gql`
         _id
         name
         logo
-        website
       }
       targetAudience {
         gender

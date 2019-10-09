@@ -19,10 +19,6 @@ export interface UpdateBrand_updateBrand {
    * Cloudinary URL of brand logo
    */
   logo: string;
-  /**
-   * URL of the brand's website
-   */
-  website: string;
 }
 
 export interface UpdateBrand {

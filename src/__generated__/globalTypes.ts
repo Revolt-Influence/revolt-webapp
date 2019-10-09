@@ -211,7 +211,7 @@ export interface SubmitCollabReviewInput {
 export interface UpdateBrandInput {
   logo: string;
   name: string;
-  website: string;
+  website?: string | null;
 }
 
 //==============================================================

@@ -51,10 +51,6 @@ export interface GetCampaign_campaign_brand {
    * Cloudinary URL of brand logo
    */
   logo: string;
-  /**
-   * URL of the brand's website
-   */
-  website: string;
 }
 
 export interface GetCampaign_campaign_targetAudience {
@@ -88,10 +84,6 @@ export interface GetCampaign_campaign {
    * Mongoose generated ID
    */
   _id: string;
-  /**
-   * More info about the campaign and its goals
-   */
-  goal: string | null;
   /**
    * Total amount of money that will be given to creators
    */

@@ -17,7 +17,6 @@ export const BRAND_FRAGMENT = gql`
     _id
     name
     logo
-    website
   }
 `
 
@@ -82,16 +81,6 @@ const CampaignFormBrand: React.FC<Props> = ({ brand }) => {
                 value={brandInput.name}
                 onChange={e => handleUpdateBrand({ name: e.target.value })}
                 hasLabel
-              />
-            </FormInputLabel>
-            <FormInputLabel>
-              Publisher website
-              <FormInput
-                value={brandInput.website}
-                onChange={e => handleUpdateBrand({ website: e.target.value })}
-                placeholder="https..."
-                hasLabel
-                required
               />
             </FormInputLabel>
           </Box>

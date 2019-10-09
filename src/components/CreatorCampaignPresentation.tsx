@@ -6,7 +6,6 @@ import styled from 'styled-components'
 import { TextLinkExternal } from '../styles/Button'
 import { LabelText } from '../styles/Text'
 import { palette } from '../utils/colors'
-import { useWindowSize } from '../utils/hooks'
 import { applyCloudinaryTransformations } from '../utils/images'
 import { setFont } from '../utils/styles'
 import CheckList from './CheckList'
@@ -19,6 +18,7 @@ import {
   GetCreatorCampaign,
   GetCreatorCampaignVariables,
 } from '../__generated__/GetCreatorCampaign'
+import { useDeviceType } from '../utils/hooks'
 
 const Styles = styled.div`
   h3 {
@@ -60,7 +60,6 @@ const ExternalLink = styled(TextLinkExternal)<{ black?: boolean }>`
 export const CREATOR_CAMPAIGN_PRESENTATION_FRAGMENT = gql`
   fragment CreatorCampaignPresentationFragment on Campaign {
     _id
-    goal
     brand {
       ...BrandFragment
     }
@@ -98,8 +97,7 @@ const CreatorCampaignPresentation: React.FC<Props> = ({ campaignId }) => {
     GetCreatorCampaignVariables
   >(GET_CREATOR_CAMPAIGN, { variables: { campaignId } })
 
-  const { width } = useWindowSize()
-  const isMobile = width < 600
+  const deviceType = useDeviceType()
 
   if (loading) {
     return <Loader fullScreen />
@@ -111,7 +109,7 @@ const CreatorCampaignPresentation: React.FC<Props> = ({ campaignId }) => {
   const { brand, product, rules } = campaign
 
   const fullLink =
-    brand.website && `${brand.website.startsWith('http') ? '' : 'http://'}${brand.website}`
+    product.website && `${product.website.startsWith('http') ? '' : 'http://'}${product.website}`
 
   return (
     <Styles>
@@ -120,7 +118,11 @@ const CreatorCampaignPresentation: React.FC<Props> = ({ campaignId }) => {
         justifyContent={['flex-start', 'flex-start', 'space-between']}
       >
         {/* Left column on desktop */}
-        <Box width={[1, 1, 6 / 12]} pr={[0, 0, '15rem']} my="-2rem">
+        <Box
+          width={[1, 1, 6 / 12]}
+          pr={[0, 0, '15rem']}
+          my={deviceType === 'desktop' ? '-2rem' : 0}
+        >
           <SplitView title="The game" stacked noBorder>
             <ImageWrapper
               src={product.pictures.length > 0 ? product.pictures[0] : null}
@@ -129,9 +131,12 @@ const CreatorCampaignPresentation: React.FC<Props> = ({ campaignId }) => {
               placeholderText="No image available"
             />
             <Box mt="2rem">
+              <LabelText grey withMargin>
+                About the game
+              </LabelText>
               <p style={{ whiteSpace: 'pre-line' }}>{product.pitch}</p>
               <LabelText grey withMargin>
-                Game website
+                Website
               </LabelText>
               <ExternalLink
                 // Preprend http:// if needed
@@ -146,11 +151,13 @@ const CreatorCampaignPresentation: React.FC<Props> = ({ campaignId }) => {
         </Box>
         {/* Right column on desktop */}
         <Box width={[1, 1, 6 / 12]} mt="-2rem">
-          <SplitView title="The campaign" ratio={3.5 / 12} stacked noBorder={!isMobile}>
-            <p style={{ whiteSpace: 'pre-line' }}>{campaign.goal}</p>
-          </SplitView>
-          <SplitView title="The publisher" ratio={3.5 / 12} stacked>
-            <Flex justifyContent="space-between" alignItems="flex-start" flexWrap="wrap">
+          <SplitView
+            title="The publisher"
+            noBorder={deviceType === 'desktop'}
+            ratio={3.5 / 12}
+            stacked
+          >
+            <Flex justifyContent="space-between" alignItems="center" flexWrap="wrap">
               <Box width={2 / 12} pr="1rem">
                 <img
                   src={applyCloudinaryTransformations(brand.logo, {
@@ -161,14 +168,7 @@ const CreatorCampaignPresentation: React.FC<Props> = ({ campaignId }) => {
                 />
               </Box>
               <Box width={10 / 12} pl="1rem">
-                <LabelText grey>Name</LabelText>
                 <p>{brand.name}</p>
-                <LabelText grey withMargin>
-                  Website
-                </LabelText>
-                <ExternalLink href={fullLink} title={brand.name} target="_blank" black>
-                  {fullLink}
-                </ExternalLink>
               </Box>
             </Flex>
           </SplitView>

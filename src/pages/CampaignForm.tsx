@@ -180,7 +180,7 @@ const CampaignForm: React.FC<RouteComponentProps<MatchParams>> = ({ match, histo
                     <GlobalStyle />
                     <Box px="1rem">
                       <Title>{product.name}</Title>
-                      <Box mt="-3rem">
+                      <Box mt="-1rem">
                         <CreatorCampaignPresentation campaignId={campaign._id} />
                       </Box>
                     </Box>

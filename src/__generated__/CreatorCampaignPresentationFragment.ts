@@ -19,10 +19,6 @@ export interface CreatorCampaignPresentationFragment_brand {
    * Cloudinary URL of brand logo
    */
   logo: string;
-  /**
-   * URL of the brand's website
-   */
-  website: string;
 }
 
 export interface CreatorCampaignPresentationFragment_product {
@@ -63,10 +59,6 @@ export interface CreatorCampaignPresentationFragment {
    * Mongoose generated ID
    */
   _id: string;
-  /**
-   * More info about the campaign and its goals
-   */
-  goal: string | null;
   /**
    * The brand that published the campaign
    */
