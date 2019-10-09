@@ -19,7 +19,7 @@ const CampaignBriefPreview: React.FC<ICampaignBriefPreviewProps> = ({ campaign }
         message="This is the page that the influencers will see. They will send you a request if they are interested.
 "
       />
-      <Box mb="2rem">
+      <Box mb="1rem">
         <MainLink to={`/brand/campaigns/${campaign._id}/brief`} inverted>
           Edit my brief
         </MainLink>
