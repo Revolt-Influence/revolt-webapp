@@ -20,6 +20,7 @@ import { REVIEW_COLLAB_APPLICATION } from './BrandCollabCard'
 import Dropdown from './Dropdown'
 import ErrorCard from './ErrorCard'
 import YoutubePreview, { YOUTUBER_PROFILE_FRAGMENT } from './YoutubePreview'
+import { showLanguage } from '../utils/enums'
 
 const checkSource = require('../images/icons/check_white.svg')
 const closeSource = require('../images/icons/close_white.svg')
@@ -37,7 +38,7 @@ const Styles = styled.div`
     margin-right: 2rem;
     border-radius: 50%;
     box-shadow: ${shadow.inset};
-    border: 4px solid ${palette.pink._300};
+    border: 4px solid ${props => props.theme.primary._200};
   }
 
   .name {
@@ -239,7 +240,7 @@ const CreatorProfile: React.FC<Props> = ({ creatorId, collabId, handleAccept, ha
         <div>
           <h1 className="name">{name}</h1>
           <p>
-            {yearToAge(birthYear)} years old, speaks {language}
+            {yearToAge(birthYear)} years old, speaks {showLanguage(language)}
           </p>
         </div>
       </Flex>

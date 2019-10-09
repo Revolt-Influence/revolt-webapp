@@ -170,7 +170,7 @@ export interface CampaignAudienceInput {
 }
 
 export interface CampaignBriefInput {
-  goal: string;
+  goal?: string | null;
   rules: string[];
   estimatedBudget?: number | null;
   trackingProvider: TrackingProvider;

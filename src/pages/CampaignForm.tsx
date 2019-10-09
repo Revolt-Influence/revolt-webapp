@@ -123,7 +123,7 @@ const CampaignForm: React.FC<RouteComponentProps<MatchParams>> = ({ match, histo
         )}
         {!campaignIsComplete && campaign.isArchived && (
           <Box mb="1rem">
-            <NotificationCard nature="info" message="Complete your brief to send to review" />
+            <NotificationCard nature="info" message="Complete your brief to send it to review" />
           </Box>
         )}
         {publishButtonIsShown && (

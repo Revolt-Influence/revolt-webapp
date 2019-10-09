@@ -1,6 +1,5 @@
 import React, { useState, useCallback } from 'react'
 import { useDropzone, DropzoneOptions } from 'react-dropzone'
-import { SortableContainer, SortableElement } from 'react-sortable-hoc'
 import arrayMove from 'array-move'
 import styled from 'styled-components'
 import { MainButton } from '../styles/Button'
@@ -12,7 +11,6 @@ import { useWindowSize } from '../utils/hooks'
 import ErrorCard from './ErrorCard'
 import { Flex } from '@rebass/grid'
 import { FormSelect } from '../styles/Form'
-import { breakpoints } from './CustomThemeProvider'
 
 const closeSource = require('../images/icons/close.svg')
 

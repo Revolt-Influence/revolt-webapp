@@ -32,7 +32,7 @@ const MessageBubble = styled(Flex)<{ isFromMe: boolean }>`
       if (props.isFromMe) {
         return css`
           align-self: flex-end;
-          background: ${palette.pink._200};
+          background: ${props.theme.accent._200};
         `
       } else {
         return css`

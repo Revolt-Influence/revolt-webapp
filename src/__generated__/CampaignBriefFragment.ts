@@ -15,10 +15,6 @@ export interface CampaignBriefFragment {
    */
   _id: string;
   /**
-   * More info about the campaign and its goals
-   */
-  goal: string;
-  /**
    * Rules that creators must respect to receive the gift
    */
   rules: string[];

@@ -103,7 +103,7 @@ export interface CampaignCardFragment {
   /**
    * More info about the campaign and its goals
    */
-  goal: string;
+  goal: string | null;
   /**
    * The brand that published the campaign
    */

@@ -18,12 +18,12 @@ import ReviewCard from './ReviewCard'
 import InfoCard from './InfoCard'
 
 const Stats = styled(Box)`
-  background: ${palette.pink._100};
+  background: ${palette.blue._100};
   border-radius: 8px;
   .stat {
     text-align: center;
     .figure {
-      color: ${palette.pink._500};
+      color: ${palette.blue._500};
       text-align: center;
       margin-bottom: 8px;
       ${setFont(600, 'huge')}

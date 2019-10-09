@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import { Box, Flex } from '@rebass/grid'
 import gql from 'graphql-tag'
-import { FormInputLabel, FormInput, FormTextarea, FormSelect } from '../styles/Form'
+import { FormInputLabel, FormInput, FormSelect } from '../styles/Form'
 import SplitView from './SplitView'
+import InfoCard from './InfoCard'
 import { CAMPAIGN_SAVE_DEBOUNCE } from '../pages/CampaignForm'
 import { useDebouncedCallback } from 'use-debounce/lib'
 import {
@@ -26,7 +27,6 @@ const possiblePublishingPlatforms = Object.values(PublishingPlatform) as Publish
 export const CAMPAIGN_BRIEF_FRAGMENT = gql`
   fragment CampaignBriefFragment on Campaign {
     _id
-    goal
     rules
     estimatedBudget
     trackingProvider
@@ -94,18 +94,11 @@ const CampaignFormBrief: React.FC<Prop> = ({ brief }) => {
         {/* Notifications */}
         {hasSaved && <Toast nature="success" text="Changes saved" disappear />}
         {error && <Toast nature="error" text="Could not save changes" disappear />}
-        {/* Campaign goal */}
-        <FormInputLabel>
-          Campaign goal
-          <FormTextarea
-            rows={4}
-            value={briefInput.goal}
-            onChange={e => handleUpdateBrief({ goal: e.target.value })}
-            hasLabel
-            required
-          />
-        </FormInputLabel>
         {/* Loop through all items and add an empty one */}
+        <InfoCard
+          noMargin
+          message="You can define a set of rules that the influencer will commit to follow"
+        />
         {[...briefInput.rules, ''].map((_rule, _index) => (
           <FormInputLabel key={_index}>
             Influencer rule {_index + 1}
