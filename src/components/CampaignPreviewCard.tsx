@@ -53,7 +53,7 @@ const Style = styled(Box)`
     margin-top: 0.8rem;
     text-transform: uppercase;
     letter-spacing: 0.01em;
-    color: ${palette.blue._600};
+    color: ${props => props.theme.primary._500};
     ${setFont(600, 'small')}
   }
 

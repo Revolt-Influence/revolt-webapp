@@ -22,7 +22,7 @@ const Tab = styled.div<ITabProps>`
   padding: ${props => (props.small ? '0.3rem 1.5rem' : '0.8rem 2.5rem')};
   transform: translateY(3px);
   color: ${props => (props.isActive ? palette.grey._900 : palette.grey._700)};
-  border-bottom: 3px solid ${props => (props.isActive ? props.theme.primary._500 : 'transparent')};
+  border-bottom: 3px solid ${props => (props.isActive ? props.theme.accent._500 : 'transparent')};
 `
 
 export interface ITabItem {

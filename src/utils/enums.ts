@@ -7,6 +7,7 @@ import {
   ReviewFormat,
   CreatorStatus,
   PublishingPlatform,
+  ReviewCollabDecision,
 } from '../__generated__/globalTypes'
 
 export function showGender(gender: Gender): string {
@@ -206,5 +207,18 @@ export function showPublishingPlatform(platform: PublishingPlatform): string {
       return 'Steam'
     default:
       return platform
+  }
+}
+
+export function showReviewCollabDecision(decision: ReviewCollabDecision): string {
+  switch (decision) {
+    case ReviewCollabDecision.ACCEPT:
+      return 'Accept'
+    case ReviewCollabDecision.DENY:
+      return 'Deny'
+    case ReviewCollabDecision.MARK_AS_SENT:
+      return 'Mark as sent'
+    default:
+      return decision
   }
 }

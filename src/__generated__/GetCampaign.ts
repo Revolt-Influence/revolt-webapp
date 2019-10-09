@@ -91,7 +91,7 @@ export interface GetCampaign_campaign {
   /**
    * More info about the campaign and its goals
    */
-  goal: string;
+  goal: string | null;
   /**
    * Total amount of money that will be given to creators
    */

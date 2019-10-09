@@ -103,7 +103,7 @@ export interface GetCampaigns_campaigns_items {
   /**
    * More info about the campaign and its goals
    */
-  goal: string;
+  goal: string | null;
   /**
    * The brand that published the campaign
    */

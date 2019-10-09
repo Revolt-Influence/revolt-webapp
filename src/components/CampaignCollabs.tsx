@@ -179,7 +179,7 @@ const CampaignCollabs: React.FC<ICampaignCollabsProps> = ({ campaignId }) => {
                 </h2>
               </Row>
               <p className="help">
-                You have accepted the collab, but haven't given the game to the influencer
+                You have accepted the collab, but haven't sent the game to the influencer
               </p>
               {acceptedCollabs.length === 0 && <p className="noResult">No collabs.</p>}
               {acceptedCollabs.map(_collab => (

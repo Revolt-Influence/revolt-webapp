@@ -123,7 +123,7 @@ const CampaignForm: React.FC<RouteComponentProps<MatchParams>> = ({ match, histo
         )}
         {!campaignIsComplete && campaign.isArchived && (
           <Box mb="1rem">
-            <NotificationCard nature="info" message="Complete your brief to send to review" />
+            <NotificationCard nature="info" message="Complete your brief to send it to review" />
           </Box>
         )}
         {publishButtonIsShown && (
@@ -162,7 +162,7 @@ const CampaignForm: React.FC<RouteComponentProps<MatchParams>> = ({ match, histo
             <CampaignFormTargetAudience targetAudience={targetAudience} campaignId={campaign._id} />
             {showPublishButton()}
             {/* Some whitespace because there is no footer on this page */}
-            <Box mb="1rem" />
+            <Box mb="3rem" />
           </FormBox>
           <FormBox flex={1} style={{ overflow: 'hidden' }}>
             <PreviewColumn>
