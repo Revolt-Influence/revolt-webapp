@@ -11,6 +11,8 @@ import { truncateString } from '../utils/strings'
 import { useWindowSize } from '../utils/hooks'
 import ErrorCard from './ErrorCard'
 import { Flex } from '@rebass/grid'
+import { FormSelect } from '../styles/Form'
+import { breakpoints } from './CustomThemeProvider'
 
 const closeSource = require('../images/icons/close.svg')
 
@@ -65,17 +67,18 @@ const DroppedImagePreview = styled.div`
   justify-content: flex-start;
   align-items: center;
   border-radius: 4px;
-  margin-bottom: 1rem;
   p.index {
     margin-right: 2rem;
     color: ${palette.pink._500};
   }
   img.preview {
     border: 2px solid ${palette.grey._200};
-    height: 4rem;
-    max-height: 4rem;
+    height: 5rem;
+    max-height: 5rem;
     width: auto;
     max-width: 10rem;
+    margin-left: 2rem;
+    transform: translateY(-2px);
     object-fit: contain;
   }
   p {
@@ -83,6 +86,7 @@ const DroppedImagePreview = styled.div`
   }
   button.close {
     background: ${palette.grey._200};
+    z-index: 100;
     width: 3.2rem;
     height: 3.2rem;
     margin-left: 2rem;
@@ -123,37 +127,6 @@ const DropImage: React.FC<Props> = ({
   const [error, setError] = useState(null)
   const [isUploading, setIsUploading] = useState<boolean>(false)
   const { width } = useWindowSize()
-
-  // react-sortable-hoc stuff
-  const SortableItem = SortableElement(({ image, _index }: { image: string; _index: number }) => (
-    <DroppedImagePreview key={image}>
-      {allowMultiple && <p className="index">{_index + 1}.</p>}
-      <img className="preview" src={image} alt="Game promo" />
-      <button
-        className="close"
-        onClick={e => {
-          e.stopPropagation()
-          handleRemoveImage(e, image)
-        }}
-        onDrag={e => e.stopPropagation()}
-        onDragStart={e => e.stopPropagation()}
-        onDragEnd={e => e.stopPropagation()}
-        onMouseDown={e => e.stopPropagation()}
-        onMouseUp={e => e.stopPropagation()}
-        type="button"
-      >
-        <img src={closeSource} alt="close" className="close" />
-      </button>
-    </DroppedImagePreview>
-  ))
-
-  const SortableList = SortableContainer(({ images }: { images: string[] }) => (
-    <Flex flexDirection="column" pt="1rem">
-      {images.map((_image, _index) => (
-        <SortableItem key={_index} index={_index} _index={_index} image={_image} />
-      ))}
-    </Flex>
-  ))
 
   // Handle drop/select function
   const onDrop = useCallback(
@@ -204,23 +177,63 @@ const DropImage: React.FC<Props> = ({
     imageToRemove: string
   ) => {
     e.stopPropagation()
-    handleDrop(currentImages.filter(_image => _image !== imageToRemove))
+    const newImages = allowMultiple
+      ? currentImages.filter(_image => _image !== imageToRemove)
+      : ['']
+    handleDrop(newImages)
   }
 
-  const handleSortEnd = ({ oldIndex, newIndex }: { oldIndex: number; newIndex: number }) => {
+  const handleReorder = (oldIndex: number, newIndex: number) => {
     const sortedImages = arrayMove<string>(currentImages, oldIndex, newIndex)
     handleDrop(sortedImages)
   }
 
+  const showCurrentImages = () => (
+    <Flex flexDirection="column">
+      {currentImages.map((_image, _index) => (
+        <DroppedImagePreview key={_image}>
+          {allowMultiple && (
+            <FormSelect
+              style={{ zIndex: 100 }}
+              value={_index}
+              onClick={e => e.stopPropagation()}
+              // onMouseUp={e => e.stopPropagation()}
+              // onMouseDown={e => e.stopPropagation()}
+              onChange={e => handleReorder(_index, parseInt(e.target.value))}
+            >
+              {currentImages.map((__image, __index) => (
+                <option key={__index} value={__index} onClick={e => e.stopPropagation()}>
+                  n° {__index + 1}
+                </option>
+              ))}
+            </FormSelect>
+          )}
+          <img className="preview" src={_image} alt="Game promo" />
+          <button
+            className="close"
+            onClick={e => {
+              e.stopPropagation()
+              e.preventDefault()
+              handleRemoveImage(e, _image)
+            }}
+            type="button"
+          >
+            <img src={closeSource} alt="close" className="close" />
+          </button>
+        </DroppedImagePreview>
+      ))}
+    </Flex>
+  )
+
   return (
     <div>
-      <SortableList images={currentImages} onSortEnd={handleSortEnd} />
       <DropStyles
         {...getRootProps()}
         isDragActive={isDragActive}
         isDragReject={isDragReject}
         isUploading={isUploading}
       >
+        {showCurrentImages()}
         {error && <ErrorCard message="Upload failed" />}
         {/* Don't suggest drag and drop on mobile */}
         {!isUploading &&
