@@ -1,7 +1,10 @@
+import React, { useRef } from 'react'
 import { useQuery } from '@apollo/react-hooks'
 import { Box, Flex } from '@rebass/grid'
+import Slider from 'react-slick'
+import 'slick-carousel/slick/slick.css'
+import 'slick-carousel/slick/slick-theme.css'
 import { gql } from 'apollo-boost'
-import React from 'react'
 import styled from 'styled-components'
 import { TextLinkExternal } from '../styles/Button'
 import { LabelText } from '../styles/Text'
@@ -98,6 +101,8 @@ const CreatorCampaignPresentation: React.FC<Props> = ({ campaignId }) => {
   >(GET_CREATOR_CAMPAIGN, { variables: { campaignId } })
 
   const deviceType = useDeviceType()
+  const mainSlider = useRef<Slider>(null)
+  const previewSlider = useRef<Slider>(null)
 
   if (loading) {
     return <Loader fullScreen />
@@ -118,18 +123,38 @@ const CreatorCampaignPresentation: React.FC<Props> = ({ campaignId }) => {
         justifyContent={['flex-start', 'flex-start', 'space-between']}
       >
         {/* Left column on desktop */}
-        <Box
-          width={[1, 1, 6 / 12]}
-          pr={[0, 0, '15rem']}
-          my={deviceType === 'desktop' ? '-2rem' : 0}
-        >
+        <Box width={[1, 1, 6 / 12]} my={deviceType === 'desktop' ? '-2rem' : 0}>
           <SplitView title="The game" stacked noBorder>
-            <ImageWrapper
-              src={product.pictures.length > 0 ? product.pictures[0] : null}
-              alt={product.name || 'Cadeau'}
-              ratio={4 / 3}
-              placeholderText="No image available"
-            />
+            <Slider
+              infinite
+              easing="ease-in-out"
+              ref={mainSlider}
+              asNavFor={previewSlider.current}
+              focusOnSelect
+            >
+              {product.pictures.map(_picture => (
+                <ImageWrapper
+                  src={_picture}
+                  alt={product.name || 'Game'}
+                  key={_picture}
+                  ratio={4 / 3}
+                  placeholderText="No image available"
+                />
+              ))}
+            </Slider>
+            <Slider
+              dots
+              infinite
+              slidesToShow={3}
+              arrows
+              easing="ease-in-out"
+              ref={previewSlider}
+              asNavFor={mainSlider.current}
+            >
+              {product.pictures.map((_picture, _index) => (
+                <p key={_picture}>{_index + 1}</p>
+              ))}
+            </Slider>
             <Box mt="2rem">
               <LabelText grey withMargin>
                 About the game
@@ -150,7 +175,7 @@ const CreatorCampaignPresentation: React.FC<Props> = ({ campaignId }) => {
           </SplitView>
         </Box>
         {/* Right column on desktop */}
-        <Box width={[1, 1, 6 / 12]} mt="-2rem">
+        <Box width={[1, 1, 6 / 12]} mt="-2rem" pl={[0, 0, '5rem']}>
           <SplitView
             title="The publisher"
             noBorder={deviceType === 'desktop'}
