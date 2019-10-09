@@ -62,7 +62,6 @@ interface IImageWrapperProps extends IStylesProps {
   alt: string
   placeholderText?: string
   showLabel?: () => any
-  sizes?: string
 }
 
 const ImageWrapper: React.FC<IImageWrapperProps> = ({

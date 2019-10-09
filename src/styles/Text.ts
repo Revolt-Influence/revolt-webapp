@@ -69,7 +69,7 @@ const LabelText = styled.p<{ grey?: boolean; withMargin?: boolean }>`
   ${props =>
     props.withMargin &&
     css`
-      margin-top: 2rem;
+      margin-top: 1.5rem;
     `}
   ${setFont(600, 'small')}
 `
