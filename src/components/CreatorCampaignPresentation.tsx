@@ -1,5 +1,6 @@
 import React, { useRef, useState, useCallback } from 'react'
 import { useQuery } from '@apollo/react-hooks'
+import moment from 'moment'
 import { Box, Flex } from '@rebass/grid'
 import Slider from 'react-slick'
 import 'slick-carousel/slick/slick.css'
@@ -9,7 +10,6 @@ import styled from 'styled-components'
 import { TextLinkExternal } from '../styles/Button'
 import { LabelText } from '../styles/Text'
 import { palette } from '../utils/colors'
-import { applyCloudinaryTransformations } from '../utils/images'
 import { setFont, shadow } from '../utils/styles'
 import CheckList from './CheckList'
 import ErrorCard from './ErrorCard'
@@ -23,6 +23,7 @@ import {
 } from '../__generated__/GetCreatorCampaign'
 import { useDeviceType } from '../utils/hooks'
 import { getYoutubeEmbedLink, getYoutubeThumbnail } from '../utils/youtube'
+import { showGameCategory } from '../utils/enums'
 
 const Styles = styled.div`
   h3 {
@@ -151,112 +152,106 @@ const CreatorCampaignPresentation: React.FC<Props> = ({ campaignId, isInsideIfra
         justifyContent={['flex-start', 'flex-start', 'space-between']}
       >
         {/* Left column on desktop */}
-        <Box width={[1, 1, 6 / 12]} my={deviceType === 'desktop' ? '-2rem' : 0}>
-          <SplitView title="The game" stacked noBorder>
-            <Slider
-              infinite
-              easing="ease-in-out"
-              ref={slider}
-              focusOnSelect
-              // afterChange={newSlide => setCurrentSlide(newSlide)}
-            >
-              {hasYoutube && (
-                <div ref={measuredRef}>
-                  <iframe
-                    className="video"
-                    width={frameWidth}
-                    height={(frameWidth * 3) / 4}
-                    src={getYoutubeEmbedLink(product.youtubeLink)}
-                    title="Game demo"
-                  />
-                </div>
-              )}
-              {product.pictures.map(_picture => (
+        <Box mt="1.8rem" width={[1, 1, 6 / 12]}>
+          <Slider
+            infinite
+            easing="ease-in-out"
+            ref={slider}
+            focusOnSelect
+            speed={300}
+            // afterChange={newSlide => setCurrentSlide(newSlide)}
+          >
+            {hasYoutube && (
+              <div ref={measuredRef}>
+                <iframe
+                  className="video"
+                  width={frameWidth}
+                  height={(frameWidth * 3) / 4}
+                  src={getYoutubeEmbedLink(product.youtubeLink)}
+                  title="Game demo"
+                />
+              </div>
+            )}
+            {product.pictures.map(_picture => (
+              <ImageWrapper
+                src={_picture}
+                alt={product.name || 'Game'}
+                key={_picture}
+                ratio={4 / 3}
+                placeholderText="No image available"
+              />
+            ))}
+          </Slider>
+          <Flex flexDirection="row" justifyContent="flex-start" flexWrap="wrap">
+            {hasYoutube && (
+              <Box
+                as="button"
+                width={3 / 4}
+                px="0.5rem"
+                style={{ flex: 1 }}
+                onClick={() => slider.current.slickGoTo(0)}
+              >
                 <ImageWrapper
-                  src={_picture}
+                  src={getYoutubeThumbnail(product.youtubeLink)}
                   alt={product.name || 'Game'}
-                  key={_picture}
                   ratio={4 / 3}
                   placeholderText="No image available"
                 />
-              ))}
-            </Slider>
-            <Flex flexDirection="row" justifyContent="flex-start" flexWrap="wrap">
-              {hasYoutube && (
-                <Box
-                  as="button"
-                  width={3 / 4}
-                  px="0.5rem"
-                  style={{ flex: 1 }}
-                  onClick={() => slider.current.slickGoTo(0)}
-                >
-                  <ImageWrapper
-                    src={getYoutubeThumbnail(product.youtubeLink)}
-                    alt={product.name || 'Game'}
-                    ratio={4 / 3}
-                    placeholderText="No image available"
-                  />
-                </Box>
-              )}
-              {product.pictures.map((_picture, _index) => (
-                <Box
-                  as="button"
-                  width={3 / 4}
-                  px="0.5rem"
-                  key={_picture}
-                  style={{ flex: 1 }}
-                  onClick={() => slider.current.slickGoTo(_index + (hasYoutube ? 1 : 0))}
-                >
-                  <ImageWrapper
-                    src={_picture}
-                    alt={product.name || 'Game'}
-                    ratio={4 / 3}
-                    placeholderText="No image available"
-                  />
-                </Box>
-              ))}
-            </Flex>
-            <Box mt="2rem">
-              <LabelText grey withMargin>
-                About the game
-              </LabelText>
-              <p style={{ whiteSpace: 'pre-line' }}>{product.pitch}</p>
-              <LabelText grey withMargin>
-                Website
-              </LabelText>
-              <ExternalLink
-                // Preprend http:// if needed
-                href={fullLink}
-                title={product.name}
-                target="_blank"
+              </Box>
+            )}
+            {product.pictures.map((_picture, _index) => (
+              <Box
+                as="button"
+                width={3 / 4}
+                px="0.5rem"
+                key={_picture}
+                style={{ flex: 1 }}
+                onClick={() => slider.current.slickGoTo(_index + (hasYoutube ? 1 : 0))}
               >
-                {product.website}
-              </ExternalLink>
-            </Box>
-          </SplitView>
+                <ImageWrapper
+                  src={_picture}
+                  alt={product.name || 'Game'}
+                  ratio={4 / 3}
+                  placeholderText="No image available"
+                />
+              </Box>
+            ))}
+          </Flex>
+          <LabelText grey withMargin>
+            Genres
+          </LabelText>
+          <p>{product.categories.map(_cat => showGameCategory(_cat)).join(', ')}</p>
+          <Box>
+            <LabelText grey withMargin>
+              Website
+            </LabelText>
+            <ExternalLink
+              // Preprend http:// if needed
+              href={fullLink}
+              title={product.name}
+              target="_blank"
+            >
+              {product.website}
+            </ExternalLink>
+          </Box>
+          <LabelText grey withMargin>
+            Publisher
+          </LabelText>
+          {brand.name}
+          <LabelText grey withMargin>
+            Release date
+          </LabelText>
+          {moment(product.launchedAt).format('MMMM Do YYYY')}
         </Box>
         {/* Right column on desktop */}
-        <Box width={[1, 1, 6 / 12]} mt="-2rem" pl={[0, 0, '5rem']}>
+        <Box width={[1, 1, 6 / 12]} mt={['2rem', '2rem', '-2rem']} pl={[0, 0, '5rem']}>
           <SplitView
-            title="The publisher"
+            title="About the game"
             noBorder={deviceType === 'desktop'}
             ratio={3.5 / 12}
             stacked
           >
-            <Flex justifyContent="space-between" alignItems="center" flexWrap="wrap">
-              <Box width={2 / 12} pr="1rem">
-                <img
-                  src={applyCloudinaryTransformations(brand.logo, {
-                    width: 250,
-                  })}
-                  alt={brand.name}
-                  className="logo"
-                />
-              </Box>
-              <Box width={10 / 12} pl="1rem">
-                <p>{brand.name}</p>
-              </Box>
-            </Flex>
+            <p style={{ whiteSpace: 'pre-line' }}>{product.pitch}</p>
           </SplitView>
           <Box>
             <SplitView title="Rules" ratio={3.5 / 12} stacked>

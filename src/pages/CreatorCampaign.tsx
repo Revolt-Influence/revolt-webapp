@@ -180,7 +180,7 @@ const CreatorCampaign: React.FC<Props> = ({ match }) => {
         {/* Actual tab content */}
         {showCurrentTab()}
         {/* Main action button (depends on tab) */}
-        <Flex justifyContent="center">{showActionButton()}</Flex>
+        <Box mt="2rem">{showActionButton()}</Box>
 
         {/* Go back to main tab (presentation) if not on main tab */}
         {tab !== GameTab.PRESENTATION && (
