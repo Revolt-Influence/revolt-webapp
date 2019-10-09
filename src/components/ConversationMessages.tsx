@@ -5,8 +5,9 @@ import { palette } from '../utils/colors'
 import { applyCloudinaryTransformations } from '../utils/images'
 import { shadow } from '../utils/styles'
 import gql from 'graphql-tag'
+import { MessageBubble } from '../styles/MessageBubble'
 
-const MessageBubble = styled(Flex)<{ isFromMe: boolean }>`
+const Message = styled(Flex)<{ isFromMe: boolean }>`
   max-width: 65rem;
   &:not(:last-child) {
     margin-bottom: 1rem;
@@ -92,7 +93,7 @@ const ConversationMessages: React.FC<Props> = ({ messages }) => (
       // Sort from oldest to most recent because we're autoscrolling to the bottom of the list
       .sort((_messageA, _messageB) => (_messageA.sentAt > _messageB.sentAt ? 1 : -1))
       .map(_message => (
-        <MessageBubble isFromMe={_message.isFromMe} key={_message._id}>
+        <Message isFromMe={_message.isFromMe} key={_message._id}>
           {!_message.isFromMe && (
             <img
               src={applyCloudinaryTransformations(_message.authorPicture, { width: 80 })}
@@ -100,8 +101,8 @@ const ConversationMessages: React.FC<Props> = ({ messages }) => (
               className="recipient"
             />
           )}
-          <div className="bubble">{_message.text}</div>
-        </MessageBubble>
+          <MessageBubble isFromMe={_message.isFromMe}>{_message.text}</MessageBubble>
+        </Message>
       ))}
   </Flex>
 )

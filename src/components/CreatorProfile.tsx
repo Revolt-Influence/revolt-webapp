@@ -1,8 +1,7 @@
 import { useLazyQuery, useMutation, useQuery } from '@apollo/react-hooks'
-import { Flex } from '@rebass/grid'
+import { Flex, Box } from '@rebass/grid'
 import { gql } from 'apollo-boost'
 import React, { useEffect } from 'react'
-import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { palette } from '../utils/colors'
 import { applyCloudinaryTransformations } from '../utils/images'
@@ -17,15 +16,17 @@ import {
 } from '../__generated__/ReviewCollabApplication'
 import AudienceInsights from './AudienceInsights'
 import { REVIEW_COLLAB_APPLICATION } from './BrandCollabCard'
-import Dropdown from './Dropdown'
 import ErrorCard from './ErrorCard'
 import YoutubePreview, { YOUTUBER_PROFILE_FRAGMENT } from './YoutubePreview'
-import { showLanguage } from '../utils/enums'
+import { showLanguage, showReviewCollabDecision } from '../utils/enums'
+import { FormSelect } from '../styles/Form'
+import { MessageBubble } from '../styles/MessageBubble'
+import { MainLink } from '../styles/Button'
 
 const checkSource = require('../images/icons/check_white.svg')
 const closeSource = require('../images/icons/close_white.svg')
-const contactSource = require('../images/icons/email_white.svg')
 
+const possibleReviewCollabDecisions = Object.values(ReviewCollabDecision)
 const placeholderPicture = 'https://dummyimage.com/40x40/d8dee3/D8DEE3.jpg'
 
 const Styles = styled.div`
@@ -38,17 +39,12 @@ const Styles = styled.div`
     margin-right: 2rem;
     border-radius: 50%;
     box-shadow: ${shadow.inset};
-    border: 4px solid ${props => props.theme.primary._200};
+    border: 4px solid ${props => props.theme.primary._300};
   }
 
   .name {
     ${setFont(600, 'big')}
     margin-bottom: 1rem;
-  }
-
-  .message {
-    margin-top: 2rem;
-    white-space: pre-wrap;
   }
 
   .label {
@@ -65,11 +61,15 @@ const Styles = styled.div`
     border-radius: 8px;
     color: ${palette.grey._50};
     transition: 0.3s all ease-in-out;
+    box-shadow: ${shadow._200};
+    &:hover:not(:disabled) {
+    box-shadow: ${shadow._400};
+    }
     p {
       margin: 0 0.5rem;
     }
-    &:not(:last-child) {
-      margin-right: 1.5rem;
+    &:not(:first-child) {
+      margin-left: 1.5rem;
     }
     img {
       width: 3rem;
@@ -192,19 +192,6 @@ const CreatorProfile: React.FC<Props> = ({ creatorId, collabId, handleAccept, ha
     ReviewCollabApplicationVariables
   >(REVIEW_COLLAB_APPLICATION)
 
-  const getStatusDropdownSelected = (): string => {
-    switch (collab.status) {
-      case CollabStatus.ACCEPTED:
-        return 'Accepted'
-      case CollabStatus.DENIED:
-        return 'Denied'
-      case CollabStatus.SENT:
-        return 'Product sent'
-      default:
-        return collab.status
-    }
-  }
-
   if (creatorLoading || collabLoading) {
     return <p>Loading profile...</p>
   }
@@ -217,16 +204,24 @@ const CreatorProfile: React.FC<Props> = ({ creatorId, collabId, handleAccept, ha
   const { youtube } = creator
   const hasYoutube = youtube != null
 
+  const getCurrentDecision = (): ReviewCollabDecision => {
+    switch (collab.status) {
+      case CollabStatus.ACCEPTED:
+        return ReviewCollabDecision.ACCEPT
+      case CollabStatus.DENIED:
+        return ReviewCollabDecision.DENY
+      case CollabStatus.SENT:
+        return ReviewCollabDecision.MARK_AS_SENT
+      default:
+        return null
+    }
+  }
+
   const showContactButton = () =>
     collab ? (
-      <Link
-        to={`/brand/messages/${collab.conversation._id}`}
-        className="action contact"
-        type="button"
-      >
-        <p>Contact</p>
-        <img src={contactSource} alt="contact" />
-      </Link>
+      <MainLink to={`/brand/messages/${collab.conversation._id}`} type="button" noMargin>
+        Send a message
+      </MainLink>
     ) : null
 
   return (
@@ -245,14 +240,16 @@ const CreatorProfile: React.FC<Props> = ({ creatorId, collabId, handleAccept, ha
         </div>
       </Flex>
       {collab && (
-        <p className="message">
-          <span className="label">Message:</span> {collab.message}
-        </p>
+        <Box style={{ display: 'inline-block' }} mt="2rem">
+          <Box mb="0.5rem">Message</Box>
+          <MessageBubble isFromMe={false}>{collab.message}</MessageBubble>
+        </Box>
       )}
-      <Flex flexDirection="row" justifyContent="space-between" mt="2rem">
+      <Flex flexDirection="row" justifyContent="space-between" mt="2rem" alignItems="baseline">
         {handleAccept != null && handleRefuse != null ? (
           <>
             <Flex flexDirection="row" justifyContent="space-between">
+              {collab && showContactButton()}
               <button className="action accept" type="button" onClick={handleAccept}>
                 <p>Accept</p>
                 <img src={checkSource} alt="accept" />
@@ -262,14 +259,32 @@ const CreatorProfile: React.FC<Props> = ({ creatorId, collabId, handleAccept, ha
                 <img src={closeSource} alt="deny" />
               </button>
             </Flex>
-            {collab && showContactButton()}
           </>
         ) : (
           collabId &&
           collab && (
             <>
               {showContactButton()}
-              <Dropdown
+              {collab.status !== CollabStatus.DONE && (
+                <FormSelect
+                  value={getCurrentDecision()}
+                  onChange={e => {
+                    reviewCollabApplication({
+                      variables: {
+                        collabId: collabId,
+                        decision: e.target.value as ReviewCollabDecision,
+                      },
+                    })
+                  }}
+                >
+                  {possibleReviewCollabDecisions.map(_possibleDecision => (
+                    <option value={_possibleDecision} key={_possibleDecision}>
+                      {showReviewCollabDecision(_possibleDecision)}
+                    </option>
+                  ))}
+                </FormSelect>
+              )}
+              {/* <Dropdown
                 options={
                   [
                     ReviewCollabDecision.ACCEPT,
@@ -286,7 +301,7 @@ const CreatorProfile: React.FC<Props> = ({ creatorId, collabId, handleAccept, ha
                     },
                   })
                 }}
-              />
+              /> */}
             </>
           )
         )}

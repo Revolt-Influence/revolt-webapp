@@ -133,7 +133,9 @@ const CampaignPropositions: React.FC<Props> = ({ campaignId }) => {
         <FullHeightColumns
           leftComponent={() => (
             <>
-              {collabsApplied.length === 0 && <InfoCard message="You don't have new requests" />}
+              {collabsApplied.length === 0 && (
+                <InfoCard message="You don't have any new requests yet. Don't worry, they'll come fast!" />
+              )}
               {collabsApplied
                 .sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1))
                 .map(showPropositionPreview)}

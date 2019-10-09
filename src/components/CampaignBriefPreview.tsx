@@ -15,7 +15,10 @@ const CampaignBriefPreview: React.FC<ICampaignBriefPreviewProps> = ({ campaign }
   const status = getCampaignStatus(campaign)
   return (
     <ContainerBox>
-      <InfoCard message="This is the brief influencers will see. They will send you a collab request if they are interested." />
+      <InfoCard
+        message="This is the page that the influencers will see. They will send you a request if they are interested.
+"
+      />
       <Box mb="2rem">
         <MainLink to={`/brand/campaigns/${campaign._id}/brief`} inverted>
           Edit my brief

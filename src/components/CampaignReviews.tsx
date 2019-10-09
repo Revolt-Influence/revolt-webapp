@@ -127,7 +127,7 @@ const CampaignReviews: React.FC<Props> = ({ campaignId }) => {
           >
             {reviews.length === 0 && (
               <Box px="2rem">
-                <InfoCard message="You don't have reviews yet" />
+                <InfoCard message="You don't have any reviews of your game yet." />
               </Box>
             )}
             {reviews.map((_review, index) => (
