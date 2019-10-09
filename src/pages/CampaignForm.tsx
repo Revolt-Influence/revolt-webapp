@@ -181,7 +181,7 @@ const CampaignForm: React.FC<RouteComponentProps<MatchParams>> = ({ match, histo
                     <Box px="1rem">
                       <Title>{product.name}</Title>
                       <Box mt="-1rem">
-                        <CreatorCampaignPresentation campaignId={campaign._id} />
+                        <CreatorCampaignPresentation isInsideIframe campaignId={campaign._id} />
                       </Box>
                     </Box>
                   </>

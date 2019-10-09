@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useCallback } from 'react'
 import { useQuery } from '@apollo/react-hooks'
 import { Box, Flex } from '@rebass/grid'
 import Slider from 'react-slick'
@@ -10,7 +10,7 @@ import { TextLinkExternal } from '../styles/Button'
 import { LabelText } from '../styles/Text'
 import { palette } from '../utils/colors'
 import { applyCloudinaryTransformations } from '../utils/images'
-import { setFont } from '../utils/styles'
+import { setFont, shadow } from '../utils/styles'
 import CheckList from './CheckList'
 import ErrorCard from './ErrorCard'
 import ImageWrapper from './ImageWrapper'
@@ -22,6 +22,7 @@ import {
   GetCreatorCampaignVariables,
 } from '../__generated__/GetCreatorCampaign'
 import { useDeviceType } from '../utils/hooks'
+import { getYoutubeEmbedLink, getYoutubeThumbnail } from '../utils/youtube'
 
 const Styles = styled.div`
   h3 {
@@ -47,6 +48,11 @@ const Styles = styled.div`
     width: 25px;
     height: 25px;
     margin-right: 10px;
+  }
+
+  iframe.video {
+    box-shadow: ${shadow._200};
+    border-radius: 8px;
   }
 `
 
@@ -92,17 +98,25 @@ const GET_CREATOR_CAMPAIGN = gql`
 
 interface Props {
   campaignId: string
+  isInsideIframe?: boolean
 }
 
-const CreatorCampaignPresentation: React.FC<Props> = ({ campaignId }) => {
+const CreatorCampaignPresentation: React.FC<Props> = ({ campaignId, isInsideIframe }) => {
   const { data: { campaign } = { campaign: null }, loading, error } = useQuery<
     GetCreatorCampaign,
     GetCreatorCampaignVariables
   >(GET_CREATOR_CAMPAIGN, { variables: { campaignId } })
 
   const deviceType = useDeviceType()
-  const [mainSlider, setMainSlider] = useState<Slider>(null)
-  const [previewSlider, setPreviewSlider] = useState<Slider>(null)
+
+  const slider = useRef<Slider>(null)
+  // const [currentSlide, setCurrentSlide] = useState<number>(0)
+  const [frameWidth, setFrameWidth] = useState(0)
+  const measuredRef = useCallback((node: HTMLElement) => {
+    if (node != null) {
+      setFrameWidth(node.offsetWidth)
+    }
+  }, [])
 
   if (loading) {
     return <Loader fullScreen />
@@ -112,12 +126,26 @@ const CreatorCampaignPresentation: React.FC<Props> = ({ campaignId }) => {
   }
 
   const { brand, product, rules } = campaign
+  const hasYoutube = !!product.youtubeLink
 
   const fullLink =
     product.website && `${product.website.startsWith('http') ? '' : 'http://'}${product.website}`
 
   return (
     <Styles>
+      {/* Load Slick styles if inside iframe */}
+      {isInsideIframe && (
+        <>
+          <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick-theme.min.css"
+          />
+          <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.css"
+          />
+        </>
+      )}
       <Flex
         flexDirection={['column', 'column', 'row']}
         justifyContent={['flex-start', 'flex-start', 'space-between']}
@@ -128,10 +156,21 @@ const CreatorCampaignPresentation: React.FC<Props> = ({ campaignId }) => {
             <Slider
               infinite
               easing="ease-in-out"
-              ref={slider => setMainSlider(slider)}
-              asNavFor={previewSlider}
+              ref={slider}
               focusOnSelect
+              // afterChange={newSlide => setCurrentSlide(newSlide)}
             >
+              {hasYoutube && (
+                <div ref={measuredRef}>
+                  <iframe
+                    className="video"
+                    width={frameWidth}
+                    height={(frameWidth * 3) / 4}
+                    src={getYoutubeEmbedLink(product.youtubeLink)}
+                    title="Game demo"
+                  />
+                </div>
+              )}
               {product.pictures.map(_picture => (
                 <ImageWrapper
                   src={_picture}
@@ -142,19 +181,41 @@ const CreatorCampaignPresentation: React.FC<Props> = ({ campaignId }) => {
                 />
               ))}
             </Slider>
-            <Slider
-              dots
-              infinite
-              slidesToShow={3}
-              arrows
-              easing="ease-in-out"
-              ref={slider => setPreviewSlider(slider)}
-              asNavFor={mainSlider}
-            >
+            <Flex flexDirection="row" justifyContent="flex-start" flexWrap="wrap">
+              {hasYoutube && (
+                <Box
+                  as="button"
+                  width={3 / 4}
+                  px="0.5rem"
+                  style={{ flex: 1 }}
+                  onClick={() => slider.current.slickGoTo(0)}
+                >
+                  <ImageWrapper
+                    src={getYoutubeThumbnail(product.youtubeLink)}
+                    alt={product.name || 'Game'}
+                    ratio={4 / 3}
+                    placeholderText="No image available"
+                  />
+                </Box>
+              )}
               {product.pictures.map((_picture, _index) => (
-                <p key={_picture}>{_index + 1}</p>
+                <Box
+                  as="button"
+                  width={3 / 4}
+                  px="0.5rem"
+                  key={_picture}
+                  style={{ flex: 1 }}
+                  onClick={() => slider.current.slickGoTo(_index + (hasYoutube ? 1 : 0))}
+                >
+                  <ImageWrapper
+                    src={_picture}
+                    alt={product.name || 'Game'}
+                    ratio={4 / 3}
+                    placeholderText="No image available"
+                  />
+                </Box>
               ))}
-            </Slider>
+            </Flex>
             <Box mt="2rem">
               <LabelText grey withMargin>
                 About the game
