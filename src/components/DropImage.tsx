@@ -129,7 +129,19 @@ const DropImage: React.FC<Props> = ({
     <DroppedImagePreview key={image}>
       {allowMultiple && <p className="index">{_index + 1}.</p>}
       <img className="preview" src={image} alt="Game promo" />
-      <button className="close" onClick={e => handleRemoveImage(e, image)} type="button">
+      <button
+        className="close"
+        onClick={e => {
+          e.stopPropagation()
+          handleRemoveImage(e, image)
+        }}
+        onDrag={e => e.stopPropagation()}
+        onDragStart={e => e.stopPropagation()}
+        onDragEnd={e => e.stopPropagation()}
+        onMouseDown={e => e.stopPropagation()}
+        onMouseUp={e => e.stopPropagation()}
+        type="button"
+      >
         <img src={closeSource} alt="close" className="close" />
       </button>
     </DroppedImagePreview>
