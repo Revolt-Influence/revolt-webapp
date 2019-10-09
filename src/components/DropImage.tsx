@@ -252,9 +252,16 @@ const DropImage: React.FC<Props> = ({
             height: '100%',
           }}
         />
-        <MainButton type="button" display="inline" smaller inverted>
-          Add an image
-        </MainButton>
+        {maxImages && currentImages.length < maxImages ? (
+          <MainButton type="button" display="inline" smaller inverted>
+            Add an image
+          </MainButton>
+        ) : (
+          <p style={{ textAlign: 'center' }}>
+            {maxImages} images max,
+            <br /> remove images to add new ones
+          </p>
+        )}
       </DropStyles>
     </div>
   )
