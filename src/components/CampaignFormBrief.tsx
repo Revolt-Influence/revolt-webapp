@@ -130,7 +130,7 @@ const CampaignFormBrief: React.FC<Prop> = ({ brief }) => {
         {/* Tracking provider */}
         <Box width={[1, 1, 6 / 12]}>
           <FormInputLabel withMargin>
-            Tracking provider
+            Tracking provider (optional)
             <FormSelect
               value={briefInput.trackingProvider}
               onChange={e =>

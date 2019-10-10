@@ -24,6 +24,9 @@ const ProductCarousel: React.FC<Props> = ({ product, isInsideIframe }) => {
 
   const hasYoutube = !!product.youtubeLink
 
+  // Only show previous if there are multiple items to show
+  const showPreviews = product.pictures.length > 1 || (product.pictures.length === 1 && hasYoutube)
+
   return (
     <div>
       {/* Load Slick styles if inside iframe */}
@@ -69,42 +72,43 @@ const ProductCarousel: React.FC<Props> = ({ product, isInsideIframe }) => {
           />
         ))}
       </Slider>
-      {/* All media options */}
-      <Flex flexDirection="row" justifyContent="flex-start" flexWrap="wrap" mt="1rem" mx="-0.5rem">
-        {hasYoutube && (
-          <Box
-            as="button"
-            width={3 / 4}
-            px="0.5rem"
-            style={{ flex: 1 }}
-            onClick={() => slider.current.slickGoTo(0)}
-          >
-            <ImageWrapper
-              src={getYoutubeThumbnail(product.youtubeLink)}
-              alt={product.name || 'Game'}
-              ratio={4 / 3}
-              placeholderText="No image available"
-            />
-          </Box>
-        )}
-        {product.pictures.map((_picture, _index) => (
-          <Box
-            as="button"
-            width={3 / 4}
-            px="0.5rem"
-            key={_picture}
-            style={{ flex: 1 }}
-            onClick={() => slider.current.slickGoTo(_index + (hasYoutube ? 1 : 0))}
-          >
-            <ImageWrapper
-              src={_picture}
-              alt={product.name || 'Game'}
-              ratio={4 / 3}
-              placeholderText="No image available"
-            />
-          </Box>
-        ))}
-      </Flex>
+      {/* All media options previews */}
+      {showPreviews && (
+        <Flex
+          flexDirection="row"
+          justifyContent="flex-start"
+          flexWrap="wrap"
+          mt="1rem"
+          mx="-0.5rem"
+        >
+          {hasYoutube && (
+            <Box as="button" width={1 / 5} px="0.5rem" onClick={() => slider.current.slickGoTo(0)}>
+              <ImageWrapper
+                src={getYoutubeThumbnail(product.youtubeLink)}
+                alt={product.name || 'Game'}
+                ratio={4 / 3}
+                placeholderText="No image available"
+              />
+            </Box>
+          )}
+          {product.pictures.map((_picture, _index) => (
+            <Box
+              as="button"
+              width={1 / 5}
+              px="0.5rem"
+              key={_picture}
+              onClick={() => slider.current.slickGoTo(_index + (hasYoutube ? 1 : 0))}
+            >
+              <ImageWrapper
+                src={_picture}
+                alt={product.name || 'Game'}
+                ratio={4 / 3}
+                placeholderText="No image available"
+              />
+            </Box>
+          ))}
+        </Flex>
+      )}
     </div>
   )
 }
