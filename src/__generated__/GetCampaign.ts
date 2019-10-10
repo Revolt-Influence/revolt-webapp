@@ -35,9 +35,9 @@ export interface GetCampaign_campaign_product {
    */
   categories: GameCategory[];
   /**
-   * Game lauch date, can be past or future
+   * Game lauch date, defined only if future
    */
-  launchedAt: any;
+  launchedAt: any | null;
 }
 
 export interface GetCampaign_campaign_brand {

@@ -152,10 +152,14 @@ const CreatorCampaignPresentation: React.FC<Props> = ({ campaignId, isInsideIfra
             Publisher
           </LabelText>
           {brand.name}
-          <LabelText grey withMargin>
-            Release date
-          </LabelText>
-          {moment(product.launchedAt).format('MMMM Do YYYY')}
+          {product.launchedAt && (
+            <>
+              <LabelText grey withMargin>
+                Release date
+              </LabelText>
+              {moment(product.launchedAt).format('MMMM Do YYYY')}
+            </>
+          )}
         </Box>
         {/* Right column on desktop */}
         <Box width={[1, 1, 6 / 12]} mt={['2rem', '2rem', '-2rem']} pl={[0, 0, '5rem']}>

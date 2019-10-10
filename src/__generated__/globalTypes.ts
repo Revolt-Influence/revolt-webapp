@@ -182,7 +182,7 @@ export interface CampaignProductInput {
   pitch: string;
   website: string;
   pictures: string[];
-  launchedAt: any;
+  launchedAt?: any | null;
   categories: GameCategory[];
   youtubeLink?: string | null;
 }

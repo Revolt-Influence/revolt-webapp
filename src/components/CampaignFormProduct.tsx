@@ -5,6 +5,7 @@ import gql from 'graphql-tag'
 import { FormInputLabel, FormInput, FormTextarea } from '../styles/Form'
 import DropImage from './DropImage'
 import SplitView from './SplitView'
+import CheckBox from './CheckBox'
 import { GetCampaign_campaign_product } from '../__generated__/GetCampaign'
 import { CAMPAIGN_SAVE_DEBOUNCE } from '../pages/CampaignForm'
 import { useDebouncedCallback } from 'use-debounce/lib'
@@ -44,6 +45,7 @@ const CampaignFormProduct: React.FC<Prop> = ({ product, campaignId }) => {
   // Update local form state
   const [productInput, setProductInput] = useState<CampaignProductInput>(productInputData)
   const [hasSaved, setHasSaved] = useState<boolean>(false)
+  const [wasLaunched, setWasLaunched] = useState<boolean>(!product.launchedAt)
 
   // Use a ref to prevent stale data in the event handle
   const productInputRef = useRef<CampaignProductInput>()
@@ -56,6 +58,7 @@ const CampaignFormProduct: React.FC<Prop> = ({ product, campaignId }) => {
   }, CAMPAIGN_SAVE_DEBOUNCE)
 
   const handleUpdateProduct = (update: Partial<CampaignProductInput>) => {
+    console.log(update)
     setHasSaved(false)
     // Treat update that come from callbacks separately as we need to ensure they have fresh data
     if (update.pictures || update.launchedAt || update.categories) {
@@ -114,7 +117,7 @@ const CampaignFormProduct: React.FC<Prop> = ({ product, campaignId }) => {
                 allowMultiple
                 currentImages={productInput.pictures}
                 maxImages={4}
-                idealSize="800x600 pixels (4:3)"
+                idealSize="1280x720 pixels (16:9)"
               />
             </FormInputLabel>
           </Box>
@@ -148,17 +151,34 @@ const CampaignFormProduct: React.FC<Prop> = ({ product, campaignId }) => {
           />
         </FormInputLabel>
         {/* Launch date */}
-        <Box width={[1, 1, 6 / 12]}>
-          <FormInputLabel withMargin>
-            Game launch date
-            <FormInput
-              type="date"
-              value={moment(productInput.launchedAt).format('YYYY-MM-DD')}
-              onChange={e => handleUpdateProduct({ launchedAt: e.target.value })}
-              hasLabel
-            />
-          </FormInputLabel>
+        <Box mt="2rem">
+          <CheckBox
+            isChecked={wasLaunched}
+            text="The game has already launched"
+            handleClick={() => {
+              if (wasLaunched) {
+                setWasLaunched(!wasLaunched)
+                handleUpdateProduct({ launchedAt: new Date() })
+              } else {
+                setWasLaunched(!wasLaunched)
+                handleUpdateProduct({ launchedAt: null })
+              }
+            }}
+          />
         </Box>
+        {!wasLaunched && (
+          <Box width={[1, 1, 6 / 12]}>
+            <FormInputLabel withMargin>
+              Game launch date
+              <FormInput
+                type="date"
+                value={moment(productInput.launchedAt).format('YYYY-MM-DD')}
+                onChange={e => handleUpdateProduct({ launchedAt: e.target.value })}
+                hasLabel
+              />
+            </FormInputLabel>
+          </Box>
+        )}
       </>
     </SplitView>
   )
