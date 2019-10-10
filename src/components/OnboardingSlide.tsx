@@ -20,8 +20,11 @@ const Styles = styled(Flex)`
 
   .illustration {
     flex: 1;
-    max-width: 600px;
+    max-width: 60rem;
     height: auto;
+    @media screen and (max-width: ${props => props.theme.breakpoints[1]}) {
+      display: none;
+    }
   }
 `
 

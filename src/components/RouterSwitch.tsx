@@ -35,6 +35,7 @@ const TermsAndConditions = lazy(() => import('../pages/TermsAndConditions'))
 const Conversation = lazy(() => import('../pages/Conversation'))
 const ConversationsList = lazy(() => import('../pages/ConversationsList'))
 const Community = lazy(() => import('../pages/Community'))
+const PreCampaignForm = lazy(() => import('../pages/PreCampaignForm'))
 
 const Layout = styled.div<{ minHeight: number }>`
   display: flex;
@@ -199,6 +200,7 @@ const RouterSwitch: React.FC<RouteComponentProps> = () => {
     return (
       <Switch>
         <Route exact path="/brand" render={() => <Redirect to="/brand/campaigns" />} />
+        <Route exact path="/brand/createCampaign" component={PreCampaignForm} />
         <Route exact path="/brand/campaigns" render={renderCampaignsList} />
         <Route
           exact

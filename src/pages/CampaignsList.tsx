@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from '@apollo/react-hooks'
+import { useQuery } from '@apollo/react-hooks'
 import { Box, Flex } from '@rebass/grid'
 import gql from 'graphql-tag'
 import React from 'react'
@@ -8,11 +8,10 @@ import CampaignPreviewCard from '../components/CampaignPreviewCard'
 import ErrorCard from '../components/ErrorCard'
 import Loader from '../components/Loader'
 import NotificationCard from '../components/NotificationCard'
-import { MainButton } from '../styles/Button'
+import { MainLink } from '../styles/Button'
 import { ContainerBox } from '../styles/grid'
 import { Title } from '../styles/Text'
 import { usePageTitle } from '../utils/hooks'
-import { CreateCampaign } from '../__generated__/CreateCampaign'
 import { GetCampaigns } from '../__generated__/GetCampaigns'
 import { CREATOR_CAMPAIGN_PRESENTATION_FRAGMENT } from '../components/CreatorCampaignPresentation'
 
@@ -54,33 +53,12 @@ export const GET_CAMPAIGNS = gql`
   ${CAMPAIGN_CARD_FRAGMENT}
 `
 
-export const CREATE_CAMPAIGN = gql`
-  mutation CreateCampaign {
-    createCampaign {
-      ...CreatorCampaignPresentationFragment
-      collabs {
-        _id
-        status
-      }
-    }
-  }
-  ${CREATOR_CAMPAIGN_PRESENTATION_FRAGMENT}
-`
-
 const CampaignsList: React.FC<RouteComponentProps> = ({ history }) => {
   usePageTitle('My campaigns')
   // Fetch data
   const { data: { campaigns } = { campaigns: null }, loading, error } = useQuery<GetCampaigns, {}>(
     GET_CAMPAIGNS
   )
-  const [createCampaign, createCampaignStatus] = useMutation<CreateCampaign, {}>(CREATE_CAMPAIGN, {
-    // Go to campaign page if campaign was created
-    onCompleted: createdCampaign => {
-      history.push(`/brand/campaigns/${createdCampaign.createCampaign._id}/brief`)
-    },
-    // Add created campaign to cache
-    refetchQueries: [{ query: GET_CAMPAIGNS }],
-  })
 
   if (loading) {
     return <Loader />
@@ -107,22 +85,13 @@ const CampaignsList: React.FC<RouteComponentProps> = ({ history }) => {
         >
           <Title>My campaigns</Title>
           <Box mb={['3rem', 0, 0]}>
-            <MainButton
-              onClick={() => createCampaign()}
-              disabled={createCampaignStatus.loading}
-              noMargin
-            >
-              {createCampaignStatus.loading ? 'Creating campaign...' : 'Create a campaign'}
-            </MainButton>
+            <MainLink noMargin to="/brand/createCampaign">
+              Create a campaign
+            </MainLink>
           </Box>
         </Flex>
       </ContainerBox>
       <ContainerBox>
-        {createCampaignStatus.error && (
-          <Box mb="1rem">
-            <ErrorCard message="Could not create campaign" noMargin />
-          </Box>
-        )}
         <Flex flexDirection="row" flexWrap="wrap" mx={[0, 0, '-2rem']} mt="-3rem" pb="2rem">
           {campaigns.items.length > 0 ? (
             campaigns.items.map(_campaign => (
