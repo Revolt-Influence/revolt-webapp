@@ -59,7 +59,7 @@ const getCampaignStatus = (campaign: GetCampaign_campaign): CampaignStatusInfo =
   ) {
     return {
       name: CampaignStatus.INCOMPLETE,
-      description: 'Fill your brief to publish the campaign',
+      description: 'Your campaign is not ready yet',
       color: palette.red._500,
     }
   }

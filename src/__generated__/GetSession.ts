@@ -16,6 +16,10 @@ export interface GetSession_session_user {
    */
   email: string;
   /**
+   * Only used to score the lead, not a relation
+   */
+  company: string;
+  /**
    * Whether the user has paid
    */
   plan: Plan;

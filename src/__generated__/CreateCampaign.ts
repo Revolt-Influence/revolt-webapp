@@ -2,7 +2,7 @@
 /* eslint-disable */
 // This file was automatically generated and should not be edited.
 
-import { GameCategory, CollabStatus } from "./globalTypes";
+import { CreateCampaignInput, GameCategory, CollabStatus } from "./globalTypes";
 
 // ====================================================
 // GraphQL mutation operation: CreateCampaign
@@ -95,4 +95,8 @@ export interface CreateCampaign {
    * Create blank campaign
    */
   createCampaign: CreateCampaign_createCampaign;
+}
+
+export interface CreateCampaignVariables {
+  campaignData: CreateCampaignInput;
 }

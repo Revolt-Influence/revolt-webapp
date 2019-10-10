@@ -187,6 +187,12 @@ export interface CampaignProductInput {
   youtubeLink?: string | null;
 }
 
+export interface CreateCampaignInput {
+  productName: string;
+  website: string;
+  brandName: string;
+}
+
 export interface SignupCreatorInput {
   email: string;
   password: string;

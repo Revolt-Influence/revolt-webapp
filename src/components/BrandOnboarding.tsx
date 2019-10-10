@@ -1,9 +1,6 @@
 import React from 'react'
 import { useHistory } from 'react-router-dom'
 import OnboardingSlide from './OnboardingSlide'
-import { useMutation } from '@apollo/react-hooks'
-import { CreateCampaign } from '../__generated__/CreateCampaign'
-import { CREATE_CAMPAIGN, GET_CAMPAIGNS } from '../pages/CampaignsList'
 
 const landingIllustration = require('../images/illustrations/landing.svg')
 const propositionsIllustration = require('../images/illustrations/propositions.svg')
@@ -41,13 +38,6 @@ const slidesReducer = (
 
 const BrandOnboarding: React.FC<{}> = () => {
   const history = useHistory()
-  const [createCampaign] = useMutation<CreateCampaign>(CREATE_CAMPAIGN, {
-    onCompleted: ({ createCampaign: { _id } }) => {
-      history.push(`/brand/campaigns/${_id}/brief`)
-    },
-    // Add created campaign to cache
-    refetchQueries: [{ query: GET_CAMPAIGNS }],
-  })
   // Store current status in state
   const [slidesState, slidesDispatch] = React.useReducer(slidesReducer, initialSlidesState)
 
@@ -56,7 +46,7 @@ const BrandOnboarding: React.FC<{}> = () => {
     {
       title: 'Create your campaign',
       description:
-        'Fill your campaign brief in less than two minutes and receive offers from streamers that would be a perfect match for your game.',
+        'Tell us about your game and we will publish your campaign, so you can receive offers from streamers that would be a perfect match for your game.',
       buttonText: 'Next step',
       handleButtonClick: () => slidesDispatch('NEXT_SLIDE'),
       image: landingIllustration,
@@ -74,7 +64,7 @@ const BrandOnboarding: React.FC<{}> = () => {
       description:
         "Forget about filling spreadsheets. In one click you'll get a custom report of the performances of your campaigns and estimate the engagement generated.",
       buttonText: 'Create my campaign',
-      handleButtonClick: () => createCampaign(),
+      handleButtonClick: () => history.push('/brand/createCampaign'),
       image: performancesIllustration,
     },
   ]
