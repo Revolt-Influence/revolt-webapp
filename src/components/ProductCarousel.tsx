@@ -56,7 +56,7 @@ const ProductCarousel: React.FC<Props> = ({ product, isInsideIframe }) => {
             <iframe
               className="video"
               width={frameWidth}
-              height={(frameWidth * 3) / 4}
+              height={(frameWidth * 9) / 16}
               src={getYoutubeEmbedLink(product.youtubeLink)}
               title="Game demo"
             />
@@ -67,7 +67,7 @@ const ProductCarousel: React.FC<Props> = ({ product, isInsideIframe }) => {
             src={_picture}
             alt={product.name || 'Game'}
             key={_picture}
-            ratio={4 / 3}
+            ratio={16 / 9}
             placeholderText="No image available"
           />
         ))}
@@ -78,7 +78,7 @@ const ProductCarousel: React.FC<Props> = ({ product, isInsideIframe }) => {
           flexDirection="row"
           justifyContent="flex-start"
           flexWrap="wrap"
-          mt="1rem"
+          mt="0.5rem"
           mx="-0.5rem"
         >
           {hasYoutube && (
