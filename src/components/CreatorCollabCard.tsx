@@ -108,7 +108,7 @@ const CreatorCollabCard: React.FC<Props> = ({ collab }) => {
         <ImageWrapper
           src={campaign.product.pictures[0]}
           alt={campaign.product.name}
-          ratio={4 / 3}
+          ratio={16 / 9}
         />
         <h3 className="title">{capitalizeFirstLetter(campaign.product.name)}</h3>
         <div className="brand">

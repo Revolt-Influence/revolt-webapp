@@ -68,9 +68,9 @@ export interface GetCreatorCampaignPage_campaign_product {
    */
   pictures: string[];
   /**
-   * Game lauch date, can be past or future
+   * Game lauch date, defined only if future
    */
-  launchedAt: any;
+  launchedAt: any | null;
 }
 
 export interface GetCreatorCampaignPage_campaign {

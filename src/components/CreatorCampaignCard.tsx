@@ -62,7 +62,7 @@ const CreatorCampaignCard: React.FC<Props> = ({ campaign }) => {
         <ImageWrapper
           src={product.pictures[0]}
           alt={product.name}
-          ratio={4 / 3}
+          ratio={16 / 9}
           placeholderText="No game picture"
         />
         <h3 className="title">{capitalizeFirstLetter(product.name)}</h3>

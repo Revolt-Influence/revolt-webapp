@@ -48,9 +48,9 @@ export interface CreateCampaign_createCampaign_product {
    */
   pictures: string[];
   /**
-   * Game lauch date, can be past or future
+   * Game lauch date, defined only if future
    */
-  launchedAt: any;
+  launchedAt: any | null;
 }
 
 export interface CreateCampaign_createCampaign_collabs {

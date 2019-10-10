@@ -153,11 +153,13 @@ const CampaignFormTargetAudience: React.FC<Prop> = ({ targetAudience, campaignId
                 Add a country
               </option>
               <option value={noPreferenceKey}>No preference</option>
-              {allCountries.map(_country => (
-                <option key={_country[1]} value={_country[1]}>
-                  {capitalizeFirstLetter(_country[0])}
-                </option>
-              ))}
+              {allCountries
+                .sort((_countryA, _countryB) => (_countryA > _countryB ? 1 : -1))
+                .map(_country => (
+                  <option key={_country[1]} value={_country[1]}>
+                    {capitalizeFirstLetter(_country[0])}
+                  </option>
+                ))}
             </FormSelect>
           </FormInputLabel>
           {/* Show selected countries */}

@@ -104,7 +104,7 @@ const CampaignPreviewCard: React.FC<Props> = ({ campaign }) => {
         <ImageWrapper
           src={product.pictures.length > 0 ? product.pictures[0] : null}
           alt={product.name}
-          ratio={4 / 3}
+          ratio={16 / 9}
           placeholderText="Add a game image in the brief"
           showLabel={showStatusLabel}
         />
