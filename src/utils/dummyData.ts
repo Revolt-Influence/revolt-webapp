@@ -3,8 +3,9 @@ import {
   GetCampaignRequestedCollabs_campaign_collabs_creator,
   GetCampaignRequestedCollabs_campaign_collabs_creator_youtube,
 } from '../__generated__/GetCampaignRequestedCollabs'
-import { CollabStatus, Language } from '../__generated__/globalTypes'
+import { CollabStatus, Language, ReviewFormat } from '../__generated__/globalTypes'
 import { GetCampaignCollabs_campaign_collabs } from '../__generated__/GetCampaignCollabs'
+import { GetCampaignReviews_campaign_reviews } from '../__generated__/GetCampaignReviews'
 
 export const dummyYoutuber: GetCampaignRequestedCollabs_campaign_collabs_creator_youtube = {
   __typename: 'Youtuber',
@@ -92,4 +93,15 @@ export const dummyDoneCollab: GetCampaignCollabs_campaign_collabs = {
   message: "Here is what a collab will look like once it's completed",
   status: CollabStatus.DONE,
   updatedAt: Date.now(),
+}
+
+export const dummyReview: GetCampaignReviews_campaign_reviews = {
+  __typename: 'Review',
+  _id: 'DUMMY_REVIEW',
+  commentCount: 924,
+  createdAt: Date.now(),
+  creator: dummyCreator,
+  format: ReviewFormat.YOUTUBE_VIDEO,
+  likeCount: 12043,
+  link: 'https://www.youtube.com/watch?v=mLyOj_QD4a4',
 }

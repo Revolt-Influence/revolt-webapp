@@ -32,7 +32,7 @@ const Column = styled.section<{ status: CollabStatus }>`
   h2 {
     ${setFont(600, 'big')}
   }
-  p.noResult {
+  p.darkText {
     padding: 1rem;
   }
   .help {
@@ -53,7 +53,7 @@ const Column = styled.section<{ status: CollabStatus }>`
               color: ${palette.blue._400};
             }
           }
-          .help {
+          .help, .darkText {
             color: ${palette.blue._800};
           }
         `
@@ -68,7 +68,7 @@ const Column = styled.section<{ status: CollabStatus }>`
               color: ${palette.orange._500};
             }
           }
-          .help {
+          .help, .darkText {
             color: ${palette.orange._800};
           }
         `
@@ -83,7 +83,7 @@ const Column = styled.section<{ status: CollabStatus }>`
               color: ${palette.green._300};
             }
           }
-          .help {
+          .help, .darkText {
             color: ${palette.green._800};
           }
         `
@@ -96,7 +96,8 @@ const Column = styled.section<{ status: CollabStatus }>`
           h2 span {
             color: ${palette.blue._400};
           }
-          .help {
+          .help,
+          .darkText {
             color: ${palette.blue._800};
           }
         `
@@ -227,7 +228,7 @@ const CampaignCollabs: React.FC<ICampaignCollabsProps> = ({ campaignId }) => {
               <p className="help">
                 You have accepted the collab, but haven't sent the game to the influencer
               </p>
-              {acceptedCollabs.length === 0 && <p className="noResult">No collabs.</p>}
+              {acceptedCollabs.length === 0 && <p className="darkText">No collabs.</p>}
               {acceptedCollabs.map(_collab => (
                 <BrandCollabCard collab={_collab} key={_collab._id} />
               ))}
@@ -241,7 +242,7 @@ const CampaignCollabs: React.FC<ICampaignCollabsProps> = ({ campaignId }) => {
                 </h2>
               </Row>
               <p className="help">The influencer is now able to create his review of the game.</p>
-              {sentCollabs.length === 0 && <p className="noResult">No collabs.</p>}
+              {sentCollabs.length === 0 && <p className="darkText">No collabs.</p>}
               {sentCollabs.map(_collab => (
                 <BrandCollabCard collab={_collab} key={_collab._id} />
               ))}
@@ -255,10 +256,10 @@ const CampaignCollabs: React.FC<ICampaignCollabsProps> = ({ campaignId }) => {
                 </h2>
               </Row>
               <p className="help">The reviews are live. You can see them in the Reviews tab</p>
-              {doneCollabs.length === 0 && <p className="noResult">No collabs.</p>}
+              {doneCollabs.length === 0 && <p className="darkText">No collabs.</p>}
               {dummyIsShown && (
-                <Box mt="2rem">
-                  <p>Here's what a collab will look like:</p>
+                <Box>
+                  <p className="darkText">Here's what a collab will look like:</p>
                   <BrandCollabCard isDummy collab={dummyDoneCollab} />
                 </Box>
               )}

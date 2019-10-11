@@ -2,7 +2,7 @@ import { useQuery } from '@apollo/react-hooks'
 import { Box, Flex } from '@rebass/grid'
 import approx from 'approximate-number'
 import gql from 'graphql-tag'
-import React from 'react'
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import { ContainerBox } from '../styles/grid'
 import { palette } from '../utils/colors'
@@ -16,6 +16,7 @@ import ErrorCard from './ErrorCard'
 import Loader from './Loader'
 import ReviewCard from './ReviewCard'
 import InfoCard from './InfoCard'
+import { dummyReview } from '../utils/dummyData'
 
 const Stats = styled(Box)`
   background: ${palette.blue._100};
@@ -59,7 +60,7 @@ interface Props {
 }
 
 const CampaignReviews: React.FC<Props> = ({ campaignId }) => {
-  const { data: { campaign } = { campaign: null }, loading, error } = useQuery<
+  const { client, data: { campaign } = { campaign: null }, loading, error } = useQuery<
     GetCampaignReviews,
     GetCampaignReviewsVariables
   >(GET_CAMPAIGN_REVIEWS, { variables: { campaignId } })
@@ -117,6 +118,9 @@ const CampaignReviews: React.FC<Props> = ({ campaignId }) => {
               ))}
             </Flex>
           </Stats>
+          {reviews.length === 0 && (
+            <InfoCard message="You don't have any reviews of your game yet. Here is what a review will look like:" />
+          )}
           <Flex
             flexDirection="row"
             justifyContent="flex-start"
@@ -126,8 +130,8 @@ const CampaignReviews: React.FC<Props> = ({ campaignId }) => {
             mt="2rem"
           >
             {reviews.length === 0 && (
-              <Box px="2rem">
-                <InfoCard message="You don't have any reviews of your game yet." />
+              <Box width={[1, 6 / 12, 4 / 12]} px="2rem" mb="2rem">
+                <ReviewCard review={dummyReview} />
               </Box>
             )}
             {reviews.map((_review, index) => (
