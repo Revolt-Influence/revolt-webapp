@@ -299,6 +299,7 @@ const CreatorProfile: React.FC<Props> = ({
               {collab.status !== CollabStatus.DONE && (
                 <FormSelect
                   value={getCurrentDecision()}
+                  disabled={!!isDummy}
                   onChange={e => {
                     reviewCollabApplication({
                       variables: {

@@ -158,9 +158,10 @@ const Network = styled(Flex)`
 
 interface Props {
   collab: GetCampaignCollabs_campaign_collabs
+  isDummy?: boolean
 }
 
-const BrandCollabCard: React.FC<Props> = ({ collab }) => {
+const BrandCollabCard: React.FC<Props> = ({ collab, isDummy }) => {
   const { conversation, status, creator, updatedAt, _id } = collab
 
   // Prepare review collab
@@ -189,7 +190,7 @@ const BrandCollabCard: React.FC<Props> = ({ collab }) => {
     <Link
       className="action contact"
       type="button"
-      to={`/brand/messages/${conversation._id}`}
+      to={isDummy ? '#' : `/brand/messages/${conversation._id}`}
       onClick={e => e.stopPropagation()}
     >
       <p>Contact</p>

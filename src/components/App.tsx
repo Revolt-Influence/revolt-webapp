@@ -29,7 +29,7 @@ const typeDefs = gql`
     creatorPanel: CreatorPanel
   }
   extend type Mutation {
-    openCreatorPanel(creatorId: String!, collabId: String): CreatorPanel
+    openCreatorPanel(creatorId: String!, collabId: String, isDummy: Boolean): CreatorPanel
     closeCreatorPanel: CreatorPanel
   }
 `
@@ -47,6 +47,7 @@ const resolvers = {
       isOpen: true,
       creatorId: args.creatorId,
       collabId: args.collabId,
+      // isDummy !!arg.
     }),
     closeCreatorPanel: (parent, args: {}): CloseCreatorPanel_closeCreatorPanel => ({
       __typename: 'CreatorPanel',

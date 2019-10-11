@@ -4,6 +4,7 @@ import {
   GetCampaignRequestedCollabs_campaign_collabs_creator_youtube,
 } from '../__generated__/GetCampaignRequestedCollabs'
 import { CollabStatus, Language } from '../__generated__/globalTypes'
+import { GetCampaignCollabs_campaign_collabs } from '../__generated__/GetCampaignCollabs'
 
 export const dummyYoutuber: GetCampaignRequestedCollabs_campaign_collabs_creator_youtube = {
   __typename: 'Youtuber',
@@ -68,7 +69,27 @@ export const dummyCollabRequest: GetCampaignRequestedCollabs_campaign_collabs = 
   conversation: null,
   createdAt: Date.now(),
   message:
-    "Hi! I'm a dummy YouTuber. Here's what a collab request from a real YouTuber will look like",
+    "Hi! I'm a dummy YouTuber. This is what a collab request from a real influencer will look like.",
   status: CollabStatus.REQUEST,
   creator: dummyCreator,
+}
+
+export const dummyDoneCollab: GetCampaignCollabs_campaign_collabs = {
+  __typename: 'Collab',
+  _id: 'DUMMY_DONE_COLLAB',
+  conversation: null,
+  creator: {
+    ...dummyCreator,
+    youtube: {
+      ...dummyYoutuber,
+      __typename: 'Youtuber',
+      _id: 'DUMMY_YOUTUBER_2',
+      subscriberCount: 53029,
+      videoCount: 421,
+      viewCount: 4984853,
+    },
+  },
+  message: "Here is what a collab will look like once it's completed",
+  status: CollabStatus.DONE,
+  updatedAt: Date.now(),
 }

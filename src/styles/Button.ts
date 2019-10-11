@@ -208,17 +208,8 @@ const MainLink = styled(Link)<MainLinkProps>`
   ${props =>
     props.disabled &&
     css`
+      cursor: not-allowed;
       pointer-events: none;
-      position: relative;
-      :after {
-        content: '';
-        position: absolute;
-        cursor: not-allowed;
-        width: 100%;
-        height: 100%;
-        top: 0;
-        left: 0;
-      }
     `}
 `
 
