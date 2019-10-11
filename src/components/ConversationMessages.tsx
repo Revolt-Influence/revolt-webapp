@@ -1,7 +1,6 @@
 import React from 'react'
 import { Flex } from '@rebass/grid'
 import styled, { css } from 'styled-components'
-import { palette } from '../utils/colors'
 import { applyCloudinaryTransformations } from '../utils/images'
 import { shadow } from '../utils/styles'
 import gql from 'graphql-tag'

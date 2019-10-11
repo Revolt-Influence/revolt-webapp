@@ -14,6 +14,7 @@ import { Dot } from '../styles/Dot'
 
 const ANIMATION_DURATION = 1000
 const MAX_LOCATIONS = 6
+const MAX_AGEGROUPS = 6
 
 overwrite([{ code: 'GB', name: 'UK' }, { code: 'US', name: 'USA' }])
 
@@ -63,6 +64,8 @@ const AudienceInsights: React.FC<Props> = ({
           name: `${_topAge.name.replace('age', '')} ans`,
         }))
         .sort(sortByPercentage)
+        // Limit groups amount
+        .filter((_group, index) => index < MAX_AGEGROUPS)
     : []
 
   // Prepare country data
@@ -74,7 +77,7 @@ const AudienceInsights: React.FC<Props> = ({
           name: getName(_isoCountry.name) || _isoCountry.name,
         }))
         .sort(sortByPercentage)
-        // Limit to 6 countries
+        // Limit countries amount
         .filter((_country, index) => index < MAX_LOCATIONS)
     : []
 

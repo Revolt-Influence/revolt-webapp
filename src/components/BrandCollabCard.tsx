@@ -176,7 +176,9 @@ const BrandCollabCard: React.FC<Props> = ({ collab, isDummy }) => {
   )
 
   const handleShowProfile = () => {
-    openCreatorPanel({ variables: { creatorId: creator._id, collabId: collab._id } })
+    openCreatorPanel({
+      variables: { creatorId: creator._id, collabId: collab._id, isDummy: !!isDummy },
+    })
   }
 
   const viewProfileButton = () => (
