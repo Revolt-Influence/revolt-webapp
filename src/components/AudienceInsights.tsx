@@ -1,7 +1,7 @@
 import React from 'react'
 import { BarChart, Bar, XAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts'
 import { Box, Flex } from '@rebass/grid'
-import { getName } from 'country-list'
+import { getName, overwrite } from 'country-list'
 import styled from 'styled-components'
 import { palette } from '../utils/colors'
 import { setFont, shadow } from '../utils/styles'
@@ -14,6 +14,8 @@ import { Dot } from '../styles/Dot'
 
 const ANIMATION_DURATION = 1000
 const MAX_LOCATIONS = 6
+
+overwrite([{ code: 'GB', name: 'UK' }, { code: 'US', name: 'USA' }])
 
 const Styles = styled.div`
   .legend {

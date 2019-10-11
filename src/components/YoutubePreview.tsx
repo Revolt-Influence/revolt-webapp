@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 import approx from 'approximate-number'
 import { Flex, Box } from '@rebass/grid'
 import SocialAccountPreview from './SocialAccountPreview'
@@ -36,7 +36,7 @@ const YOUTUBER_PROFILE_FRAGMENT = gql`
   }
 `
 
-const GET_YOUTUBER = gql`
+export const GET_YOUTUBER = gql`
   query GetYoutuber($youtuberId: String!) {
     youtuber(id: $youtuberId) {
       ...YoutuberProfileFragment
@@ -52,11 +52,12 @@ interface Props {
 const YoutubePreview: React.FC<Props> = ({ youtuberId }) => {
   const { data, loading, error } = useQuery<GetYoutuber, GetYoutuberVariables>(GET_YOUTUBER, {
     variables: { youtuberId },
+    fetchPolicy: youtuberId.includes('DUMMY') ? 'cache-only' : 'cache-first',
   })
   if (loading) {
     return <p>Loading...</p>
   }
-  if (error) {
+  if (error || !data) {
     return <ErrorCard message="Could not preview YouTube channel" />
   }
   const {
@@ -88,4 +89,4 @@ const YoutubePreview: React.FC<Props> = ({ youtuberId }) => {
 }
 
 export { YOUTUBER_PROFILE_FRAGMENT }
-export default YoutubePreview
+export default memo(YoutubePreview)

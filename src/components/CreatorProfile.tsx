@@ -7,7 +7,7 @@ import { palette } from '../utils/colors'
 import { applyCloudinaryTransformations } from '../utils/images'
 import { yearToAge } from '../utils/stats'
 import { setFont, shadow } from '../utils/styles'
-import { Creator, CreatorVariables } from '../__generated__/Creator'
+import { GetCreator, GetCreatorVariables } from '../__generated__/GetCreator'
 import { GetCollab, GetCollabVariables } from '../__generated__/GetCollab'
 import { CollabStatus, ReviewCollabDecision } from '../__generated__/globalTypes'
 import {
@@ -62,6 +62,10 @@ const Styles = styled.div`
     color: ${palette.grey._50};
     transition: 0.3s all ease-in-out;
     box-shadow: ${shadow._200};
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
     &:hover:not(:disabled) {
     box-shadow: ${shadow._400};
     }
@@ -77,19 +81,19 @@ const Styles = styled.div`
     }
     &.accept {
       background: ${palette.green._500};
-      &:hover {
+      &:hover:not(:disabled) {
         background: ${palette.green._600};
       }
     }
     &.refuse {
       background: ${palette.red._500};
-      &:hover {
+      &:hover:not(:disabled) {
         background: ${palette.red._600};
       }
     }
     &.contact {
       background: ${palette.blue._500};
-      &:hover {
+      &:hover:not(:disabled) {
         background: ${palette.blue._600};
       }
     }
@@ -138,7 +142,7 @@ export const CREATOR_PROFILE_FRAGMENT = gql`
 `
 
 export const GET_CREATOR = gql`
-  query Creator($creatorId: String!) {
+  query GetCreator($creatorId: String!) {
     creator(id: $creatorId) {
       ...CreatorProfileFragment
       status
@@ -166,19 +170,31 @@ interface Props {
   collabId?: string
   handleAccept?: () => any
   handleRefuse?: () => any
+  isDummy?: boolean
 }
 
-const CreatorProfile: React.FC<Props> = ({ creatorId, collabId, handleAccept, handleRefuse }) => {
+const CreatorProfile: React.FC<Props> = ({
+  creatorId,
+  collabId,
+  handleAccept,
+  handleRefuse,
+  isDummy,
+}) => {
   const {
     data: { creator } = { creator: null },
     loading: creatorLoading,
     error: creatorError,
-  } = useQuery<Creator, CreatorVariables>(GET_CREATOR, { variables: { creatorId } })
+  } = useQuery<GetCreator, GetCreatorVariables>(GET_CREATOR, {
+    variables: { creatorId },
+    fetchPolicy: creatorId.includes('DUMMY') ? 'cache-only' : 'cache-first',
+  })
 
   const [
     fetchCollab,
     { data: { collab } = { collab: null }, loading: collabLoading, error: collabError },
-  ] = useLazyQuery<GetCollab, GetCollabVariables>(GET_COLLAB)
+  ] = useLazyQuery<GetCollab, GetCollabVariables>(GET_COLLAB, {
+    fetchPolicy: collabId && collabId.includes('DUMMY') ? 'cache-only' : 'cache-first',
+  })
 
   useEffect(() => {
     if (collabId) {
@@ -219,7 +235,12 @@ const CreatorProfile: React.FC<Props> = ({ creatorId, collabId, handleAccept, ha
 
   const showContactButton = () =>
     collab ? (
-      <MainLink to={`/brand/messages/${collab.conversation._id}`} type="button" noMargin>
+      <MainLink
+        disabled={!!isDummy}
+        to={isDummy ? '#' : `/brand/messages/${collab.conversation && collab.conversation._id}`}
+        type="button"
+        noMargin
+      >
         Send a message
       </MainLink>
     ) : null
@@ -250,11 +271,21 @@ const CreatorProfile: React.FC<Props> = ({ creatorId, collabId, handleAccept, ha
           <>
             <Flex flexDirection="row" justifyContent="space-between">
               {collab && showContactButton()}
-              <button className="action accept" type="button" onClick={handleAccept}>
+              <button
+                disabled={!!isDummy}
+                className="action accept"
+                type="button"
+                onClick={handleAccept}
+              >
                 <p>Accept</p>
                 <img src={checkSource} alt="accept" />
               </button>
-              <button className="action refuse" type="button" onClick={handleRefuse}>
+              <button
+                disabled={!!isDummy}
+                className="action refuse"
+                type="button"
+                onClick={handleRefuse}
+              >
                 <p>Deny</p>
                 <img src={closeSource} alt="deny" />
               </button>
@@ -284,24 +315,6 @@ const CreatorProfile: React.FC<Props> = ({ creatorId, collabId, handleAccept, ha
                   ))}
                 </FormSelect>
               )}
-              {/* <Dropdown
-                options={
-                  [
-                    ReviewCollabDecision.ACCEPT,
-                    ReviewCollabDecision.DENY,
-                    ReviewCollabDecision.MARK_AS_SENT,
-                  ] as ReviewCollabDecision[]
-                }
-                selection={getStatusDropdownSelected()}
-                handleChange={(newSelection: ReviewCollabDecision) => {
-                  reviewCollabApplication({
-                    variables: {
-                      collabId: collabId,
-                      decision: newSelection,
-                    },
-                  })
-                }}
-              /> */}
             </>
           )
         )}

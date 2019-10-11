@@ -3,7 +3,7 @@ import { Box } from '@rebass/grid'
 import moment from 'moment'
 import { ContainerBox } from '../styles/grid'
 import { useToggle } from '../utils/hooks'
-import CreatorProfile from './CreatorProfile'
+import CreatorProfile, { GET_CREATOR, GET_COLLAB } from './CreatorProfile'
 import ErrorBoundary from './ErrorBoundary'
 import CheckBox from './CheckBox'
 import FullHeightColumns from './FullHeightColumns'
@@ -15,7 +15,7 @@ import {
   GetCampaignRequestedCollabsVariables,
   GetCampaignRequestedCollabs_campaign_collabs,
 } from '../__generated__/GetCampaignRequestedCollabs'
-import { CollabStatus, ReviewCollabDecision } from '../__generated__/globalTypes'
+import { CollabStatus, ReviewCollabDecision, CreatorStatus } from '../__generated__/globalTypes'
 import Loader from './Loader'
 import ErrorCard from './ErrorCard'
 import {
@@ -23,7 +23,11 @@ import {
   ReviewCollabApplicationVariables,
 } from '../__generated__/ReviewCollabApplication'
 import InfoCard from './InfoCard'
-import { YOUTUBER_PROFILE_FRAGMENT } from './YoutubePreview'
+import { YOUTUBER_PROFILE_FRAGMENT, GET_YOUTUBER } from './YoutubePreview'
+import { dummyCollabRequest, dummyCreator } from '../utils/dummyData'
+import { GetCreator, GetCreatorVariables } from '../__generated__/GetCreator'
+import { GetYoutuber, GetYoutuberVariables } from '../__generated__/GetYoutuber'
+import { GetCollab, GetCollabVariables } from '../__generated__/GetCollab'
 
 const placeholderImage = 'https://dummyimage.com/40x40/d8dee3/D8DEE3.jpg'
 
@@ -72,7 +76,7 @@ interface Props {
 
 const CampaignPropositions: React.FC<Props> = ({ campaignId }) => {
   // Server requests
-  const { data: { campaign } = { campaign: null }, loading, error } = useQuery<
+  const { data: { campaign } = { campaign: null }, loading, error, client } = useQuery<
     GetCampaignRequestedCollabs,
     GetCampaignRequestedCollabsVariables
   >(GET_CAMPAIGN_REQUESTED_COLLABS, { variables: { campaignId } })
@@ -84,6 +88,8 @@ const CampaignPropositions: React.FC<Props> = ({ campaignId }) => {
     : []
   const [showRefused, toggleShowRefused] = useToggle(false)
 
+  const dummyIsShown: boolean = !loading && !error && campaign.collabs.length === 0
+
   // Prepare decision request
   const [reviewCollabApplication, reviewStatus] = useMutation<
     ReviewCollabApplication,
@@ -92,13 +98,20 @@ const CampaignPropositions: React.FC<Props> = ({ campaignId }) => {
 
   const [selectedId, setSelectedId] = useState(collabsApplied.length && collabsApplied[0]._id)
   useEffect(() => {
-    setSelectedId(collabsApplied.length && collabsApplied[0]._id)
+    if (!dummyIsShown) {
+      // Auto select first real collab
+      setSelectedId(collabsApplied.length && collabsApplied[0]._id)
+    } else {
+      // Auto select dummy creator
+      setSelectedId(dummyCollabRequest._id)
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [collabsApplied.length])
+  }, [collabsApplied.length, dummyIsShown])
 
   const selectedProposition =
-    [...collabsApplied, ...collabsDenied].find(_proposition => _proposition._id === selectedId) ||
-    collabsApplied[0]
+    [...collabsApplied, ...collabsDenied, dummyCollabRequest].find(
+      _proposition => _proposition._id === selectedId
+    ) || collabsApplied[0]
   const selectedCreator = selectedProposition && selectedProposition.creator
 
   const showPropositionPreview = (_proposition: GetCampaignRequestedCollabs_campaign_collabs) => (
@@ -112,6 +125,42 @@ const CampaignPropositions: React.FC<Props> = ({ campaignId }) => {
     />
   )
 
+  useEffect(() => {
+    // Add dummy data to cache if they'll be displayed
+    if (dummyIsShown) {
+      // Collab query
+      client.writeQuery<GetCollab, GetCollabVariables>({
+        query: GET_COLLAB,
+        variables: { collabId: dummyCollabRequest._id },
+        data: {
+          collab: {
+            ...dummyCollabRequest,
+            updatedAt: Date.now(),
+          },
+        },
+      })
+      // Creator query
+      client.writeQuery<GetCreator, GetCreatorVariables>({
+        query: GET_CREATOR,
+        variables: { creatorId: dummyCreator._id },
+        data: {
+          creator: {
+            ...dummyCreator,
+            status: CreatorStatus.VERIFIED,
+          },
+        },
+      })
+      // Youtuber query
+      client.writeQuery<GetYoutuber, GetYoutuberVariables>({
+        query: GET_YOUTUBER,
+        variables: { youtuberId: dummyCreator.youtube._id },
+        data: {
+          youtuber: dummyCreator.youtube,
+        },
+      })
+    }
+  }, [client, dummyIsShown])
+
   if (loading) {
     return <Loader />
   }
@@ -120,7 +169,7 @@ const CampaignPropositions: React.FC<Props> = ({ campaignId }) => {
   }
 
   const handleApplicationDecision = (decision: ReviewCollabDecision): void => {
-    if (!reviewStatus.loading) {
+    if (!reviewStatus.loading && !dummyIsShown) {
       reviewCollabApplication({
         variables: { collabId: selectedId, decision },
       })
@@ -134,18 +183,32 @@ const CampaignPropositions: React.FC<Props> = ({ campaignId }) => {
           leftComponent={() => (
             <>
               {collabsApplied.length === 0 && (
-                <InfoCard message="You don't have any new requests yet. Don't worry, they'll come fast!" />
+                <InfoCard
+                  message={`You don't have any new requests yet. ${
+                    dummyIsShown
+                      ? 'Here is a dummy collab request, so you can know what to expect'
+                      : "Don't worry, they'll come fast!"
+                  }`}
+                />
               )}
               {collabsApplied
                 .sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1))
                 .map(showPropositionPreview)}
-              <Box mb="1rem" px="2rem">
-                <CheckBox
-                  text="Show denied requests"
-                  isChecked={showRefused}
-                  handleClick={toggleShowRefused}
-                />
-              </Box>
+              {collabsDenied.length > 0 && (
+                <Box mb="1rem" px="2rem">
+                  <CheckBox
+                    text="Show denied requests"
+                    isChecked={showRefused}
+                    handleClick={toggleShowRefused}
+                  />
+                </Box>
+              )}
+              {dummyIsShown && (
+                <>
+                  <Box mt="2rem" />
+                  {showPropositionPreview(dummyCollabRequest)}{' '}
+                </>
+              )}
               {showRefused &&
                 collabsDenied
                   .sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1))
@@ -160,6 +223,7 @@ const CampaignPropositions: React.FC<Props> = ({ campaignId }) => {
                   collabId={selectedId}
                   handleAccept={() => handleApplicationDecision(ReviewCollabDecision.ACCEPT)}
                   handleRefuse={() => handleApplicationDecision(ReviewCollabDecision.DENY)}
+                  isDummy={dummyIsShown}
                 />
               )}
             </Box>

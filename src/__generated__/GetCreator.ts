@@ -5,10 +5,10 @@
 import { Language, CreatorStatus } from "./globalTypes";
 
 // ====================================================
-// GraphQL query operation: Creator
+// GraphQL query operation: GetCreator
 // ====================================================
 
-export interface Creator_creator_youtube_videos {
+export interface GetCreator_creator_youtube_videos {
   __typename: "YoutubeVideo";
   title: string;
   /**
@@ -17,7 +17,7 @@ export interface Creator_creator_youtube_videos {
   videoId: string;
 }
 
-export interface Creator_creator_youtube_audience_ageGroups {
+export interface GetCreator_creator_youtube_audience_ageGroups {
   __typename: "AudienceMetric";
   name: string;
   /**
@@ -26,7 +26,7 @@ export interface Creator_creator_youtube_audience_ageGroups {
   percentage: number;
 }
 
-export interface Creator_creator_youtube_audience_countries {
+export interface GetCreator_creator_youtube_audience_countries {
   __typename: "AudienceMetric";
   name: string;
   /**
@@ -35,13 +35,13 @@ export interface Creator_creator_youtube_audience_countries {
   percentage: number;
 }
 
-export interface Creator_creator_youtube_audience {
+export interface GetCreator_creator_youtube_audience {
   __typename: "YoutubeAudience";
-  ageGroups: Creator_creator_youtube_audience_ageGroups[];
+  ageGroups: GetCreator_creator_youtube_audience_ageGroups[];
   /**
    * ISO 3166-1-alpha-2 codes of countries and their percentage
    */
-  countries: Creator_creator_youtube_audience_countries[];
+  countries: GetCreator_creator_youtube_audience_countries[];
   /**
    * Percentage of male subscribers, between 0 and 100
    */
@@ -52,7 +52,7 @@ export interface Creator_creator_youtube_audience {
   femalePercentage: number;
 }
 
-export interface Creator_creator_youtube {
+export interface GetCreator_creator_youtube {
   __typename: "Youtuber";
   /**
    * Mongoose generated ID
@@ -68,11 +68,11 @@ export interface Creator_creator_youtube {
   picture: string;
   videoCount: number;
   subscriberCount: number;
-  videos: Creator_creator_youtube_videos[];
-  audience: Creator_creator_youtube_audience;
+  videos: GetCreator_creator_youtube_videos[];
+  audience: GetCreator_creator_youtube_audience;
 }
 
-export interface Creator_creator {
+export interface GetCreator_creator {
   __typename: "Creator";
   /**
    * Mongoose generated ID
@@ -97,20 +97,20 @@ export interface Creator_creator {
   /**
    * Youtube account linked to the creator
    */
-  youtube: Creator_creator_youtube | null;
+  youtube: GetCreator_creator_youtube | null;
   /**
    * Whether the influencer was validated by an admin
    */
   status: CreatorStatus;
 }
 
-export interface Creator {
+export interface GetCreator {
   /**
    * Get specific creator by ID or email
    */
-  creator: Creator_creator | null;
+  creator: GetCreator_creator | null;
 }
 
-export interface CreatorVariables {
+export interface GetCreatorVariables {
   creatorId: string;
 }

@@ -14,7 +14,6 @@ import { useDeviceType } from '../utils/hooks'
 const formSource = require('../images/illustrations/insertBlock.svg')
 
 const Styles = styled(ContainerBox)`
-  /* border: 2px solid green; */
   .illustration {
     width: 35rem;
     @media screen and (max-width: ${props => props.theme.breakpoints[1]}) {
