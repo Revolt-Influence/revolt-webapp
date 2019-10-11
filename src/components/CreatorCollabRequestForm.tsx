@@ -79,7 +79,7 @@ const CreatorCollabRequestForm: React.FC<Props> = ({ brand, campaignId }) => {
       <MainButtonSubmit
         type="submit"
         value={applyLoading ? 'Applying..' : 'Apply'}
-        disabled={!allowSubmit || applyLoading}
+        disabled={!allowSubmit || applyLoading || !!createdCollab}
         onClick={handleSubmit}
       />
     </SplitView>

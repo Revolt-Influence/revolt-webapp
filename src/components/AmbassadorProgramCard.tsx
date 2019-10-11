@@ -16,7 +16,7 @@ const Styles = styled(Flex)`
 `
 
 const AmbassadorProgramCard: React.FunctionComponent<{}> = () => (
-  <Styles flexDirection="column" alignItems="center" py={['2rem', '2rem', '3.1']}>
+  <Styles flexDirection="column" alignItems="center" py={['2rem', '2rem', '3.1rem']}>
     <SubTitle noMargin>Invite your friends</SubTitle>
     <p className="description">
       Win 5€ per streamer

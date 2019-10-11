@@ -83,6 +83,9 @@ const Styles = styled.div`
     &:not(:last-child) {
       margin-right: 1.2rem;
     }
+    &.disabled {
+      opacity: 0.5;
+    }
     img {
       width: 3rem;
       height: auto;
@@ -95,7 +98,7 @@ const Styles = styled.div`
     }
     &.contact {
       background: ${palette.blue._500};
-      &:hover {
+      &:hover:not(.disabled) {
         background: ${palette.blue._600};
       }
     }
@@ -190,8 +193,9 @@ const BrandCollabCard: React.FC<Props> = ({ collab, isDummy }) => {
 
   const showContactButton = () => (
     <Link
-      className="action contact"
+      className="action contact disabled"
       type="button"
+      style={isDummy && { pointerEvents: 'none' }}
       to={isDummy ? '#' : `/brand/messages/${conversation._id}`}
       onClick={e => e.stopPropagation()}
     >
