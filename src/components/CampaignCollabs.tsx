@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styled, { css } from 'styled-components'
 import { gql } from 'apollo-boost'
 import { Box, Flex } from '@rebass/grid'
@@ -8,7 +8,7 @@ import { setFont, shadow } from '../utils/styles'
 import { palette } from '../utils/colors'
 import ErrorBoundary from './ErrorBoundary'
 import { useQuery } from '@apollo/react-hooks'
-import { CollabStatus } from '../__generated__/globalTypes'
+import { CollabStatus, Language, CreatorStatus } from '../__generated__/globalTypes'
 import Loader from './Loader'
 import ErrorCard from './ErrorCard'
 import {
@@ -16,6 +16,12 @@ import {
   GetCampaignCollabsVariables,
 } from '../__generated__/GetCampaignCollabs'
 import { ContainerBox } from '../styles/grid'
+import { GetCollab, GetCollabVariables } from '../__generated__/GetCollab'
+import { GET_COLLAB, GET_CREATOR } from './CreatorProfile'
+import { dummyDoneCollab, dummyYoutuber, dummyCreator } from '../utils/dummyData'
+import { GetCreator, GetCreatorVariables } from '../__generated__/GetCreator'
+import { GET_YOUTUBER } from './YoutubePreview'
+import { GetYoutuber, GetYoutuberVariables } from '../__generated__/GetYoutuber'
 
 const Column = styled.section<{ status: CollabStatus }>`
   padding-top: 2rem;
@@ -26,7 +32,7 @@ const Column = styled.section<{ status: CollabStatus }>`
   h2 {
     ${setFont(600, 'big')}
   }
-  p.noResult {
+  p.darkText {
     padding: 1rem;
   }
   .help {
@@ -47,7 +53,7 @@ const Column = styled.section<{ status: CollabStatus }>`
               color: ${palette.blue._400};
             }
           }
-          .help {
+          .help, .darkText {
             color: ${palette.blue._800};
           }
         `
@@ -62,7 +68,7 @@ const Column = styled.section<{ status: CollabStatus }>`
               color: ${palette.orange._500};
             }
           }
-          .help {
+          .help, .darkText {
             color: ${palette.orange._800};
           }
         `
@@ -77,7 +83,7 @@ const Column = styled.section<{ status: CollabStatus }>`
               color: ${palette.green._300};
             }
           }
-          .help {
+          .help, .darkText {
             color: ${palette.green._800};
           }
         `
@@ -90,7 +96,8 @@ const Column = styled.section<{ status: CollabStatus }>`
           h2 span {
             color: ${palette.blue._400};
           }
-          .help {
+          .help,
+          .darkText {
             color: ${palette.blue._800};
           }
         `
@@ -141,10 +148,50 @@ interface ICampaignCollabsProps {
 
 const CampaignCollabs: React.FC<ICampaignCollabsProps> = ({ campaignId }) => {
   // Get campaign collabs from Redux
-  const { data: { campaign } = { campaign: null }, loading, error } = useQuery<
+  const { client, data: { campaign } = { campaign: null }, loading, error } = useQuery<
     GetCampaignCollabs,
     GetCampaignCollabsVariables
   >(GET_CAMPAIGN_COLLABS, { variables: { campaignId } })
+
+  const dummyIsShown: boolean = !loading && !error && campaign.collabs.length === 0
+  useEffect(() => {
+    // Add dummy data to cache if they'll be displayed
+    if (dummyIsShown) {
+      // Collab query
+      client.writeQuery<GetCollab, GetCollabVariables>({
+        query: GET_COLLAB,
+        variables: { collabId: dummyDoneCollab._id },
+        data: {
+          collab: {
+            ...dummyDoneCollab,
+            updatedAt: Date.now(),
+          },
+        },
+      })
+      // Creator query
+      client.writeQuery<GetCreator, GetCreatorVariables>({
+        query: GET_CREATOR,
+        variables: { creatorId: dummyDoneCollab.creator._id },
+        data: {
+          creator: {
+            ...dummyDoneCollab.creator,
+            status: CreatorStatus.VERIFIED,
+            language: Language.ENGLISH,
+            birthYear: 1992,
+            youtube: dummyYoutuber,
+          },
+        },
+      })
+      // Youtuber query
+      client.writeQuery<GetYoutuber, GetYoutuberVariables>({
+        query: GET_YOUTUBER,
+        variables: { youtuberId: dummyCreator.youtube._id },
+        data: {
+          youtuber: dummyCreator.youtube,
+        },
+      })
+    }
+  }, [dummyIsShown, client])
 
   if (loading) {
     return <Loader fullScreen />
@@ -181,7 +228,7 @@ const CampaignCollabs: React.FC<ICampaignCollabsProps> = ({ campaignId }) => {
               <p className="help">
                 You have accepted the collab, but haven't sent the game to the influencer
               </p>
-              {acceptedCollabs.length === 0 && <p className="noResult">No collabs.</p>}
+              {acceptedCollabs.length === 0 && <p className="darkText">No collabs.</p>}
               {acceptedCollabs.map(_collab => (
                 <BrandCollabCard collab={_collab} key={_collab._id} />
               ))}
@@ -195,7 +242,7 @@ const CampaignCollabs: React.FC<ICampaignCollabsProps> = ({ campaignId }) => {
                 </h2>
               </Row>
               <p className="help">The influencer is now able to create his review of the game.</p>
-              {sentCollabs.length === 0 && <p className="noResult">No collabs.</p>}
+              {sentCollabs.length === 0 && <p className="darkText">No collabs.</p>}
               {sentCollabs.map(_collab => (
                 <BrandCollabCard collab={_collab} key={_collab._id} />
               ))}
@@ -209,7 +256,13 @@ const CampaignCollabs: React.FC<ICampaignCollabsProps> = ({ campaignId }) => {
                 </h2>
               </Row>
               <p className="help">The reviews are live. You can see them in the Reviews tab</p>
-              {doneCollabs.length === 0 && <p className="noResult">No collabs.</p>}
+              {doneCollabs.length === 0 && <p className="darkText">No collabs.</p>}
+              {dummyIsShown && (
+                <Box>
+                  <p className="darkText">Here's what a collab will look like:</p>
+                  <BrandCollabCard isDummy collab={dummyDoneCollab} />
+                </Box>
+              )}
               {doneCollabs.map(_collab => (
                 <BrandCollabCard collab={_collab} key={_collab._id} />
               ))}

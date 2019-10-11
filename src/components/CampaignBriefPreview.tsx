@@ -1,6 +1,6 @@
 import React from 'react'
 import { ContainerBox } from '../styles/grid'
-import { MainLink } from '../styles/Button'
+import { MainLink, TextLinkExternal } from '../styles/Button'
 import CreatorCampaignPresentation from './CreatorCampaignPresentation'
 import { GetCampaign_campaign } from '../__generated__/GetCampaign'
 import { getCampaignStatus, CampaignStatus } from '../pages/CampaignDashboard'
@@ -14,7 +14,6 @@ import { useDeviceType } from '../utils/hooks'
 const formSource = require('../images/illustrations/insertBlock.svg')
 
 const Styles = styled(ContainerBox)`
-  /* border: 2px solid green; */
   .illustration {
     width: 35rem;
     @media screen and (max-width: ${props => props.theme.breakpoints[1]}) {
@@ -44,13 +43,24 @@ const CampaignBriefPreview: React.FC<Props> = ({ campaign }) => {
             <Title noMargin={deviceType === 'desktop'}>We are creating your campaign</Title>
             <Box mt={[0, 0, '2.5rem']}>
               Give us a moment! We'll send you an email once your campaign is ready to be published.
+              In the meantime, you can look around the app to see how managing a campaign works on
+              Revolt.
             </Box>
             <Box mt="2rem">
               <p>
                 In a hurry? You can{' '}
                 <Link to={`/brand/campaigns/${campaign._id}/brief`}>
                   <Text color="blue">fill the campaign brief yourself</Text>
-                </Link>
+                </Link>{' '}
+                or{' '}
+                <TextLinkExternal
+                  href="mailto:contact@revolt.club"
+                  title="our email"
+                  target="_blank"
+                  style={{ textDecoration: 'none' }}
+                >
+                  contact us
+                </TextLinkExternal>
               </p>
             </Box>
           </Box>

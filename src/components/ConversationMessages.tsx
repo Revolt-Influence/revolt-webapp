@@ -1,14 +1,12 @@
 import React from 'react'
 import { Flex } from '@rebass/grid'
 import styled, { css } from 'styled-components'
-import { palette } from '../utils/colors'
 import { applyCloudinaryTransformations } from '../utils/images'
 import { shadow } from '../utils/styles'
 import gql from 'graphql-tag'
 import { MessageBubble } from '../styles/MessageBubble'
 
 const Message = styled(Flex)<{ isFromMe: boolean }>`
-  max-width: 65rem;
   &:not(:last-child) {
     margin-bottom: 1rem;
   }
@@ -24,25 +22,6 @@ const Message = styled(Flex)<{ isFromMe: boolean }>`
       `
     }
   }}
-
-  .bubble {
-    padding: 1rem 2rem;
-    border-radius: 2rem;
-    white-space: pre-wrap;
-    ${props => {
-      if (props.isFromMe) {
-        return css`
-          align-self: flex-end;
-          background: ${props.theme.accent._200};
-        `
-      } else {
-        return css`
-          align-self: flex-start;
-          background: ${palette.grey._200};
-        `
-      }
-    }}
-  }
 
   .recipient {
     width: 4rem;

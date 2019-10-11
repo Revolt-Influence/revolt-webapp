@@ -200,8 +200,17 @@ MainButton.defaultProps = {
   type: 'button',
 }
 
-const MainLink = styled(Link)`
+interface MainLinkProps extends IMainButtonProps {
+  disabled?: boolean
+}
+const MainLink = styled(Link)<MainLinkProps>`
   ${buttonStyles}
+  ${props =>
+    props.disabled &&
+    css`
+      cursor: not-allowed;
+      pointer-events: none;
+    `}
 `
 
 export const MainLinkExternal = styled.a`

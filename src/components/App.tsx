@@ -24,13 +24,14 @@ const typeDefs = gql`
     isOpen: Boolean!
     creatorId: String
     collabId: String
+    isDummy: Boolean
   }
   extend type Query {
     creatorPanel: CreatorPanel
   }
   extend type Mutation {
-    openCreatorPanel(creatorId: String!, collabId: String): CreatorPanel
-    closeCreatorPanel: CreatorPanel
+    openCreatorPanel(creatorId: String!, collabId: String, isDummy: Boolean): CreatorPanel!
+    closeCreatorPanel: CreatorPanel!
   }
 `
 
@@ -38,15 +39,14 @@ const resolvers = {
   Mutation: {
     openCreatorPanel: (
       parent,
-      args: OpenCreatorPanelVariables,
-      context,
-      info
+      args: OpenCreatorPanelVariables
     ): OpenCreatorPanel_openCreatorPanel => ({
       __typename: 'CreatorPanel',
       id: PANEL_ID,
       isOpen: true,
       creatorId: args.creatorId,
       collabId: args.collabId,
+      isDummy: !!args.isDummy,
     }),
     closeCreatorPanel: (parent, args: {}): CloseCreatorPanel_closeCreatorPanel => ({
       __typename: 'CreatorPanel',
@@ -54,6 +54,7 @@ const resolvers = {
       isOpen: false,
       creatorId: null,
       collabId: null,
+      isDummy: false,
     }),
   },
 }
@@ -64,6 +65,7 @@ const defaultCreatorPanel: GetCreatorPanel_creatorPanel = {
   isOpen: false,
   creatorId: null,
   collabId: null,
+  isDummy: false,
 }
 
 const cache = new InMemoryCache()

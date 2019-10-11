@@ -12,13 +12,15 @@ export interface OpenCreatorPanel_openCreatorPanel {
   isOpen: boolean;
   creatorId: string | null;
   collabId: string | null;
+  isDummy: boolean | null;
 }
 
 export interface OpenCreatorPanel {
-  openCreatorPanel: OpenCreatorPanel_openCreatorPanel | null;
+  openCreatorPanel: OpenCreatorPanel_openCreatorPanel;
 }
 
 export interface OpenCreatorPanelVariables {
   creatorId: string;
   collabId?: string | null;
+  isDummy?: boolean | null;
 }

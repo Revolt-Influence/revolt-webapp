@@ -83,6 +83,9 @@ const Styles = styled.div`
     &:not(:last-child) {
       margin-right: 1.2rem;
     }
+    &.disabled {
+      opacity: 0.5;
+    }
     img {
       width: 3rem;
       height: auto;
@@ -95,7 +98,7 @@ const Styles = styled.div`
     }
     &.contact {
       background: ${palette.blue._500};
-      &:hover {
+      &:hover:not(.disabled) {
         background: ${palette.blue._600};
       }
     }
@@ -158,9 +161,10 @@ const Network = styled(Flex)`
 
 interface Props {
   collab: GetCampaignCollabs_campaign_collabs
+  isDummy?: boolean
 }
 
-const BrandCollabCard: React.FC<Props> = ({ collab }) => {
+const BrandCollabCard: React.FC<Props> = ({ collab, isDummy }) => {
   const { conversation, status, creator, updatedAt, _id } = collab
 
   // Prepare review collab
@@ -175,7 +179,9 @@ const BrandCollabCard: React.FC<Props> = ({ collab }) => {
   )
 
   const handleShowProfile = () => {
-    openCreatorPanel({ variables: { creatorId: creator._id, collabId: collab._id } })
+    openCreatorPanel({
+      variables: { creatorId: creator._id, collabId: collab._id, isDummy: !!isDummy },
+    })
   }
 
   const viewProfileButton = () => (
@@ -187,9 +193,10 @@ const BrandCollabCard: React.FC<Props> = ({ collab }) => {
 
   const showContactButton = () => (
     <Link
-      className="action contact"
+      className="action contact disabled"
       type="button"
-      to={`/brand/messages/${conversation._id}`}
+      style={isDummy && { pointerEvents: 'none' }}
+      to={isDummy ? '#' : `/brand/messages/${conversation._id}`}
       onClick={e => e.stopPropagation()}
     >
       <p>Contact</p>

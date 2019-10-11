@@ -12,6 +12,7 @@ export interface GetCreatorPanel_creatorPanel {
   isOpen: boolean;
   creatorId: string | null;
   collabId: string | null;
+  isDummy: boolean | null;
 }
 
 export interface GetCreatorPanel {

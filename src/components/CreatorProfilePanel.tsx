@@ -56,17 +56,19 @@ export const GET_CREATOR_PANEL = gql`
       isOpen
       creatorId
       collabId
+      isDummy
     }
   }
 `
 
 export const OPEN_CREATOR_PANEL = gql`
-  mutation OpenCreatorPanel($creatorId: String!, $collabId: String) {
-    openCreatorPanel(creatorId: $creatorId, collabId: $collabId) @client {
+  mutation OpenCreatorPanel($creatorId: String!, $collabId: String, $isDummy: Boolean) {
+    openCreatorPanel(creatorId: $creatorId, collabId: $collabId, isDummy: $isDummy) @client {
       id
       isOpen
       creatorId
       collabId
+      isDummy
     }
   }
 `
@@ -78,6 +80,7 @@ const CLOSE_CREATOR_PANEL = gql`
       isOpen
       creatorId
       collabId
+      isDummy
     }
   }
 `
@@ -110,6 +113,7 @@ const CreatorProfilePanel: React.FC<{}> = () => {
       <CreatorProfile
         creatorId={data.creatorPanel.creatorId}
         collabId={data.creatorPanel.collabId}
+        isDummy={data.creatorPanel.isDummy}
       />
     </Styles>
   )

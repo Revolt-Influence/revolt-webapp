@@ -9,7 +9,11 @@ function applyCloudinaryTransformations(
   options: Partial<ImageOptions> = { quality: 80 }
 ): string {
   // Make sure it's a cloudinary link
-  if (cloudinaryLink == null || !cloudinaryLink.includes('cloudinary.com')) {
+  if (
+    cloudinaryLink == null ||
+    typeof cloudinaryLink !== 'string' ||
+    !cloudinaryLink.includes('cloudinary.com')
+  ) {
     // Return image URL with no transformations
     return cloudinaryLink
   }

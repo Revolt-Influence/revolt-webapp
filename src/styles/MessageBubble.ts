@@ -4,6 +4,7 @@ import { palette } from '../utils/colors'
 export const MessageBubble = styled.div<{ isFromMe: boolean }>`
   padding: 1rem 2rem;
   border-radius: 2rem;
+  max-width: 65rem;
   white-space: pre-wrap;
   ${props => {
     if (props.isFromMe) {

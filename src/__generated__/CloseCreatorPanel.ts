@@ -12,8 +12,9 @@ export interface CloseCreatorPanel_closeCreatorPanel {
   isOpen: boolean;
   creatorId: string | null;
   collabId: string | null;
+  isDummy: boolean | null;
 }
 
 export interface CloseCreatorPanel {
-  closeCreatorPanel: CloseCreatorPanel_closeCreatorPanel | null;
+  closeCreatorPanel: CloseCreatorPanel_closeCreatorPanel;
 }
