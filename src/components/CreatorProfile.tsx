@@ -22,6 +22,10 @@ import { showLanguage, showReviewCollabDecision } from '../utils/enums'
 import { FormSelect } from '../styles/Form'
 import { MessageBubble } from '../styles/MessageBubble'
 import { MainLink } from '../styles/Button'
+import { Price } from '../styles/Price'
+import InfoCard from './InfoCard'
+
+const PLATFORM_COMMISSION_PERCENTAGE = 20
 
 const checkSource = require('../images/icons/check_white.svg')
 const closeSource = require('../images/icons/close_white.svg')
@@ -158,6 +162,7 @@ export const GET_COLLAB = gql`
       status
       message
       updatedAt
+      quote
       conversation {
         _id
       }
@@ -261,8 +266,18 @@ const CreatorProfile: React.FC<Props> = ({
         </div>
       </Flex>
       {collab && (
-        <Box style={{ display: 'inline-block' }} mt="2rem">
-          <Box mb="0.5rem">Message</Box>
+        <Box style={{ display: 'inline-block' }}>
+          <InfoCard message="The quote is defined after analyzing the influencer's stats. If you think it's too high, you can negotiate by contacting him and asking him to update the quote" />
+          <Box mt="2rem">Quote (in US Dollars)</Box>
+          <Flex flexDirection="row" alignItems="center">
+            <Price>${collab.quote}</Price>
+            <Box ml="1rem">
+              + ${(collab.quote * PLATFORM_COMMISSION_PERCENTAGE) / 100} platform fees
+            </Box>
+          </Flex>
+          <Box mt="1rem" mb="0.5rem">
+            Message
+          </Box>
           <MessageBubble isFromMe={false}>{collab.message}</MessageBubble>
         </Box>
       )}
@@ -277,7 +292,14 @@ const CreatorProfile: React.FC<Props> = ({
                 type="button"
                 onClick={handleAccept}
               >
-                <p>Accept</p>
+                {collab == null ? (
+                  <p>Accept</p>
+                ) : (
+                  <p>
+                    Accept and pay $
+                    {collab.quote + (collab.quote * PLATFORM_COMMISSION_PERCENTAGE) / 100}
+                  </p>
+                )}
                 <img src={checkSource} alt="accept" />
               </button>
               <button

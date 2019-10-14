@@ -40,6 +40,7 @@ const GET_CAMPAIGN_REQUESTED_COLLABS = gql`
         status
         createdAt
         message
+        quote
         conversation {
           _id
         }
