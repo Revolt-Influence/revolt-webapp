@@ -69,6 +69,7 @@ export const dummyCollabRequest: GetCampaignRequestedCollabs_campaign_collabs = 
   _id: 'DUMMY_COLLAB_REQUEST',
   conversation: null,
   createdAt: Date.now(),
+  quote: 120,
   message:
     "Hi! I'm a dummy YouTuber. This is what a collab request from a real influencer will look like.",
   status: CollabStatus.REQUEST,

@@ -2,6 +2,7 @@ import styled, { css } from 'styled-components'
 import { palette } from '../utils/colors'
 
 export const MessageBubble = styled.div<{ isFromMe: boolean }>`
+  display: inline-block;
   padding: 1rem 2rem;
   border-radius: 2rem;
   max-width: 65rem;

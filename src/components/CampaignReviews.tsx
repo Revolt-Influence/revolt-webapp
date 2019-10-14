@@ -1,8 +1,8 @@
+import React from 'react'
 import { useQuery } from '@apollo/react-hooks'
 import { Box, Flex } from '@rebass/grid'
 import approx from 'approximate-number'
 import gql from 'graphql-tag'
-import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import { ContainerBox } from '../styles/grid'
 import { palette } from '../utils/colors'
@@ -60,7 +60,7 @@ interface Props {
 }
 
 const CampaignReviews: React.FC<Props> = ({ campaignId }) => {
-  const { client, data: { campaign } = { campaign: null }, loading, error } = useQuery<
+  const { data: { campaign } = { campaign: null }, loading, error } = useQuery<
     GetCampaignReviews,
     GetCampaignReviewsVariables
   >(GET_CAMPAIGN_REVIEWS, { variables: { campaignId } })
