@@ -113,6 +113,10 @@ export interface GetCreatorCampaignPage_collabs {
    */
   status: CollabStatus;
   /**
+   * How much the influencer wants to be paid in USD
+   */
+  quote: number;
+  /**
    * The campaign the collab is a part of
    */
   campaign: GetCreatorCampaignPage_collabs_campaign;
