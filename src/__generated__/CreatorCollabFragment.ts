@@ -84,10 +84,6 @@ export interface CreatorCollabFragment {
    * Advancement of the collab
    */
   status: CollabStatus;
-  /**
-   * How much the influencer wants to be paid in USD
-   */
-  quote: number;
   updatedAt: any;
   /**
    * The campaign the collab is a part of

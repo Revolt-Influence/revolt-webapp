@@ -32,10 +32,6 @@ export interface GetCollab_collab {
   message: string;
   updatedAt: any;
   /**
-   * How much the influencer wants to be paid in USD
-   */
-  quote: number;
-  /**
    * Conv where collab brand and creator can chat
    */
   conversation: GetCollab_collab_conversation;

@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useMutation } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 import { MainButtonSubmit } from '../styles/Button'
-import { FormInputLabel, FormTextarea, FormInput } from '../styles/Form'
+import { FormInputLabel, FormTextarea } from '../styles/Form'
 import { ApplyToCampaign, ApplyToCampaignVariables } from '../__generated__/ApplyToCampaign'
 import CheckBox from './CheckBox'
 import ErrorCard from './ErrorCard'
@@ -10,12 +10,10 @@ import SplitView from './SplitView'
 import SuccessCard from './SuccessCard'
 import { CREATOR_COLLAB_FRAGMENT } from './CreatorCollabCard'
 import { GET_CREATOR_COLLABS } from '../pages/CollabsList'
-import InfoCard from './InfoCard'
-import { Box } from '@rebass/grid'
 
 const APPLY_TO_CAMPAIGN = gql`
-  mutation ApplyToCampaign($message: String!, $campaignId: String!, $quote: Float!) {
-    applyToCampaign(message: $message, campaignId: $campaignId, quote: $quote) {
+  mutation ApplyToCampaign($message: String!, $campaignId: String!) {
+    applyToCampaign(message: $message, campaignId: $campaignId) {
       # Get data of created collab
       ...CreatorCollabFragment
     }
@@ -40,11 +38,8 @@ const CreatorCollabRequestForm: React.FC<Props> = ({ brand, campaignId }) => {
     refetchQueries: [{ query: GET_CREATOR_COLLABS }],
   })
 
-  const recommendedQuote = 100
-
   const [message, setMessage] = useState<string>('')
   const [acceptsTerms, setAcceptsTerms] = useState<boolean>(false)
-  const [quote, setQuote] = useState<number>(recommendedQuote)
 
   const checkIfAllowSubmit = () => {
     if (!acceptsTerms || message.length === 0) {
@@ -56,7 +51,7 @@ const CreatorCollabRequestForm: React.FC<Props> = ({ brand, campaignId }) => {
 
   const handleSubmit = (e: React.MouseEvent<HTMLInputElement>) => {
     e.preventDefault()
-    applyToCampaign({ variables: { campaignId, message, quote } })
+    applyToCampaign({ variables: { campaignId, message } })
   }
 
   return (
@@ -70,24 +65,9 @@ const CreatorCollabRequestForm: React.FC<Props> = ({ brand, campaignId }) => {
           placeholder="Requests with a message a more likely to be accepted"
         />
       </FormInputLabel>
-      <InfoCard
-        message={`Based on your channel's stats, we recommend that you ask for $${recommendedQuote} for this collab`}
-      />
-      <Box width={[1, 1, 8 / 12]}>
-        <FormInputLabel withMargin>
-          Your quote, in US Dollars
-          <FormInput
-            hasLabel
-            value={quote}
-            type="number"
-            onChange={e => setQuote(parseFloat(e.target.value))}
-            placeholder="How much the brand will pay you"
-          />
-        </FormInputLabel>
-      </Box>
       <CheckBox
         handleClick={() => setAcceptsTerms(!acceptsTerms)}
-        text={`By checking this box, you are contractually committing to publishing a review of the game if ${brand} accepts the collab`}
+        text={`By checking this box, you are contractually committing to publishing a review of the game if ${brand} accepts the collabs`}
         isChecked={acceptsTerms}
       />
       {applyError && <ErrorCard message="Could not apply to the collab" />}
@@ -99,7 +79,7 @@ const CreatorCollabRequestForm: React.FC<Props> = ({ brand, campaignId }) => {
       <MainButtonSubmit
         type="submit"
         value={applyLoading ? 'Applying..' : 'Apply'}
-        disabled={!allowSubmit || applyLoading || !!createdCollab || !quote}
+        disabled={!allowSubmit || applyLoading || !!createdCollab}
         onClick={handleSubmit}
       />
     </SplitView>

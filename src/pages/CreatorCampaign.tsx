@@ -21,12 +21,10 @@ import {
   GetCreatorCampaignPageVariables,
 } from '../__generated__/GetCreatorCampaignPage'
 import { CreatorStatus, CollabStatus } from '../__generated__/globalTypes'
-import UpdateQuoteForm from '../components/UpdateQuoteForm'
 
-enum ProductTab {
+enum GameTab {
   PRESENTATION = 'presentation',
   APPLY = 'apply',
-  UPDATE_QUOTE = 'update quote',
   SUBMIT = 'submit',
 }
 
@@ -44,7 +42,6 @@ const GET_CREATOR_CAMPAIGN_PAGE = gql`
     collabs {
       _id
       status
-      quote
       campaign {
         _id
       }
@@ -68,7 +65,7 @@ const CreatorCampaign: React.FC<Props> = ({ match }) => {
   } = useQuery<GetCreatorCampaignPage, GetCreatorCampaignPageVariables>(GET_CREATOR_CAMPAIGN_PAGE, {
     variables: { campaignId },
   })
-  const [tab, setTab] = useState<ProductTab>(ProductTab.PRESENTATION)
+  const [tab, setTab] = useState<GameTab>(GameTab.PRESENTATION)
 
   usePageTitle(campaign && campaign.product.name)
 
@@ -98,17 +95,17 @@ const CreatorCampaign: React.FC<Props> = ({ match }) => {
 
   const showPresentation = () => <CreatorCampaignPresentation campaignId={campaign._id} />
 
-  const changeTab = (newTab: ProductTab) => {
+  const changeTab = (newTab: GameTab) => {
     window.scrollTo(0, 0)
     setTab(newTab)
   }
 
   const showActionButton = () => {
     // Fresh new campaign, suggest applying
-    if (tab === ProductTab.PRESENTATION && !alreadyInCollab) {
+    if (tab === GameTab.PRESENTATION && !alreadyInCollab) {
       return (
         <MainButton
-          onClick={() => changeTab(ProductTab.APPLY)}
+          onClick={() => changeTab(GameTab.APPLY)}
           noMargin
           disabled={session.creator.status !== CreatorStatus.VERIFIED}
         >
@@ -117,24 +114,13 @@ const CreatorCampaign: React.FC<Props> = ({ match }) => {
       )
     }
     if (
-      tab === ProductTab.PRESENTATION &&
+      tab === GameTab.PRESENTATION &&
       alreadyInCollab &&
       (linkedCollab.status === CollabStatus.SENT || linkedCollab.status === CollabStatus.ACCEPTED)
     ) {
       return (
-        <MainButton onClick={() => changeTab(ProductTab.SUBMIT)} noMargin>
+        <MainButton onClick={() => changeTab(GameTab.SUBMIT)} noMargin>
           Submit my review
-        </MainButton>
-      )
-    }
-    if (
-      tab === ProductTab.PRESENTATION &&
-      alreadyInCollab &&
-      (linkedCollab.status === CollabStatus.REQUEST || linkedCollab.status === CollabStatus.DENIED)
-    ) {
-      return (
-        <MainButton onClick={() => changeTab(ProductTab.UPDATE_QUOTE)} noMargin>
-          Update my quote
         </MainButton>
       )
     }
@@ -142,18 +128,28 @@ const CreatorCampaign: React.FC<Props> = ({ match }) => {
   }
 
   const showCurrentTab = () => {
-    switch (tab) {
-      case ProductTab.PRESENTATION:
-        return showPresentation()
-      case ProductTab.APPLY:
-        return <CreatorCollabRequestForm brand={campaign.brand.name} campaignId={campaign._id} />
-      case ProductTab.SUBMIT:
-        return <SubmitCreatorReviews collabId={linkedCollab._id} />
-      case ProductTab.UPDATE_QUOTE:
-        return <UpdateQuoteForm collab={linkedCollab} />
-      default:
-        return showPresentation()
+    if (tab === GameTab.PRESENTATION) {
+      return showPresentation()
     }
+
+    // Apply to campaign
+    if (tab === GameTab.APPLY) {
+      return <CreatorCollabRequestForm brand={campaign.brand.name} campaignId={campaign._id} />
+    }
+
+    // Submit review
+    if (tab === GameTab.SUBMIT) {
+      if (
+        alreadyInCollab &&
+        linkedCollab.status !== CollabStatus.REQUEST &&
+        linkedCollab.status !== CollabStatus.DENIED
+      ) {
+        return <SubmitCreatorReviews collabId={linkedCollab._id} />
+      }
+    }
+
+    // Default (should not happen)
+    return showPresentation()
   }
 
   return (
@@ -187,9 +183,9 @@ const CreatorCampaign: React.FC<Props> = ({ match }) => {
         <Box mt="2rem">{showActionButton()}</Box>
 
         {/* Go back to main tab (presentation) if not on main tab */}
-        {tab !== ProductTab.PRESENTATION && (
-          <Flex mt="2rem">
-            <TextButton onClick={() => changeTab(ProductTab.PRESENTATION)} noMargin>
+        {tab !== GameTab.PRESENTATION && (
+          <Flex justifyContent="center" mt="2rem">
+            <TextButton onClick={() => changeTab(GameTab.PRESENTATION)}>
               Back to the game presentation
             </TextButton>
           </Flex>

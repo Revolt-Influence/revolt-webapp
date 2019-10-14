@@ -56,7 +56,6 @@ export const CREATOR_COLLAB_FRAGMENT = gql`
   fragment CreatorCollabFragment on Collab {
     _id
     status
-    quote
     updatedAt
     campaign {
       ...CreatorCampaignPresentationFragment
