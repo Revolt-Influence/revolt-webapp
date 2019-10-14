@@ -164,7 +164,6 @@ const CampaignCollabs: React.FC<ICampaignCollabsProps> = ({ campaignId }) => {
         data: {
           collab: {
             ...dummyDoneCollab,
-            quote: 120,
             updatedAt: Date.now(),
           },
         },

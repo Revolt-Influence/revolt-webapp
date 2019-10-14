@@ -52,7 +52,7 @@ const ConnectCreatorYoutube: React.FC<{}> = () => {
   }
 
   const scope =
-    'https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/yt-analytics.readonly https://www.googleapis.com/auth/yt-analytics-monetary.readonly'
+    'https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/yt-analytics.readonly'
 
   // Youtube is already linked, show preview
   if (session.creator.youtube != null) {

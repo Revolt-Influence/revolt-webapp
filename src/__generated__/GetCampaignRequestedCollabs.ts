@@ -124,10 +124,6 @@ export interface GetCampaignRequestedCollabs_campaign_collabs {
    */
   message: string;
   /**
-   * How much the influencer wants to be paid in USD
-   */
-  quote: number;
-  /**
    * Conv where collab brand and creator can chat
    */
   conversation: GetCampaignRequestedCollabs_campaign_collabs_conversation;
