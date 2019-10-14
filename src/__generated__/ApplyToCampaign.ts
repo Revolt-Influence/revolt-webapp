@@ -84,6 +84,10 @@ export interface ApplyToCampaign_applyToCampaign {
    * Advancement of the collab
    */
   status: CollabStatus;
+  /**
+   * How much the influencer wants to be paid in USD
+   */
+  quote: number;
   updatedAt: any;
   /**
    * The campaign the collab is a part of
@@ -101,4 +105,5 @@ export interface ApplyToCampaign {
 export interface ApplyToCampaignVariables {
   message: string;
   campaignId: string;
+  quote: number;
 }

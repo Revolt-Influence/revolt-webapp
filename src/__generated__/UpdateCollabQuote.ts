@@ -5,18 +5,10 @@
 import { CollabStatus } from "./globalTypes";
 
 // ====================================================
-// GraphQL query operation: GetCollab
+// GraphQL mutation operation: UpdateCollabQuote
 // ====================================================
 
-export interface GetCollab_collab_conversation {
-  __typename: "Conversation";
-  /**
-   * Mongoose generated ID
-   */
-  _id: string;
-}
-
-export interface GetCollab_collab {
+export interface UpdateCollabQuote_updateCollabQuote {
   __typename: "Collab";
   /**
    * Mongoose generated ID
@@ -27,27 +19,19 @@ export interface GetCollab_collab {
    */
   status: CollabStatus;
   /**
-   * The creator's motivation message for the brand
-   */
-  message: string;
-  updatedAt: any;
-  /**
    * How much the influencer wants to be paid in USD
    */
   quote: number;
-  /**
-   * Conv where collab brand and creator can chat
-   */
-  conversation: GetCollab_collab_conversation;
 }
 
-export interface GetCollab {
+export interface UpdateCollabQuote {
   /**
-   * Get collab by ID
+   * Update collab quote after negotiation
    */
-  collab: GetCollab_collab;
+  updateCollabQuote: UpdateCollabQuote_updateCollabQuote;
 }
 
-export interface GetCollabVariables {
+export interface UpdateCollabQuoteVariables {
   collabId: string;
+  newQuote: number;
 }
