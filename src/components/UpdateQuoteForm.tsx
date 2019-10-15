@@ -21,9 +21,10 @@ const UPDATE_COLLAB_QUOTE = gql`
 
 interface Props {
   collab: GetCreatorCampaignPage_collabs
+  onChangeQuote?: () => void
 }
 
-const UpdateQuoteForm: React.FC<Props> = ({ collab }) => {
+const UpdateQuoteForm: React.FC<Props> = ({ collab, onChangeQuote }) => {
   // Form state
   const [newQuote, setNewQuote] = useState<number>(collab.quote)
   const [succeeded, setSucceeded] = useState<boolean>(false)
@@ -38,6 +39,10 @@ const UpdateQuoteForm: React.FC<Props> = ({ collab }) => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     updateCollabQuote({ variables: { collabId: collab._id, newQuote } })
+    // Optional callback
+    if (onChangeQuote) {
+      onChangeQuote()
+    }
   }
 
   return (

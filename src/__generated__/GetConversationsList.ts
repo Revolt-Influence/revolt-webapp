@@ -2,6 +2,8 @@
 /* eslint-disable */
 // This file was automatically generated and should not be edited.
 
+import { CollabStatus } from "./globalTypes";
+
 // ====================================================
 // GraphQL query operation: GetConversationsList
 // ====================================================
@@ -88,6 +90,34 @@ export interface GetConversationsList_conversations_items_brand {
   logo: string;
 }
 
+export interface GetConversationsList_conversations_items_collabs_campaign {
+  __typename: "Campaign";
+  /**
+   * Mongoose generated ID
+   */
+  _id: string;
+}
+
+export interface GetConversationsList_conversations_items_collabs {
+  __typename: "Collab";
+  /**
+   * Mongoose generated ID
+   */
+  _id: string;
+  /**
+   * Advancement of the collab
+   */
+  status: CollabStatus;
+  /**
+   * How much the influencer wants to be paid in USD
+   */
+  quote: number;
+  /**
+   * The campaign the collab is a part of
+   */
+  campaign: GetConversationsList_conversations_items_collabs_campaign;
+}
+
 export interface GetConversationsList_conversations_items {
   __typename: "Conversation";
   /**
@@ -107,6 +137,7 @@ export interface GetConversationsList_conversations_items {
    * Brand that talks to a creator
    */
   brand: GetConversationsList_conversations_items_brand;
+  collabs: GetConversationsList_conversations_items_collabs[];
 }
 
 export interface GetConversationsList_conversations {

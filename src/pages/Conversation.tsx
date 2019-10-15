@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useCallback } from 'react'
+import React, { useRef, useEffect, useCallback, useState } from 'react'
 import { SubTitle, Title } from '../styles/Text'
 import { usePageTitle, useDeviceType, useConversationsSocket } from '../utils/hooks'
 import { Flex, Box } from '@rebass/grid'
@@ -23,9 +23,11 @@ import {
 } from '../__generated__/GetConversationsList'
 import { GET_SESSION } from '../components/Session'
 import { GetSession } from '../__generated__/GetSession'
-import { SessionType } from '../__generated__/globalTypes'
+import { SessionType, CollabStatus } from '../__generated__/globalTypes'
 import { GetConversation, GetConversationVariables } from '../__generated__/GetConversation'
 import { ConversationFragment } from '../__generated__/ConversationFragment'
+import UpdateQuoteForm from '../components/UpdateQuoteForm'
+import { TextButton } from '../styles/Button'
 
 const CONVERSATION_FRAGMENT = gql`
   fragment ConversationFragment on Conversation {
@@ -43,6 +45,14 @@ const CONVERSATION_FRAGMENT = gql`
       _id
       name
       logo
+    }
+    collabs {
+      _id
+      status
+      quote
+      campaign {
+        _id
+      }
     }
   }
   ${MESSAGE_FRAGMENT}
@@ -79,6 +89,9 @@ const Conversation: React.FC<RouteComponentProps<Match>> = ({ match }) => {
 
   // Scroll messages to the bottom
   const messagesRef = useRef<HTMLElement>(null)
+
+  // Toggle quote widget
+  const [quoteIsShown, setQuoteIsShown] = useState<boolean>(false)
 
   // Prepare optional query to get specific conversion if it's not in the list
   const [getSpecificConversation, getSpecificConversationStatus] = useLazyQuery<
@@ -120,11 +133,12 @@ const Conversation: React.FC<RouteComponentProps<Match>> = ({ match }) => {
   const conversation = conversations.find(_conv => _conv._id === conversationId)
 
   // Scroll to the bottom of messages
-  useEffect(() => {
+  const scrollToBottom = () => {
     if (!!messagesRef.current) {
       messagesRef.current.scrollTop = messagesRef.current.scrollHeight
     }
-  }, [conversation])
+  }
+  useEffect(scrollToBottom, [conversation])
 
   useConversationsSocket()
 
@@ -235,6 +249,30 @@ const Conversation: React.FC<RouteComponentProps<Match>> = ({ match }) => {
       {/* Conversation messages */}
       <Box flex={1} style={{ overflowY: 'scroll' }} ref={messagesRef}>
         <ConversationMessages messages={detailedMessages} />
+        {/* Only show quote widget if creator and collab not accepted */}
+        {session.sessionType === SessionType.CREATOR &&
+          conversation.collabs
+            .filter(_collab => [CollabStatus.DENIED, CollabStatus.REQUEST].includes(_collab.status))
+            .map(_collab =>
+              quoteIsShown ? (
+                <Box mt="2rem" mb="1rem" key={_collab._id}>
+                  <UpdateQuoteForm collab={_collab} onChangeQuote={() => setQuoteIsShown(false)} />
+                </Box>
+              ) : (
+                <Box mt="2rem" mb="1rem" key={_collab._id}>
+                  <TextButton
+                    noMargin
+                    nature="primary"
+                    onClick={() => {
+                      setQuoteIsShown(true)
+                      scrollToBottom()
+                    }}
+                  >
+                    Change my quote
+                  </TextButton>
+                </Box>
+              )
+            )}
       </Box>
       {/* Conversation message form */}
       <MessageForm conversationId={conversationId} />
