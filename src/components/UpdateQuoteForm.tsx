@@ -61,7 +61,7 @@ const UpdateQuoteForm: React.FC<Props> = ({ collab, onChangeQuote }) => {
       {error && <ErrorCard message="Could not update the quote" />}
       {succeeded && <SuccessCard message="Your quote was updated" />}
       <MainButtonSubmit
-        disabled={loading || !newQuote || newQuote === collab.quote}
+        disabled={loading || (newQuote == null && newQuote !== 0) || newQuote === collab.quote}
         value={loading ? 'Updating' : 'Update my quote'}
       />
     </form>
