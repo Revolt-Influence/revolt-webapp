@@ -111,7 +111,7 @@ const CampaignPreviewCard: React.FC<Props> = ({ campaign }) => {
         <p className="stat">
           {requestsCount === 0 && collabsCount === 0
             ? 'No requests'
-            : `${requestsCount} requests${requestsCount > 1 ? 's' : ''} · ${collabsCount} collab${
+            : `${requestsCount} request${requestsCount > 1 ? 's' : ''} · ${collabsCount} collab${
                 collabsCount > 1 ? 's' : ''
               }`}
         </p>

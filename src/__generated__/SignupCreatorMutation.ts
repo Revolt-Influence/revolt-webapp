@@ -60,6 +60,10 @@ export interface SignupCreatorMutation_signupCreator_creator {
    */
   status: CreatorStatus;
   /**
+   * Whether the creator has a Stripe connect account
+   */
+  hasConnectedStripe: boolean;
+  /**
    * Youtube account linked to the creator
    */
   youtube: SignupCreatorMutation_signupCreator_creator_youtube | null;

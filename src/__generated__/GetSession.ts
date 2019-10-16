@@ -60,6 +60,10 @@ export interface GetSession_session_creator {
    */
   status: CreatorStatus;
   /**
+   * Whether the creator has a Stripe connect account
+   */
+  hasConnectedStripe: boolean;
+  /**
    * Youtube account linked to the creator
    */
   youtube: GetSession_session_creator_youtube | null;
