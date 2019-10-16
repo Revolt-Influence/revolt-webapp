@@ -61,7 +61,7 @@ const AudienceInsights: React.FC<Props> = ({
     ? ageGroups
         .map((_topAge, _index) => ({
           ..._topAge,
-          name: `${_topAge.name.replace('age', '')} ans`,
+          name: `${_topAge.name.replace('age', '')} y/o`,
         }))
         .sort(sortByPercentage)
         // Limit groups amount
@@ -86,8 +86,8 @@ const AudienceInsights: React.FC<Props> = ({
   const formattedMalePercentage = malePercentage * scaleGenderPercentage
   const formattedFemalePercentage = femalePercentage * scaleGenderPercentage
   const genderDatas = [
-    { name: 'hommes', value: formattedMalePercentage, color: palette.blue._400 },
-    { name: 'femmes', value: formattedFemalePercentage, color: palette.pink._400 },
+    { name: 'men', value: formattedMalePercentage, color: palette.blue._400 },
+    { name: 'women', value: formattedFemalePercentage, color: palette.pink._400 },
   ]
 
   return (

@@ -153,7 +153,12 @@ const CampaignCollabs: React.FC<ICampaignCollabsProps> = ({ campaignId }) => {
     GetCampaignCollabsVariables
   >(GET_CAMPAIGN_COLLABS, { variables: { campaignId } })
 
-  const dummyIsShown: boolean = !loading && !error && campaign.collabs.length === 0
+  const dummyIsShown: boolean =
+    !loading &&
+    !error &&
+    campaign.collabs.filter(_collab =>
+      [CollabStatus.ACCEPTED, CollabStatus.SENT, CollabStatus.DONE].includes(_collab.status)
+    ).length === 0
   useEffect(() => {
     // Add dummy data to cache if they'll be displayed
     if (dummyIsShown) {

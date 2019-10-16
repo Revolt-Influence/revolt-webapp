@@ -67,7 +67,7 @@ const YoutubePreview: React.FC<Props> = ({ youtuberId }) => {
     <SocialAccountPreview
       logo={youtubeSource}
       network="YouTube"
-      stats={`${approx(subscriberCount)} abonnés, ${videoCount} vidéos`}
+      stats={`${approx(subscriberCount)} subscribers, ${videoCount} videos`}
       username={name}
     >
       <Flex
