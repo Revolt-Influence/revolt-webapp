@@ -14,6 +14,10 @@ export interface GetCreatorExpectedViews_session_creator_youtube {
   _id: string;
   medianViews: number;
   estimatedCpm: number;
+  /**
+   * Link of Youtube channel
+   */
+  url: string;
 }
 
 export interface GetCreatorExpectedViews_session_creator {
@@ -22,6 +26,14 @@ export interface GetCreatorExpectedViews_session_creator {
    * Mongoose generated ID
    */
   _id: string;
+  /**
+   * The email is used for login and notifications
+   */
+  email: string;
+  /**
+   * Whether the creator has a Stripe connect account
+   */
+  hasConnectedStripe: boolean;
   /**
    * Youtube account linked to the creator
    */

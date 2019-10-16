@@ -28,6 +28,7 @@ export const SESSION_FRAGMENT = gql`
       picture
       email
       status
+      hasConnectedStripe
       youtube {
         _id
       }

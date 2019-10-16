@@ -60,6 +60,10 @@ export interface SessionFragment_creator {
    */
   status: CreatorStatus;
   /**
+   * Whether the creator has a Stripe connect account
+   */
+  hasConnectedStripe: boolean;
+  /**
    * Youtube account linked to the creator
    */
   youtube: SessionFragment_creator_youtube | null;
