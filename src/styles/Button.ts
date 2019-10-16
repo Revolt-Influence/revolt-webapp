@@ -52,13 +52,14 @@ const TextButton = styled.button<ITextButtonProps>`
     }
   }}
   cursor: pointer;
-  margin: 0 ${props => {
-    if (props.noMargin) {
-      return '0'
-    } else {
-      return props.smallMargin ? '1.5rem' : '2.5rem'
-    }
-  }}
+  margin: 0
+    ${props => {
+      if (props.noMargin) {
+        return '0'
+      } else {
+        return props.smallMargin ? '1.5rem' : '2.5rem'
+      }
+    }};
   border-radius: 8px;
   transform: 0.3s all ease-in-out;
   ${setFont(600, 'normal')}

@@ -53,7 +53,15 @@ const UpdateQuoteForm: React.FC<Props> = ({ collab, onChangeQuote }) => {
           <FormInput
             value={newQuote}
             type="number"
-            onChange={e => setNewQuote(parseFloat(e.target.value) || null)}
+            min="0"
+            onChange={e => {
+              if (e.target.value === '') {
+                setNewQuote(null)
+              }
+              if (parseFloat(e.target.value) > 0) {
+                setNewQuote(parseFloat(e.target.value))
+              }
+            }}
             hasLabel
           />
         </FormInputLabel>

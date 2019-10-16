@@ -165,6 +165,14 @@ const CampaignCollabs: React.FC<ICampaignCollabsProps> = ({ campaignId }) => {
           collab: {
             ...dummyDoneCollab,
             quote: 120,
+            creator: {
+              ...dummyDoneCollab.creator,
+              youtube: {
+                ...dummyDoneCollab.creator.youtube,
+                estimatedCpm: 32,
+                medianViews: 34500,
+              },
+            },
             updatedAt: Date.now(),
           },
         },

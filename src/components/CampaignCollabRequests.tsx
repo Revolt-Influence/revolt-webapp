@@ -53,6 +53,8 @@ const GET_CAMPAIGN_REQUESTED_COLLABS = gql`
           language
           youtube {
             ...YoutuberProfileFragment
+            medianViews
+            estimatedCpm
           }
         }
       }
