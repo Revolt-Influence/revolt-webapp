@@ -24,6 +24,7 @@ import { MessageBubble } from '../styles/MessageBubble'
 import { MainLink } from '../styles/Button'
 import { Price } from '../styles/Price'
 import InfoCard from './InfoCard'
+import { getCollabRecommendedQuote } from '../utils/collabs'
 
 const PLATFORM_COMMISSION_PERCENTAGE = 20
 
@@ -163,6 +164,14 @@ export const GET_COLLAB = gql`
       message
       updatedAt
       quote
+      creator {
+        _id
+        youtube {
+          _id
+          estimatedCpm
+          medianViews
+        }
+      }
       conversation {
         _id
       }
@@ -250,6 +259,15 @@ const CreatorProfile: React.FC<Props> = ({
       </MainLink>
     ) : null
 
+  const getRecommendedQuote = (): number => {
+    const collabHasYoutube = !!collab.creator.youtube
+    if (collabHasYoutube) {
+      const { estimatedCpm, medianViews } = collab.creator.youtube
+      return getCollabRecommendedQuote(estimatedCpm, medianViews)
+    }
+    return 0
+  }
+
   return (
     <Styles>
       <Flex flexDirection="row" alignItems="center">
@@ -267,7 +285,6 @@ const CreatorProfile: React.FC<Props> = ({
       </Flex>
       {collab && (
         <Box style={{ display: 'inline-block' }}>
-          <InfoCard message="The quote is defined after analyzing the influencer's stats. If you think it's too high, you can negotiate by contacting him and asking him to update the quote" />
           <Box mt="2rem">Quote (in US Dollars)</Box>
           <Flex flexDirection="row" alignItems="center">
             <Price>${collab.quote}</Price>
@@ -275,6 +292,9 @@ const CreatorProfile: React.FC<Props> = ({
               + ${(collab.quote * PLATFORM_COMMISSION_PERCENTAGE) / 100} platform fees
             </Box>
           </Flex>
+          <InfoCard
+            message={`Based on the influencer's stats, we recommend that you pay him $${getRecommendedQuote()}. You can negotiate by sending him a message.`}
+          />
           <Box mt="1rem" mb="0.5rem">
             Message
           </Box>

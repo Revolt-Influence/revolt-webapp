@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useMutation } from '@apollo/react-hooks'
+import { useMutation, useQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 import { MainButtonSubmit } from '../styles/Button'
 import { FormInputLabel, FormTextarea, FormInput } from '../styles/Form'
@@ -12,6 +12,8 @@ import { CREATOR_COLLAB_FRAGMENT } from './CreatorCollabCard'
 import { GET_CREATOR_COLLABS } from '../pages/CollabsList'
 import InfoCard from './InfoCard'
 import { Box } from '@rebass/grid'
+import { GetCreatorExpectedViews } from '../__generated__/GetCreatorExpectedViews'
+import { getCollabRecommendedQuote } from '../utils/collabs'
 
 const APPLY_TO_CAMPAIGN = gql`
   mutation ApplyToCampaign($message: String!, $campaignId: String!, $quote: Float!) {
@@ -23,12 +25,40 @@ const APPLY_TO_CAMPAIGN = gql`
   ${CREATOR_COLLAB_FRAGMENT}
 `
 
+const GET_CREATOR_EXPECTED_VIEWS = gql`
+  query GetCreatorExpectedViews {
+    session {
+      creator {
+        _id
+        youtube {
+          _id
+          medianViews
+          estimatedCpm
+        }
+      }
+    }
+  }
+`
+
 interface Props {
   brand: string
   campaignId: string
 }
 
 const CreatorCollabRequestForm: React.FC<Props> = ({ brand, campaignId }) => {
+  const [message, setMessage] = useState<string>('')
+  const [acceptsTerms, setAcceptsTerms] = useState<boolean>(false)
+  const [quote, setQuote] = useState<number>(0)
+  const [recommendedQuote, setRecommendedQuote] = useState<number>(0)
+
+  useQuery<GetCreatorExpectedViews>(GET_CREATOR_EXPECTED_VIEWS, {
+    onCompleted: _session => {
+      const { medianViews, estimatedCpm } = _session.session.creator.youtube
+      const recommended = getCollabRecommendedQuote(estimatedCpm, medianViews)
+      setRecommendedQuote(recommended)
+      setQuote(recommended)
+    },
+  })
   const [
     applyToCampaign,
     {
@@ -39,12 +69,6 @@ const CreatorCollabRequestForm: React.FC<Props> = ({ brand, campaignId }) => {
   ] = useMutation<ApplyToCampaign, ApplyToCampaignVariables>(APPLY_TO_CAMPAIGN, {
     refetchQueries: [{ query: GET_CREATOR_COLLABS }],
   })
-
-  const recommendedQuote = 100
-
-  const [message, setMessage] = useState<string>('')
-  const [acceptsTerms, setAcceptsTerms] = useState<boolean>(false)
-  const [quote, setQuote] = useState<number>(recommendedQuote)
 
   const checkIfAllowSubmit = () => {
     if (!acceptsTerms || message.length === 0) {
@@ -80,7 +104,15 @@ const CreatorCollabRequestForm: React.FC<Props> = ({ brand, campaignId }) => {
             hasLabel
             value={quote}
             type="number"
-            onChange={e => setQuote(parseFloat(e.target.value))}
+            min="0"
+            onChange={e => {
+              if (e.target.value === '') {
+                setQuote(null)
+              }
+              if (parseFloat(e.target.value) > 0) {
+                setQuote(parseFloat(e.target.value))
+              }
+            }}
             placeholder="How much the brand will pay you"
           />
         </FormInputLabel>
@@ -99,7 +131,7 @@ const CreatorCollabRequestForm: React.FC<Props> = ({ brand, campaignId }) => {
       <MainButtonSubmit
         type="submit"
         value={applyLoading ? 'Applying..' : 'Apply'}
-        disabled={!allowSubmit || applyLoading || !!createdCollab || !quote}
+        disabled={!allowSubmit || applyLoading || !!createdCollab || (quote == null && quote !== 0)}
         onClick={handleSubmit}
       />
     </SplitView>

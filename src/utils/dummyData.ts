@@ -12,6 +12,8 @@ export const dummyYoutuber: GetCampaignRequestedCollabs_campaign_collabs_creator
   _id: 'DUMMY_YOUTUBER_1',
   videoCount: 12,
   name: 'Dummy YouTube Channel',
+  estimatedCpm: 32,
+  medianViews: 34500,
   picture:
     'https://res.cloudinary.com/revolt/image/upload/v1570798076/creator_pictures/arfcvup1uhfctcmvuuhf.svg',
   subscriberCount: 324579,
@@ -73,7 +75,14 @@ export const dummyCollabRequest: GetCampaignRequestedCollabs_campaign_collabs = 
   message:
     "Hi! I'm a dummy YouTuber. This is what a collab request from a real influencer will look like.",
   status: CollabStatus.REQUEST,
-  creator: dummyCreator,
+  creator: {
+    ...dummyCreator,
+    youtube: {
+      ...dummyCreator.youtube,
+      estimatedCpm: 32,
+      medianViews: 34500,
+    },
+  },
 }
 
 export const dummyDoneCollab: GetCampaignCollabs_campaign_collabs = {
