@@ -14,6 +14,7 @@ import InfoCard from './InfoCard'
 import { Box } from '@rebass/grid'
 import { GetCreatorExpectedViews } from '../__generated__/GetCreatorExpectedViews'
 import { getCollabRecommendedQuote } from '../utils/collabs'
+import WarningCard from './WarningCard'
 
 const APPLY_TO_CAMPAIGN = gql`
   mutation ApplyToCampaign($message: String!, $campaignId: String!, $quote: Float!) {
@@ -95,8 +96,8 @@ const CreatorCollabRequestForm: React.FC<Props> = ({ brand, campaignId }) => {
 
   const { hasConnectedStripe, email, youtube } = session.creator
 
-  const getStripeAuthLink = () => `https://connect.stripe.com/express/oauth/authorize?client_id=${process.env.REACT_APP_STRIPE_CLIENT_ID}&state={STATE_VALUE}&stripe_user[email]=${email}&stripe_user[url]=${youtube.url}
-    `
+  const getStripeAuthLink = () =>
+    `https://dashboard.stripe.com/express/oauth/authorize?response_type=code&client_id=${process.env.REACT_APP_STRIPE_CLIENT_ID}&stripe_user[email]=${email}&stripe_user[url]=${youtube.url}&stripe_user[business_type]=individual`
 
   return (
     <SplitView title="Apply" ratio={4 / 12} noBorder>
@@ -109,43 +110,29 @@ const CreatorCollabRequestForm: React.FC<Props> = ({ brand, campaignId }) => {
           placeholder="Requests with a message a more likely to be accepted"
         />
       </FormInputLabel>
-      {hasConnectedStripe ? (
-        <>
-          <InfoCard
-            message={`Based on your channel's stats, we recommend that you ask for $${recommendedQuote} for this collab`}
+      <InfoCard
+        message={`Based on your channel's stats, we recommend that you ask for $${recommendedQuote} for this collab`}
+      />
+      <Box width={[1, 1, 8 / 12]}>
+        <FormInputLabel withMargin>
+          Your quote, in US Dollars
+          <FormInput
+            hasLabel
+            value={quote}
+            type="number"
+            min="0"
+            onChange={e => {
+              if (e.target.value === '') {
+                setQuote(null)
+              }
+              if (parseFloat(e.target.value) >= 0) {
+                setQuote(parseFloat(e.target.value))
+              }
+            }}
+            placeholder="How much the brand will pay you"
           />
-          <Box width={[1, 1, 8 / 12]}>
-            <FormInputLabel withMargin>
-              Your quote, in US Dollars
-              <FormInput
-                hasLabel
-                value={quote}
-                type="number"
-                min="0"
-                onChange={e => {
-                  if (e.target.value === '') {
-                    setQuote(null)
-                  }
-                  if (parseFloat(e.target.value) > 0) {
-                    setQuote(parseFloat(e.target.value))
-                  }
-                }}
-                placeholder="How much the brand will pay you"
-              />
-            </FormInputLabel>
-          </Box>
-        </>
-      ) : (
-        <Box my="2rem">
-          <p>
-            To start sending quotes for paid collabs and accepting payments, you need to connect
-            your bank details.
-          </p>
-          <MainLinkExternal inverted href={getStripeAuthLink()}>
-            Start accepting payments
-          </MainLinkExternal>
-        </Box>
-      )}
+        </FormInputLabel>
+      </Box>
       <CheckBox
         handleClick={() => setAcceptsTerms(!acceptsTerms)}
         text={`By checking this box, you are contractually committing to publishing a review of the game if ${brand} accepts the collab`}
@@ -157,12 +144,21 @@ const CreatorCollabRequestForm: React.FC<Props> = ({ brand, campaignId }) => {
           message={`Your collab request was saved. ${brand} will contact you if you are selected`}
         />
       )}
-      <MainButtonSubmit
-        type="submit"
-        value={applyLoading ? 'Applying..' : 'Apply'}
-        disabled={!allowSubmit || applyLoading || !!createdCollab || (quote == null && quote !== 0)}
-        onClick={handleSubmit}
-      />
+      {quote > 0 && !hasConnectedStripe ? (
+        <Box>
+          <WarningCard message="To start getting paid for you collabs, you need to connect a bank account where we can send you money. We use Stripe to handle secure payments" />
+          <MainLinkExternal href={getStripeAuthLink()}>Start accepting payments</MainLinkExternal>
+        </Box>
+      ) : (
+        <MainButtonSubmit
+          type="submit"
+          value={applyLoading ? 'Applying..' : 'Apply'}
+          disabled={
+            !allowSubmit || applyLoading || !!createdCollab || (quote == null && quote !== 0)
+          }
+          onClick={handleSubmit}
+        />
+      )}
     </SplitView>
   )
 }

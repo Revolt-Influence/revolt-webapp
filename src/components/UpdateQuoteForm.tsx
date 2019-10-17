@@ -58,7 +58,7 @@ const UpdateQuoteForm: React.FC<Props> = ({ collab, onChangeQuote }) => {
               if (e.target.value === '') {
                 setNewQuote(null)
               }
-              if (parseFloat(e.target.value) > 0) {
+              if (parseFloat(e.target.value) >= 0) {
                 setNewQuote(parseFloat(e.target.value))
               }
             }}

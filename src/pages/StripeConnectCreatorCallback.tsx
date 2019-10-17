@@ -48,7 +48,7 @@ const StripeConnectCreatorCallback: React.FC<{}> = () => {
       {succeeded && (
         <>
           <SuccessCard message="Your bank details were saved" />
-          <Title>Congratulation!</Title>
+          <Title>Congratulations!</Title>
           <p>You're now ready to get paid for your collabs.</p>
           <MainLink to="/creator/games">Send quotes</MainLink>
         </>
