@@ -146,7 +146,7 @@ const SubmitCollabRequest: React.FC<Props> = ({ brand, campaignId }) => {
       )}
       {quote > 0 && !hasConnectedStripe ? (
         <Box>
-          <WarningCard message="To start getting paid for you collabs, you need to connect a bank account where we can send you money. We use Stripe to handle secure payments" />
+          <WarningCard message="To start getting paid for you collabs, you need to connect a bank account where we can send you money. We use Stripe to handle secure payments." />
           <MainLinkExternal href={getStripeAuthLink()}>Start accepting payments</MainLinkExternal>
         </Box>
       ) : (

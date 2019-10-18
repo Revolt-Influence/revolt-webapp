@@ -193,7 +193,7 @@ const BrandCollabCard: React.FC<Props> = ({ collab, isDummy }) => {
 
   const showContactButton = () => (
     <Link
-      className="action contact disabled"
+      className={`action contact ${isDummy ? 'disabled' : ''}`}
       type="button"
       style={isDummy && { pointerEvents: 'none' }}
       to={isDummy ? '#' : `/brand/messages/${conversation._id}`}

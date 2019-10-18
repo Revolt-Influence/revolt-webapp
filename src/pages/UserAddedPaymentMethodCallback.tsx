@@ -29,7 +29,9 @@ const UserAddedPaymentMethodCallback: React.FC<{}> = () => {
   const [savePaymentMethod, { loading, error }] = useMutation<
     SaveUserPaymentMethod,
     SaveUserPaymentMethodVariables
-  >(SAVE_USER_PAYMENT_METHOD, { onCompleted: () => setSucceeded(true) })
+  >(SAVE_USER_PAYMENT_METHOD, {
+    onCompleted: () => setSucceeded(true),
+  })
 
   // Validate token on first load
   const location = useLocation()
