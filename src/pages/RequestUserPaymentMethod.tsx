@@ -8,6 +8,8 @@ import { useMutation } from '@apollo/react-hooks'
 import { Box } from '@rebass/grid'
 import { CreateStripeSession } from '../__generated__/CreateStripeSession'
 import ErrorCard from '../components/ErrorCard'
+import { LabelText } from '../styles/Text'
+import OrderedList from '../components/OrderedList'
 
 const stripe = Stripe(process.env.REACT_APP_STRIPE_API_KEY)
 
@@ -16,6 +18,12 @@ const CREATE_STRIPE_SESSION = gql`
     createStripeSession
   }
 `
+
+const steps: string[] = [
+  'Add a payment method. We partner with Stripe to securely store your payment info',
+  'Accept influencer quotes on your campaign dashboard',
+  'You will only be charged once the influencer publishes his review',
+]
 
 const RequestUserPaymentMethod: React.FC<{}> = () => {
   // Prepare mutations
@@ -38,14 +46,12 @@ const RequestUserPaymentMethod: React.FC<{}> = () => {
 
   return (
     <ContainerBox>
-      <PageHeader title="Add a payment method" />
+      <PageHeader title="Start accepting paid collabs" />
       <WarningCard message="You need to add a payment method to accept a paid collab" />
       <Box mt="2rem">
         <p>Paid collabs allow you work with quality influencers and reach a bigger audience.</p>
-        <p>
-          We use Stripe to securely manage payments. You will ony be charged once the collab is
-          completed.
-        </p>
+        <LabelText withMargin>Get started</LabelText>
+        <OrderedList items={steps} />
       </Box>
       {createSessionError && <ErrorCard message="We could not add your payment method" />}
       {error && <ErrorCard message={error} />}
