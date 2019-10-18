@@ -2,11 +2,27 @@
 /* eslint-disable */
 // This file was automatically generated and should not be edited.
 
-import { ReviewFormat } from "./globalTypes";
+import { CollabStatus, ReviewFormat } from "./globalTypes";
 
 // ====================================================
 // GraphQL query operation: GetCampaignReviews
 // ====================================================
+
+export interface GetCampaignReviews_campaign_collabs {
+  __typename: "Collab";
+  /**
+   * Mongoose generated ID
+   */
+  _id: string;
+  /**
+   * Advancement of the collab
+   */
+  status: CollabStatus;
+  /**
+   * How much the influencer wants to be paid in USD
+   */
+  quote: number;
+}
 
 export interface GetCampaignReviews_campaign_reviews_creator {
   __typename: "Creator";
@@ -49,6 +65,10 @@ export interface GetCampaignReviews_campaign {
    * Mongoose generated ID
    */
   _id: string;
+  /**
+   * All collabs linked to the campaign
+   */
+  collabs: GetCampaignReviews_campaign_collabs[];
   /**
    * All reviews made for the campaign
    */
