@@ -10,7 +10,7 @@ import {
   SubmitCollabReviewVariables,
 } from '../__generated__/SubmitCollabReview'
 import CheckBox from './CheckBox'
-import { GET_COLLAB } from './CreatorProfile'
+import { GET_COLLAB } from './ReviewCollabRequest'
 import ErrorCard from './ErrorCard'
 import Loader from './Loader'
 import SplitView from './SplitView'

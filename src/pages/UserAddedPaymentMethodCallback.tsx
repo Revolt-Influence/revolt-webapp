@@ -54,7 +54,7 @@ const UserAddedPaymentMethodCallback: React.FC<{}> = () => {
           <Title>Congratulations!</Title>
           <p>
             You're now ready to accept paid collabs with influencers. You will only be charged once
-            the collab is completed.
+            a collab you accepted is completed.
           </p>
           <MainLink to="/brand/campaigns">View my collab requests</MainLink>
         </>

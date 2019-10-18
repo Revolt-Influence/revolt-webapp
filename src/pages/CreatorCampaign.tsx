@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { RouteComponentProps, withRouter } from 'react-router-dom'
 import { Flex, Box } from '@rebass/grid'
 import ErrorCard from '../components/ErrorCard'
-import CreatorCollabRequestForm from '../components/CreatorCollabRequestForm'
+import SubmitCollabRequest from '../components/SubmitCollabRequest'
 import { ContainerBox } from '../styles/grid'
 import CreatorCampaignPresentation, {
   CREATOR_CAMPAIGN_PRESENTATION_FRAGMENT,
@@ -146,7 +146,7 @@ const CreatorCampaign: React.FC<Props> = ({ match }) => {
       case ProductTab.PRESENTATION:
         return showPresentation()
       case ProductTab.APPLY:
-        return <CreatorCollabRequestForm brand={campaign.brand.name} campaignId={campaign._id} />
+        return <SubmitCollabRequest brand={campaign.brand.name} campaignId={campaign._id} />
       case ProductTab.SUBMIT:
         return <SubmitCreatorReviews collabId={linkedCollab._id} />
       case ProductTab.UPDATE_QUOTE:

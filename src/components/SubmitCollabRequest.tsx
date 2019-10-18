@@ -49,7 +49,7 @@ interface Props {
   campaignId: string
 }
 
-const CreatorCollabRequestForm: React.FC<Props> = ({ brand, campaignId }) => {
+const SubmitCollabRequest: React.FC<Props> = ({ brand, campaignId }) => {
   const [message, setMessage] = useState<string>('')
   const [acceptsTerms, setAcceptsTerms] = useState<boolean>(false)
   const [quote, setQuote] = useState<number>(0)
@@ -163,4 +163,4 @@ const CreatorCollabRequestForm: React.FC<Props> = ({ brand, campaignId }) => {
   )
 }
 
-export default CreatorCollabRequestForm
+export default SubmitCollabRequest
