@@ -9,7 +9,6 @@ import { palette } from '../utils/colors'
 import ErrorBoundary from './ErrorBoundary'
 import { useQuery } from '@apollo/react-hooks'
 import { CollabStatus, Language, CreatorStatus } from '../__generated__/globalTypes'
-import Loader from './Loader'
 import ErrorCard from './ErrorCard'
 import {
   GetCampaignCollabs,
@@ -209,7 +208,11 @@ const CampaignCollabs: React.FC<ICampaignCollabsProps> = ({ campaignId }) => {
   }, [dummyIsShown, client])
 
   if (loading) {
-    return <Loader fullScreen />
+    return (
+      <ContainerBox>
+        <p>Loading collabs...</p>
+      </ContainerBox>
+    )
   }
   if (error) {
     return (

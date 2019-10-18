@@ -95,18 +95,10 @@ export const GET_CREATOR = gql`
 interface Props {
   creatorId: string
   collabId?: string
-  handleAccept?: () => any
-  handleRefuse?: () => any
   isDummy?: boolean
 }
 
-const CreatorProfile: React.FC<Props> = ({
-  creatorId,
-  collabId,
-  handleAccept,
-  handleRefuse,
-  isDummy,
-}) => {
+const CreatorProfile: React.FC<Props> = ({ creatorId, collabId, isDummy }) => {
   const {
     data: { creator } = { creator: null },
     loading: creatorLoading,
