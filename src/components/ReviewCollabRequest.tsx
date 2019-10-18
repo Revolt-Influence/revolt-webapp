@@ -1,8 +1,9 @@
 import React from 'react'
 import { useQuery, useMutation } from '@apollo/react-hooks'
+import { Box, Flex } from '@rebass/grid'
+import { useHistory } from 'react-router-dom'
 import { GetCollab, GetCollabVariables } from '../__generated__/GetCollab'
 import ErrorCard from './ErrorCard'
-import { Box, Flex } from '@rebass/grid'
 import { Price } from '../styles/Price'
 import InfoCard from './InfoCard'
 import { MessageBubble } from '../styles/MessageBubble'
@@ -19,6 +20,8 @@ import styled from 'styled-components'
 import { palette } from '../utils/colors'
 import { shadow } from '../utils/styles'
 import { showReviewCollabDecision } from '../utils/enums'
+import { GetSession } from '../__generated__/GetSession'
+import { GET_SESSION } from './Session'
 
 const checkSource = require('../images/icons/check_white.svg')
 const closeSource = require('../images/icons/close_white.svg')
@@ -115,6 +118,7 @@ interface Props {
 const ReviewCollabRequest: React.FC<Props> = ({ collabId }) => {
   const isDummy = collabId.includes('DUMMY')
 
+  // Get collab details
   const {
     data: { collab } = { collab: null },
     loading: collabLoading,
@@ -130,10 +134,20 @@ const ReviewCollabRequest: React.FC<Props> = ({ collabId }) => {
     ReviewCollabApplicationVariables
   >(REVIEW_COLLAB_APPLICATION)
 
-  if (collabLoading) {
+  // May need for redirection to payment page
+  const history = useHistory()
+
+  // Get session to check if user has a payment method
+  const {
+    data: { session },
+    loading: sessionLoading,
+    error: sessionError,
+  } = useQuery<GetSession>(GET_SESSION)
+
+  if (collabLoading || sessionLoading) {
     return <p>Loading...</p>
   }
-  if (collabError) {
+  if (collabError || sessionError) {
     return <ErrorCard message="Could not load collab request" />
   }
 
@@ -172,7 +186,10 @@ const ReviewCollabRequest: React.FC<Props> = ({ collabId }) => {
   }
 
   const handleApplicationDecision = (decision: ReviewCollabDecision): void => {
-    if (!reviewStatus.loading && !isDummy) {
+    if (decision === ReviewCollabDecision.ACCEPT && !session.user.hasPaymentMethod) {
+      // Redirect to payment methods page
+      history.push('/brand/requestPaymentMethod')
+    } else if (!reviewStatus.loading && !isDummy) {
       reviewCollabApplication({
         variables: { collabId, decision },
       })
@@ -200,7 +217,7 @@ const ReviewCollabRequest: React.FC<Props> = ({ collabId }) => {
       </Box>
       {/* Review collab request (accept, deny or negotiate) */}
       <Flex flexDirection="row" justifyContent="space-between" mt="2rem" alignItems="baseline">
-        {[CollabStatus.ACCEPTED, CollabStatus.DENIED].includes(collab.status) ? (
+        {[CollabStatus.REQUEST, CollabStatus.DENIED].includes(collab.status) ? (
           <Flex flexDirection="row" justifyContent="space-between">
             {collab && showContactButton()}
             <button
@@ -209,14 +226,10 @@ const ReviewCollabRequest: React.FC<Props> = ({ collabId }) => {
               type="button"
               onClick={() => handleApplicationDecision(ReviewCollabDecision.ACCEPT)}
             >
-              {collab == null ? (
-                <p>Accept</p>
-              ) : (
-                <p>
-                  Accept and pay $
-                  {collab.quote + (collab.quote * PLATFORM_COMMISSION_PERCENTAGE) / 100}
-                </p>
-              )}
+              <p>
+                Accept and pay $
+                {collab.quote + (collab.quote * PLATFORM_COMMISSION_PERCENTAGE) / 100}
+              </p>
               <img src={checkSource} alt="accept" />
             </button>
             <button
