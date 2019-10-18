@@ -38,8 +38,8 @@ const Styles = styled.div`
   background: ${palette.grey._50};
 
   .profilePicture {
-    width: 12rem;
-    height: 12rem;
+    width: 10rem;
+    height: 10rem;
     object-fit: cover;
     margin-right: 2rem;
     border-radius: 50%;
