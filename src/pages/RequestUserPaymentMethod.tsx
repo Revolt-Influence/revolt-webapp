@@ -1,4 +1,6 @@
 import React, { useState } from 'react'
+import queryString from 'query-string'
+import { useLocation } from 'react-router-dom'
 import { ContainerBox } from '../styles/grid'
 import PageHeader from '../components/PageHeader'
 import WarningCard from '../components/WarningCard'
@@ -10,6 +12,7 @@ import { CreateStripeSession } from '../__generated__/CreateStripeSession'
 import ErrorCard from '../components/ErrorCard'
 import { LabelText } from '../styles/Text'
 import OrderedList from '../components/OrderedList'
+import InfoCard from '../components/InfoCard'
 
 const stripe = Stripe(process.env.REACT_APP_STRIPE_API_KEY)
 
@@ -44,10 +47,20 @@ const RequestUserPaymentMethod: React.FC<{}> = () => {
     setError(stripeError.message)
   }
 
+  // Get optional intent from URL param
+  const location = useLocation()
+  const parsedQuery = queryString.parse(location.search)
+  const { intent } = parsedQuery
+
   return (
     <ContainerBox>
       <PageHeader title="Start accepting paid collabs" />
-      <WarningCard message="You need to add a payment method to accept a paid collab" />
+      {intent === 'collab' && (
+        <WarningCard message="You need to add a payment method to accept a paid collab" />
+      )}
+      {intent === 'replace' && (
+        <InfoCard message="Adding a payment method will replace your current one" />
+      )}
       <Box mt="2rem">
         <p>Paid collabs allow you work with quality influencers and reach a bigger audience.</p>
         <LabelText withMargin>Get started</LabelText>

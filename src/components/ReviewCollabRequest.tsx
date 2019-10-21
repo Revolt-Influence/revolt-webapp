@@ -27,7 +27,7 @@ import ErrorBoundary from './ErrorBoundary'
 const checkSource = require('../images/icons/check_white.svg')
 const closeSource = require('../images/icons/close_white.svg')
 
-const PLATFORM_COMMISSION_PERCENTAGE = 15
+export const PLATFORM_COMMISSION_PERCENTAGE = 15
 const possibleReviewCollabDecisions = Object.values(ReviewCollabDecision)
 
 const Styles = styled(Box)`
@@ -189,7 +189,7 @@ const ReviewCollabRequest: React.FC<Props> = ({ collabId }) => {
   const handleApplicationDecision = (decision: ReviewCollabDecision): void => {
     if (decision === ReviewCollabDecision.ACCEPT && !session.user.hasPaymentMethod) {
       // Redirect to payment methods page
-      history.push('/brand/requestPaymentMethod')
+      history.push(`/brand/requestPaymentMethod?intent="collab"`)
     } else if (!reviewStatus.loading && !isDummy) {
       reviewCollabApplication({
         variables: { collabId, decision },

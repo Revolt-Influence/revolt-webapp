@@ -102,12 +102,12 @@ const SubmitCollabRequest: React.FC<Props> = ({ brand, campaignId }) => {
   return (
     <SplitView title="Apply" ratio={4 / 12} noBorder>
       <FormInputLabel>
-        Motivation message for {brand}
+        Your proposition for {brand}
         <FormTextarea
           hasLabel
           value={message}
           onChange={e => setMessage(e.target.value)}
-          placeholder="Requests with a message a more likely to be accepted"
+          placeholder={`Hi ${brand}, I'd love to do a 20-minute let's play video...`}
         />
       </FormInputLabel>
       <InfoCard

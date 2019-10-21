@@ -7,6 +7,7 @@ import SplitView from '../components/SplitView'
 import { usePageTitle } from '../utils/hooks'
 import { Title } from '../styles/Text'
 import Session from '../components/Session'
+import UserPaymentInfo from '../components/UserPaymentInfo'
 
 const UserAccount: React.FC<{}> = () => {
   usePageTitle('My account')
@@ -18,6 +19,10 @@ const UserAccount: React.FC<{}> = () => {
         {/* Contact info */}
         <SplitView title="My contact info">
           <UpdateUserInfo />
+        </SplitView>
+        {/* Payment info */}
+        <SplitView title="My payment info">
+          <UserPaymentInfo />
         </SplitView>
         {/* Change password */}
         <SplitView title="My password">

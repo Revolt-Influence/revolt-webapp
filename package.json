@@ -26,6 +26,7 @@
     "@types/react-truncate": "^2.3.3",
     "@types/rebass__grid": "^6.0.5",
     "@types/recharts": "^1.1.21",
+    "@types/stripe-v3": "^3.1.9",
     "@types/styled-components": "^4.1.8",
     "@types/superagent": "^3.8.4",
     "apollo": "^2.18.3",

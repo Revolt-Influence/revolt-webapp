@@ -18,6 +18,7 @@ import ReviewCard from './ReviewCard'
 import InfoCard from './InfoCard'
 import { dummyReview } from '../utils/dummyData'
 import { CollabStatus } from '../__generated__/globalTypes'
+import { PLATFORM_COMMISSION_PERCENTAGE } from './ReviewCollabRequest'
 
 const Stats = styled(Box)`
   background: ${palette.blue._100};
@@ -80,7 +81,11 @@ const CampaignReviews: React.FC<Props> = ({ campaignId }) => {
 
   const totalSpentBudget = collabs
     .filter(_collab => _collab.status === CollabStatus.DONE)
-    .reduce((quotesSum, _collab) => quotesSum + _collab.quote, 0)
+    .reduce(
+      (quotesSum, _collab) =>
+        quotesSum + _collab.quote * ((100 + PLATFORM_COMMISSION_PERCENTAGE) / 100),
+      0
+    )
   const totalLikes = reviews.reduce((total, _review) => total + (_review.likeCount || 0), 0)
   const totalComments = reviews.reduce((total, _review) => total + (_review.commentCount || 0), 0)
   const earnedMediaValue = (totalLikes + totalComments) * 0.3
@@ -104,11 +109,11 @@ const CampaignReviews: React.FC<Props> = ({ campaignId }) => {
     },
     {
       name: 'Budget spent',
-      value: `${approx(totalSpentBudget)}€`,
+      value: `$${approx(totalSpentBudget)}`,
     },
     {
       name: 'Earned media value',
-      value: `${approx(earnedMediaValue)}€`,
+      value: `$${approx(earnedMediaValue)}`,
     },
   ]
 

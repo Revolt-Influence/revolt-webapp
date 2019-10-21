@@ -1,6 +1,6 @@
+import React from 'react'
 import { Box } from '@rebass/grid'
 import queryString from 'query-string'
-import React from 'react'
 import { RouteComponentProps, withRouter } from 'react-router-dom'
 import CampaignBriefPreview from '../components/CampaignBriefPreview'
 import CampaignCollabs from '../components/CampaignCollabs'
