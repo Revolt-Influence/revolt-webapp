@@ -186,7 +186,11 @@ const ReviewCollabRequest: React.FC<Props> = ({ collabId }) => {
   }
 
   const handleApplicationDecision = (decision: ReviewCollabDecision): void => {
-    if (decision === ReviewCollabDecision.ACCEPT && !session.user.hasPaymentMethod) {
+    if (
+      decision === ReviewCollabDecision.ACCEPT &&
+      !session.user.hasPaymentMethod &&
+      collab.quote > 0
+    ) {
       // Redirect to payment methods page
       history.push(`/brand/requestPaymentMethod?intent="collab"`)
     } else if (!reviewStatus.loading && !isDummy) {
@@ -226,10 +230,14 @@ const ReviewCollabRequest: React.FC<Props> = ({ collabId }) => {
               type="button"
               onClick={() => handleApplicationDecision(ReviewCollabDecision.ACCEPT)}
             >
-              <p>
-                Accept and pay $
-                {collab.quote + (collab.quote * PLATFORM_COMMISSION_PERCENTAGE) / 100}
-              </p>
+              {collab.quote > 0 ? (
+                <p>
+                  Accept and pay $
+                  {collab.quote + (collab.quote * PLATFORM_COMMISSION_PERCENTAGE) / 100}
+                </p>
+              ) : (
+                <p>Accept</p>
+              )}
               <img src={checkSource} alt="accept" />
             </button>
             <button
