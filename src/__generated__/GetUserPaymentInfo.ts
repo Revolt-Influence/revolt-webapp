@@ -14,7 +14,7 @@ export interface GetUserPaymentInfo_session_user {
    */
   hasPaymentMethod: boolean;
   /**
-   * Got from Stripe, used to tell what card the user used
+   * Last digits of the saved credit card
    */
   creditCardLast4: string | null;
 }

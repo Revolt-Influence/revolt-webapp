@@ -13,6 +13,7 @@ import ErrorCard from './ErrorCard'
 import YoutubePreview, { YOUTUBER_PROFILE_FRAGMENT } from './YoutubePreview'
 import { showLanguage } from '../utils/enums'
 import ReviewCollabRequest from './ReviewCollabRequest'
+import ErrorBoundary from './ErrorBoundary'
 
 const placeholderPicture = 'https://dummyimage.com/40x40/d8dee3/D8DEE3.jpg'
 
@@ -135,7 +136,11 @@ const CreatorProfile: React.FC<Props> = ({ creatorId, collabId, isDummy }) => {
           </p>
         </div>
       </Flex>
-      {collabId && <ReviewCollabRequest collabId={collabId} />}
+      {collabId && (
+        <ErrorBoundary message="Could not load the collab details">
+          <ReviewCollabRequest collabId={collabId} />
+        </ErrorBoundary>
+      )}
       {/* Networks preview */}
       {youtube && <h2 className="section">Platforms</h2>}
       <section>{hasYoutube && <YoutubePreview youtuberId={youtube._id} />}</section>

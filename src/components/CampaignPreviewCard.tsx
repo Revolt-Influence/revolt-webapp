@@ -99,7 +99,7 @@ const CampaignPreviewCard: React.FC<Props> = ({ campaign }) => {
   )
 
   return (
-    <Link to={`/brand/campaigns/${campaign._id}`}>
+    <Link to={`/brand/campaigns/${campaign._id}`} style={{ display: 'block' }}>
       <Style mt={[0, 0, 0]} p={[0, 0, 0]}>
         <ImageWrapper
           src={product.pictures.length > 0 ? product.pictures[0] : null}

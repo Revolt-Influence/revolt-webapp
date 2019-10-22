@@ -70,7 +70,7 @@ const CreatorCampaign: React.FC<Props> = ({ match }) => {
   })
   const [tab, setTab] = useState<ProductTab>(ProductTab.PRESENTATION)
 
-  usePageTitle(campaign && campaign.product.name)
+  usePageTitle(campaign == null ? 'Game' : campaign.product.name)
 
   if (loading) {
     return <Loader fullScreen />
@@ -110,7 +110,7 @@ const CreatorCampaign: React.FC<Props> = ({ match }) => {
         <MainButton
           onClick={() => changeTab(ProductTab.APPLY)}
           noMargin
-          disabled={session.creator.status !== CreatorStatus.VERIFIED}
+          disabled={session.creator.status === CreatorStatus.BLOCKED}
         >
           Apply
         </MainButton>
@@ -172,7 +172,7 @@ const CreatorCampaign: React.FC<Props> = ({ match }) => {
           {showActionButton()}
         </Flex>
         {/* Eventual info message */}
-        {session.creator.status !== CreatorStatus.VERIFIED && (
+        {session.creator.status === CreatorStatus.BLOCKED && (
           <Box mt={['1rem', 0, 0]}>
             <NotificationCard
               nature="info"

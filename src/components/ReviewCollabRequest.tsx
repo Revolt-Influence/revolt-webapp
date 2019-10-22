@@ -22,7 +22,6 @@ import { shadow } from '../utils/styles'
 import { showReviewCollabDecision } from '../utils/enums'
 import { GetSession } from '../__generated__/GetSession'
 import { GET_SESSION } from './Session'
-import ErrorBoundary from './ErrorBoundary'
 
 const checkSource = require('../images/icons/check_white.svg')
 const closeSource = require('../images/icons/close_white.svg')
@@ -198,80 +197,78 @@ const ReviewCollabRequest: React.FC<Props> = ({ collabId }) => {
   }
 
   return (
-    <ErrorBoundary message="Could not load the collab details">
-      <Styles>
-        {/* Show collab request details */}
-        <Box style={{ display: 'inline-block' }}>
-          <Box mt="2rem">Quote (in US Dollars)</Box>
-          <Flex flexDirection="row" alignItems="center">
-            <Price>${collab.quote}</Price>
-            <Box ml="1rem">
-              + ${(collab.quote * PLATFORM_COMMISSION_PERCENTAGE) / 100} platform fees
-            </Box>
-          </Flex>
-          <InfoCard
-            message={`Based on the influencer's stats, we recommend that you pay him $${getRecommendedQuote()}. You can negotiate by sending him a message.`}
-          />
-          <Box mt="1rem" mb="0.5rem">
-            Message
+    <Styles>
+      {/* Show collab request details */}
+      <Box style={{ display: 'inline-block' }}>
+        <Box mt="2rem">Quote (in US Dollars)</Box>
+        <Flex flexDirection="row" alignItems="center">
+          <Price>${collab.quote}</Price>
+          <Box ml="1rem">
+            + ${(collab.quote * PLATFORM_COMMISSION_PERCENTAGE) / 100} platform fees
           </Box>
-          <MessageBubble isFromMe={false}>{collab.message}</MessageBubble>
-        </Box>
-        {/* Review collab request (accept, deny or negotiate) */}
-        <Flex flexDirection="row" justifyContent="space-between" mt="2rem" alignItems="baseline">
-          {[CollabStatus.REQUEST, CollabStatus.DENIED].includes(collab.status) ? (
-            <Flex flexDirection="row" justifyContent="space-between">
-              {collab && showContactButton()}
-              <button
-                disabled={!!isDummy}
-                className="action accept"
-                type="button"
-                onClick={() => handleApplicationDecision(ReviewCollabDecision.ACCEPT)}
-              >
-                <p>
-                  Accept and pay $
-                  {collab.quote + (collab.quote * PLATFORM_COMMISSION_PERCENTAGE) / 100}
-                </p>
-                <img src={checkSource} alt="accept" />
-              </button>
-              <button
-                disabled={!!isDummy}
-                className="action refuse"
-                type="button"
-                onClick={() => handleApplicationDecision(ReviewCollabDecision.DENY)}
-              >
-                <p>Deny</p>
-                <img src={closeSource} alt="deny" />
-              </button>
-            </Flex>
-          ) : (
-            <>
-              {showContactButton()}
-              {collab.status !== CollabStatus.DONE && (
-                <FormSelect
-                  value={getCurrentDecision()}
-                  disabled={!!isDummy}
-                  onChange={e => {
-                    reviewCollabApplication({
-                      variables: {
-                        collabId: collabId,
-                        decision: e.target.value as ReviewCollabDecision,
-                      },
-                    })
-                  }}
-                >
-                  {possibleReviewCollabDecisions.map(_possibleDecision => (
-                    <option value={_possibleDecision} key={_possibleDecision}>
-                      {showReviewCollabDecision(_possibleDecision)}
-                    </option>
-                  ))}
-                </FormSelect>
-              )}
-            </>
-          )}
         </Flex>
-      </Styles>
-    </ErrorBoundary>
+        <InfoCard
+          message={`Based on the influencer's stats, we recommend that you pay him $${getRecommendedQuote()}. You can negotiate by sending him a message.`}
+        />
+        <Box mt="1rem" mb="0.5rem">
+          Message
+        </Box>
+        <MessageBubble isFromMe={false}>{collab.message}</MessageBubble>
+      </Box>
+      {/* Review collab request (accept, deny or negotiate) */}
+      <Flex flexDirection="row" justifyContent="space-between" mt="2rem" alignItems="baseline">
+        {[CollabStatus.REQUEST, CollabStatus.DENIED].includes(collab.status) ? (
+          <Flex flexDirection="row" justifyContent="space-between">
+            {collab && showContactButton()}
+            <button
+              disabled={!!isDummy}
+              className="action accept"
+              type="button"
+              onClick={() => handleApplicationDecision(ReviewCollabDecision.ACCEPT)}
+            >
+              <p>
+                Accept and pay $
+                {collab.quote + (collab.quote * PLATFORM_COMMISSION_PERCENTAGE) / 100}
+              </p>
+              <img src={checkSource} alt="accept" />
+            </button>
+            <button
+              disabled={!!isDummy}
+              className="action refuse"
+              type="button"
+              onClick={() => handleApplicationDecision(ReviewCollabDecision.DENY)}
+            >
+              <p>Deny</p>
+              <img src={closeSource} alt="deny" />
+            </button>
+          </Flex>
+        ) : (
+          <>
+            {showContactButton()}
+            {collab.status !== CollabStatus.DONE && (
+              <FormSelect
+                value={getCurrentDecision()}
+                disabled={!!isDummy}
+                onChange={e => {
+                  reviewCollabApplication({
+                    variables: {
+                      collabId: collabId,
+                      decision: e.target.value as ReviewCollabDecision,
+                    },
+                  })
+                }}
+              >
+                {possibleReviewCollabDecisions.map(_possibleDecision => (
+                  <option value={_possibleDecision} key={_possibleDecision}>
+                    {showReviewCollabDecision(_possibleDecision)}
+                  </option>
+                ))}
+              </FormSelect>
+            )}
+          </>
+        )}
+      </Flex>
+    </Styles>
   )
 }
 
