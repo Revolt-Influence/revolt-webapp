@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { RouteComponentProps, withRouter } from 'react-router-dom'
 import { Flex, Box } from '@rebass/grid'
 import ErrorCard from '../components/ErrorCard'
-import CreatorCollabRequestForm from '../components/CreatorCollabRequestForm'
+import SubmitCollabRequest from '../components/SubmitCollabRequest'
 import { ContainerBox } from '../styles/grid'
 import CreatorCampaignPresentation, {
   CREATOR_CAMPAIGN_PRESENTATION_FRAGMENT,
@@ -70,7 +70,7 @@ const CreatorCampaign: React.FC<Props> = ({ match }) => {
   })
   const [tab, setTab] = useState<ProductTab>(ProductTab.PRESENTATION)
 
-  usePageTitle(campaign && campaign.product.name)
+  usePageTitle(campaign == null ? 'Game' : campaign.product.name)
 
   if (loading) {
     return <Loader fullScreen />
@@ -110,7 +110,7 @@ const CreatorCampaign: React.FC<Props> = ({ match }) => {
         <MainButton
           onClick={() => changeTab(ProductTab.APPLY)}
           noMargin
-          disabled={session.creator.status !== CreatorStatus.VERIFIED}
+          disabled={session.creator.status === CreatorStatus.BLOCKED}
         >
           Apply
         </MainButton>
@@ -146,7 +146,7 @@ const CreatorCampaign: React.FC<Props> = ({ match }) => {
       case ProductTab.PRESENTATION:
         return showPresentation()
       case ProductTab.APPLY:
-        return <CreatorCollabRequestForm brand={campaign.brand.name} campaignId={campaign._id} />
+        return <SubmitCollabRequest brand={campaign.brand.name} campaignId={campaign._id} />
       case ProductTab.SUBMIT:
         return <SubmitCreatorReviews collabId={linkedCollab._id} />
       case ProductTab.UPDATE_QUOTE:
@@ -172,7 +172,7 @@ const CreatorCampaign: React.FC<Props> = ({ match }) => {
           {showActionButton()}
         </Flex>
         {/* Eventual info message */}
-        {session.creator.status !== CreatorStatus.VERIFIED && (
+        {session.creator.status === CreatorStatus.BLOCKED && (
           <Box mt={['1rem', 0, 0]}>
             <NotificationCard
               nature="info"

@@ -10,6 +10,7 @@ import ConnectCreatorYoutube from '../components/ConnectCreatorYoutube'
 import UpdateCreatorContactInfo from '../components/UpdateCreatorContactInfo'
 import Session from '../components/Session'
 import ChangePassword from '../components/ChangePassword'
+import CreatorPaymentsOverview from '../components/CreatorPaymentsOverview'
 
 const CreatorAccount: React.FC<{}> = () => {
   usePageTitle('My account')
@@ -34,6 +35,10 @@ const CreatorAccount: React.FC<{}> = () => {
           {/* Change password */}
           <SplitView title="My password">
             <ChangePassword />
+          </SplitView>
+          {/* Payments overview */}
+          <SplitView title="Payments">
+            <CreatorPaymentsOverview />
           </SplitView>
           {/* Session */}
           <SplitView title="My session">

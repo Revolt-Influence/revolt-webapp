@@ -75,10 +75,10 @@ export interface GetCampaignRequestedCollabs_campaign_collabs_creator_youtube {
    */
   picture: string;
   videoCount: number;
+  medianViews: number;
   subscriberCount: number;
   videos: GetCampaignRequestedCollabs_campaign_collabs_creator_youtube_videos[];
   audience: GetCampaignRequestedCollabs_campaign_collabs_creator_youtube_audience;
-  medianViews: number;
   estimatedCpm: number;
 }
 

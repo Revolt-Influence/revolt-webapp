@@ -104,7 +104,7 @@ const CreatorCollabCard: React.FC<Props> = ({ collab }) => {
   const { campaign } = collab
 
   return (
-    <Link to={`/creator/games/${campaign._id}`}>
+    <Link to={`/creator/games/${campaign._id}`} style={{ display: 'block' }}>
       <Style mt={[0, 0, 0]} p={[0, 0, 0]}>
         <ImageWrapper
           src={campaign.product.pictures[0]}

@@ -16,6 +16,10 @@ export interface GetSession_session_user {
    */
   email: string;
   /**
+   * Whether the user has entered a payment method
+   */
+  hasPaymentMethod: boolean;
+  /**
    * Only used to score the lead, not a relation
    */
   company: string;

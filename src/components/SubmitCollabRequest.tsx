@@ -49,7 +49,7 @@ interface Props {
   campaignId: string
 }
 
-const CreatorCollabRequestForm: React.FC<Props> = ({ brand, campaignId }) => {
+const SubmitCollabRequest: React.FC<Props> = ({ brand, campaignId }) => {
   const [message, setMessage] = useState<string>('')
   const [acceptsTerms, setAcceptsTerms] = useState<boolean>(false)
   const [quote, setQuote] = useState<number>(0)
@@ -102,12 +102,12 @@ const CreatorCollabRequestForm: React.FC<Props> = ({ brand, campaignId }) => {
   return (
     <SplitView title="Apply" ratio={4 / 12} noBorder>
       <FormInputLabel>
-        Motivation message for {brand}
+        Your proposition for {brand}
         <FormTextarea
           hasLabel
           value={message}
           onChange={e => setMessage(e.target.value)}
-          placeholder="Requests with a message a more likely to be accepted"
+          placeholder={`Hi ${brand}, I'd love to do a 20-minute let's play video...`}
         />
       </FormInputLabel>
       <InfoCard
@@ -146,7 +146,7 @@ const CreatorCollabRequestForm: React.FC<Props> = ({ brand, campaignId }) => {
       )}
       {quote > 0 && !hasConnectedStripe ? (
         <Box>
-          <WarningCard message="To start getting paid for you collabs, you need to connect a bank account where we can send you money. We use Stripe to handle secure payments" />
+          <WarningCard message="To start getting paid for you collabs, you need to connect a bank account where we can send you money. We use Stripe to handle secure payments." />
           <MainLinkExternal href={getStripeAuthLink()}>Start accepting payments</MainLinkExternal>
         </Box>
       ) : (
@@ -163,4 +163,4 @@ const CreatorCollabRequestForm: React.FC<Props> = ({ brand, campaignId }) => {
   )
 }
 
-export default CreatorCollabRequestForm
+export default SubmitCollabRequest

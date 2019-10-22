@@ -17,6 +17,8 @@ import Loader from './Loader'
 import ReviewCard from './ReviewCard'
 import InfoCard from './InfoCard'
 import { dummyReview } from '../utils/dummyData'
+import { CollabStatus } from '../__generated__/globalTypes'
+import { PLATFORM_COMMISSION_PERCENTAGE } from './ReviewCollabRequest'
 
 const Stats = styled(Box)`
   background: ${palette.blue._100};
@@ -39,6 +41,11 @@ const GET_CAMPAIGN_REVIEWS = gql`
   query GetCampaignReviews($campaignId: String!) {
     campaign(id: $campaignId) {
       _id
+      collabs {
+        _id
+        status
+        quote
+      }
       reviews {
         _id
         format
@@ -70,8 +77,15 @@ const CampaignReviews: React.FC<Props> = ({ campaignId }) => {
   if (error) {
     return <ErrorCard />
   }
-  const { reviews } = campaign
+  const { reviews, collabs } = campaign
 
+  const totalSpentBudget = collabs
+    .filter(_collab => _collab.status === CollabStatus.DONE)
+    .reduce(
+      (quotesSum, _collab) =>
+        quotesSum + _collab.quote * ((100 + PLATFORM_COMMISSION_PERCENTAGE) / 100),
+      0
+    )
   const totalLikes = reviews.reduce((total, _review) => total + (_review.likeCount || 0), 0)
   const totalComments = reviews.reduce((total, _review) => total + (_review.commentCount || 0), 0)
   const earnedMediaValue = (totalLikes + totalComments) * 0.3
@@ -94,8 +108,12 @@ const CampaignReviews: React.FC<Props> = ({ campaignId }) => {
       value: approx(totalLikes + totalComments),
     },
     {
+      name: 'Budget spent',
+      value: `$${approx(totalSpentBudget)}`,
+    },
+    {
       name: 'Earned media value',
-      value: `${approx(earnedMediaValue)}€`,
+      value: `$${approx(earnedMediaValue)}`,
     },
   ]
 

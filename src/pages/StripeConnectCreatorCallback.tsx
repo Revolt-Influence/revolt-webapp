@@ -12,7 +12,7 @@ import {
 import ErrorCard from '../components/ErrorCard'
 import SuccessCard from '../components/SuccessCard'
 import Loader from '../components/Loader'
-import { MainLink, MainButton } from '../styles/Button'
+import { MainButton, MainLinkExternal } from '../styles/Button'
 
 const CREATE_STRIPE_CONNECTED_ACCOUNT = gql`
   mutation CreateStripeConnectedAccount($code: String!) {
@@ -50,7 +50,8 @@ const StripeConnectCreatorCallback: React.FC<{}> = () => {
           <SuccessCard message="Your bank details were saved" />
           <Title>Congratulations!</Title>
           <p>You're now ready to get paid for your collabs.</p>
-          <MainLink to="/creator/games">Send quotes</MainLink>
+          {/* HTML link, not react-router, to prevent weird bug */}
+          <MainLinkExternal href="/creator/games">Send quotes</MainLinkExternal>
         </>
       )}
     </ContainerBox>

@@ -12,7 +12,7 @@ export const dummyYoutuber: GetCampaignRequestedCollabs_campaign_collabs_creator
   _id: 'DUMMY_YOUTUBER_1',
   videoCount: 12,
   name: 'Dummy YouTube Channel',
-  estimatedCpm: 32,
+  estimatedCpm: 5,
   medianViews: 34500,
   picture:
     'https://res.cloudinary.com/revolt/image/upload/v1570798076/creator_pictures/arfcvup1uhfctcmvuuhf.svg',
@@ -79,7 +79,7 @@ export const dummyCollabRequest: GetCampaignRequestedCollabs_campaign_collabs = 
     ...dummyCreator,
     youtube: {
       ...dummyCreator.youtube,
-      estimatedCpm: 32,
+      estimatedCpm: 5,
       medianViews: 34500,
     },
   },

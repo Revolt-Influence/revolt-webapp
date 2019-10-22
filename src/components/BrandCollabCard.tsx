@@ -7,7 +7,7 @@ import { palette } from '../utils/colors'
 import { setFont, shadow } from '../utils/styles'
 import { capitalizeFirstLetter } from '../utils/strings'
 import { Row } from '../utils/grid'
-import { REVIEW_COLLAB_APPLICATION } from './CampaignCollabRequests'
+import { REVIEW_COLLAB_APPLICATION } from './ReviewCollabRequest'
 import { Link } from 'react-router-dom'
 import { CollabStatus, ReviewCollabDecision } from '../__generated__/globalTypes'
 import { useMutation } from '@apollo/react-hooks'
@@ -193,7 +193,7 @@ const BrandCollabCard: React.FC<Props> = ({ collab, isDummy }) => {
 
   const showContactButton = () => (
     <Link
-      className="action contact disabled"
+      className={`action contact ${isDummy ? 'disabled' : ''}`}
       type="button"
       style={isDummy && { pointerEvents: 'none' }}
       to={isDummy ? '#' : `/brand/messages/${conversation._id}`}

@@ -18,6 +18,7 @@ export const SESSION_FRAGMENT = gql`
     user {
       _id
       email
+      hasPaymentMethod
       company
       plan
       isAdmin
@@ -95,8 +96,8 @@ const Session: React.FC<{}> = () => {
 
   return (
     <div>
-      <Box mb="1rem">You are connected as {email}</Box>
-      {logoutStatus.error ? <ErrorCard message="Could not logout" /> : null}
+      <Box mb="1rem">You are logged in as {email}</Box>
+      {logoutStatus.error && <ErrorCard message="Could not logout" />}
       <MainButton onClick={() => logout()} disabled={logoutStatus.loading} noMargin inverted>
         {logoutStatus.loading ? 'Logging out...' : 'Log out'}
       </MainButton>

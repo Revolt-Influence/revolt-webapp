@@ -57,7 +57,11 @@ interface Props {
 const CreatorCampaignCard: React.FC<Props> = ({ campaign }) => {
   const { product, brand } = campaign
   return (
-    <Link to={`/creator/games/${campaign._id}`} onClick={() => window.scrollTo(0, 0)}>
+    <Link
+      to={`/creator/games/${campaign._id}`}
+      onClick={() => window.scrollTo(0, 0)}
+      style={{ display: 'block' }}
+    >
       <Style>
         <ImageWrapper
           src={product.pictures[0]}

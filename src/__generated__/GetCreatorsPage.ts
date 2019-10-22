@@ -67,6 +67,7 @@ export interface GetCreatorsPage_creators_items_youtube {
    */
   picture: string;
   videoCount: number;
+  medianViews: number;
   subscriberCount: number;
   videos: GetCreatorsPage_creators_items_youtube_videos[];
   audience: GetCreatorsPage_creators_items_youtube_audience;

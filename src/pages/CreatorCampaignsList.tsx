@@ -69,14 +69,6 @@ const CreatorCampaignsList: React.FC<RouteComponentProps> = ({ location, history
         <>
           <Title isCentered={deviceType !== 'desktop'}>Games</Title>
           <>
-            {session.creator.status === CreatorStatus.UNVERIFIED && (
-              <Box mb="2rem" px={['2rem', 0, 0]}>
-                <NotificationCard
-                  nature="info"
-                  message="Your profile hasn't been verified by our team yet. You can't apply to receive games for now"
-                />
-              </Box>
-            )}
             {session.creator.status === CreatorStatus.BLOCKED && (
               <Box mb="2rem" px={['2rem', 0, 0]}>
                 <NotificationCard

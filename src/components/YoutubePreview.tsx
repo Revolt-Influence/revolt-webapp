@@ -16,6 +16,7 @@ const YOUTUBER_PROFILE_FRAGMENT = gql`
     name
     picture
     videoCount
+    medianViews
     subscriberCount
     videos {
       title
@@ -61,13 +62,13 @@ const YoutubePreview: React.FC<Props> = ({ youtuberId }) => {
     return <ErrorCard message="Could not preview YouTube channel" />
   }
   const {
-    youtuber: { videos, subscriberCount, videoCount, name },
+    youtuber: { videos, subscriberCount, name, medianViews },
   } = data
   return (
     <SocialAccountPreview
       logo={youtubeSource}
       network="YouTube"
-      stats={`${approx(subscriberCount)} subscribers, ${videoCount} videos`}
+      stats={`${approx(subscriberCount)} subscribers, ${approx(medianViews)} potential views`}
       username={name}
     >
       <Flex
