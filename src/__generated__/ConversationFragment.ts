@@ -2,6 +2,8 @@
 /* eslint-disable */
 // This file was automatically generated and should not be edited.
 
+import { CollabStatus } from "./globalTypes";
+
 // ====================================================
 // GraphQL fragment: ConversationFragment
 // ====================================================
@@ -88,6 +90,34 @@ export interface ConversationFragment_brand {
   logo: string;
 }
 
+export interface ConversationFragment_collabs_campaign {
+  __typename: "Campaign";
+  /**
+   * Mongoose generated ID
+   */
+  _id: string;
+}
+
+export interface ConversationFragment_collabs {
+  __typename: "Collab";
+  /**
+   * Mongoose generated ID
+   */
+  _id: string;
+  /**
+   * Advancement of the collab
+   */
+  status: CollabStatus;
+  /**
+   * How much the influencer wants to be paid in USD
+   */
+  quote: number;
+  /**
+   * The campaign the collab is a part of
+   */
+  campaign: ConversationFragment_collabs_campaign;
+}
+
 export interface ConversationFragment {
   __typename: "Conversation";
   /**
@@ -107,4 +137,5 @@ export interface ConversationFragment {
    * Brand that talks to a creator
    */
   brand: ConversationFragment_brand;
+  collabs: ConversationFragment_collabs[];
 }

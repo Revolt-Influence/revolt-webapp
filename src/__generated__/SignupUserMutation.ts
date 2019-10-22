@@ -16,6 +16,10 @@ export interface SignupUserMutation_signupUser_user {
    */
   email: string;
   /**
+   * Whether the user has entered a payment method
+   */
+  hasPaymentMethod: boolean;
+  /**
    * Only used to score the lead, not a relation
    */
   company: string;
@@ -59,6 +63,10 @@ export interface SignupUserMutation_signupUser_creator {
    * Whether the influencer was validated by an admin
    */
   status: CreatorStatus;
+  /**
+   * Whether the creator has a Stripe connect account
+   */
+  hasConnectedStripe: boolean;
   /**
    * Youtube account linked to the creator
    */

@@ -65,6 +65,7 @@ export interface YoutuberProfileFragment {
    */
   picture: string;
   videoCount: number;
+  medianViews: number;
   subscriberCount: number;
   videos: YoutuberProfileFragment_videos[];
   audience: YoutuberProfileFragment_audience;

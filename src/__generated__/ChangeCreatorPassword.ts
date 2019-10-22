@@ -7,7 +7,10 @@
 // ====================================================
 
 export interface ChangeCreatorPassword_changeCreatorPassword {
-  __typename: "User";
+  __typename: "Creator";
+  /**
+   * Mongoose generated ID
+   */
   _id: string;
 }
 

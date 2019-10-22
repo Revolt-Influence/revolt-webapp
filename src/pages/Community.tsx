@@ -8,10 +8,9 @@ import Loader from '../components/Loader'
 import FullHeightColumns from '../components/FullHeightColumns'
 import SelectableCard from '../components/SelectableCard'
 import { Flex, Box } from '@rebass/grid'
-import { TextButton } from '../styles/Button'
+import { TextButton, MainButton } from '../styles/Button'
 import CreatorProfile, { CREATOR_PROFILE_FRAGMENT } from '../components/CreatorProfile'
 import { Title } from '../styles/Text'
-import Dropdown from '../components/Dropdown'
 import gql from 'graphql-tag'
 import { useQuery, useMutation } from '@apollo/react-hooks'
 import { GetCreatorsPage, GetCreatorsPageVariables } from '../__generated__/GetCreatorsPage'
@@ -19,6 +18,7 @@ import { CreatorStatus } from '../__generated__/globalTypes'
 import ErrorCard from '../components/ErrorCard'
 import { SetCreatorStatus, SetCreatorStatusVariables } from '../__generated__/SetCreatorStatus'
 import { showCreatorStatus } from '../utils/enums'
+import { FormSelect } from '../styles/Form'
 
 const GET_CREATORS_PAGE = gql`
   query GetCreatorsPage($page: Float!, $status: CreatorStatus!) {
@@ -68,15 +68,15 @@ const Community: React.FC<RouteComponentProps> = ({ location }) => {
     },
   })
 
-  const [setCreatorStatus] = useMutation<SetCreatorStatus, SetCreatorStatusVariables>(
-    SET_CREATOR_STATUS,
-    {
-      refetchQueries: [
-        { query: GET_CREATORS_PAGE, variables: { page: currentPage, status: filter } },
-      ],
-      awaitRefetchQueries: true,
-    }
-  )
+  const [setCreatorStatus, { loading: setStatusLoading }] = useMutation<
+    SetCreatorStatus,
+    SetCreatorStatusVariables
+  >(SET_CREATOR_STATUS, {
+    refetchQueries: [
+      { query: GET_CREATORS_PAGE, variables: { page: currentPage, status: filter } },
+    ],
+    awaitRefetchQueries: true,
+  })
 
   if (loading) {
     return <Loader fullScreen />
@@ -120,19 +120,19 @@ const Community: React.FC<RouteComponentProps> = ({ location }) => {
             >
               <Title>Community</Title>
               <Box flex={1} style={{ overflowY: 'scroll' }} pb="1rem">
-                <Dropdown
-                  name="Status"
-                  selection={filter}
-                  options={
-                    [
-                      CreatorStatus.UNVERIFIED,
-                      CreatorStatus.VERIFIED,
-                      CreatorStatus.BLOCKED,
-                    ] as CreatorStatus[]
-                  }
-                  handleChange={handleFilterChange}
-                  withMargin
-                />
+                Status:{' '}
+                <FormSelect
+                  value={filter}
+                  onChange={e => handleFilterChange(e.target.value as CreatorStatus)}
+                >
+                  {[CreatorStatus.UNVERIFIED, CreatorStatus.VERIFIED, CreatorStatus.BLOCKED].map(
+                    _status => (
+                      <option key={_status} value={_status}>
+                        {showCreatorStatus(_status)}
+                      </option>
+                    )
+                  )}
+                </FormSelect>
                 {currentPage > 1 && (
                   <TextButton onClick={() => setCurrentPage(currentPage - 1)}>
                     See more recents
@@ -161,11 +161,31 @@ const Community: React.FC<RouteComponentProps> = ({ location }) => {
           rightComponent={() => (
             <Box p="2rem" flex={1}>
               {selectedId && (
-                <CreatorProfile
-                  creatorId={selectedId}
-                  handleAccept={() => handleSetStatus(CreatorStatus.VERIFIED)}
-                  handleRefuse={() => handleSetStatus(CreatorStatus.BLOCKED)}
-                />
+                <>
+                  <Flex flexDirection="row" mb="2rem">
+                    <Box mr="2rem">
+                      <MainButton
+                        nature="success"
+                        noMargin
+                        inverted
+                        onClick={() => handleSetStatus(CreatorStatus.VERIFIED)}
+                        disabled={setStatusLoading}
+                      >
+                        Accept
+                      </MainButton>
+                    </Box>
+                    <MainButton
+                      nature="danger"
+                      noMargin
+                      inverted
+                      onClick={() => handleSetStatus(CreatorStatus.BLOCKED)}
+                      disabled={setStatusLoading}
+                    >
+                      Refuse
+                    </MainButton>
+                  </Flex>
+                  <CreatorProfile creatorId={selectedId} />
+                </>
               )}
             </Box>
           )}

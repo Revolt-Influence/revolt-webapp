@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { RouteComponentProps, withRouter } from 'react-router-dom'
 import { Flex, Box } from '@rebass/grid'
 import ErrorCard from '../components/ErrorCard'
-import CreatorCollabRequestForm from '../components/CreatorCollabRequestForm'
+import SubmitCollabRequest from '../components/SubmitCollabRequest'
 import { ContainerBox } from '../styles/grid'
 import CreatorCampaignPresentation, {
   CREATOR_CAMPAIGN_PRESENTATION_FRAGMENT,
@@ -21,10 +21,12 @@ import {
   GetCreatorCampaignPageVariables,
 } from '../__generated__/GetCreatorCampaignPage'
 import { CreatorStatus, CollabStatus } from '../__generated__/globalTypes'
+import UpdateQuoteForm from '../components/UpdateQuoteForm'
 
-enum GameTab {
+enum ProductTab {
   PRESENTATION = 'presentation',
   APPLY = 'apply',
+  UPDATE_QUOTE = 'update quote',
   SUBMIT = 'submit',
 }
 
@@ -42,6 +44,7 @@ const GET_CREATOR_CAMPAIGN_PAGE = gql`
     collabs {
       _id
       status
+      quote
       campaign {
         _id
       }
@@ -65,9 +68,9 @@ const CreatorCampaign: React.FC<Props> = ({ match }) => {
   } = useQuery<GetCreatorCampaignPage, GetCreatorCampaignPageVariables>(GET_CREATOR_CAMPAIGN_PAGE, {
     variables: { campaignId },
   })
-  const [tab, setTab] = useState<GameTab>(GameTab.PRESENTATION)
+  const [tab, setTab] = useState<ProductTab>(ProductTab.PRESENTATION)
 
-  usePageTitle(campaign && campaign.product.name)
+  usePageTitle(campaign == null ? 'Game' : campaign.product.name)
 
   if (loading) {
     return <Loader fullScreen />
@@ -95,32 +98,43 @@ const CreatorCampaign: React.FC<Props> = ({ match }) => {
 
   const showPresentation = () => <CreatorCampaignPresentation campaignId={campaign._id} />
 
-  const changeTab = (newTab: GameTab) => {
+  const changeTab = (newTab: ProductTab) => {
     window.scrollTo(0, 0)
     setTab(newTab)
   }
 
   const showActionButton = () => {
     // Fresh new campaign, suggest applying
-    if (tab === GameTab.PRESENTATION && !alreadyInCollab) {
+    if (tab === ProductTab.PRESENTATION && !alreadyInCollab) {
       return (
         <MainButton
-          onClick={() => changeTab(GameTab.APPLY)}
+          onClick={() => changeTab(ProductTab.APPLY)}
           noMargin
-          disabled={session.creator.status !== CreatorStatus.VERIFIED}
+          disabled={session.creator.status === CreatorStatus.BLOCKED}
         >
           Apply
         </MainButton>
       )
     }
     if (
-      tab === GameTab.PRESENTATION &&
+      tab === ProductTab.PRESENTATION &&
       alreadyInCollab &&
       (linkedCollab.status === CollabStatus.SENT || linkedCollab.status === CollabStatus.ACCEPTED)
     ) {
       return (
-        <MainButton onClick={() => changeTab(GameTab.SUBMIT)} noMargin>
+        <MainButton onClick={() => changeTab(ProductTab.SUBMIT)} noMargin>
           Submit my review
+        </MainButton>
+      )
+    }
+    if (
+      tab === ProductTab.PRESENTATION &&
+      alreadyInCollab &&
+      (linkedCollab.status === CollabStatus.REQUEST || linkedCollab.status === CollabStatus.DENIED)
+    ) {
+      return (
+        <MainButton onClick={() => changeTab(ProductTab.UPDATE_QUOTE)} noMargin>
+          Update my quote
         </MainButton>
       )
     }
@@ -128,28 +142,18 @@ const CreatorCampaign: React.FC<Props> = ({ match }) => {
   }
 
   const showCurrentTab = () => {
-    if (tab === GameTab.PRESENTATION) {
-      return showPresentation()
-    }
-
-    // Apply to campaign
-    if (tab === GameTab.APPLY) {
-      return <CreatorCollabRequestForm brand={campaign.brand.name} campaignId={campaign._id} />
-    }
-
-    // Submit review
-    if (tab === GameTab.SUBMIT) {
-      if (
-        alreadyInCollab &&
-        linkedCollab.status !== CollabStatus.REQUEST &&
-        linkedCollab.status !== CollabStatus.DENIED
-      ) {
+    switch (tab) {
+      case ProductTab.PRESENTATION:
+        return showPresentation()
+      case ProductTab.APPLY:
+        return <SubmitCollabRequest brand={campaign.brand.name} campaignId={campaign._id} />
+      case ProductTab.SUBMIT:
         return <SubmitCreatorReviews collabId={linkedCollab._id} />
-      }
+      case ProductTab.UPDATE_QUOTE:
+        return <UpdateQuoteForm collab={linkedCollab} />
+      default:
+        return showPresentation()
     }
-
-    // Default (should not happen)
-    return showPresentation()
   }
 
   return (
@@ -168,7 +172,7 @@ const CreatorCampaign: React.FC<Props> = ({ match }) => {
           {showActionButton()}
         </Flex>
         {/* Eventual info message */}
-        {session.creator.status !== CreatorStatus.VERIFIED && (
+        {session.creator.status === CreatorStatus.BLOCKED && (
           <Box mt={['1rem', 0, 0]}>
             <NotificationCard
               nature="info"
@@ -183,9 +187,9 @@ const CreatorCampaign: React.FC<Props> = ({ match }) => {
         <Box mt="2rem">{showActionButton()}</Box>
 
         {/* Go back to main tab (presentation) if not on main tab */}
-        {tab !== GameTab.PRESENTATION && (
-          <Flex justifyContent="center" mt="2rem">
-            <TextButton onClick={() => changeTab(GameTab.PRESENTATION)}>
+        {tab !== ProductTab.PRESENTATION && (
+          <Flex mt="2rem">
+            <TextButton onClick={() => changeTab(ProductTab.PRESENTATION)} noMargin>
               Back to the game presentation
             </TextButton>
           </Flex>

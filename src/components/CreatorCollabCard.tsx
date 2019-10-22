@@ -56,6 +56,7 @@ export const CREATOR_COLLAB_FRAGMENT = gql`
   fragment CreatorCollabFragment on Collab {
     _id
     status
+    quote
     updatedAt
     campaign {
       ...CreatorCampaignPresentationFragment
@@ -103,7 +104,7 @@ const CreatorCollabCard: React.FC<Props> = ({ collab }) => {
   const { campaign } = collab
 
   return (
-    <Link to={`/creator/games/${campaign._id}`}>
+    <Link to={`/creator/games/${campaign._id}`} style={{ display: 'block' }}>
       <Style mt={[0, 0, 0]} p={[0, 0, 0]}>
         <ImageWrapper
           src={campaign.product.pictures[0]}

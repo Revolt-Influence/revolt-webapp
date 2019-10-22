@@ -78,6 +78,9 @@ const DroppedImagePreview = styled.div`
     margin-left: 2rem;
     transform: translateY(-2px);
     object-fit: contain;
+    &:only-child {
+      margin-left: 0;
+    }
   }
   p {
     ${truncateString('200px')}
@@ -207,17 +210,19 @@ const DropImage: React.FC<Props> = ({
             </FormSelect>
           )}
           <img className="preview" src={_image} alt="Game promo" />
-          <button
-            className="close"
-            onClick={e => {
-              e.stopPropagation()
-              e.preventDefault()
-              handleRemoveImage(e, _image)
-            }}
-            type="button"
-          >
-            <img src={closeSource} alt="close" className="close" />
-          </button>
+          {allowMultiple && (
+            <button
+              className="close"
+              onClick={e => {
+                e.stopPropagation()
+                e.preventDefault()
+                handleRemoveImage(e, _image)
+              }}
+              type="button"
+            >
+              <img src={closeSource} alt="close" className="close" />
+            </button>
+          )}
         </DroppedImagePreview>
       ))}
     </Flex>

@@ -3,25 +3,22 @@ import { Box } from '@rebass/grid'
 import moment from 'moment'
 import { ContainerBox } from '../styles/grid'
 import { useToggle } from '../utils/hooks'
-import CreatorProfile, { GET_CREATOR, GET_COLLAB } from './CreatorProfile'
+import CreatorProfile, { GET_CREATOR } from './CreatorProfile'
+import { GET_COLLAB } from './ReviewCollabRequest'
 import ErrorBoundary from './ErrorBoundary'
 import CheckBox from './CheckBox'
 import FullHeightColumns from './FullHeightColumns'
 import SelectableCard from './SelectableCard'
 import gql from 'graphql-tag'
-import { useQuery, useMutation } from '@apollo/react-hooks'
+import { useQuery } from '@apollo/react-hooks'
 import {
   GetCampaignRequestedCollabs,
   GetCampaignRequestedCollabsVariables,
   GetCampaignRequestedCollabs_campaign_collabs,
 } from '../__generated__/GetCampaignRequestedCollabs'
-import { CollabStatus, ReviewCollabDecision, CreatorStatus } from '../__generated__/globalTypes'
+import { CollabStatus, CreatorStatus } from '../__generated__/globalTypes'
 import Loader from './Loader'
 import ErrorCard from './ErrorCard'
-import {
-  ReviewCollabApplication,
-  ReviewCollabApplicationVariables,
-} from '../__generated__/ReviewCollabApplication'
 import InfoCard from './InfoCard'
 import { YOUTUBER_PROFILE_FRAGMENT, GET_YOUTUBER } from './YoutubePreview'
 import { dummyCollabRequest, dummyCreator } from '../utils/dummyData'
@@ -40,6 +37,7 @@ const GET_CAMPAIGN_REQUESTED_COLLABS = gql`
         status
         createdAt
         message
+        quote
         conversation {
           _id
         }
@@ -52,22 +50,14 @@ const GET_CAMPAIGN_REQUESTED_COLLABS = gql`
           language
           youtube {
             ...YoutuberProfileFragment
+            medianViews
+            estimatedCpm
           }
         }
       }
     }
   }
   ${YOUTUBER_PROFILE_FRAGMENT}
-`
-
-export const REVIEW_COLLAB_APPLICATION = gql`
-  mutation ReviewCollabApplication($collabId: String!, $decision: ReviewCollabDecision!) {
-    reviewCollabApplication(decision: $decision, collabId: $collabId) {
-      _id
-      status
-      updatedAt
-    }
-  }
 `
 
 interface Props {
@@ -89,12 +79,6 @@ const CampaignPropositions: React.FC<Props> = ({ campaignId }) => {
   const [showRefused, toggleShowRefused] = useToggle(false)
 
   const dummyIsShown: boolean = !loading && !error && campaign.collabs.length === 0
-
-  // Prepare decision request
-  const [reviewCollabApplication, reviewStatus] = useMutation<
-    ReviewCollabApplication,
-    ReviewCollabApplicationVariables
-  >(REVIEW_COLLAB_APPLICATION)
 
   const [selectedId, setSelectedId] = useState(collabsApplied.length && collabsApplied[0]._id)
   useEffect(() => {
@@ -168,14 +152,6 @@ const CampaignPropositions: React.FC<Props> = ({ campaignId }) => {
     return <ErrorCard message="Could not show collab requests" />
   }
 
-  const handleApplicationDecision = (decision: ReviewCollabDecision): void => {
-    if (!reviewStatus.loading && !dummyIsShown) {
-      reviewCollabApplication({
-        variables: { collabId: selectedId, decision },
-      })
-    }
-  }
-
   return (
     <ContainerBox mt="-2rem">
       <ErrorBoundary message="Could not show collab requests">
@@ -221,8 +197,6 @@ const CampaignPropositions: React.FC<Props> = ({ campaignId }) => {
                 <CreatorProfile
                   creatorId={selectedCreator._id}
                   collabId={selectedId}
-                  handleAccept={() => handleApplicationDecision(ReviewCollabDecision.ACCEPT)}
-                  handleRefuse={() => handleApplicationDecision(ReviewCollabDecision.DENY)}
                   isDummy={dummyIsShown}
                 />
               )}

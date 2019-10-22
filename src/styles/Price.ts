@@ -6,7 +6,7 @@ const Price = styled.div`
   display: inline-block;
   margin-top: 2px;
   color: ${palette.green._900};
-  border: 2px solid ${palette.green._300};
+  border: 2px solid ${palette.green._200};
   background: ${palette.green._100};
   padding: 4px 10px;
   border-radius: 8px;

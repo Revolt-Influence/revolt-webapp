@@ -3,7 +3,7 @@ import { Box } from '@rebass/grid'
 import NotificationCard from './NotificationCard'
 
 interface Props {
-  message: string
+  message?: string
   noMargin?: boolean
 }
 
@@ -12,5 +12,9 @@ const SuccessCard: React.FC<Props> = ({ message, noMargin }) => (
     <NotificationCard nature="success" message={message} />
   </Box>
 )
+
+SuccessCard.defaultProps = {
+  message: 'Done successfully',
+}
 
 export default SuccessCard

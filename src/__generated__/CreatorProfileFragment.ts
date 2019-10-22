@@ -67,6 +67,7 @@ export interface CreatorProfileFragment_youtube {
    */
   picture: string;
   videoCount: number;
+  medianViews: number;
   subscriberCount: number;
   videos: CreatorProfileFragment_youtube_videos[];
   audience: CreatorProfileFragment_youtube_audience;

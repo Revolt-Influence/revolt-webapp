@@ -8,6 +8,28 @@ import { CollabStatus } from "./globalTypes";
 // GraphQL query operation: GetCollab
 // ====================================================
 
+export interface GetCollab_collab_creator_youtube {
+  __typename: "Youtuber";
+  /**
+   * Mongoose generated ID
+   */
+  _id: string;
+  estimatedCpm: number;
+  medianViews: number;
+}
+
+export interface GetCollab_collab_creator {
+  __typename: "Creator";
+  /**
+   * Mongoose generated ID
+   */
+  _id: string;
+  /**
+   * Youtube account linked to the creator
+   */
+  youtube: GetCollab_collab_creator_youtube | null;
+}
+
 export interface GetCollab_collab_conversation {
   __typename: "Conversation";
   /**
@@ -31,6 +53,14 @@ export interface GetCollab_collab {
    */
   message: string;
   updatedAt: any;
+  /**
+   * How much the influencer wants to be paid in USD
+   */
+  quote: number;
+  /**
+   * The creator working on the collab
+   */
+  creator: GetCollab_collab_creator;
   /**
    * Conv where collab brand and creator can chat
    */

@@ -67,6 +67,7 @@ export interface AttachCreatorYoutube_attachCreatorYoutubeChannel_youtube {
    */
   picture: string;
   videoCount: number;
+  medianViews: number;
   subscriberCount: number;
   videos: AttachCreatorYoutube_attachCreatorYoutubeChannel_youtube_videos[];
   audience: AttachCreatorYoutube_attachCreatorYoutubeChannel_youtube_audience;

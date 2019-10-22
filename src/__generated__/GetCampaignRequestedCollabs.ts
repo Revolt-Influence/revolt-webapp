@@ -75,9 +75,11 @@ export interface GetCampaignRequestedCollabs_campaign_collabs_creator_youtube {
    */
   picture: string;
   videoCount: number;
+  medianViews: number;
   subscriberCount: number;
   videos: GetCampaignRequestedCollabs_campaign_collabs_creator_youtube_videos[];
   audience: GetCampaignRequestedCollabs_campaign_collabs_creator_youtube_audience;
+  estimatedCpm: number;
 }
 
 export interface GetCampaignRequestedCollabs_campaign_collabs_creator {
@@ -123,6 +125,10 @@ export interface GetCampaignRequestedCollabs_campaign_collabs {
    * The creator's motivation message for the brand
    */
   message: string;
+  /**
+   * How much the influencer wants to be paid in USD
+   */
+  quote: number;
   /**
    * Conv where collab brand and creator can chat
    */

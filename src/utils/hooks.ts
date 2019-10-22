@@ -247,6 +247,7 @@ export function useConversationsSocket() {
   useEffect(() => {
     const socket = socketRef.current
     const handleNewMessage = (newMessage: MessageFragment) => {
+      console.log('new message', newMessage)
       // When a new message arrives, add it to the Apollo cache for 2 queries.
       // Provide all the fields required by the Apollo cache
       const fullMessage: MessageFragment = {

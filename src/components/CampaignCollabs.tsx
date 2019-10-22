@@ -9,7 +9,6 @@ import { palette } from '../utils/colors'
 import ErrorBoundary from './ErrorBoundary'
 import { useQuery } from '@apollo/react-hooks'
 import { CollabStatus, Language, CreatorStatus } from '../__generated__/globalTypes'
-import Loader from './Loader'
 import ErrorCard from './ErrorCard'
 import {
   GetCampaignCollabs,
@@ -17,7 +16,8 @@ import {
 } from '../__generated__/GetCampaignCollabs'
 import { ContainerBox } from '../styles/grid'
 import { GetCollab, GetCollabVariables } from '../__generated__/GetCollab'
-import { GET_COLLAB, GET_CREATOR } from './CreatorProfile'
+import { GET_CREATOR } from './CreatorProfile'
+import { GET_COLLAB } from './ReviewCollabRequest'
 import { dummyDoneCollab, dummyYoutuber, dummyCreator } from '../utils/dummyData'
 import { GetCreator, GetCreatorVariables } from '../__generated__/GetCreator'
 import { GET_YOUTUBER } from './YoutubePreview'
@@ -153,7 +153,12 @@ const CampaignCollabs: React.FC<ICampaignCollabsProps> = ({ campaignId }) => {
     GetCampaignCollabsVariables
   >(GET_CAMPAIGN_COLLABS, { variables: { campaignId } })
 
-  const dummyIsShown: boolean = !loading && !error && campaign.collabs.length === 0
+  const dummyIsShown: boolean =
+    !loading &&
+    !error &&
+    campaign.collabs.filter(_collab =>
+      [CollabStatus.ACCEPTED, CollabStatus.SENT, CollabStatus.DONE].includes(_collab.status)
+    ).length === 0
   useEffect(() => {
     // Add dummy data to cache if they'll be displayed
     if (dummyIsShown) {
@@ -164,6 +169,15 @@ const CampaignCollabs: React.FC<ICampaignCollabsProps> = ({ campaignId }) => {
         data: {
           collab: {
             ...dummyDoneCollab,
+            quote: 120,
+            creator: {
+              ...dummyDoneCollab.creator,
+              youtube: {
+                ...dummyDoneCollab.creator.youtube,
+                estimatedCpm: 32,
+                medianViews: 34500,
+              },
+            },
             updatedAt: Date.now(),
           },
         },
@@ -194,7 +208,11 @@ const CampaignCollabs: React.FC<ICampaignCollabsProps> = ({ campaignId }) => {
   }, [dummyIsShown, client])
 
   if (loading) {
-    return <Loader fullScreen />
+    return (
+      <ContainerBox>
+        <p>Loading collabs...</p>
+      </ContainerBox>
+    )
   }
   if (error) {
     return (

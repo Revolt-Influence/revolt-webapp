@@ -65,6 +65,7 @@ export interface GetYoutuber_youtuber {
    */
   picture: string;
   videoCount: number;
+  medianViews: number;
   subscriberCount: number;
   videos: GetYoutuber_youtuber_videos[];
   audience: GetYoutuber_youtuber_audience;
