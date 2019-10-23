@@ -49,6 +49,7 @@ export interface GetCampaignReviews_campaign_reviews {
   commentCount: number;
   createdAt: any;
   likeCount: number;
+  viewCount: number;
   /**
    * Link to view the review
    */

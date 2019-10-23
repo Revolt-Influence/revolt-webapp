@@ -109,6 +109,7 @@ export const dummyReview: GetCampaignReviews_campaign_reviews = {
   __typename: 'Review',
   _id: 'DUMMY_REVIEW',
   commentCount: 924,
+  viewCount: 12304,
   createdAt: Date.now(),
   creator: dummyCreator,
   format: ReviewFormat.YOUTUBE_VIDEO,

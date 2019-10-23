@@ -52,6 +52,7 @@ const GET_CAMPAIGN_REVIEWS = gql`
         commentCount
         createdAt
         likeCount
+        viewCount
         link
         creator {
           _id
@@ -88,6 +89,7 @@ const CampaignReviews: React.FC<Props> = ({ campaignId }) => {
     )
   const totalLikes = reviews.reduce((total, _review) => total + (_review.likeCount || 0), 0)
   const totalComments = reviews.reduce((total, _review) => total + (_review.commentCount || 0), 0)
+  const totalViews = reviews.reduce((total, _review) => total + (_review.viewCount || 0), 0)
   const earnedMediaValue = (totalLikes + totalComments) * 0.3
 
   const stats = [
@@ -104,8 +106,8 @@ const CampaignReviews: React.FC<Props> = ({ campaignId }) => {
       value: approx(totalComments),
     },
     {
-      name: 'Engagement',
-      value: approx(totalLikes + totalComments),
+      name: 'Views',
+      value: approx(totalViews),
     },
     {
       name: 'Budget spent',
