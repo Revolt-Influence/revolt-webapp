@@ -5,6 +5,8 @@ import PageHeader from '../components/PageHeader'
 import { palette } from '../utils/colors'
 import { setFont } from '../utils/styles'
 import { usePageTitle } from '../utils/hooks'
+import { AMBASSADOR_BRAND_REWARD } from '../components/AmbassadorProgramBrands'
+import { AMBASSADOR_CREATOR_REWARD } from '../components/AmbassadorProgramCreators'
 
 const Styles = styled(ContainerBox)`
   p {
@@ -17,6 +19,9 @@ const Styles = styled(ContainerBox)`
   ol {
     list-style: unset;
     margin-bottom: 1rem;
+    li {
+      margin-left: 2rem;
+    }
   }
   h3 {
     ${setFont(600, 'big')}
@@ -269,18 +274,35 @@ const TermsAndConditions: React.FC<{}> = () => {
         Pour toute question relative à l’application des présentes CGU, vous pouvez joindre
         l’éditeur aux coordonnées inscrites à l’ARTICLE 1.
       </p>
-      <h3>Article 13 : Politique d’affiliation</h3>
+      <h3>Article 13: Ambassador program</h3>
       <p>
-        Lorsqu'un influenceur recommande la plateforme à une marque Revolt Influence s’engage à le
-        gratifier une rémunération allant jusqu’à 100€ pour le récompenser si les conditions
-        suivantes sont réunies :
+        Influencers can recommend Revolt to a brand via our Ambassador Program. They can only
+        recommend a brand if the brand has contacted the influencer first. Influencers have to enter
+        the email that the brand used to contact them. Then Revolt contacts the brand on the
+        influencer's behalf, and recommends that they manage their campaign on Revolt.
+      </p>
+      <p>
+        Revolt can pay the influencer {AMBASSADOR_BRAND_REWARD} for each brand recommended via the
+        program if the following conditions are all met:
       </p>
       <ul>
+        <li>The brand creates a campaign on Revolt</li>
         <li>
-          La marque a publié une campagne sur la plateforme qui a été validée par notre équipe
+          Revolt approves the campaign. Only quality campaigns are accepted. Revolt reserves the
+          right to tell what is a qualified product, based on the product's quality, the brand's
+          reputation and the brand's budget.
         </li>
-        <li>La marque reconnaît avoir découvert Revolt sur recommandation de l’influenceur</li>
-        <li>La marque a souscrit à une offre payante pendant au moins 14 jours sans la résilier</li>
+        <li>The brand accepted at least 1 collab request on its campaign</li>
+      </ul>
+      <p>
+        Influencers can also invite other influencers by sending them a tracked signup link. Every
+        time an influencer signs up using this link, Revolt gives ${AMBASSADOR_CREATOR_REWARD} USD
+        to the ambassador if the following conditions are met:
+      </p>
+      <ul>
+        <li>The influencer signed up using the tracked link</li>
+        <li>The influencer had a big enough audience to be allowed</li>
+        <li>The influencer completed at least 1 collab with a brand</li>
       </ul>
     </Styles>
   )
