@@ -166,22 +166,22 @@ const buttonStyles = css<IMainButtonProps>`
       `
     }
     return css`
-      margin-top: 15px;
+      margin-top: 1.5rem;
     `
   }}
   ${props => {
     if (props.smaller) {
       return css`
-        padding: 5px 10px;
+        padding: 0.5rem 1rem;
         ${!props.noMargin
           ? css`
-              margin-top: 10px;
+              margin-top: 1rem;
             `
           : null}
       `
     }
     return css`
-      padding: ${props.inverted ? '1.3rem' : '1.5rem'} 2rem;
+      padding: ${props.inverted ? '1.1rem' : '1.3rem'} 1.8rem;
     `
   }}
 

@@ -3,7 +3,6 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { palette } from '../utils/colors'
-import { applyCloudinaryTransformations } from '../utils/images'
 import { capitalizeFirstLetter } from '../utils/strings'
 import { setFont, shadow } from '../utils/styles'
 import ImageWrapper from './ImageWrapper'
@@ -17,7 +16,7 @@ const Style = styled(Box)`
 
   .brand {
     color: ${palette.grey._600};
-    margin-top: 0.4rem;
+    margin-top: 0.2rem;
   }
 
   img.logo {
@@ -72,13 +71,13 @@ const CreatorCampaignCard: React.FC<Props> = ({ campaign }) => {
         <h3 className="title">{capitalizeFirstLetter(product.name)}</h3>
         <div className="brand">
           <Flex flexDirection="row" alignItems="center" justifyContent="flex-start">
-            <img
+            {/* <img
               className="logo"
               src={applyCloudinaryTransformations(brand.logo, {
                 width: 150,
               })}
               alt={brand.name}
-            />
+            /> */}
             <p>{brand.name}</p>
           </Flex>
         </div>

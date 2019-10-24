@@ -102,12 +102,12 @@ const CampaignReviews: React.FC<Props> = ({ campaignId }) => {
       value: approx(totalLikes),
     },
     {
-      name: 'Comments',
-      value: approx(totalComments),
-    },
-    {
       name: 'Views',
       value: approx(totalViews),
+    },
+    {
+      name: 'Comments',
+      value: approx(totalComments),
     },
     {
       name: 'Budget spent',
