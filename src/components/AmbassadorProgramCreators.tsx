@@ -29,6 +29,7 @@ const creatorSteps = [
   'The influencer must have at least 2k followers on YouTube or Twitch',
   'The influencer must conclude a collab on the platform',
 ]
+export const AMBASSADOR_CREATOR_REWARD = 5
 
 interface Props {
   creatorId: string
@@ -58,7 +59,10 @@ const AmbassadorProgramCreators: React.FC<Props> = ({ creatorId }) => {
       >
         {/* Creator referral */}
         <Box width={[1, 1, 8 / 12]}>
-          <p>We give you $5 each time you bring a qualified influencer on the platform.</p>
+          <p>
+            We give you ${AMBASSADOR_CREATOR_REWARD} each time you bring a qualified influencer on
+            the platform.
+          </p>
           <LabelText withMargin>Conditions</LabelText>
           <OrderedList items={creatorSteps} />
           <LabelText withMargin>Link to share</LabelText>

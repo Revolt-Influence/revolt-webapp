@@ -15,11 +15,11 @@ enum ProgramTab {
   BRANDS = 'Invite brands',
 }
 
-const possibleTabs = Object.values(ProgramTab)
+const possibleTabs = [ProgramTab.BRANDS, ProgramTab.CREATORS]
 
 const AmbassadorProgram: React.FunctionComponent<{}> = () => {
   usePageTitle('Become an ambassador')
-  const [tab, setTab] = useState<ProgramTab>(ProgramTab.CREATORS)
+  const [tab, setTab] = useState<ProgramTab>(ProgramTab.BRANDS)
   // Copy link
   const { data: { session } = { session: null } } = useQuery<GetSession>(GET_SESSION)
   const creatorId = session.creator._id
