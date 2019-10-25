@@ -108,11 +108,18 @@ export const dummyDoneCollab: GetCampaignCollabs_campaign_collabs = {
 export const dummyReview: GetCampaignReviews_campaign_reviews = {
   __typename: 'Review',
   _id: 'DUMMY_REVIEW',
-  commentCount: 924,
-  viewCount: 12304,
+  stats: [
+    {
+      __typename: 'ReviewStats',
+      _id: 'DUMMU_REVIEW_RECENT_STAT_ID',
+      createdAt: '2019-10-18T16:31:54.006Z',
+      commentCount: 924,
+      viewCount: 12304,
+      likeCount: 12043,
+    },
+  ],
   createdAt: Date.now(),
   creator: dummyCreator,
   format: ReviewFormat.YOUTUBE_VIDEO,
-  likeCount: 12043,
   link: 'https://www.youtube.com/watch?v=mLyOj_QD4a4',
 }

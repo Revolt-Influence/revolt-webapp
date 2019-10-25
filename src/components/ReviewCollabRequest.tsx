@@ -5,7 +5,6 @@ import { useHistory } from 'react-router-dom'
 import { GetCollab, GetCollabVariables } from '../__generated__/GetCollab'
 import ErrorCard from './ErrorCard'
 import { Price } from '../styles/Price'
-import InfoCard from './InfoCard'
 import { MessageBubble } from '../styles/MessageBubble'
 import gql from 'graphql-tag'
 import { getCollabRecommendedQuote } from '../utils/collabs'
@@ -22,6 +21,8 @@ import { shadow } from '../utils/styles'
 import { showReviewCollabDecision } from '../utils/enums'
 import { GetSession } from '../__generated__/GetSession'
 import { GET_SESSION } from './Session'
+import { LabelText } from '../styles/Text'
+import WarningCard from './WarningCard'
 
 const checkSource = require('../images/icons/check_white.svg')
 const closeSource = require('../images/icons/close_white.svg')
@@ -159,6 +160,7 @@ const ReviewCollabRequest: React.FC<Props> = ({ collabId }) => {
     }
     return 0
   }
+  const recommendedQuote = getRecommendedQuote()
 
   const showContactButton = () =>
     collab ? (
@@ -200,23 +202,32 @@ const ReviewCollabRequest: React.FC<Props> = ({ collabId }) => {
     }
   }
 
+  const platformFees = Math.round(collab.quote * PLATFORM_COMMISSION_PERCENTAGE) / 100
+
   return (
     <Styles>
       {/* Show collab request details */}
       <Box style={{ display: 'inline-block' }}>
-        <Box mt="2rem">Quote (in US Dollars)</Box>
+        <LabelText withMargin>Influencer's quote (in US Dollars)</LabelText>
         <Flex flexDirection="row" alignItems="center">
           <Price>${collab.quote}</Price>
+          <Box ml="1rem">+ ${platformFees} platform fees</Box>
+        </Flex>
+        <LabelText withMargin>Recommended price</LabelText>
+        <Flex flexDirection="row">
+          <Price style={{ alignSelf: 'flex-start' }}>${recommendedQuote}</Price>
           <Box ml="1rem">
-            + ${(collab.quote * PLATFORM_COMMISSION_PERCENTAGE) / 100} platform fees
+            The recommended price is obtained using the influencer's expected views, average
+            engagement, audience demographics and more.
           </Box>
         </Flex>
-        <InfoCard
-          message={`Based on the influencer's stats, we recommend that you pay him $${getRecommendedQuote()}. You can negotiate by sending him a message.`}
-        />
-        <Box mt="1rem" mb="0.5rem">
-          Message
-        </Box>
+        {collab.quote > recommendedQuote && (
+          <WarningCard
+            message={`The influencer's quote is $${collab.quote -
+              recommendedQuote} higher than our recommended price. You can negotiate by sending him a message`}
+          />
+        )}
+        <LabelText withMargin>Message</LabelText>
         <MessageBubble isFromMe={false}>{collab.message}</MessageBubble>
       </Box>
       {/* Review collab request (accept, deny or negotiate) */}
@@ -231,12 +242,10 @@ const ReviewCollabRequest: React.FC<Props> = ({ collabId }) => {
               onClick={() => handleApplicationDecision(ReviewCollabDecision.ACCEPT)}
             >
               {collab.quote > 0 ? (
-                <p>
-                  Accept and pay $
-                  {collab.quote + (collab.quote * PLATFORM_COMMISSION_PERCENTAGE) / 100}
-                </p>
+                // Prevent floating point bug
+                <p>Accept and pay ${Math.round((collab.quote + platformFees) * 100) / 100}</p>
               ) : (
-                <p>Accept</p>
+                <p>Accept for free</p>
               )}
               <img src={checkSource} alt="accept" />
             </button>

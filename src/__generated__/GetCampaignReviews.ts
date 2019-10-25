@@ -24,6 +24,18 @@ export interface GetCampaignReviews_campaign_collabs {
   quote: number;
 }
 
+export interface GetCampaignReviews_campaign_reviews_stats {
+  __typename: "ReviewStats";
+  /**
+   * Mongoose generated ID
+   */
+  _id: string;
+  createdAt: any;
+  commentCount: number;
+  likeCount: number;
+  viewCount: number;
+}
+
 export interface GetCampaignReviews_campaign_reviews_creator {
   __typename: "Creator";
   /**
@@ -46,10 +58,11 @@ export interface GetCampaignReviews_campaign_reviews {
    * Platform of the review
    */
   format: ReviewFormat;
-  commentCount: number;
+  /**
+   * History of the reviews stats since they were added
+   */
+  stats: GetCampaignReviews_campaign_reviews_stats[];
   createdAt: any;
-  likeCount: number;
-  viewCount: number;
   /**
    * Link to view the review
    */

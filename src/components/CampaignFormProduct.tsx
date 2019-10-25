@@ -154,7 +154,7 @@ const CampaignFormProduct: React.FC<Prop> = ({ product, campaignId }) => {
         <Box mt="2rem">
           <CheckBox
             isChecked={wasLaunched}
-            text="The game has already launched"
+            text="The game is already launched"
             handleClick={() => {
               if (wasLaunched) {
                 setWasLaunched(!wasLaunched)

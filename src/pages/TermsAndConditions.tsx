@@ -282,8 +282,8 @@ const TermsAndConditions: React.FC<{}> = () => {
         influencer's behalf, and recommends that they manage their campaign on Revolt.
       </p>
       <p>
-        Revolt can pay the influencer {AMBASSADOR_BRAND_REWARD} for each brand recommended via the
-        program if the following conditions are all met:
+        Revolt can pay the influencer ${AMBASSADOR_BRAND_REWARD} USD for each brand recommended via
+        the program if the following conditions are all met:
       </p>
       <ul>
         <li>The brand creates a campaign on Revolt</li>

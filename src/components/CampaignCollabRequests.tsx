@@ -192,7 +192,7 @@ const CampaignPropositions: React.FC<Props> = ({ campaignId }) => {
             </>
           )}
           rightComponent={() => (
-            <Box p="1rem" flex={1}>
+            <Box p="1rem" mt="-1rem" flex={1}>
               {selectedCreator && (
                 <CreatorProfile
                   creatorId={selectedCreator._id}

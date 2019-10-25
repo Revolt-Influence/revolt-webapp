@@ -49,10 +49,14 @@ const GET_CAMPAIGN_REVIEWS = gql`
       reviews {
         _id
         format
-        commentCount
+        stats {
+          _id
+          createdAt
+          commentCount
+          likeCount
+          viewCount
+        }
         createdAt
-        likeCount
-        viewCount
         link
         creator {
           _id
@@ -87,9 +91,13 @@ const CampaignReviews: React.FC<Props> = ({ campaignId }) => {
         quotesSum + _collab.quote * ((100 + PLATFORM_COMMISSION_PERCENTAGE) / 100),
       0
     )
-  const totalLikes = reviews.reduce((total, _review) => total + (_review.likeCount || 0), 0)
-  const totalComments = reviews.reduce((total, _review) => total + (_review.commentCount || 0), 0)
-  const totalViews = reviews.reduce((total, _review) => total + (_review.viewCount || 0), 0)
+  const lastStats = reviews.map(_review => {
+    console.log(_review)
+    return _review.stats[0]
+  })
+  const totalLikes = lastStats.reduce((total, _stats) => total + (_stats.likeCount || 0), 0)
+  const totalComments = lastStats.reduce((total, _stats) => total + (_stats.commentCount || 0), 0)
+  const totalViews = lastStats.reduce((total, _stats) => total + (_stats.viewCount || 0), 0)
   const earnedMediaValue = (totalLikes + totalComments) * 0.3
 
   const stats = [
@@ -98,12 +106,12 @@ const CampaignReviews: React.FC<Props> = ({ campaignId }) => {
       value: reviews.length,
     },
     {
-      name: 'Likes',
-      value: approx(totalLikes),
-    },
-    {
       name: 'Views',
       value: approx(totalViews),
+    },
+    {
+      name: 'Likes',
+      value: approx(totalLikes),
     },
     {
       name: 'Comments',

@@ -21,18 +21,22 @@ const Styles = styled.div`
   background: ${palette.grey._50};
 
   .profilePicture {
-    width: 10rem;
-    height: 10rem;
+    width: 8rem;
+    height: 8rem;
     object-fit: cover;
     margin-right: 2rem;
     border-radius: 50%;
     box-shadow: ${shadow.inset};
-    border: 4px solid ${props => props.theme.primary._300};
+    /* border: 4px solid ${props => props.theme.primary._300}; */
   }
 
   .name {
     ${setFont(600, 'big')}
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .description {
+    color: ${palette.grey._700};
   }
 
   .label {
@@ -131,7 +135,7 @@ const CreatorProfile: React.FC<Props> = ({ creatorId, collabId, isDummy }) => {
         />
         <div>
           <h1 className="name">{name}</h1>
-          <p>
+          <p className="description">
             {yearToAge(birthYear)} years old, speaks {showLanguage(language)}
           </p>
         </div>
