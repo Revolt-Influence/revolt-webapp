@@ -73,6 +73,8 @@ const ReviewCard: React.FC<IReviewCardProps> = ({ review }) => {
     }
   }, [])
 
+  const lastStats = review.stats[0]
+
   return (
     <a href={review.link} title={`view ${review.format}`} target="_blank" rel="noopener noreferrer">
       <Styles p={[0, 0, 0]} mt={[0, 0, 0]} ref={measuredRef}>
@@ -95,11 +97,11 @@ const ReviewCard: React.FC<IReviewCardProps> = ({ review }) => {
             <Flex flexDirection="row" alignItems="baseline">
               <Flex flexDirection="row" alignItems="center" mr="2rem">
                 <img className="statIcon" src={likeIcon} alt="Likes" />
-                <p>{approx(review.likeCount)}</p>
+                <p>{approx(lastStats.likeCount)}</p>
               </Flex>
               <Flex flexDirection="row" alignItems="center">
                 <img className="statIcon" src={commentIcon} alt="Comments" />
-                <p>{approx(review.commentCount)}</p>
+                <p>{approx(lastStats.commentCount)}</p>
               </Flex>
             </Flex>
           )}

@@ -20,7 +20,7 @@ const Style = styled(Box)`
 
   .brand {
     color: ${palette.grey._500};
-    margin-top: 0.4rem;
+    margin-top: 0.2rem;
   }
 
   img.logo {
@@ -113,12 +113,9 @@ const CreatorCollabCard: React.FC<Props> = ({ collab }) => {
         />
         <h3 className="title">{capitalizeFirstLetter(campaign.product.name)}</h3>
         <div className="brand">
-          <Flex flexDirection="row" alignItems="center" justifyContent="flex-start">
-            <img className="logo" src={campaign.brand.logo} alt={campaign.brand.name} />
-            <p>{campaign.brand.name}</p>
-          </Flex>
+          <p>{campaign.brand.name}</p>
         </div>
-        <Flex flexDirection="row" alignItems="center" justifyContent="space-between" mt="1rem">
+        <Flex flexDirection="row" alignItems="center" justifyContent="space-between" mt="0.5rem">
           <Status color={status.color}>{status.name}</Status>
         </Flex>
       </Style>
