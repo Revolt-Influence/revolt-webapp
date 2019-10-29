@@ -221,12 +221,13 @@ const ReviewCollabRequest: React.FC<Props> = ({ collabId }) => {
             engagement, audience demographics and more.
           </Box>
         </Flex>
-        {collab.quote > recommendedQuote && (
-          <WarningCard
-            message={`The influencer's quote is $${collab.quote -
-              recommendedQuote} higher than our recommended price. You can negotiate by sending him a message`}
-          />
-        )}
+        {collab.quote > recommendedQuote &&
+          [CollabStatus.REQUEST, CollabStatus.DENIED].includes(collab.status) && (
+            <WarningCard
+              message={`The influencer's quote is $${collab.quote -
+                recommendedQuote} higher than our recommended price. You can negotiate by sending him a message`}
+            />
+          )}
         <LabelText withMargin>Message</LabelText>
         <MessageBubble isFromMe={false}>{collab.message}</MessageBubble>
       </Box>

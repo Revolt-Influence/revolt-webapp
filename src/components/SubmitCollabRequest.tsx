@@ -141,7 +141,7 @@ const SubmitCollabRequest: React.FC<Props> = ({ brand, campaignId }) => {
       {applyError && <ErrorCard message="Could not apply to the collab" />}
       {createdCollab && (
         <SuccessCard
-          message={`Your collab request was saved. ${brand} will contact you if you are selected`}
+          message={`Your collab request was saved. You'll receive an email with your own tracking link if you are accepted`}
         />
       )}
       {quote > 0 && !hasConnectedStripe ? (

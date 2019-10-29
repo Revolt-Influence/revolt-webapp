@@ -25,7 +25,7 @@ export interface SubmitCollabReview_submitCollabReview {
   /**
    * Social media post made for the campaign
    */
-  review: SubmitCollabReview_submitCollabReview_review;
+  review: SubmitCollabReview_submitCollabReview_review | null;
 }
 
 export interface SubmitCollabReview {

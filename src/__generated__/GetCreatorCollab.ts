@@ -5,10 +5,10 @@
 import { CollabStatus, GameCategory } from "./globalTypes";
 
 // ====================================================
-// GraphQL mutation operation: ApplyToCampaign
+// GraphQL query operation: GetCreatorCollab
 // ====================================================
 
-export interface ApplyToCampaign_applyToCampaign_campaign_brand {
+export interface GetCreatorCollab_collab_campaign_brand {
   __typename: "Brand";
   /**
    * Mongoose generated ID
@@ -21,7 +21,7 @@ export interface ApplyToCampaign_applyToCampaign_campaign_brand {
   logo: string;
 }
 
-export interface ApplyToCampaign_applyToCampaign_campaign_product {
+export interface GetCreatorCollab_collab_campaign_product {
   __typename: "CampaignProduct";
   /**
    * Name of the product
@@ -53,7 +53,7 @@ export interface ApplyToCampaign_applyToCampaign_campaign_product {
   launchedAt: any | null;
 }
 
-export interface ApplyToCampaign_applyToCampaign_campaign {
+export interface GetCreatorCollab_collab_campaign {
   __typename: "Campaign";
   /**
    * Mongoose generated ID
@@ -62,11 +62,11 @@ export interface ApplyToCampaign_applyToCampaign_campaign {
   /**
    * The brand that published the campaign
    */
-  brand: ApplyToCampaign_applyToCampaign_campaign_brand | null;
+  brand: GetCreatorCollab_collab_campaign_brand | null;
   /**
    * What the creator will receive
    */
-  product: ApplyToCampaign_applyToCampaign_campaign_product;
+  product: GetCreatorCollab_collab_campaign_product;
   /**
    * Rules that creators must respect to receive the gift
    */
@@ -74,7 +74,7 @@ export interface ApplyToCampaign_applyToCampaign_campaign {
   createdAt: any;
 }
 
-export interface ApplyToCampaign_applyToCampaign {
+export interface GetCreatorCollab_collab {
   __typename: "Collab";
   /**
    * Mongoose generated ID
@@ -96,18 +96,16 @@ export interface ApplyToCampaign_applyToCampaign {
   /**
    * The campaign the collab is a part of
    */
-  campaign: ApplyToCampaign_applyToCampaign_campaign;
+  campaign: GetCreatorCollab_collab_campaign;
 }
 
-export interface ApplyToCampaign {
+export interface GetCreatorCollab {
   /**
-   * Creates a collab request
+   * Get collab by ID
    */
-  applyToCampaign: ApplyToCampaign_applyToCampaign;
+  collab: GetCreatorCollab_collab;
 }
 
-export interface ApplyToCampaignVariables {
-  message: string;
-  campaignId: string;
-  quote: number;
+export interface GetCreatorCollabVariables {
+  collabId: string;
 }

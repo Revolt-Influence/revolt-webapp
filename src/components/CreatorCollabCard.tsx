@@ -58,6 +58,7 @@ export const CREATOR_COLLAB_FRAGMENT = gql`
     status
     quote
     updatedAt
+    trackedLink
     campaign {
       ...CreatorCampaignPresentationFragment
     }

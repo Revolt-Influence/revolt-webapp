@@ -104,7 +104,6 @@ const CampaignFormBrief: React.FC<Prop> = ({ brief }) => {
             Influencer rule {_index + 1}
             <FormInput
               value={_rule}
-              disabled={_index === 0} // Keep the first rule
               onChange={e => {
                 // Update rule if field is not blank
                 if (e.target.value.length > 0) {

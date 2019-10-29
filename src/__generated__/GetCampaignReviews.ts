@@ -34,6 +34,10 @@ export interface GetCampaignReviews_campaign_reviews_stats {
   commentCount: number;
   likeCount: number;
   viewCount: number;
+  /**
+   * How many times the collab-specific link was clicked
+   */
+  linkClicksCount: number;
 }
 
 export interface GetCampaignReviews_campaign_reviews_creator {
