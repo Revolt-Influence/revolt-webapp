@@ -25,6 +25,7 @@ interface ISplitViewProps {
   children: React.ReactChild | React.ReactChild[]
   withMargin?: boolean
   noBorder?: boolean
+  noPadding?: boolean
   stacked?: boolean
 }
 
@@ -34,6 +35,7 @@ const SplitView: React.FC<ISplitViewProps> = ({
   ratio,
   withMargin,
   noBorder,
+  noPadding,
   stacked,
 }) => {
   const finalRatio = ratio || 4 / 12
@@ -43,7 +45,7 @@ const SplitView: React.FC<ISplitViewProps> = ({
       alignItems="flex-start"
       mb={withMargin ? '3rem' : 0}
       mt={withMargin ? ['2rem', '2rem', '3rem'] : 0}
-      py={['2.5rem', '2.5rem', '3rem']}
+      py={noPadding ? 0 : ['2.5rem', '2.5rem', '3rem']}
       flexDirection={stacked ? 'column' : ['column', 'column', 'row']}
       width={1}
       noBorder={noBorder}

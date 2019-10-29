@@ -90,6 +90,10 @@ export interface CreatorCollabFragment {
   quote: number;
   updatedAt: any;
   /**
+   * Bitly link to track the campaign performance
+   */
+  trackedLink: string;
+  /**
    * The campaign the collab is a part of
    */
   campaign: CreatorCollabFragment_campaign;

@@ -5,11 +5,11 @@ import styled from 'styled-components'
 const checkIconSource =
   'https://res.cloudinary.com/revolt/image/upload/v1569512887/icons/added_green.svg'
 
-const Feature = styled.div`
+const Feature = styled.div<{ noMargin: boolean }>`
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
-  margin-top: 1.5rem;
+  margin-top: ${props => (props.noMargin ? 0 : '1rem')};
   align-items: flex-start;
 `
 
@@ -24,12 +24,13 @@ const CheckIcon = styled.img`
 
 interface ICheckListProps {
   items: string[]
+  noMargin?: boolean
 }
 
-const CheckList: React.FC<ICheckListProps> = ({ items }) => (
+const CheckList: React.FC<ICheckListProps> = ({ items, noMargin }) => (
   <ul>
     {items.map((_item, index) => (
-      <Feature key={index}>
+      <Feature noMargin={!!noMargin && index === 0} key={index}>
         <CheckIcon src={checkIconSource} alt="Dot" />
         {_item}
       </Feature>

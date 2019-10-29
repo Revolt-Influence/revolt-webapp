@@ -1,21 +1,26 @@
 import { useMutation, useQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 import React, { useState } from 'react'
-import { MainButtonSubmit } from '../styles/Button'
+import { MainButtonSubmit, MainButton } from '../styles/Button'
 import { FormInput, FormInputLabel } from '../styles/Form'
-import { GetCollab, GetCollabVariables } from '../__generated__/GetCollab'
 import { CollabStatus, ReviewFormat, SubmitCollabReviewInput } from '../__generated__/globalTypes'
 import {
   SubmitCollabReview,
   SubmitCollabReviewVariables,
 } from '../__generated__/SubmitCollabReview'
 import CheckBox from './CheckBox'
-import { GET_COLLAB } from './ReviewCollabRequest'
 import ErrorCard from './ErrorCard'
 import Loader from './Loader'
 import SplitView from './SplitView'
 import SuccessCard from './SuccessCard'
 import { showReviewFormat } from '../utils/enums'
+import CheckList from './CheckList'
+import { CREATOR_COLLAB_FRAGMENT } from './CreatorCollabCard'
+import { GetCreatorCollab, GetCreatorCollabVariables } from '../__generated__/GetCreatorCollab'
+import { Box } from '@rebass/grid'
+import WarningCard from './WarningCard'
+import { LabelText } from '../styles/Text'
+import copy from 'copy-to-clipboard'
 
 const SUBMIT_COLLAB_REVIEW = gql`
   mutation SubmitCollabReview($review: SubmitCollabReviewInput!, $collabId: String!) {
@@ -26,6 +31,15 @@ const SUBMIT_COLLAB_REVIEW = gql`
       }
     }
   }
+`
+
+const GET_CREATOR_COLLAB = gql`
+  query GetCreatorCollab($collabId: String!) {
+    collab(collabId: $collabId) {
+      ...CreatorCollabFragment
+    }
+  }
+  ${CREATOR_COLLAB_FRAGMENT}
 `
 
 interface Props {
@@ -40,12 +54,13 @@ const SubmitCreatorReviews: React.FC<Props> = ({ collabId }) => {
     link: '',
   })
   const [succeeded, setSucceeded] = useState<boolean>(false)
+  const [copyText, setCopyText] = useState<'Copy' | 'Copied!'>('Copy')
 
   // Network requests
   const { data: { collab } = { collab: null }, ...collabRequestStatus } = useQuery<
-    GetCollab,
-    GetCollabVariables
-  >(GET_COLLAB, { variables: { collabId } })
+    GetCreatorCollab,
+    GetCreatorCollabVariables
+  >(GET_CREATOR_COLLAB, { variables: { collabId } })
   const [submitCollabReview, { loading, error }] = useMutation<
     SubmitCollabReview,
     SubmitCollabReviewVariables
@@ -79,10 +94,29 @@ const SubmitCreatorReviews: React.FC<Props> = ({ collabId }) => {
     })
   }
 
+  const handleCopy = () => {
+    copy(collab.trackedLink)
+    setCopyText('Copied!')
+    window.setTimeout(() => setCopyText('Copy'), 2000)
+  }
+
   return (
-    <SplitView title="My review" ratio={3.5 / 12} noBorder>
+    <SplitView title="My review" ratio={3.5 / 12} noBorder noPadding>
       <form onSubmit={handleSubmit}>
-        <FormInputLabel>
+        <WarningCard
+          message="Make sure your review includes your custom link. It is used to track your collab's performance"
+          noMargin
+        />
+        <Box mt="2rem" />
+        <LabelText>Your custom link</LabelText>
+        <Box style={{ display: 'inline-block' }} mr="1rem">
+          {collab.trackedLink}
+        </Box>
+        <MainButton smaller inverted noMargin onClick={handleCopy}>
+          {copyText}
+        </MainButton>
+        <LabelText withMargin>Your review</LabelText>
+        <FormInputLabel noMargin>
           Link of your {showReviewFormat(review.format)}
           <FormInput
             value={review.link}
@@ -92,10 +126,13 @@ const SubmitCreatorReviews: React.FC<Props> = ({ collabId }) => {
             hasLabel
           />
         </FormInputLabel>
+        <LabelText withMargin>Collab rules</LabelText>
+        <p>Make sure you have respected the following campaign rules before submitting:</p>
+        <CheckList items={collab.campaign.rules} />
         <CheckBox
           isChecked={hasRespected}
           handleClick={() => setHasRespected(!hasRespected)}
-          text="I have respected the campaign rules"
+          text="I have respected all the campaign rules"
         />
         {succeeded && <SuccessCard message="Your review was saved" />}
         {error && <ErrorCard message="Could not saved your review" />}
