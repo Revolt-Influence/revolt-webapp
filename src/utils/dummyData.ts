@@ -116,6 +116,7 @@ export const dummyReview: GetCampaignReviews_campaign_reviews = {
       commentCount: 924,
       viewCount: 12304,
       likeCount: 12043,
+      linkClicksCount: 1204,
     },
   ],
   createdAt: Date.now(),

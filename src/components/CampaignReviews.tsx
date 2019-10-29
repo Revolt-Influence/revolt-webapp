@@ -19,6 +19,7 @@ import InfoCard from './InfoCard'
 import { dummyReview } from '../utils/dummyData'
 import { CollabStatus } from '../__generated__/globalTypes'
 import { PLATFORM_COMMISSION_PERCENTAGE } from './ReviewCollabRequest'
+import moment from 'moment'
 
 const Stats = styled(Box)`
   background: ${palette.blue._100};
@@ -55,6 +56,7 @@ const GET_CAMPAIGN_REVIEWS = gql`
           commentCount
           likeCount
           viewCount
+          linkClicksCount
         }
         createdAt
         link
@@ -91,12 +93,10 @@ const CampaignReviews: React.FC<Props> = ({ campaignId }) => {
         quotesSum + _collab.quote * ((100 + PLATFORM_COMMISSION_PERCENTAGE) / 100),
       0
     )
-  const lastStats = reviews.map(_review => {
-    console.log(_review)
-    return _review.stats[0]
-  })
+  const lastStats = reviews.map(_review => _review.stats[0])
   const totalLikes = lastStats.reduce((total, _stats) => total + (_stats.likeCount || 0), 0)
   const totalComments = lastStats.reduce((total, _stats) => total + (_stats.commentCount || 0), 0)
+  const totalClicks = lastStats.reduce((total, _stats) => total + (_stats.linkClicksCount || 0), 0)
   const totalViews = lastStats.reduce((total, _stats) => total + (_stats.viewCount || 0), 0)
   const earnedMediaValue = (totalLikes + totalComments) * 0.3
 
@@ -116,6 +116,10 @@ const CampaignReviews: React.FC<Props> = ({ campaignId }) => {
     {
       name: 'Comments',
       value: approx(totalComments),
+    },
+    {
+      name: 'Clicks',
+      value: approx(totalClicks),
     },
     {
       name: 'Budget spent',
@@ -149,13 +153,15 @@ const CampaignReviews: React.FC<Props> = ({ campaignId }) => {
           {reviews.length === 0 && (
             <InfoCard message="You don't have any reviews of your game yet. Here is what a review will look like:" />
           )}
+          <Box my="1rem">
+            The review stats were last updated {moment(lastStats[0].createdAt).fromNow()}
+          </Box>
           <Flex
             flexDirection="row"
             justifyContent="flex-start"
             flexWrap="wrap"
             alignItems="flex-start"
             mx="-2rem"
-            mt="2rem"
           >
             {reviews.length === 0 && (
               <Box width={[1, 6 / 12, 4 / 12]} px="2rem" mb="2rem">
