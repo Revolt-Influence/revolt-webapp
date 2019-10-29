@@ -154,7 +154,8 @@ const CampaignReviews: React.FC<Props> = ({ campaignId }) => {
             <InfoCard message="You don't have any reviews of your game yet. Here is what a review will look like:" />
           )}
           <Box my="1rem">
-            The review stats were last updated {moment(lastStats[0].createdAt).fromNow()}
+            The review stats were last updated{' '}
+            {moment(lastStats.length > 0 ? lastStats[0].createdAt : new Date()).fromNow()}
           </Box>
           <Flex
             flexDirection="row"
