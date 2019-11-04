@@ -7,7 +7,7 @@ import { palette } from '../utils/colors'
 import { setFont, shadow } from '../utils/styles'
 import { GetCampaignReviews_campaign_reviews } from '../__generated__/GetCampaignReviews'
 import { ReviewFormat } from '../__generated__/globalTypes'
-import { getYoutubeEmbedLink } from '../utils/youtube'
+import { getYoutubeEmbedLink, getVideoId } from '../utils/youtube'
 
 const likeIcon = require('../images/icons/like.svg')
 const commentIcon = require('../images/icons/comment.svg')
@@ -60,7 +60,8 @@ interface IReviewCardProps {
 const ReviewCard: React.FC<IReviewCardProps> = ({ review }) => {
   const getIframeUrl = () => {
     if (review.format === ReviewFormat.YOUTUBE_VIDEO) {
-      return getYoutubeEmbedLink(review.link)
+      const videoId = getVideoId(review.link)
+      return getYoutubeEmbedLink(videoId)
     }
     return null
   }

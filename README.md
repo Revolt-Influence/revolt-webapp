@@ -1,5 +1,8 @@
 # Revolt App Front-End
 
+<!-- Badges -->
+[![Netlify Status](https://api.netlify.com/api/v1/badges/a0c29ead-bc95-4186-805f-b4da52f7f05a/deploy-status)](https://app.netlify.com/sites/revolt-webapp/deploys)
+
 >>[View on Github](https://github.com/remi2j/revolt-webapp)
 >
 >Find the front-end on [this repo](https://github.com/remi2j/revolt-graphql)

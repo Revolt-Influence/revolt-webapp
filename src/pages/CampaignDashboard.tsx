@@ -1,11 +1,10 @@
-import React from 'react'
+import React, { lazy, Suspense } from 'react'
 import { Box } from '@rebass/grid'
 import queryString from 'query-string'
 import { RouteComponentProps, withRouter } from 'react-router-dom'
 import CampaignBriefPreview from '../components/CampaignBriefPreview'
 import CampaignCollabs from '../components/CampaignCollabs'
 import CampaignCollabRequests from '../components/CampaignCollabRequests'
-import CampaignReviews from '../components/CampaignReviews'
 import CampaignSettings from '../components/CampaignSettings'
 import PageHeader from '../components/PageHeader'
 import Tabs, { ITabItem } from '../components/Tabs'
@@ -22,6 +21,8 @@ import {
 import Loader from '../components/Loader'
 import ErrorCard from '../components/ErrorCard'
 import InfoCard from '../components/InfoCard'
+
+const CampaignReviews = lazy(() => import('../components/CampaignReviews'))
 
 export enum CampaignStatus {
   ARCHIVED = 'Not published',
@@ -199,9 +200,11 @@ const CampaignDashboard: React.FC<Props> = ({ match, location }) => {
 
   return (
     <main>
+      {/* Header */}
       <ContainerBox>
         <PageHeader title={campaign.product.name} destination="/brand" />
       </ContainerBox>
+      {/* Optional info messsages */}
       {status.name !== CampaignStatus.ONLINE && (
         <ContainerBox mb="2rem" mt="-1rem">
           {status.name === CampaignStatus.AWAITING_REVIEW && (
@@ -211,10 +214,12 @@ const CampaignDashboard: React.FC<Props> = ({ match, location }) => {
           {status.name === CampaignStatus.INCOMPLETE && <InfoCard message={status.description} />}
         </ContainerBox>
       )}
+      {/* Dashboard tab */}
       <Box mt={[0, 0, '-2rem']}>
         <Tabs items={tabItems} />
       </Box>
-      {showCurrentTab()}
+      {/* Main content */}
+      <Suspense fallback={<Loader />}>{showCurrentTab()}</Suspense>
     </main>
   )
 }

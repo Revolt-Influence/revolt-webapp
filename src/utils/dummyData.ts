@@ -5,7 +5,10 @@ import {
 } from '../__generated__/GetCampaignRequestedCollabs'
 import { CollabStatus, Language, ReviewFormat } from '../__generated__/globalTypes'
 import { GetCampaignCollabs_campaign_collabs } from '../__generated__/GetCampaignCollabs'
-import { GetCampaignReviews_campaign_reviews } from '../__generated__/GetCampaignReviews'
+import {
+  GetCampaignReviews_campaign_reviews,
+  GetCampaignReviews_campaign_collabs,
+} from '../__generated__/GetCampaignReviews'
 
 export const dummyYoutuber: GetCampaignRequestedCollabs_campaign_collabs_creator_youtube = {
   __typename: 'Youtuber',
@@ -123,4 +126,13 @@ export const dummyReview: GetCampaignReviews_campaign_reviews = {
   creator: dummyCreator,
   format: ReviewFormat.YOUTUBE_VIDEO,
   link: 'https://www.youtube.com/watch?v=mLyOj_QD4a4',
+  platformId: 'mLyOj_QD4a4',
+}
+
+export const dummyReviewCollab: GetCampaignReviews_campaign_collabs = {
+  __typename: 'Collab',
+  _id: dummyDoneCollab._id,
+  quote: 130,
+  review: dummyReview,
+  status: CollabStatus.DONE,
 }

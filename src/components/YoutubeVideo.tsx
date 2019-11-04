@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { YoutuberProfileFragment_videos } from '../__generated__/YoutuberProfileFragment'
+import { getYoutubeEmbedLink } from '../utils/youtube'
 
 const Styles = styled.article`
   border-radius: 8px;
@@ -22,20 +22,19 @@ const Styles = styled.article`
 `
 
 interface IYoutubeVideoProps {
-  video: YoutuberProfileFragment_videos
+  videoId: string
+  autoplay?: boolean
 }
 
-const YoutubeVideo: React.FC<IYoutubeVideoProps> = ({ video: { title, videoId } }) => (
+const YoutubeVideo: React.FC<IYoutubeVideoProps> = ({ videoId, autoplay }) => (
   <Styles>
-    {/* <img className="thumbnail" src={url} alt={title} />
-      <Fl */}
     <div className="frameWrapper">
       <iframe
         className="iframe"
-        title={title}
+        title="Youtube video"
         width="100%"
         height="0"
-        src={`https://www.youtube.com/embed/${videoId}?modestbranding=1`}
+        src={getYoutubeEmbedLink(videoId, !!autoplay)}
         frameBorder="0"
         allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
         allowFullScreen

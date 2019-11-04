@@ -11,7 +11,7 @@ export const MessageBubble = styled.div<{ isFromMe: boolean }>`
     if (props.isFromMe) {
       return css`
         align-self: flex-end;
-        background: ${props.theme.accent._200};
+        background: ${props.theme.primary._200};
       `
     } else {
       return css`

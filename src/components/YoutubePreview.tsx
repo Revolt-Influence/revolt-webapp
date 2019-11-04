@@ -81,7 +81,7 @@ const YoutubePreview: React.FC<Props> = ({ youtuberId }) => {
       >
         {videos.map(_video => (
           <Box width={[1, 1, 6 / 12]} px="0.5rem" mb="1rem" key={_video.videoId}>
-            <YoutubeVideo video={_video} />
+            <YoutubeVideo videoId={_video.videoId} />
           </Box>
         ))}
       </Flex>

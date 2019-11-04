@@ -12,7 +12,7 @@ const nativeFontStack = "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-ser
 const fontStack = `Montserrat, Gotham, ${nativeFontStack}`
 
 function setFont(
-  weight: number = 500,
+  weight: 500 | 600 = 500,
   size: 'small' | 'normal' | 'big' | 'huge'
 ): Interpolation<ThemeProps<Theme>> {
   return css`
