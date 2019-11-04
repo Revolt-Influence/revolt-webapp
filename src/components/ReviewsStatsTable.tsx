@@ -17,7 +17,7 @@ import { useMutation } from '@apollo/react-hooks'
 import { OPEN_CREATOR_PANEL } from './CreatorProfilePanel'
 import { GetCreator, GetCreatorVariables } from '../__generated__/GetCreator'
 import { GET_CREATOR } from './CreatorProfile'
-import { CreatorStatus } from '../__generated__/globalTypes'
+import { CreatorStatus, CollabStatus } from '../__generated__/globalTypes'
 import { GetYoutuber, GetYoutuberVariables } from '../__generated__/GetYoutuber'
 import { GET_YOUTUBER } from './YoutubePreview'
 
@@ -168,7 +168,9 @@ const ReviewsStatsTable: React.FC<Props> = ({ lastStatsDate, reviews, collabs })
     const lastStats = review.stats[0]
     const collab = isDummy
       ? dummyReviewCollab
-      : collabs.find(_collab => _collab.review._id === review._id)
+      : collabs.find(
+          _collab => _collab.status === CollabStatus.DONE && _collab.review._id === review._id
+        )
     return (
       <tr key={review._id}>
         <td className="video">
