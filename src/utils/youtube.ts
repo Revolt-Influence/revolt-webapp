@@ -8,9 +8,8 @@ export function getVideoId(youtubeUrl: string): string {
   }
 }
 
-export function getYoutubeEmbedLink(youtubeUrl: string): string {
-  const videoId = getVideoId(youtubeUrl)
-  return `https://www.youtube.com/embed/${videoId}?modestbranding=1`
+export function getYoutubeEmbedLink(videoId: string, autoplay: boolean = false): string {
+  return `https://www.youtube.com/embed/${videoId}?modestbranding=1&autoplay=${autoplay ? 1 : 0}`
 }
 
 export function getYoutubeThumbnail(videoUrl: string): string {

@@ -8,6 +8,14 @@ import { CollabStatus, ReviewFormat } from "./globalTypes";
 // GraphQL query operation: GetCampaignReviews
 // ====================================================
 
+export interface GetCampaignReviews_campaign_collabs_review {
+  __typename: "Review";
+  /**
+   * Mongoose generated ID
+   */
+  _id: string;
+}
+
 export interface GetCampaignReviews_campaign_collabs {
   __typename: "Collab";
   /**
@@ -22,6 +30,10 @@ export interface GetCampaignReviews_campaign_collabs {
    * How much the influencer wants to be paid in USD
    */
   quote: number;
+  /**
+   * Social media post made for the campaign
+   */
+  review: GetCampaignReviews_campaign_collabs_review | null;
 }
 
 export interface GetCampaignReviews_campaign_reviews_stats {
@@ -50,6 +62,10 @@ export interface GetCampaignReviews_campaign_reviews_creator {
    * Creator display name, can be a full name or a pseudo
    */
   name: string | null;
+  /**
+   * Cloudinary URL of a picture got from user upload or a social network
+   */
+  picture: string | null;
 }
 
 export interface GetCampaignReviews_campaign_reviews {
@@ -62,6 +78,10 @@ export interface GetCampaignReviews_campaign_reviews {
    * Platform of the review
    */
   format: ReviewFormat;
+  /**
+   * ID specific to the platform the review is hosted on (not Mongoose related).  e.g.: youtube video ID
+   */
+  platformId: string;
   /**
    * History of the reviews stats since they were added
    */

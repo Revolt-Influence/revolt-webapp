@@ -76,10 +76,11 @@ const ReviewsStatsGraph: React.FC<Props> = ({ reviews, lastStatsDate }) => {
           items.length === 0
             ? _item
             : {
-                likeCount: _item.likeCount - items[items.length - 1].likeCount,
-                linkClicksCount: _item.linkClicksCount - items[items.length - 1].linkClicksCount,
-                viewCount: _item.viewCount - items[items.length - 1].viewCount,
-                commentCount: _item.commentCount - items[items.length - 1].commentCount,
+                likeCount: _item.likeCount - itemsGroupedByDay[items.length - 1].likeCount,
+                linkClicksCount:
+                  _item.linkClicksCount - itemsGroupedByDay[items.length - 1].linkClicksCount,
+                viewCount: _item.viewCount - itemsGroupedByDay[items.length - 1].viewCount,
+                commentCount: _item.commentCount - itemsGroupedByDay[items.length - 1].commentCount,
               }
         return [...items, { ..._item, ...incrementalStats }]
       },
@@ -119,7 +120,7 @@ const ReviewsStatsGraph: React.FC<Props> = ({ reviews, lastStatsDate }) => {
           </defs>
           <XAxis dataKey="day" />
           <YAxis />
-          <CartesianGrid stroke={palette.grey._100} />
+          <CartesianGrid stroke={palette.grey._200} />
           <Tooltip />
           <Area
             type="monotone"
