@@ -10,7 +10,6 @@ import {
 import ErrorBoundary from './ErrorBoundary'
 import ErrorCard from './ErrorCard'
 import Loader from './Loader'
-import InfoCard from './InfoCard'
 import moment from 'moment'
 import ReviewStatsOverview from './ReviewsStatsOverview'
 import ReviewsStatsGraph from './ReviewsStatsGraph'
@@ -78,7 +77,11 @@ const CampaignReviews: React.FC<Props> = ({ campaignId }) => {
         <>
           <ReviewStatsOverview reviews={reviews} collabs={collabs} />
           <Box mt="2rem">
-            <ReviewsStatsGraph reviews={reviews} lastStatsDate={lastStatsDate} />
+            <ReviewsStatsGraph
+              reviews={reviews}
+              campaignId={campaignId}
+              lastStatsDate={lastStatsDate}
+            />
           </Box>
           <Box mt="2rem" mb="2rem">
             <ReviewsStatsTable reviews={reviews} collabs={collabs} lastStatsDate={lastStatsDate} />

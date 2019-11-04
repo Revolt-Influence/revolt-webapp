@@ -26,10 +26,11 @@ interface GraphDataItem {
 
 interface Props {
   reviews: GetCampaignReviews_campaign_reviews[]
+  campaignId: string
   lastStatsDate: Moment
 }
 
-const ReviewsStatsGraph: React.FC<Props> = ({ reviews, lastStatsDate }) => {
+const ReviewsStatsGraph: React.FC<Props> = ({ reviews, lastStatsDate, campaignId }) => {
   const graphData = useMemo(() => {
     const flatStats = reviews.flatMap(_review => _review.stats)
     const statsWithoutTime = flatStats.map(_stat => ({
@@ -72,16 +73,31 @@ const ReviewsStatsGraph: React.FC<Props> = ({ reviews, lastStatsDate }) => {
     const incrementalItems: GraphDataItem[] = itemsGroupedByDay.reduce(
       (items: GraphDataItem[], _item) => {
         // Compare stats with previous if possible
+        const addedViewCount =
+          items.length === 0
+            ? _item.viewCount
+            : _item.viewCount - itemsGroupedByDay[items.length - 1].viewCount
+
+        const getAddedClickCount = () => {
+          // Check if real or fake campaign
+          if (campaignId === process.env.REACT_APP_DEMO_CAMPAIGN_ID) {
+            // Create fake but credible number
+            return Math.ceil((addedViewCount % 10) * 0.03 + addedViewCount * 0.1)
+          }
+          // Or get the real number
+          return _item.linkClicksCount - itemsGroupedByDay[items.length - 1].linkClicksCount
+        }
+
         const incrementalStats: Partial<GraphDataItem> =
           items.length === 0
-            ? _item
+            ? { ..._item, linkClicksCount: getAddedClickCount() }
             : {
                 likeCount: _item.likeCount - itemsGroupedByDay[items.length - 1].likeCount,
-                linkClicksCount:
-                  _item.linkClicksCount - itemsGroupedByDay[items.length - 1].linkClicksCount,
-                viewCount: _item.viewCount - itemsGroupedByDay[items.length - 1].viewCount,
+                linkClicksCount: getAddedClickCount(),
+                viewCount: addedViewCount,
                 commentCount: _item.commentCount - itemsGroupedByDay[items.length - 1].commentCount,
               }
+
         return [...items, { ..._item, ...incrementalStats }]
       },
       []
@@ -93,7 +109,7 @@ const ReviewsStatsGraph: React.FC<Props> = ({ reviews, lastStatsDate }) => {
     }))
 
     return itemsFormattedDates
-  }, [reviews])
+  }, [campaignId, reviews])
 
   return (
     <div>
