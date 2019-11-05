@@ -2,7 +2,7 @@ import React, { useCallback, useState, useRef } from 'react'
 import Slider from 'react-slick'
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
-import { getYoutubeEmbedLink, getYoutubeThumbnail } from '../utils/youtube'
+import { getYoutubeEmbedLink, getYoutubeThumbnail, getVideoId } from '../utils/youtube'
 import ImageWrapper from './ImageWrapper'
 import { GetCampaign_campaign_product } from '../__generated__/GetCampaign'
 import { Box, Flex } from '@rebass/grid'
@@ -57,7 +57,7 @@ const ProductCarousel: React.FC<Props> = ({ product, isInsideIframe }) => {
               className="video"
               width={frameWidth}
               height={(frameWidth * 9) / 16}
-              src={getYoutubeEmbedLink(product.youtubeLink)}
+              src={getYoutubeEmbedLink(getVideoId(product.youtubeLink))}
               title="Game demo"
             />
           </div>
