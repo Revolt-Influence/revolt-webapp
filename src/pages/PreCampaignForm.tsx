@@ -5,7 +5,7 @@ import PageHeader from '../components/PageHeader'
 import InfoCard from '../components/InfoCard'
 import { usePageTitle } from '../utils/hooks'
 import { FormInputLabel, FormInput } from '../styles/Form'
-import { CREATOR_CAMPAIGN_PRESENTATION_FRAGMENT } from '../components/CreatorCampaignPresentation'
+import { PRODUCT_PRESENTATION_FRAGMENT } from '../components/ProductPresentation'
 import { CreateCampaign, CreateCampaignVariables } from '../__generated__/CreateCampaign'
 import { useMutation, useQuery } from '@apollo/react-hooks'
 import { GET_CAMPAIGNS } from './CampaignsList'
@@ -19,14 +19,14 @@ import { Box } from '@rebass/grid'
 export const CREATE_CAMPAIGN = gql`
   mutation CreateCampaign($campaignData: CreateCampaignInput!) {
     createCampaign(campaignData: $campaignData) {
-      ...CreatorCampaignPresentationFragment
+      ...ProductPresentationFragment
       collabs {
         _id
         status
       }
     }
   }
-  ${CREATOR_CAMPAIGN_PRESENTATION_FRAGMENT}
+  ${PRODUCT_PRESENTATION_FRAGMENT}
 `
 
 const PreCampaignForm: React.FC<{}> = () => {

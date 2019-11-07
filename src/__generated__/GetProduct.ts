@@ -5,10 +5,10 @@
 import { GameCategory } from "./globalTypes";
 
 // ====================================================
-// GraphQL query operation: GetCreatorCampaignsPage
+// GraphQL query operation: GetProduct
 // ====================================================
 
-export interface GetCreatorCampaignsPage_campaigns_items_brand {
+export interface GetProduct_campaign_brand {
   __typename: "Brand";
   /**
    * Mongoose generated ID
@@ -21,7 +21,7 @@ export interface GetCreatorCampaignsPage_campaigns_items_brand {
   logo: string;
 }
 
-export interface GetCreatorCampaignsPage_campaigns_items_product {
+export interface GetProduct_campaign_product {
   __typename: "CampaignProduct";
   /**
    * Name of the product
@@ -53,7 +53,7 @@ export interface GetCreatorCampaignsPage_campaigns_items_product {
   launchedAt: any | null;
 }
 
-export interface GetCreatorCampaignsPage_campaigns_items {
+export interface GetProduct_campaign {
   __typename: "Campaign";
   /**
    * Mongoose generated ID
@@ -62,11 +62,11 @@ export interface GetCreatorCampaignsPage_campaigns_items {
   /**
    * The brand that published the campaign
    */
-  brand: GetCreatorCampaignsPage_campaigns_items_brand | null;
+  brand: GetProduct_campaign_brand | null;
   /**
    * What the creator will receive
    */
-  product: GetCreatorCampaignsPage_campaigns_items_product;
+  product: GetProduct_campaign_product;
   /**
    * Rules that creators must respect to receive the gift
    */
@@ -74,20 +74,13 @@ export interface GetCreatorCampaignsPage_campaigns_items {
   createdAt: any;
 }
 
-export interface GetCreatorCampaignsPage_campaigns {
-  __typename: "PaginatedCampaignResponse";
-  currentPage: number;
-  totalPages: number;
-  items: GetCreatorCampaignsPage_campaigns_items[];
-}
-
-export interface GetCreatorCampaignsPage {
+export interface GetProduct {
   /**
-   * Get page of campaigns, different if brand or a user
+   * Get campaign by ID
    */
-  campaigns: GetCreatorCampaignsPage_campaigns;
+  campaign: GetProduct_campaign;
 }
 
-export interface GetCreatorCampaignsPageVariables {
-  page?: number | null;
+export interface GetProductVariables {
+  campaignId: string;
 }

@@ -25,8 +25,8 @@ const NotFound = lazy(() => import('../pages/NotFound'))
 const ResetPassword = lazy(() => import('../pages/ResetPassword'))
 const CampaignsList = lazy(() => import('../pages/CampaignsList'))
 const CollabsList = lazy(() => import('../pages/CollabsList'))
-const CreatorCampaignsList = lazy(() => import('../pages/CreatorCampaignsList'))
-const CreatorCampaign = lazy(() => import('../pages/CreatorCampaign'))
+const ProductsList = lazy(() => import('../pages/ProductsList'))
+const Product = lazy(() => import('../pages/Product'))
 const CampaignForm = lazy(() => import('../pages/CampaignForm'))
 const ConnectSocialAccount = lazy(() => import('../pages/ConnectSocialAccount'))
 const AmbassadorProgram = lazy(() => import('../pages/AmbassadorProgram'))
@@ -133,11 +133,11 @@ const RouterSwitch: React.FC<RouteComponentProps> = () => {
     return <CampaignsList />
   }
 
-  const renderCreatorCampaignsList = () => {
+  const renderProductsList = () => {
     if (!isLoggedIn) {
       return <Redirect to="/login" />
     }
-    return <CreatorCampaignsList />
+    return <ProductsList />
   }
 
   const renderCollabsList = () => {
@@ -147,11 +147,11 @@ const RouterSwitch: React.FC<RouteComponentProps> = () => {
     return <CollabsList />
   }
 
-  const renderCreatorCampaign = () => {
+  const renderProduct = () => {
     if (!isLoggedIn) {
       return <Redirect to="/login" />
     }
-    return <CreatorCampaign />
+    return <Product />
   }
 
   const renderCampaignDashboard = () => {
@@ -243,9 +243,9 @@ const RouterSwitch: React.FC<RouteComponentProps> = () => {
     return (
       <Switch>
         <Route exact path="/creator" render={() => <Redirect to="/creator/games" />} />
-        <Route exact path="/creator/games" render={renderCreatorCampaignsList} />
+        <Route exact path="/creator/games" render={renderProductsList} />
         <Route exact path="/creator/collabs" render={renderCollabsList} />
-        <Route exact path="/creator/games/:campaignId" render={renderCreatorCampaign} />
+        <Route exact path="/creator/games/:campaignId" render={renderProduct} />
         <Route exact path="/creator/ambassador" component={AmbassadorProgram} />
         <Route path="/creator/myAccount" render={renderCreatorAccount} />
         <Route path="/creator/messages/:conversationId" component={Conversation} />

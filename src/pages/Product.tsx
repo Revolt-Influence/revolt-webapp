@@ -4,9 +4,9 @@ import { Flex, Box } from '@rebass/grid'
 import ErrorCard from '../components/ErrorCard'
 import SubmitCollabRequest from '../components/SubmitCollabRequest'
 import { ContainerBox } from '../styles/grid'
-import CreatorCampaignPresentation, {
-  CREATOR_CAMPAIGN_PRESENTATION_FRAGMENT,
-} from '../components/CreatorCampaignPresentation'
+import ProductPresentation, {
+  PRODUCT_PRESENTATION_FRAGMENT,
+} from '../components/ProductPresentation'
 import PageHeader from '../components/PageHeader'
 import ErrorBoundary from '../components/ErrorBoundary'
 import SubmitCreatorReviews from '../components/SubmitCreatorReviews'
@@ -16,10 +16,7 @@ import { MainButton, TextButton } from '../styles/Button'
 import NotificationCard from '../components/NotificationCard'
 import gql from 'graphql-tag'
 import { useQuery } from '@apollo/react-hooks'
-import {
-  GetCreatorCampaignPage,
-  GetCreatorCampaignPageVariables,
-} from '../__generated__/GetCreatorCampaignPage'
+import { GetProductPage, GetProductPageVariables } from '../__generated__/GetProductPage'
 import { CreatorStatus, CollabStatus } from '../__generated__/globalTypes'
 import UpdateQuoteForm from '../components/UpdateQuoteForm'
 
@@ -30,8 +27,8 @@ enum ProductTab {
   SUBMIT = 'submit',
 }
 
-const GET_CREATOR_CAMPAIGN_PAGE = gql`
-  query GetCreatorCampaignPage($campaignId: String!) {
+const GET_PRODUCT_PAGE = gql`
+  query GetProductPage($campaignId: String!) {
     session {
       creator {
         _id
@@ -39,7 +36,7 @@ const GET_CREATOR_CAMPAIGN_PAGE = gql`
       }
     }
     campaign(id: $campaignId) {
-      ...CreatorCampaignPresentationFragment
+      ...ProductPresentationFragment
     }
     collabs {
       _id
@@ -50,12 +47,12 @@ const GET_CREATOR_CAMPAIGN_PAGE = gql`
       }
     }
   }
-  ${CREATOR_CAMPAIGN_PRESENTATION_FRAGMENT}
+  ${PRODUCT_PRESENTATION_FRAGMENT}
 `
 
 interface Props extends RouteComponentProps<{ campaignId: string }> {}
 
-const CreatorCampaign: React.FC<Props> = ({ match }) => {
+const Product: React.FC<Props> = ({ match }) => {
   const { campaignId } = match.params
   const {
     data: { session, campaign, collabs } = {
@@ -65,7 +62,7 @@ const CreatorCampaign: React.FC<Props> = ({ match }) => {
     },
     loading,
     error,
-  } = useQuery<GetCreatorCampaignPage, GetCreatorCampaignPageVariables>(GET_CREATOR_CAMPAIGN_PAGE, {
+  } = useQuery<GetProductPage, GetProductPageVariables>(GET_PRODUCT_PAGE, {
     variables: { campaignId },
   })
   const [tab, setTab] = useState<ProductTab>(ProductTab.PRESENTATION)
@@ -96,7 +93,7 @@ const CreatorCampaign: React.FC<Props> = ({ match }) => {
     )
   }
 
-  const showPresentation = () => <CreatorCampaignPresentation campaignId={campaign._id} />
+  const showPresentation = () => <ProductPresentation campaignId={campaign._id} />
 
   const changeTab = (newTab: ProductTab) => {
     window.scrollTo(0, 0)
@@ -199,4 +196,4 @@ const CreatorCampaign: React.FC<Props> = ({ match }) => {
   )
 }
 
-export default withRouter(CreatorCampaign)
+export default withRouter(Product)

@@ -8,7 +8,7 @@ import ErrorCard from '../components/ErrorCard'
 import { MainButton } from '../styles/Button'
 import { usePageTitle, useClientSize } from '../utils/hooks'
 import PhoneMockup from '../components/PhoneMockup'
-import CreatorCampaignPresentation from '../components/CreatorCampaignPresentation'
+import ProductPresentation from '../components/ProductPresentation'
 import { Title, SubTitle } from '../styles/Text'
 import PageHeader from '../components/PageHeader'
 import { ContainerBox } from '../styles/grid'
@@ -181,7 +181,7 @@ const CampaignForm: React.FC<RouteComponentProps<MatchParams>> = ({ match, histo
                     <Box px="1rem">
                       <Title>{product.name}</Title>
                       <Box mt="-2rem">
-                        <CreatorCampaignPresentation isInsideIframe campaignId={campaign._id} />
+                        <ProductPresentation isInsideIframe campaignId={campaign._id} />
                       </Box>
                     </Box>
                   </>
