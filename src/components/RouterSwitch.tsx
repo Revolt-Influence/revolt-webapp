@@ -39,6 +39,7 @@ const PreCampaignForm = lazy(() => import('../pages/PreCampaignForm'))
 const StripeConnectCreatorCallback = lazy(() => import('../pages/StripeConnectCreatorCallback'))
 const RequestUserPaymentMethod = lazy(() => import('../pages/RequestUserPaymentMethod'))
 const UserAddedPaymentMethodCallback = lazy(() => import('../pages/UserAddedPaymentMethodCallback'))
+const Invite = lazy(() => import('../pages/Invite'))
 
 const Layout = styled.div<{ minHeight: number }>`
   display: flex;
@@ -270,6 +271,7 @@ const RouterSwitch: React.FC<RouteComponentProps> = () => {
             {/* All creator routes */}
             <Route path="/creator" render={creatorRouterSwitch} />
             {/* All other routes */}
+            <Route path="/invite/:campaignId" component={Invite} />
             <Route path="/userSignup" render={renderUserSignup} />
             <Route path="/connectSocialAccount" render={renderConnectSocialAccount} />
             <Route path="/creatorSignup" render={renderCreatorSignup} />

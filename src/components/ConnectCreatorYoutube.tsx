@@ -17,6 +17,9 @@ import { GET_SESSION } from './Session'
 import { GetSession } from '../__generated__/GetSession'
 import Loader from './Loader'
 
+export const YOUTUBE_SCOPE =
+  'https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/yt-analytics.readonly https://www.googleapis.com/auth/yt-analytics-monetary.readonly'
+
 const ATTACH_CREATOR_YOUTUBE = gql`
   mutation AttachCreatorYoutube($youtubeCode: String!) {
     attachCreatorYoutubeChannel(youtubeCode: $youtubeCode) {
@@ -50,9 +53,6 @@ const ConnectCreatorYoutube: React.FC<{}> = () => {
     // Send code to server to generate access_token and refresh_token
     attachCreatorYoutube({ variables: { youtubeCode: response.code } })
   }
-
-  const scope =
-    'https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/yt-analytics.readonly https://www.googleapis.com/auth/yt-analytics-monetary.readonly'
 
   // Youtube is already linked, show preview
   if (session.creator.youtube != null) {
@@ -88,13 +88,13 @@ const ConnectCreatorYoutube: React.FC<{}> = () => {
       )}
       {error && <ErrorCard />}
       <GoogleLogin
-        clientId="1084044949036-9vs7ckrse27t3c1kep4k24l8i9rv906k.apps.googleusercontent.com"
+        clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
         onSuccess={handleAuthSuccess}
         onFailure={error => setError(error)}
         cookiePolicy="single_host_origin"
         responseType="code"
         accessType="offline"
-        scope={scope}
+        scope={YOUTUBE_SCOPE}
         render={renderProps => (
           <MainButton
             onClick={renderProps.onClick}

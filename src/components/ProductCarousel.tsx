@@ -48,6 +48,7 @@ const ProductCarousel: React.FC<Props> = ({ product, isInsideIframe }) => {
         easing="ease-in-out"
         ref={slider}
         focusOnSelect
+        arrows={false}
         speed={300}
         // afterChange={newSlide => setCurrentSlide(newSlide)}
       >

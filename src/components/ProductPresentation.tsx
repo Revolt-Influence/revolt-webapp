@@ -83,7 +83,7 @@ export const PRODUCT_PRESENTATION_FRAGMENT = gql`
   ${BRAND_FRAGMENT}
 `
 
-const GET_PRODUCT = gql`
+export const GET_PRODUCT = gql`
   query GetProduct($campaignId: String!) {
     campaign(id: $campaignId) {
       ...ProductPresentationFragment
