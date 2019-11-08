@@ -68,7 +68,7 @@ const Landing: React.FC<{}> = () => {
               <MainLink
                 to="/creatorSignup"
                 inverted
-                style={{ padding: 'calc(1.5rem - 2px) calc(2rem - 2px)' }}
+                // style={{ padding: 'calc(1.5rem - 2px) calc(2rem - 2px)' }}
               >
                 I'm an influencer
               </MainLink>

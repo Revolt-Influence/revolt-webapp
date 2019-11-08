@@ -17,7 +17,7 @@ import {
 } from '../__generated__/ReviewCollabApplication'
 import styled from 'styled-components'
 import { palette } from '../utils/colors'
-import { shadow } from '../utils/styles'
+import { shadow, setFont } from '../utils/styles'
 import { showReviewCollabDecision } from '../utils/enums'
 import { GetSession } from '../__generated__/GetSession'
 import { GET_SESSION } from './Session'
@@ -40,6 +40,7 @@ const Styles = styled(Box)`
     border-radius: 8px;
     color: ${palette.grey._50};
     transition: 0.3s all ease-in-out;
+    ${setFont(600, 'normal')}
     box-shadow: ${shadow._200};
     &:disabled {
       opacity: 0.5;

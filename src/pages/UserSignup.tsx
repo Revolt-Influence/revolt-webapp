@@ -168,7 +168,7 @@ const UserSignup: React.FC<{}> = () => {
         <Help>
           Already have an account?{' '}
           <HelpLink>
-            <Link to="/login">Login</Link>
+            <Link to="/login">Log in</Link>
           </HelpLink>
         </Help>
       </Flex>
