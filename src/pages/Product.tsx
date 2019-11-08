@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
-import { RouteComponentProps, withRouter } from 'react-router-dom'
+import React from 'react'
+import { useLocation, useRouteMatch, useHistory } from 'react-router-dom'
 import { Flex, Box } from '@rebass/grid'
+import queryString from 'query-string'
 import ErrorCard from '../components/ErrorCard'
 import SubmitCollabRequest from '../components/SubmitCollabRequest'
 import { ContainerBox } from '../styles/grid'
@@ -23,7 +24,7 @@ import UpdateQuoteForm from '../components/UpdateQuoteForm'
 enum ProductTab {
   PRESENTATION = 'presentation',
   APPLY = 'apply',
-  UPDATE_QUOTE = 'update quote',
+  UPDATE_QUOTE = 'updateQuote',
   SUBMIT = 'submit',
 }
 
@@ -50,10 +51,18 @@ const GET_PRODUCT_PAGE = gql`
   ${PRODUCT_PRESENTATION_FRAGMENT}
 `
 
-interface Props extends RouteComponentProps<{ campaignId: string }> {}
-
-const Product: React.FC<Props> = ({ match }) => {
+const Product: React.FC<{}> = () => {
+  // Read campaign ID from router
+  const match = useRouteMatch<{ campaignId: string }>()
   const { campaignId } = match.params
+
+  // Read tab from router
+  const history = useHistory()
+  const location = useLocation()
+  const parsedQuery = queryString.parse(location.search)
+  const tab = parsedQuery.tab || ProductTab.PRESENTATION
+
+  // Fetch product data
   const {
     data: { session, campaign, collabs } = {
       session: null,
@@ -65,7 +74,6 @@ const Product: React.FC<Props> = ({ match }) => {
   } = useQuery<GetProductPage, GetProductPageVariables>(GET_PRODUCT_PAGE, {
     variables: { campaignId },
   })
-  const [tab, setTab] = useState<ProductTab>(ProductTab.PRESENTATION)
 
   usePageTitle(campaign == null ? 'Game' : campaign.product.name)
 
@@ -97,7 +105,7 @@ const Product: React.FC<Props> = ({ match }) => {
 
   const changeTab = (newTab: ProductTab) => {
     window.scrollTo(0, 0)
-    setTab(newTab)
+    history.push(`/creator/games/${campaignId}?tab=${newTab}`)
   }
 
   const showActionButton = () => {
@@ -196,4 +204,4 @@ const Product: React.FC<Props> = ({ match }) => {
   )
 }
 
-export default withRouter(Product)
+export default Product
