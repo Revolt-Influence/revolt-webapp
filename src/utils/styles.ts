@@ -124,7 +124,7 @@ interface IDividerProps {
 const Divider = styled('div')`
   margin: ${(props: IDividerProps) => (props.small ? '10px 0' : '30px 0')};
   width: 100%;
-  height: 4px;
+  height: 3px;
   opacity: ${(props: IDividerProps) => (props.transparent ? 0 : 1)};
   background: ${(props: IDividerProps) => props.color || palette.grey._200};
   border-radius: 2px;

@@ -102,5 +102,5 @@ export interface SignupCreatorWithYoutube {
 }
 
 export interface SignupCreatorWithYoutubeVariables {
-  youtubeCode: string;
+  googleCode: string;
 }

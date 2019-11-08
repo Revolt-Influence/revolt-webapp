@@ -19,8 +19,8 @@ import {
 } from '../__generated__/SignupCreatorWithYoutube'
 
 const SIGNUP_CREATOR_WITH_YOUTUBE = gql`
-  mutation SignupCreatorWithYoutube($youtubeCode: String!) {
-    signupCreatorWithYoutube(youtubeCode: $youtubeCode) {
+  mutation SignupCreatorWithYoutube($googleCode: String!) {
+    signupCreatorWithYoutube(googleCode: $googleCode) {
       ...SessionFragment
     }
   }
@@ -69,7 +69,7 @@ const Invite: React.FC<{}> = () => {
     // Remove hypothetical error
     setYoutubeError(null)
     // Send code to server to signup user
-    await signupCreatorWithYoutube({ variables: { youtubeCode: response.code } })
+    await signupCreatorWithYoutube({ variables: { googleCode: response.code } })
     console.log('ITS DONE. SIGNUPED.')
   }
 

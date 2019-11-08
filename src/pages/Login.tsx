@@ -19,8 +19,8 @@ import { Divider } from '../utils/styles'
 
 const Help = styled.p`
   text-align: center;
-  margin-top: 3rem;
-  margin-bottom: 3rem;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
 `
 
 const HelpLink = styled.span`
@@ -91,7 +91,7 @@ const Login: React.FC<{}> = () => {
     <Container>
       <Flex flexDirection="column" alignItems="center">
         <Title isCentered>Log in</Title>
-        <Box width={[1, 6 / 12, 4 / 12]}>
+        <Box width={[1, 6 / 12, 4 / 12]} pt="0.4rem">
           {(googleAuthError || googleError) && <ErrorCard message="Could not log in with Google" />}
           <GoogleLogin
             clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
@@ -105,6 +105,7 @@ const Login: React.FC<{}> = () => {
                 onClick={renderProps.onClick}
                 disabled={renderProps.disabled || googleLoading}
                 display="block"
+                noMargin
                 inverted
               >
                 {googleLoading ? 'Logging in...' : 'Log in with Google account'}
@@ -112,8 +113,8 @@ const Login: React.FC<{}> = () => {
             )}
           />
           <Divider />
-          <form onSubmit={handleEmailLogin}>
-            <FormInputLabel withMargin>
+          <form style={{ marginTop: '-1rem' }} onSubmit={handleEmailLogin}>
+            <FormInputLabel>
               Email
               <FormInput
                 type="email"

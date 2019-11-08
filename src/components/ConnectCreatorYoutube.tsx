@@ -21,8 +21,8 @@ export const YOUTUBE_SCOPE =
   'https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/yt-analytics.readonly https://www.googleapis.com/auth/yt-analytics-monetary.readonly'
 
 const ATTACH_CREATOR_YOUTUBE = gql`
-  mutation AttachCreatorYoutube($youtubeCode: String!) {
-    attachCreatorYoutubeChannel(youtubeCode: $youtubeCode) {
+  mutation AttachCreatorYoutube($googleCode: String!) {
+    attachCreatorYoutubeChannel(googleCode: $googleCode) {
       ...CreatorProfileFragment
     }
   }
@@ -51,7 +51,7 @@ const ConnectCreatorYoutube: React.FC<{}> = () => {
     // Remove hypothetical error
     setError(null)
     // Send code to server to generate access_token and refresh_token
-    attachCreatorYoutube({ variables: { youtubeCode: response.code } })
+    attachCreatorYoutube({ variables: { googleCode: response.code } })
   }
 
   // Youtube is already linked, show preview

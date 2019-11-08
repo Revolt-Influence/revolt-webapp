@@ -85,6 +85,9 @@ const ReviewsStatsGraph: React.FC<Props> = ({ reviews, lastStatsDate, campaignId
             return Math.ceil((addedViewCount % 10) * 0.03 + addedViewCount * 0.1)
           }
           // Or get the real number
+          if (items.length === 0) {
+            return 0
+          }
           return _item.linkClicksCount - itemsGroupedByDay[items.length - 1].linkClicksCount
         }
 
