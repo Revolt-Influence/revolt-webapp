@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { useRouteMatch, useHistory } from 'react-router-dom'
+import { useQuery, useMutation } from '@apollo/react-hooks'
+import gql from 'graphql-tag'
 import { ContainerBox } from '../styles/grid'
 import { Title } from '../styles/Text'
-import { useQuery, useMutation } from '@apollo/react-hooks'
 import { GET_SESSION, SESSION_FRAGMENT } from '../components/Session'
 import { GetSession } from '../__generated__/GetSession'
 import ProductPresentation, { GET_PRODUCT } from '../components/ProductPresentation'
@@ -12,7 +13,6 @@ import Loader from '../components/Loader'
 import ErrorCard from '../components/ErrorCard'
 import GoogleLogin, { GoogleLoginResponseOffline } from 'react-google-login'
 import { YOUTUBE_SCOPE } from '../components/ConnectCreatorYoutube'
-import gql from 'graphql-tag'
 import {
   SignupCreatorWithYoutube,
   SignupCreatorWithYoutubeVariables,
@@ -41,11 +41,16 @@ function useRedirectCreators(campaignId: string) {
 }
 
 const Invite: React.FC<{}> = () => {
+  const history = useHistory()
   const [youtubeError, setYoutubeError] = useState<boolean>(false)
-  const [signupCreatorWithYoutube] = useMutation<
+  const [signupCreatorWithYoutube, { error: signupError, loading: signupLoading }] = useMutation<
     SignupCreatorWithYoutube,
     SignupCreatorWithYoutubeVariables
-  >(SIGNUP_CREATOR_WITH_YOUTUBE, { refetchQueries: [{ query: GET_SESSION }] })
+  >(SIGNUP_CREATOR_WITH_YOUTUBE, {
+    refetchQueries: [{ query: GET_SESSION }],
+    awaitRefetchQueries: true,
+    onCompleted: () => history.push(`/creator/games/${campaignId}?tab=apply`),
+  })
 
   // Read campaign id from URL
   const match = useRouteMatch<{ campaignId: string }>()
@@ -69,16 +74,14 @@ const Invite: React.FC<{}> = () => {
     // Remove hypothetical error
     setYoutubeError(null)
     // Send code to server to signup user
-    await signupCreatorWithYoutube({ variables: { googleCode: response.code } })
-    console.log('ITS DONE. SIGNUPED.')
+    signupCreatorWithYoutube({ variables: { googleCode: response.code } })
   }
 
   const showButton = () => (
     <div>
-      {youtubeError && (
+      {(youtubeError || signupError) && (
         <ErrorCard message="Could not connect YouTube. Make sure you accept the required permissions" />
       )}
-
       <GoogleLogin
         clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
         onSuccess={handleAuthSuccess}
@@ -88,8 +91,11 @@ const Invite: React.FC<{}> = () => {
         accessType="offline"
         scope={YOUTUBE_SCOPE}
         render={renderProps => (
-          <MainButton onClick={renderProps.onClick} disabled={renderProps.disabled}>
-            Send my quote with YouTube
+          <MainButton
+            onClick={renderProps.onClick}
+            disabled={renderProps.disabled || signupLoading}
+          >
+            {signupLoading ? 'Connecting YouTube...' : 'Send my quote with YouTube'}
           </MainButton>
         )}
       />
@@ -102,7 +108,7 @@ const Invite: React.FC<{}> = () => {
       <p>
         You've been selected by {campaign.brand.name} to promote {campaign.product.name}.
       </p>
-      <p>Connect your YouTube account to send a quote!</p>
+      <p>Connect your YouTube account to send a quote.</p>
       {showButton()}
       <ProductPresentation campaignId={campaignId} />
       {showButton()}

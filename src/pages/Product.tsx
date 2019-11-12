@@ -121,6 +121,7 @@ const Product: React.FC<{}> = () => {
         </MainButton>
       )
     }
+    // Collab ongoing, suggest submit review
     if (
       tab === ProductTab.PRESENTATION &&
       alreadyInCollab &&
