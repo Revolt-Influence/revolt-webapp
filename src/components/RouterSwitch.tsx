@@ -38,6 +38,7 @@ const Community = lazy(() => import('../pages/Community'))
 const PreCampaignForm = lazy(() => import('../pages/PreCampaignForm'))
 const StripeConnectCreatorCallback = lazy(() => import('../pages/StripeConnectCreatorCallback'))
 const RequestUserPaymentMethod = lazy(() => import('../pages/RequestUserPaymentMethod'))
+const RequestStripeConnectCreator = lazy(() => import('../pages/RequestStripeConnectCreator'))
 const UserAddedPaymentMethodCallback = lazy(() => import('../pages/UserAddedPaymentMethodCallback'))
 const Invite = lazy(() => import('../pages/Invite'))
 
@@ -251,6 +252,7 @@ const RouterSwitch: React.FC<RouteComponentProps> = () => {
         <Route path="/creator/myAccount" render={renderCreatorAccount} />
         <Route path="/creator/messages/:conversationId" component={Conversation} />
         <Route exact path="/creator/messages" component={ConversationsList} />
+        <Route path="/creator/requestStripeConnect" component={RequestStripeConnectCreator} />
         <Route path="/creator/stripeCreatorCallback" component={StripeConnectCreatorCallback} />
         {/* Handle 404 */}
         <Route component={NotFound} />

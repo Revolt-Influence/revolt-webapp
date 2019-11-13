@@ -70,7 +70,7 @@ const UpdateQuoteForm: React.FC<Props> = ({ collab, onChangeQuote }) => {
       {succeeded && <SuccessCard message="Your quote was updated" />}
       <MainButtonSubmit
         disabled={loading || (newQuote == null && newQuote !== 0) || newQuote === collab.quote}
-        value={loading ? 'Updating' : 'Update my quote'}
+        value={loading ? 'Updating...' : 'Update my quote'}
       />
     </form>
   )

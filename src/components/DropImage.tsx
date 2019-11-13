@@ -198,8 +198,6 @@ const DropImage: React.FC<Props> = ({
               style={{ zIndex: 100 }}
               value={_index}
               onClick={e => e.stopPropagation()}
-              // onMouseUp={e => e.stopPropagation()}
-              // onMouseDown={e => e.stopPropagation()}
               onChange={e => handleReorder(_index, parseInt(e.target.value))}
             >
               {currentImages.map((__image, __index) => (
@@ -209,7 +207,7 @@ const DropImage: React.FC<Props> = ({
               ))}
             </FormSelect>
           )}
-          <img className="preview" src={_image} alt="Game promo" />
+          {_image && <img className="preview" src={_image} alt="Upload preview" />}
           {allowMultiple && (
             <button
               className="close"
@@ -241,7 +239,7 @@ const DropImage: React.FC<Props> = ({
         {/* Don't suggest drag and drop on mobile */}
         {!isUploading &&
           width > 700 &&
-          currentImages.length === 0 &&
+          currentImages.filter(_image => !!_image).length === 0 &&
           `Drop ${allowMultiple ? 'images' : 'an image'} here`}
         {isUploading && `Uploading your image${allowMultiple ? 's' : ''}...`}
         {idealSize && <p className="details">Ideal size: {idealSize}</p>}

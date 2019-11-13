@@ -11,6 +11,11 @@ const GET_CREATOR_STRIPE_LOGIN = gql`
     session {
       creator {
         _id
+        email
+        youtube {
+          _id
+          url
+        }
         stripeLoginLink
         hasConnectedStripe
       }
@@ -25,7 +30,11 @@ const CreatorPaymentsOverview: React.FC<{}> = () => {
   >(GET_CREATOR_STRIPE_LOGIN)
 
   if (loading) return <p>Loading...</p>
-  if (error) return <ErrorCard message="Could not load the payment data" />
+  if (error) return <ErrorCard noMargin message="Could not load the payment data" />
+
+  const { email, youtube } = session.creator
+  const getStripeAuthLink = () =>
+    `https://dashboard.stripe.com/express/oauth/authorize?response_type=code&client_id=${process.env.REACT_APP_STRIPE_CLIENT_ID}&stripe_user[email]=${email}&stripe_user[url]=${youtube.url}&stripe_user[business_type]=individual`
 
   const { hasConnectedStripe, stripeLoginLink } = session.creator
 
@@ -33,9 +42,10 @@ const CreatorPaymentsOverview: React.FC<{}> = () => {
     return (
       <Box>
         <p>
-          You haven't entered your bank details yet. Send a quote for a paid collab to start
-          accepting payments.
+          You haven't entered your bank details yet, so you can't receive money yet. We partner with
+          Stripe to securely store your bank details. You will never be charged.
         </p>
+        <MainLinkExternal href={getStripeAuthLink()}>Start receiving payments</MainLinkExternal>
       </Box>
     )
   }

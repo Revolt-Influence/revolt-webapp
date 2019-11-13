@@ -8,7 +8,6 @@ import {
   GetCampaignReviews_campaign_reviews,
   GetCampaignReviews_campaign_collabs,
 } from '../__generated__/GetCampaignReviews'
-import { PLATFORM_COMMISSION_PERCENTAGE } from './ReviewCollabRequest'
 import { CollabStatus } from '../__generated__/globalTypes'
 
 const Stats = styled(Box)`
@@ -44,11 +43,7 @@ const ReviewStatsOverview: React.FC<Props> = ({ reviews, collabs }) => {
 
   const totalSpentBudget = collabs
     .filter(_collab => _collab.status === CollabStatus.DONE)
-    .reduce(
-      (quotesSum, _collab) =>
-        quotesSum + _collab.quote * ((100 + PLATFORM_COMMISSION_PERCENTAGE) / 100),
-      0
-    )
+    .reduce((quotesSum, _collab) => quotesSum + _collab.quote, 0)
 
   const stats = [
     {

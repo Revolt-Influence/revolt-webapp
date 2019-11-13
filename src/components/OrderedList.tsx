@@ -14,7 +14,7 @@ const Style = styled.ul`
       line-height: 3rem;
       text-align: center;
       border-radius: 50%;
-      background: ${props => props.theme.accent._200};
+      background: ${props => props.theme.accent._100};
       color: ${props => props.theme.accent._700};
       margin-right: 1rem;
     }

@@ -26,6 +26,9 @@ class ErrorBoundary extends React.Component<IErrorBoundaryProps, IErrorBoundaryS
         })
         Sentry.captureException(error)
       })
+    } else {
+      // Log in development
+      console.log('Intercepted error, showing boundary', error)
     }
   }
 
