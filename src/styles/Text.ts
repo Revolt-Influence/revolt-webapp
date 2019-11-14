@@ -111,7 +111,7 @@ const SubTitle = styled.h3<ITitleProps>`
   margin-top: ${props => (props.noMargin ? '0' : '1rem')};
   margin-bottom: ${props => (props.noMargin ? '0' : '1.1rem')};
   text-align: ${props => (props.isCentered ? 'center' : 'inherit')};
-  line-height: 1em;
+  line-height: 1.2em;
   ${setFont(600, 'big')}
 `
 

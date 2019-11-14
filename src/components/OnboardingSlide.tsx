@@ -22,6 +22,7 @@ const Styles = styled(Flex)`
     flex: 1;
     max-width: 60rem;
     height: auto;
+    max-height: 400px;
     @media screen and (max-width: ${props => props.theme.breakpoints[1]}) {
       display: none;
     }

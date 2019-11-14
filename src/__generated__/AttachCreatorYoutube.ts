@@ -109,5 +109,5 @@ export interface AttachCreatorYoutube {
 }
 
 export interface AttachCreatorYoutubeVariables {
-  youtubeCode: string;
+  googleCode: string;
 }

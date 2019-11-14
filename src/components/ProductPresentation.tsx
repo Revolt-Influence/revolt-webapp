@@ -15,10 +15,7 @@ import ErrorCard from './ErrorCard'
 import Loader from './Loader'
 import SplitView from './SplitView'
 import { BRAND_FRAGMENT } from './CampaignFormBrand'
-import {
-  GetCreatorCampaign,
-  GetCreatorCampaignVariables,
-} from '../__generated__/GetCreatorCampaign'
+import { GetProduct, GetProductVariables } from '../__generated__/GetProduct'
 import { useDeviceType } from '../utils/hooks'
 import { showGameCategory } from '../utils/enums'
 import ProductCarousel from './ProductCarousel'
@@ -65,8 +62,8 @@ const ExternalLink = styled(TextLinkExternal)<{ black?: boolean }>`
   ${props => props.black && `color: ${palette.grey._900}`}
 `
 
-export const CREATOR_CAMPAIGN_PRESENTATION_FRAGMENT = gql`
-  fragment CreatorCampaignPresentationFragment on Campaign {
+export const PRODUCT_PRESENTATION_FRAGMENT = gql`
+  fragment ProductPresentationFragment on Campaign {
     _id
     brand {
       ...BrandFragment
@@ -86,13 +83,13 @@ export const CREATOR_CAMPAIGN_PRESENTATION_FRAGMENT = gql`
   ${BRAND_FRAGMENT}
 `
 
-const GET_CREATOR_CAMPAIGN = gql`
-  query GetCreatorCampaign($campaignId: String!) {
+export const GET_PRODUCT = gql`
+  query GetProduct($campaignId: String!) {
     campaign(id: $campaignId) {
-      ...CreatorCampaignPresentationFragment
+      ...ProductPresentationFragment
     }
   }
-  ${CREATOR_CAMPAIGN_PRESENTATION_FRAGMENT}
+  ${PRODUCT_PRESENTATION_FRAGMENT}
 `
 
 interface Props {
@@ -100,11 +97,11 @@ interface Props {
   isInsideIframe?: boolean
 }
 
-const CreatorCampaignPresentation: React.FC<Props> = ({ campaignId, isInsideIframe }) => {
+const ProductPresentation: React.FC<Props> = ({ campaignId, isInsideIframe }) => {
   const { data: { campaign } = { campaign: null }, loading, error } = useQuery<
-    GetCreatorCampaign,
-    GetCreatorCampaignVariables
-  >(GET_CREATOR_CAMPAIGN, { variables: { campaignId } })
+    GetProduct,
+    GetProductVariables
+  >(GET_PRODUCT, { variables: { campaignId } })
 
   const deviceType = useDeviceType()
 
@@ -182,4 +179,4 @@ const CreatorCampaignPresentation: React.FC<Props> = ({ campaignId, isInsideIfra
   )
 }
 
-export default CreatorCampaignPresentation
+export default ProductPresentation

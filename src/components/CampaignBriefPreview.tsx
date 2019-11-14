@@ -1,7 +1,7 @@
 import React from 'react'
 import { ContainerBox } from '../styles/grid'
 import { MainLink, TextLinkExternal } from '../styles/Button'
-import CreatorCampaignPresentation from './CreatorCampaignPresentation'
+import ProductPresentation from './ProductPresentation'
 import { GetCampaign_campaign } from '../__generated__/GetCampaign'
 import { getCampaignStatus, CampaignStatus } from '../pages/CampaignDashboard'
 import InfoCard from './InfoCard'
@@ -77,7 +77,7 @@ const CampaignBriefPreview: React.FC<Props> = ({ campaign }) => {
               Edit my brief
             </MainLink>
           </Box>
-          <CreatorCampaignPresentation campaignId={campaign._id} />
+          <ProductPresentation campaignId={campaign._id} />
         </>
       )}
     </Styles>

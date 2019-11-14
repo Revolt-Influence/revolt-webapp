@@ -5,6 +5,7 @@ import OnboardingSlide from './OnboardingSlide'
 const landingIllustration = require('../images/illustrations/landing.svg')
 const propositionsIllustration = require('../images/illustrations/propositions.svg')
 const performancesIllustration = require('../images/illustrations/performances.svg')
+const emailCampaignIllustration = require('../images/illustrations/emailCampaign.svg')
 
 interface ISlidesState {
   step: 'intro' | 'slides'
@@ -52,9 +53,17 @@ const BrandOnboarding: React.FC<{}> = () => {
       image: landingIllustration,
     },
     {
+      title: 'Send invites to influencers',
+      description:
+        'Using the invite link we give you, you can send invites to any influencer that may be interested in your game. You will then receive requests on your campaign dashboard.',
+      buttonText: 'Next step',
+      handleButtonClick: () => slidesDispatch('NEXT_SLIDE'),
+      image: emailCampaignIllustration,
+    },
+    {
       title: 'Negociate the smart way',
       description:
-        'You’ll have access to the community insights of each influencer and an estimation of how much engagement you’ll get for each partnership. Negotiate the influencer’s remuneration more efficiently by knowing the figures that matter. Trust the data, not promises.',
+        "You'll have access to the community insights of each influencer and an estimation of how much engagement you'll get for each partnership. Negotiate the influencer's remuneration more efficiently by knowing the figures that matter. Trust the data, not promises.",
       buttonText: 'Next step',
       handleButtonClick: () => slidesDispatch('NEXT_SLIDE'),
       image: propositionsIllustration,

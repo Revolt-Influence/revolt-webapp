@@ -77,6 +77,7 @@ const Styles = styled.div`
     border-radius: 8px;
     color: ${palette.grey._50};
     transition: 0.3s all ease-in-out;
+    ${setFont(600, 'normal')}
     p {
       margin: 0 0.5rem;
     }

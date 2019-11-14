@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { GetCreatorCampaignPage_collabs } from '../__generated__/GetCreatorCampaignPage'
+import { GetProductPage_collabs } from '../__generated__/GetProductPage'
 import { FormInputLabel, FormInput } from '../styles/Form'
 import { MainButtonSubmit } from '../styles/Button'
 import gql from 'graphql-tag'
@@ -20,7 +20,7 @@ const UPDATE_COLLAB_QUOTE = gql`
 `
 
 interface Props {
-  collab: GetCreatorCampaignPage_collabs
+  collab: GetProductPage_collabs
   onChangeQuote?: () => void
 }
 
@@ -70,7 +70,7 @@ const UpdateQuoteForm: React.FC<Props> = ({ collab, onChangeQuote }) => {
       {succeeded && <SuccessCard message="Your quote was updated" />}
       <MainButtonSubmit
         disabled={loading || (newQuote == null && newQuote !== 0) || newQuote === collab.quote}
-        value={loading ? 'Updating' : 'Update my quote'}
+        value={loading ? 'Updating...' : 'Update my quote'}
       />
     </form>
   )

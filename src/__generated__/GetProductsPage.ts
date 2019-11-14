@@ -5,10 +5,10 @@
 import { GameCategory } from "./globalTypes";
 
 // ====================================================
-// GraphQL fragment: CreatorCampaignPresentationFragment
+// GraphQL query operation: GetProductsPage
 // ====================================================
 
-export interface CreatorCampaignPresentationFragment_brand {
+export interface GetProductsPage_campaigns_items_brand {
   __typename: "Brand";
   /**
    * Mongoose generated ID
@@ -21,7 +21,7 @@ export interface CreatorCampaignPresentationFragment_brand {
   logo: string;
 }
 
-export interface CreatorCampaignPresentationFragment_product {
+export interface GetProductsPage_campaigns_items_product {
   __typename: "CampaignProduct";
   /**
    * Name of the product
@@ -53,7 +53,7 @@ export interface CreatorCampaignPresentationFragment_product {
   launchedAt: any | null;
 }
 
-export interface CreatorCampaignPresentationFragment {
+export interface GetProductsPage_campaigns_items {
   __typename: "Campaign";
   /**
    * Mongoose generated ID
@@ -62,14 +62,32 @@ export interface CreatorCampaignPresentationFragment {
   /**
    * The brand that published the campaign
    */
-  brand: CreatorCampaignPresentationFragment_brand | null;
+  brand: GetProductsPage_campaigns_items_brand | null;
   /**
    * What the creator will receive
    */
-  product: CreatorCampaignPresentationFragment_product;
+  product: GetProductsPage_campaigns_items_product;
   /**
    * Rules that creators must respect to receive the gift
    */
   rules: string[];
   createdAt: any;
+}
+
+export interface GetProductsPage_campaigns {
+  __typename: "PaginatedCampaignResponse";
+  currentPage: number;
+  totalPages: number;
+  items: GetProductsPage_campaigns_items[];
+}
+
+export interface GetProductsPage {
+  /**
+   * Get page of campaigns, different if brand or a user
+   */
+  campaigns: GetProductsPage_campaigns;
+}
+
+export interface GetProductsPageVariables {
+  page?: number | null;
 }

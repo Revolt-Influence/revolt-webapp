@@ -25,8 +25,8 @@ const NotFound = lazy(() => import('../pages/NotFound'))
 const ResetPassword = lazy(() => import('../pages/ResetPassword'))
 const CampaignsList = lazy(() => import('../pages/CampaignsList'))
 const CollabsList = lazy(() => import('../pages/CollabsList'))
-const CreatorCampaignsList = lazy(() => import('../pages/CreatorCampaignsList'))
-const CreatorCampaign = lazy(() => import('../pages/CreatorCampaign'))
+const ProductsList = lazy(() => import('../pages/ProductsList'))
+const Product = lazy(() => import('../pages/Product'))
 const CampaignForm = lazy(() => import('../pages/CampaignForm'))
 const ConnectSocialAccount = lazy(() => import('../pages/ConnectSocialAccount'))
 const AmbassadorProgram = lazy(() => import('../pages/AmbassadorProgram'))
@@ -38,7 +38,9 @@ const Community = lazy(() => import('../pages/Community'))
 const PreCampaignForm = lazy(() => import('../pages/PreCampaignForm'))
 const StripeConnectCreatorCallback = lazy(() => import('../pages/StripeConnectCreatorCallback'))
 const RequestUserPaymentMethod = lazy(() => import('../pages/RequestUserPaymentMethod'))
+const RequestStripeConnectCreator = lazy(() => import('../pages/RequestStripeConnectCreator'))
 const UserAddedPaymentMethodCallback = lazy(() => import('../pages/UserAddedPaymentMethodCallback'))
+const Invite = lazy(() => import('../pages/Invite'))
 
 const Layout = styled.div<{ minHeight: number }>`
   display: flex;
@@ -133,11 +135,11 @@ const RouterSwitch: React.FC<RouteComponentProps> = () => {
     return <CampaignsList />
   }
 
-  const renderCreatorCampaignsList = () => {
+  const renderProductsList = () => {
     if (!isLoggedIn) {
       return <Redirect to="/login" />
     }
-    return <CreatorCampaignsList />
+    return <ProductsList />
   }
 
   const renderCollabsList = () => {
@@ -147,11 +149,11 @@ const RouterSwitch: React.FC<RouteComponentProps> = () => {
     return <CollabsList />
   }
 
-  const renderCreatorCampaign = () => {
+  const renderProduct = () => {
     if (!isLoggedIn) {
       return <Redirect to="/login" />
     }
-    return <CreatorCampaign />
+    return <Product />
   }
 
   const renderCampaignDashboard = () => {
@@ -243,13 +245,14 @@ const RouterSwitch: React.FC<RouteComponentProps> = () => {
     return (
       <Switch>
         <Route exact path="/creator" render={() => <Redirect to="/creator/games" />} />
-        <Route exact path="/creator/games" render={renderCreatorCampaignsList} />
+        <Route exact path="/creator/games" render={renderProductsList} />
         <Route exact path="/creator/collabs" render={renderCollabsList} />
-        <Route exact path="/creator/games/:campaignId" render={renderCreatorCampaign} />
+        <Route exact path="/creator/games/:campaignId" render={renderProduct} />
         <Route exact path="/creator/ambassador" component={AmbassadorProgram} />
         <Route path="/creator/myAccount" render={renderCreatorAccount} />
         <Route path="/creator/messages/:conversationId" component={Conversation} />
         <Route exact path="/creator/messages" component={ConversationsList} />
+        <Route path="/creator/requestStripeConnect" component={RequestStripeConnectCreator} />
         <Route path="/creator/stripeCreatorCallback" component={StripeConnectCreatorCallback} />
         {/* Handle 404 */}
         <Route component={NotFound} />
@@ -270,6 +273,7 @@ const RouterSwitch: React.FC<RouteComponentProps> = () => {
             {/* All creator routes */}
             <Route path="/creator" render={creatorRouterSwitch} />
             {/* All other routes */}
+            <Route path="/invite/:campaignId" component={Invite} />
             <Route path="/userSignup" render={renderUserSignup} />
             <Route path="/connectSocialAccount" render={renderConnectSocialAccount} />
             <Route path="/creatorSignup" render={renderCreatorSignup} />

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useMutation, useQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
-import { MainButtonSubmit, MainLinkExternal } from '../styles/Button'
+import { MainButtonSubmit } from '../styles/Button'
 import { FormInputLabel, FormTextarea, FormInput } from '../styles/Form'
 import { ApplyToCampaign, ApplyToCampaignVariables } from '../__generated__/ApplyToCampaign'
 import CheckBox from './CheckBox'
@@ -94,10 +94,7 @@ const SubmitCollabRequest: React.FC<Props> = ({ brand, campaignId }) => {
     return <p>Loading...</p>
   }
 
-  const { hasConnectedStripe, email, youtube } = session.creator
-
-  const getStripeAuthLink = () =>
-    `https://dashboard.stripe.com/express/oauth/authorize?response_type=code&client_id=${process.env.REACT_APP_STRIPE_CLIENT_ID}&stripe_user[email]=${email}&stripe_user[url]=${youtube.url}&stripe_user[business_type]=individual`
+  const { hasConnectedStripe } = session.creator
 
   return (
     <SplitView title="Apply" ratio={4 / 12} noBorder>
@@ -144,21 +141,19 @@ const SubmitCollabRequest: React.FC<Props> = ({ brand, campaignId }) => {
           message={`Your collab request was saved. You'll receive an email with your own tracking link if you are accepted`}
         />
       )}
-      {quote > 0 && !hasConnectedStripe ? (
+      {quote > 0 && !hasConnectedStripe && (
         <Box>
-          <WarningCard message="To start getting paid for you collabs, you need to connect a bank account where we can send you money. We use Stripe to handle secure payments." />
-          <MainLinkExternal href={getStripeAuthLink()}>Start accepting payments</MainLinkExternal>
+          <WarningCard
+            message={`You will need to connect a bank account to receive the payment if ${brand} accepts your collab`}
+          />
         </Box>
-      ) : (
-        <MainButtonSubmit
-          type="submit"
-          value={applyLoading ? 'Applying..' : 'Apply'}
-          disabled={
-            !allowSubmit || applyLoading || !!createdCollab || (quote == null && quote !== 0)
-          }
-          onClick={handleSubmit}
-        />
       )}
+      <MainButtonSubmit
+        type="submit"
+        value={applyLoading ? 'Applying..' : 'Apply'}
+        disabled={!allowSubmit || applyLoading || !!createdCollab || (quote == null && quote !== 0)}
+        onClick={handleSubmit}
+      />
     </SplitView>
   )
 }

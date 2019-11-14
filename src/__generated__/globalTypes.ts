@@ -196,9 +196,6 @@ export interface CreateCampaignInput {
 export interface SignupCreatorInput {
   email: string;
   password: string;
-  birthYear: number;
-  language: Language;
-  categories: GameCategory[];
   ambassador?: string | null;
 }
 

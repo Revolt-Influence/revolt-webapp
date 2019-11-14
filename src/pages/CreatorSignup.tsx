@@ -5,7 +5,7 @@ import queryString from 'query-string'
 import styled from 'styled-components'
 import { Container } from '../utils/grid'
 import { Title } from '../styles/Text'
-import { FormInput, FormInputLabel, FormSelect } from '../styles/Form'
+import { FormInput, FormInputLabel } from '../styles/Form'
 import { MainButtonSubmit, TextLinkExternal } from '../styles/Button'
 import ErrorCard from '../components/ErrorCard'
 import { emailRegex } from '../utils/strings'
@@ -19,18 +19,9 @@ import {
   SignupCreatorMutation,
   SignupCreatorMutationVariables,
 } from '../__generated__/SignupCreatorMutation'
-import { Language, GameCategory } from '../__generated__/globalTypes'
-import GameCategoriesForm from '../components/GameCategoriesForm'
-import { showLanguage } from '../utils/enums'
 
 const checkboxEmpty = require('../images/icons/checkboxEmpty.svg')
 const checkboxChecked = require('../images/icons/checkboxChecked.svg')
-
-// Move "other" to the end
-const allPossibleLanguages = [
-  ...Object.values(Language).filter(_language => _language !== Language.OTHER),
-  Language.OTHER,
-] as Language[]
 
 const Help = styled.p`
   text-align: center;
@@ -53,7 +44,6 @@ const SIGNUP_CREATOR_MUTATION = gql`
 
 const CreatorSignup: React.FC<{}> = () => {
   usePageTitle('Influencer signup')
-  const currentYear = new Date().getFullYear()
 
   // Router stuff
   const history = useHistory()
@@ -71,9 +61,6 @@ const CreatorSignup: React.FC<{}> = () => {
   // Form data
   const [email, setEmail] = useState<string>('')
   const [password, setPassword] = useState<string>('')
-  const [birthYear, setBirthYear] = useState<number>(currentYear - 25)
-  const [language, setLanguage] = useState<Language>(Language.ENGLISH)
-  const [categories, setCategories] = useState<GameCategory[]>([])
   const [acceptsTerms, setAcceptsTerms] = useState<boolean>(false)
 
   // Check if there's an ambassador
@@ -81,7 +68,7 @@ const CreatorSignup: React.FC<{}> = () => {
   const hasQueryParams = Object.entries(parsedQuery).length > 0
   const ambassador = hasQueryParams ? (parsedQuery as any).ambassador : null
 
-  const allowSubmit = email && password && language && categories.length > 0 && acceptsTerms
+  const allowSubmit = email && password && acceptsTerms
 
   const handleSubmit = (e: React.FormEvent<HTMLDivElement>) => {
     e.preventDefault()
@@ -90,9 +77,6 @@ const CreatorSignup: React.FC<{}> = () => {
         creator: {
           email,
           password,
-          language,
-          categories,
-          birthYear,
           ambassador,
         },
       },
@@ -107,7 +91,7 @@ const CreatorSignup: React.FC<{}> = () => {
         </Title>
       </Box>
       <Flex flexDirection="column" alignItems="center" mt="1.5rem">
-        <Box as="form" width={[1, 10 / 12, 6 / 12]} onSubmit={handleSubmit}>
+        <Box as="form" width={[1, 8 / 12, 5 / 12]} onSubmit={handleSubmit}>
           {/* Email */}
           <FormInputLabel>
             Email
@@ -134,54 +118,10 @@ const CreatorSignup: React.FC<{}> = () => {
               hasLabel
             />
           </FormInputLabel>
-          {/* Game categories */}
-          <FormInputLabel>Favorite games</FormInputLabel>
-          <GameCategoriesForm
-            selectedCategories={categories}
-            handleNewSelectedCategories={newCategories => setCategories(newCategories)}
-          />
-          <Flex flexDirection="row" justifyContent="space-between" flexWrap="wrap">
-            <Box width={[1, 1, 6 / 12]} pr={[0, 0, '1rem']}>
-              {/* Birth year */}
-              <FormInputLabel withMargin>
-                Birth year
-                <FormSelect
-                  fullWidth
-                  value={birthYear}
-                  onChange={e => setBirthYear(parseInt(e.target.value))}
-                >
-                  {[...Array(80).keys()]
-                    .map(number => currentYear - number - 13)
-                    .map(_year => (
-                      <option value={_year} key={_year}>
-                        {_year}
-                      </option>
-                    ))}
-                </FormSelect>
-              </FormInputLabel>
-            </Box>
-            <Box width={[1, 1, 6 / 12]} pr={[0, 0, '1rem']}>
-              <FormInputLabel withMargin>
-                Your content's language
-                <FormSelect
-                  fullWidth
-                  value={language}
-                  onChange={e => setLanguage(e.target.value as Language)}
-                  required
-                >
-                  {allPossibleLanguages.map(_language => (
-                    <option value={_language} key={_language}>
-                      {showLanguage(_language)}
-                    </option>
-                  ))}
-                </FormSelect>
-              </FormInputLabel>
-            </Box>
-          </Flex>
           {/* Terms and conditions */}
           <Flex
             flexDirection="row"
-            mt="1rem"
+            mt="1.5rem"
             alignItems="flex-start"
             onClick={() => setAcceptsTerms(!acceptsTerms)}
           >

@@ -5,10 +5,10 @@
 import { GameCategory } from "./globalTypes";
 
 // ====================================================
-// GraphQL query operation: GetCreatorCampaign
+// GraphQL fragment: ProductPresentationFragment
 // ====================================================
 
-export interface GetCreatorCampaign_campaign_brand {
+export interface ProductPresentationFragment_brand {
   __typename: "Brand";
   /**
    * Mongoose generated ID
@@ -21,7 +21,7 @@ export interface GetCreatorCampaign_campaign_brand {
   logo: string;
 }
 
-export interface GetCreatorCampaign_campaign_product {
+export interface ProductPresentationFragment_product {
   __typename: "CampaignProduct";
   /**
    * Name of the product
@@ -53,7 +53,7 @@ export interface GetCreatorCampaign_campaign_product {
   launchedAt: any | null;
 }
 
-export interface GetCreatorCampaign_campaign {
+export interface ProductPresentationFragment {
   __typename: "Campaign";
   /**
    * Mongoose generated ID
@@ -62,25 +62,14 @@ export interface GetCreatorCampaign_campaign {
   /**
    * The brand that published the campaign
    */
-  brand: GetCreatorCampaign_campaign_brand | null;
+  brand: ProductPresentationFragment_brand | null;
   /**
    * What the creator will receive
    */
-  product: GetCreatorCampaign_campaign_product;
+  product: ProductPresentationFragment_product;
   /**
    * Rules that creators must respect to receive the gift
    */
   rules: string[];
   createdAt: any;
-}
-
-export interface GetCreatorCampaign {
-  /**
-   * Get campaign by ID
-   */
-  campaign: GetCreatorCampaign_campaign;
-}
-
-export interface GetCreatorCampaignVariables {
-  campaignId: string;
 }

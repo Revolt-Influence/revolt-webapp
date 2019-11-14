@@ -1,12 +1,13 @@
-import React, { useState } from 'react'
-import { RouteComponentProps, withRouter } from 'react-router-dom'
+import React from 'react'
+import { useLocation, useRouteMatch, useHistory } from 'react-router-dom'
 import { Flex, Box } from '@rebass/grid'
+import queryString from 'query-string'
 import ErrorCard from '../components/ErrorCard'
 import SubmitCollabRequest from '../components/SubmitCollabRequest'
 import { ContainerBox } from '../styles/grid'
-import CreatorCampaignPresentation, {
-  CREATOR_CAMPAIGN_PRESENTATION_FRAGMENT,
-} from '../components/CreatorCampaignPresentation'
+import ProductPresentation, {
+  PRODUCT_PRESENTATION_FRAGMENT,
+} from '../components/ProductPresentation'
 import PageHeader from '../components/PageHeader'
 import ErrorBoundary from '../components/ErrorBoundary'
 import SubmitCreatorReviews from '../components/SubmitCreatorReviews'
@@ -16,22 +17,19 @@ import { MainButton, TextButton } from '../styles/Button'
 import NotificationCard from '../components/NotificationCard'
 import gql from 'graphql-tag'
 import { useQuery } from '@apollo/react-hooks'
-import {
-  GetCreatorCampaignPage,
-  GetCreatorCampaignPageVariables,
-} from '../__generated__/GetCreatorCampaignPage'
+import { GetProductPage, GetProductPageVariables } from '../__generated__/GetProductPage'
 import { CreatorStatus, CollabStatus } from '../__generated__/globalTypes'
 import UpdateQuoteForm from '../components/UpdateQuoteForm'
 
 enum ProductTab {
   PRESENTATION = 'presentation',
   APPLY = 'apply',
-  UPDATE_QUOTE = 'update quote',
+  UPDATE_QUOTE = 'updateQuote',
   SUBMIT = 'submit',
 }
 
-const GET_CREATOR_CAMPAIGN_PAGE = gql`
-  query GetCreatorCampaignPage($campaignId: String!) {
+const GET_PRODUCT_PAGE = gql`
+  query GetProductPage($campaignId: String!) {
     session {
       creator {
         _id
@@ -39,7 +37,7 @@ const GET_CREATOR_CAMPAIGN_PAGE = gql`
       }
     }
     campaign(id: $campaignId) {
-      ...CreatorCampaignPresentationFragment
+      ...ProductPresentationFragment
     }
     collabs {
       _id
@@ -50,13 +48,21 @@ const GET_CREATOR_CAMPAIGN_PAGE = gql`
       }
     }
   }
-  ${CREATOR_CAMPAIGN_PRESENTATION_FRAGMENT}
+  ${PRODUCT_PRESENTATION_FRAGMENT}
 `
 
-interface Props extends RouteComponentProps<{ campaignId: string }> {}
-
-const CreatorCampaign: React.FC<Props> = ({ match }) => {
+const Product: React.FC<{}> = () => {
+  // Read campaign ID from router
+  const match = useRouteMatch<{ campaignId: string }>()
   const { campaignId } = match.params
+
+  // Read tab from router
+  const history = useHistory()
+  const location = useLocation()
+  const parsedQuery = queryString.parse(location.search)
+  const tab = parsedQuery.tab || ProductTab.PRESENTATION
+
+  // Fetch product data
   const {
     data: { session, campaign, collabs } = {
       session: null,
@@ -65,10 +71,9 @@ const CreatorCampaign: React.FC<Props> = ({ match }) => {
     },
     loading,
     error,
-  } = useQuery<GetCreatorCampaignPage, GetCreatorCampaignPageVariables>(GET_CREATOR_CAMPAIGN_PAGE, {
+  } = useQuery<GetProductPage, GetProductPageVariables>(GET_PRODUCT_PAGE, {
     variables: { campaignId },
   })
-  const [tab, setTab] = useState<ProductTab>(ProductTab.PRESENTATION)
 
   usePageTitle(campaign == null ? 'Game' : campaign.product.name)
 
@@ -96,11 +101,11 @@ const CreatorCampaign: React.FC<Props> = ({ match }) => {
     )
   }
 
-  const showPresentation = () => <CreatorCampaignPresentation campaignId={campaign._id} />
+  const showPresentation = () => <ProductPresentation campaignId={campaign._id} />
 
   const changeTab = (newTab: ProductTab) => {
     window.scrollTo(0, 0)
-    setTab(newTab)
+    history.push(`/creator/games/${campaignId}?tab=${newTab}`)
   }
 
   const showActionButton = () => {
@@ -116,6 +121,7 @@ const CreatorCampaign: React.FC<Props> = ({ match }) => {
         </MainButton>
       )
     }
+    // Collab ongoing, suggest submit review
     if (
       tab === ProductTab.PRESENTATION &&
       alreadyInCollab &&
@@ -199,4 +205,4 @@ const CreatorCampaign: React.FC<Props> = ({ match }) => {
   )
 }
 
-export default withRouter(CreatorCampaign)
+export default Product

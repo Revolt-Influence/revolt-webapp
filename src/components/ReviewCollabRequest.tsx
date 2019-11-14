@@ -17,7 +17,7 @@ import {
 } from '../__generated__/ReviewCollabApplication'
 import styled from 'styled-components'
 import { palette } from '../utils/colors'
-import { shadow } from '../utils/styles'
+import { shadow, setFont } from '../utils/styles'
 import { showReviewCollabDecision } from '../utils/enums'
 import { GetSession } from '../__generated__/GetSession'
 import { GET_SESSION } from './Session'
@@ -27,7 +27,6 @@ import WarningCard from './WarningCard'
 const checkSource = require('../images/icons/check_white.svg')
 const closeSource = require('../images/icons/close_white.svg')
 
-export const PLATFORM_COMMISSION_PERCENTAGE = 15
 const possibleReviewCollabDecisions = Object.values(ReviewCollabDecision)
 
 const Styles = styled(Box)`
@@ -40,6 +39,7 @@ const Styles = styled(Box)`
     border-radius: 8px;
     color: ${palette.grey._50};
     transition: 0.3s all ease-in-out;
+    ${setFont(600, 'normal')}
     box-shadow: ${shadow._200};
     &:disabled {
       opacity: 0.5;
@@ -202,16 +202,13 @@ const ReviewCollabRequest: React.FC<Props> = ({ collabId }) => {
     }
   }
 
-  const platformFees = Math.round(collab.quote * PLATFORM_COMMISSION_PERCENTAGE) / 100
-
   return (
     <Styles>
       {/* Show collab request details */}
       <Box style={{ display: 'inline-block' }}>
-        <LabelText withMargin>Influencer's quote (in US Dollars)</LabelText>
+        <LabelText withMargin>Influencer's quote (in USD)</LabelText>
         <Flex flexDirection="row" alignItems="center">
           <Price>${collab.quote}</Price>
-          <Box ml="1rem">+ ${platformFees} platform fees</Box>
         </Flex>
         <LabelText withMargin>Recommended price</LabelText>
         <Flex flexDirection="row">
@@ -244,7 +241,7 @@ const ReviewCollabRequest: React.FC<Props> = ({ collabId }) => {
             >
               {collab.quote > 0 ? (
                 // Prevent floating point bug
-                <p>Accept and pay ${Math.round((collab.quote + platformFees) * 100) / 100}</p>
+                <p>Accept and pay ${Math.round(collab.quote * 100) / 100}</p>
               ) : (
                 <p>Accept for free</p>
               )}

@@ -7,8 +7,8 @@ import { RouteComponentProps, withRouter } from 'react-router-dom'
 import AmbassadorProgramCard from '../components/AmbassadorProgramCard'
 import ErrorBoundary from '../components/ErrorBoundary'
 import ErrorCard from '../components/ErrorCard'
-import { CREATOR_CAMPAIGN_PRESENTATION_FRAGMENT } from '../components/CreatorCampaignPresentation'
-import CreatorCampaignCard from '../components/CreatorCampaignCard'
+import { PRODUCT_PRESENTATION_FRAGMENT } from '../components/ProductPresentation'
+import ProductCard from '../components/ProductCard'
 import Loader from '../components/Loader'
 import NotificationCard from '../components/NotificationCard'
 import Pagination from '../components/Pagination'
@@ -16,27 +16,24 @@ import { GET_SESSION } from '../components/Session'
 import { ContainerBox } from '../styles/grid'
 import { Title } from '../styles/Text'
 import { useDeviceType, usePageTitle } from '../utils/hooks'
-import {
-  GetCreatorCampaignsPage,
-  GetCreatorCampaignsPageVariables,
-} from '../__generated__/GetCreatorCampaignsPage'
+import { GetProductsPage, GetProductsPageVariables } from '../__generated__/GetProductsPage'
 import { GetSession } from '../__generated__/GetSession'
 import { CreatorStatus } from '../__generated__/globalTypes'
 
-const GET_CREATOR_CAMPAIGNS_PAGE = gql`
-  query GetCreatorCampaignsPage($page: Float) {
+const GET_PRODUCTS_PAGE = gql`
+  query GetProductsPage($page: Float) {
     campaigns(page: $page) {
       currentPage
       totalPages
       items {
-        ...CreatorCampaignPresentationFragment
+        ...ProductPresentationFragment
       }
     }
   }
-  ${CREATOR_CAMPAIGN_PRESENTATION_FRAGMENT}
+  ${PRODUCT_PRESENTATION_FRAGMENT}
 `
 
-const CreatorCampaignsList: React.FC<RouteComponentProps> = ({ location, history }) => {
+const ProductsList: React.FC<RouteComponentProps> = ({ location, history }) => {
   usePageTitle('Games')
 
   // Get current page from URL
@@ -45,9 +42,9 @@ const CreatorCampaignsList: React.FC<RouteComponentProps> = ({ location, history
   const urlCurrentPage = hasQueryParams ? parseInt((parsedQuery as any).page) : 1
 
   const { data: { campaigns } = { campaigns: null }, loading, error } = useQuery<
-    GetCreatorCampaignsPage,
-    GetCreatorCampaignsPageVariables
-  >(GET_CREATOR_CAMPAIGNS_PAGE, { variables: { page: urlCurrentPage } })
+    GetProductsPage,
+    GetProductsPageVariables
+  >(GET_PRODUCTS_PAGE, { variables: { page: urlCurrentPage } })
   const { data: { session } = { session: null } } = useQuery<GetSession>(GET_SESSION)
 
   const deviceType = useDeviceType()
@@ -91,7 +88,7 @@ const CreatorCampaignsList: React.FC<RouteComponentProps> = ({ location, history
                   px="2rem"
                   key={_campaign._id}
                 >
-                  <CreatorCampaignCard campaign={_campaign} />
+                  <ProductCard campaign={_campaign} />
                 </Box>
               ))}
               {campaigns.items.length === 0 && (
@@ -118,4 +115,4 @@ const CreatorCampaignsList: React.FC<RouteComponentProps> = ({ location, history
   )
 }
 
-export default withRouter(CreatorCampaignsList)
+export default withRouter(ProductsList)

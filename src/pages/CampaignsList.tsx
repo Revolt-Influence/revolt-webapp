@@ -13,11 +13,11 @@ import { ContainerBox } from '../styles/grid'
 import { Title } from '../styles/Text'
 import { usePageTitle } from '../utils/hooks'
 import { GetCampaigns } from '../__generated__/GetCampaigns'
-import { CREATOR_CAMPAIGN_PRESENTATION_FRAGMENT } from '../components/CreatorCampaignPresentation'
+import { PRODUCT_PRESENTATION_FRAGMENT } from '../components/ProductPresentation'
 
 const CAMPAIGN_CARD_FRAGMENT = gql`
   fragment CampaignCardFragment on Campaign {
-    ...CreatorCampaignPresentationFragment
+    ...ProductPresentationFragment
     collabs {
       _id
       status
@@ -37,7 +37,7 @@ const CAMPAIGN_CARD_FRAGMENT = gql`
       email
     }
   }
-  ${CREATOR_CAMPAIGN_PRESENTATION_FRAGMENT}
+  ${PRODUCT_PRESENTATION_FRAGMENT}
 `
 
 export const GET_CAMPAIGNS = gql`

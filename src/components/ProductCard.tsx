@@ -6,7 +6,7 @@ import { palette } from '../utils/colors'
 import { capitalizeFirstLetter } from '../utils/strings'
 import { setFont, shadow } from '../utils/styles'
 import ImageWrapper from './ImageWrapper'
-import { GetCreatorCampaign_campaign } from '../__generated__/GetCreatorCampaign'
+import { GetProduct_campaign } from '../__generated__/GetProduct'
 
 const Style = styled(Box)`
   h3.title {
@@ -50,10 +50,10 @@ const Style = styled(Box)`
 `
 
 interface Props {
-  campaign: GetCreatorCampaign_campaign
+  campaign: GetProduct_campaign
 }
 
-const CreatorCampaignCard: React.FC<Props> = ({ campaign }) => {
+const ProductCard: React.FC<Props> = ({ campaign }) => {
   const { product, brand } = campaign
   return (
     <Link
@@ -71,13 +71,6 @@ const CreatorCampaignCard: React.FC<Props> = ({ campaign }) => {
         <h3 className="title">{capitalizeFirstLetter(product.name)}</h3>
         <div className="brand">
           <Flex flexDirection="row" alignItems="center" justifyContent="flex-start">
-            {/* <img
-              className="logo"
-              src={applyCloudinaryTransformations(brand.logo, {
-                width: 150,
-              })}
-              alt={brand.name}
-            /> */}
             <p>{brand.name}</p>
           </Flex>
         </div>
@@ -86,4 +79,4 @@ const CreatorCampaignCard: React.FC<Props> = ({ campaign }) => {
   )
 }
 
-export default CreatorCampaignCard
+export default ProductCard

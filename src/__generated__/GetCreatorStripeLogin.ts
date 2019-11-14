@@ -6,12 +6,32 @@
 // GraphQL query operation: GetCreatorStripeLogin
 // ====================================================
 
+export interface GetCreatorStripeLogin_session_creator_youtube {
+  __typename: "Youtuber";
+  /**
+   * Mongoose generated ID
+   */
+  _id: string;
+  /**
+   * Link of Youtube channel
+   */
+  url: string;
+}
+
 export interface GetCreatorStripeLogin_session_creator {
   __typename: "Creator";
   /**
    * Mongoose generated ID
    */
   _id: string;
+  /**
+   * The email is used for login and notifications
+   */
+  email: string;
+  /**
+   * Youtube account linked to the creator
+   */
+  youtube: GetCreatorStripeLogin_session_creator_youtube | null;
   /**
    * Temporary link used to access the Stripe dashboard
    */

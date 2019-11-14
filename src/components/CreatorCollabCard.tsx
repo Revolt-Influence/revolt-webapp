@@ -9,7 +9,7 @@ import { Status } from '../styles/Status'
 import ImageWrapper from './ImageWrapper'
 import { CollabStatus } from '../__generated__/globalTypes'
 import gql from 'graphql-tag'
-import { CREATOR_CAMPAIGN_PRESENTATION_FRAGMENT } from './CreatorCampaignPresentation'
+import { PRODUCT_PRESENTATION_FRAGMENT } from './ProductPresentation'
 import { CreatorCollabFragment } from '../__generated__/CreatorCollabFragment'
 
 const Style = styled(Box)`
@@ -60,10 +60,10 @@ export const CREATOR_COLLAB_FRAGMENT = gql`
     updatedAt
     trackedLink
     campaign {
-      ...CreatorCampaignPresentationFragment
+      ...ProductPresentationFragment
     }
   }
-  ${CREATOR_CAMPAIGN_PRESENTATION_FRAGMENT}
+  ${PRODUCT_PRESENTATION_FRAGMENT}
 `
 
 interface Props {
