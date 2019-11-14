@@ -141,22 +141,19 @@ const SubmitCollabRequest: React.FC<Props> = ({ brand, campaignId }) => {
           message={`Your collab request was saved. You'll receive an email with your own tracking link if you are accepted`}
         />
       )}
-      {quote > 0 && !hasConnectedStripe ? (
+      {quote > 0 && !hasConnectedStripe && (
         <Box>
           <WarningCard
             message={`You will need to connect a bank account to receive the payment if ${brand} accepts your collab`}
           />
         </Box>
-      ) : (
-        <MainButtonSubmit
-          type="submit"
-          value={applyLoading ? 'Applying..' : 'Apply'}
-          disabled={
-            !allowSubmit || applyLoading || !!createdCollab || (quote == null && quote !== 0)
-          }
-          onClick={handleSubmit}
-        />
       )}
+      <MainButtonSubmit
+        type="submit"
+        value={applyLoading ? 'Applying..' : 'Apply'}
+        disabled={!allowSubmit || applyLoading || !!createdCollab || (quote == null && quote !== 0)}
+        onClick={handleSubmit}
+      />
     </SplitView>
   )
 }

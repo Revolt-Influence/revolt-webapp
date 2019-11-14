@@ -25,6 +25,8 @@ import { dummyCollabRequest, dummyCreator } from '../utils/dummyData'
 import { GetCreator, GetCreatorVariables } from '../__generated__/GetCreator'
 import { GetYoutuber, GetYoutuberVariables } from '../__generated__/GetYoutuber'
 import { GetCollab, GetCollabVariables } from '../__generated__/GetCollab'
+import Banner from './Banner'
+import copy from 'copy-to-clipboard'
 
 const placeholderImage = 'https://dummyimage.com/40x40/d8dee3/D8DEE3.jpg'
 
@@ -65,6 +67,9 @@ interface Props {
 }
 
 const CampaignPropositions: React.FC<Props> = ({ campaignId }) => {
+  const [copyButtonText, setCopyButtonText] = useState<'Copy invite link' | 'Copied!'>(
+    'Copy invite link'
+  )
   // Server requests
   const { data: { campaign } = { campaign: null }, loading, error, client } = useQuery<
     GetCampaignRequestedCollabs,
@@ -155,54 +160,72 @@ const CampaignPropositions: React.FC<Props> = ({ campaignId }) => {
   return (
     <ContainerBox mt="-2rem">
       <ErrorBoundary message="Could not show collab requests">
-        <FullHeightColumns
-          leftComponent={() => (
-            <>
-              {collabsApplied.length === 0 && (
-                <InfoCard
-                  message={`You don't have any new requests yet. ${
-                    dummyIsShown
-                      ? 'Here is a dummy collab request, so you can know what to expect'
-                      : "Don't worry, they'll come fast!"
-                  }`}
-                />
-              )}
-              {collabsApplied
-                .sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1))
-                .map(showPropositionPreview)}
-              {collabsDenied.length > 0 && (
-                <Box mb="1rem" px="2rem">
-                  <CheckBox
-                    text="Show denied requests"
-                    isChecked={showRefused}
-                    handleClick={toggleShowRefused}
+        <div>
+          <FullHeightColumns
+            leftComponent={() => (
+              <>
+                {/* Suggest sending invites */}
+                <Box mb="2rem">
+                  <Banner
+                    title="Send invites to start getting requests"
+                    description="We have created a link that you can send to influencers to invite them to your campaign. Once they have applied, you will receive quotes here."
+                    buttonText={copyButtonText}
+                    handleClick={() => {
+                      setCopyButtonText('Copied!')
+                      copy(`${window.location.origin}/invite/${campaignId}`)
+                      window.setTimeout(() => {
+                        setCopyButtonText('Copy invite link')
+                      }, 2000)
+                    }}
                   />
                 </Box>
-              )}
-              {dummyIsShown && (
-                <>
-                  <Box mt="2rem" />
-                  {showPropositionPreview(dummyCollabRequest)}{' '}
-                </>
-              )}
-              {showRefused &&
-                collabsDenied
+                {/* Show requests */}
+                {collabsApplied.length === 0 && (
+                  <InfoCard
+                    message={`You don't have any new requests yet. ${
+                      dummyIsShown
+                        ? 'Here is a dummy collab request, so you can know what to expect'
+                        : "Don't worry, they'll come fast!"
+                    }`}
+                  />
+                )}
+                {collabsApplied
                   .sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1))
                   .map(showPropositionPreview)}
-            </>
-          )}
-          rightComponent={() => (
-            <Box p="1rem" mt="-1rem" flex={1}>
-              {selectedCreator && (
-                <CreatorProfile
-                  creatorId={selectedCreator._id}
-                  collabId={selectedId}
-                  isDummy={dummyIsShown}
-                />
-              )}
-            </Box>
-          )}
-        />
+                {collabsDenied.length > 0 && (
+                  <Box mb="1rem" px="2rem">
+                    <CheckBox
+                      text="Show denied requests"
+                      isChecked={showRefused}
+                      handleClick={toggleShowRefused}
+                    />
+                  </Box>
+                )}
+                {dummyIsShown && (
+                  <>
+                    <Box mt="2rem" />
+                    {showPropositionPreview(dummyCollabRequest)}{' '}
+                  </>
+                )}
+                {showRefused &&
+                  collabsDenied
+                    .sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1))
+                    .map(showPropositionPreview)}
+              </>
+            )}
+            rightComponent={() => (
+              <Box p="1rem" mt="-1rem" flex={1}>
+                {selectedCreator && (
+                  <CreatorProfile
+                    creatorId={selectedCreator._id}
+                    collabId={selectedId}
+                    isDummy={dummyIsShown}
+                  />
+                )}
+              </Box>
+            )}
+          />
+        </div>
       </ErrorBoundary>
     </ContainerBox>
   )
