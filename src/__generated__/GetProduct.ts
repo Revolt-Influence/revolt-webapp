@@ -2,7 +2,7 @@
 /* eslint-disable */
 // This file was automatically generated and should not be edited.
 
-import { GameCategory } from "./globalTypes";
+import { ProductCategory } from "./globalTypes";
 
 // ====================================================
 // GraphQL query operation: GetProduct
@@ -32,9 +32,9 @@ export interface GetProduct_campaign_product {
    */
   pitch: string;
   /**
-   * Game categories that best describe the game
+   * Categories that best describe the product
    */
-  categories: GameCategory[];
+  categories: ProductCategory[];
   /**
    * Link to more info about the product
    */

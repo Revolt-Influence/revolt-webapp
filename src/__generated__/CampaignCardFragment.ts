@@ -2,7 +2,7 @@
 /* eslint-disable */
 // This file was automatically generated and should not be edited.
 
-import { GameCategory, CollabStatus, TrackingProvider, PublishingPlatform, AgeGroup, Gender } from "./globalTypes";
+import { ProductCategory, CollabStatus, TrackingProvider, PublishingPlatform, AgeGroup, Gender } from "./globalTypes";
 
 // ====================================================
 // GraphQL fragment: CampaignCardFragment
@@ -32,9 +32,9 @@ export interface CampaignCardFragment_product {
    */
   pitch: string;
   /**
-   * Game categories that best describe the game
+   * Categories that best describe the product
    */
-  categories: GameCategory[];
+  categories: ProductCategory[];
   /**
    * Link to more info about the product
    */

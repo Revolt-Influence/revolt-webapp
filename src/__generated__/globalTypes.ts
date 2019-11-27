@@ -41,30 +41,6 @@ export enum CreatorStatus {
 }
 
 /**
- * Family of games
- */
-export enum GameCategory {
-  ACTION = "ACTION",
-  ADVENTURE = "ADVENTURE",
-  ARCADE = "ARCADE",
-  AR_VR = "AR_VR",
-  HORROR = "HORROR",
-  INDIE = "INDIE",
-  MMO = "MMO",
-  PARTY_GAME = "PARTY_GAME",
-  PLATFORMER = "PLATFORMER",
-  PUZZLE = "PUZZLE",
-  RETRO = "RETRO",
-  ROGUELIKE = "ROGUELIKE",
-  RPG = "RPG",
-  SHOOTER = "SHOOTER",
-  SIMULATION = "SIMULATION",
-  SPORTS = "SPORTS",
-  STRATEGY = "STRATEGY",
-  SURVIVAL = "SURVIVAL",
-}
-
-/**
  * Male female or don't care
  */
 export enum Gender {
@@ -103,6 +79,20 @@ export enum Plan {
 }
 
 /**
+ * Family of products
+ */
+export enum ProductCategory {
+  FAMILY = "FAMILY",
+  FASHION = "FASHION",
+  FITNESS = "FITNESS",
+  HEALTH = "HEALTH",
+  LIFESTYLE = "LIFESTYLE",
+  MAKEUP = "MAKEUP",
+  NUTRITION = "NUTRITION",
+  TRAVEL = "TRAVEL",
+}
+
+/**
  * All the platforms where a game can be published
  */
 export enum PublishingPlatform {
@@ -130,7 +120,7 @@ export enum ReviewCollabDecision {
 }
 
 /**
- * What platform the creator will use to promote the game
+ * What platform the creator will use to promote the product
  */
 export enum ReviewFormat {
   YOUTUBE_VIDEO = "YOUTUBE_VIDEO",
@@ -183,7 +173,7 @@ export interface CampaignProductInput {
   website: string;
   pictures: string[];
   launchedAt?: any | null;
-  categories: GameCategory[];
+  categories: ProductCategory[];
   youtubeLink?: string | null;
 }
 

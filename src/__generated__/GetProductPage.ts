@@ -2,7 +2,7 @@
 /* eslint-disable */
 // This file was automatically generated and should not be edited.
 
-import { CreatorStatus, GameCategory, CollabStatus } from "./globalTypes";
+import { CreatorStatus, ProductCategory, CollabStatus } from "./globalTypes";
 
 // ====================================================
 // GraphQL query operation: GetProductPage
@@ -52,9 +52,9 @@ export interface GetProductPage_campaign_product {
    */
   pitch: string;
   /**
-   * Game categories that best describe the game
+   * Categories that best describe the product
    */
-  categories: GameCategory[];
+  categories: ProductCategory[];
   /**
    * Link to more info about the product
    */

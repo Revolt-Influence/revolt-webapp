@@ -57,13 +57,9 @@ const Footer: React.FunctionComponent<RouteComponentProps> = ({ location }) => {
             <Link to="/termsAndConditions" className="text">
               Terms of use
             </Link>
-            <p className="text">Copyright {new Date(Date.now()).getFullYear()}</p>
           </Box>
           <Box width={[1, 1, 6 / 12]}>
             <LabelText grey>Join us</LabelText>
-            <TextLinkExternal target="_blank" href="https://discord.gg/sruZ2pe" className="text">
-              Discord
-            </TextLinkExternal>
             <TextLinkExternal
               target="_blank"
               href="https://twitter.com/Revoltgamingco"

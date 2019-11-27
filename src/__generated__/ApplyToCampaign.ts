@@ -2,7 +2,7 @@
 /* eslint-disable */
 // This file was automatically generated and should not be edited.
 
-import { CollabStatus, GameCategory } from "./globalTypes";
+import { CollabStatus, ProductCategory } from "./globalTypes";
 
 // ====================================================
 // GraphQL mutation operation: ApplyToCampaign
@@ -32,9 +32,9 @@ export interface ApplyToCampaign_applyToCampaign_campaign_product {
    */
   pitch: string;
   /**
-   * Game categories that best describe the game
+   * Categories that best describe the product
    */
-  categories: GameCategory[];
+  categories: ProductCategory[];
   /**
    * Link to more info about the product
    */

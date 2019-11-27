@@ -1,23 +1,23 @@
 import React from 'react'
-import { GameCategory } from '../__generated__/globalTypes'
+import { ProductCategory } from '../__generated__/globalTypes'
 import { Flex, Box } from '@rebass/grid'
 import CheckBox from './CheckBox'
 import { showProductCategory } from '../utils/enums'
 
-const possibleCategories = Object.values(GameCategory) as GameCategory[]
+const possibleCategories = Object.values(ProductCategory) as ProductCategory[]
 
 interface Props {
-  selectedCategories: GameCategory[]
-  handleNewSelectedCategories: (newSelectedCategories: GameCategory[]) => void
+  selectedCategories: ProductCategory[]
+  handleNewSelectedCategories: (newSelectedCategories: ProductCategory[]) => void
 }
 
 const ProductCategoriesForm: React.FC<Props> = ({
   selectedCategories,
   handleNewSelectedCategories,
 }) => {
-  const handleToggleCategory = (categoryToToggle: GameCategory) => {
+  const handleToggleCategory = (categoryToToggle: ProductCategory) => {
     const wasCheckedBefore = selectedCategories.includes(categoryToToggle)
-    let newSelection: GameCategory[]
+    let newSelection: ProductCategory[]
     if (wasCheckedBefore) {
       // Remove from selection
       newSelection = selectedCategories.filter(_category => _category !== categoryToToggle)

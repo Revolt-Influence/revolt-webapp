@@ -99,11 +99,11 @@ export interface GetCampaignRequestedCollabs_campaign_collabs_creator {
   /**
    * Year of birth, used to get age approximation and ensure he is 13+
    */
-  birthYear: number;
+  birthYear: number | null;
   /**
    * What language creator's content is in
    */
-  language: Language;
+  language: Language | null;
   /**
    * Youtube account linked to the creator
    */

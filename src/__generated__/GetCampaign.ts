@@ -2,7 +2,7 @@
 /* eslint-disable */
 // This file was automatically generated and should not be edited.
 
-import { TrackingProvider, PublishingPlatform, GameCategory, Gender, AgeGroup } from "./globalTypes";
+import { TrackingProvider, PublishingPlatform, ProductCategory, Gender, AgeGroup } from "./globalTypes";
 
 // ====================================================
 // GraphQL query operation: GetCampaign
@@ -31,9 +31,9 @@ export interface GetCampaign_campaign_product {
    */
   youtubeLink: string | null;
   /**
-   * Game categories that best describe the game
+   * Categories that best describe the product
    */
-  categories: GameCategory[];
+  categories: ProductCategory[];
   /**
    * Game lauch date, defined only if future
    */

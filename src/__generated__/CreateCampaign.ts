@@ -2,7 +2,7 @@
 /* eslint-disable */
 // This file was automatically generated and should not be edited.
 
-import { CreateCampaignInput, GameCategory, CollabStatus } from "./globalTypes";
+import { CreateCampaignInput, ProductCategory, CollabStatus } from "./globalTypes";
 
 // ====================================================
 // GraphQL mutation operation: CreateCampaign
@@ -32,9 +32,9 @@ export interface CreateCampaign_createCampaign_product {
    */
   pitch: string;
   /**
-   * Game categories that best describe the game
+   * Categories that best describe the product
    */
-  categories: GameCategory[];
+  categories: ProductCategory[];
   /**
    * Link to more info about the product
    */

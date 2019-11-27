@@ -1,12 +1,11 @@
 import {
   Gender,
   AgeGroup,
-  GameCategory,
+  ProductCategory,
   TrackingProvider,
   Language,
   ReviewFormat,
   CreatorStatus,
-  PublishingPlatform,
   ReviewCollabDecision,
 } from '../__generated__/globalTypes'
 
@@ -46,44 +45,25 @@ export function showAgeGroup(ageGroup: AgeGroup): string {
   }
 }
 
-export function showProductCategory(category: GameCategory): string {
+export function showProductCategory(category: ProductCategory): string {
   switch (category) {
-    case GameCategory.ACTION:
-      return 'Action'
-    case GameCategory.ADVENTURE:
-      return 'Adventure'
-    case GameCategory.ARCADE:
-      return 'Arcade'
-    case GameCategory.AR_VR:
-      return 'AR / VR'
-    case GameCategory.HORROR:
-      return 'Horror'
-    case GameCategory.INDIE:
-      return 'Indie'
-    case GameCategory.MMO:
-      return 'MMO'
-    case GameCategory.PARTY_GAME:
-      return 'Party game'
-    case GameCategory.PLATFORMER:
-      return 'Platformer'
-    case GameCategory.PUZZLE:
-      return 'Puzzle'
-    case GameCategory.RETRO:
-      return 'Retro'
-    case GameCategory.ROGUELIKE:
-      return 'Roguelike'
-    case GameCategory.RPG:
-      return 'RPG'
-    case GameCategory.SHOOTER:
-      return 'Shooter'
-    case GameCategory.SIMULATION:
-      return 'Simulation'
-    case GameCategory.SPORTS:
-      return 'Sports'
-    case GameCategory.STRATEGY:
-      return 'Strategy'
-    case GameCategory.SURVIVAL:
-      return 'Survival'
+    case ProductCategory.FAMILY:
+      return 'Family'
+    case ProductCategory.FASHION:
+      return 'Fashion'
+    case ProductCategory.FITNESS:
+      return 'Fitness'
+    case ProductCategory.HEALTH:
+      return 'Health'
+    case ProductCategory.LIFESTYLE:
+      return 'Lifestyle'
+    case ProductCategory.MAKEUP:
+      return 'Makeup'
+    case ProductCategory.NUTRITION:
+      return 'Food'
+    case ProductCategory.TRAVEL:
+      return 'Travel'
+
     default:
       return category
   }
@@ -176,37 +156,6 @@ export function showCreatorStatus(status: CreatorStatus): string {
       return 'Verified'
     default:
       return status
-  }
-}
-
-export function showPublishingPlatform(platform: PublishingPlatform): string {
-  switch (platform) {
-    case PublishingPlatform.APP_STORE:
-      return 'Apple App Store'
-    case PublishingPlatform.EPIC:
-      return 'Epic Games Store'
-    case PublishingPlatform.ESHOP:
-      return 'Nintendo eShop'
-    case PublishingPlatform.GAME_JOLT:
-      return 'Game Jolt'
-    case PublishingPlatform.HUMBLE_BUNDLE:
-      return 'Humble Bundle'
-    case PublishingPlatform.ITCH:
-      return 'Itch.io'
-    case PublishingPlatform.KARTRIDGE:
-      return 'Kartridge'
-    case PublishingPlatform.MICROSOFT_STORE:
-      return 'Microsoft Store (Xbox)'
-    case PublishingPlatform.ORIGIN:
-      return 'Origin'
-    case PublishingPlatform.PLAY_STATION_STORE:
-      return 'PlayStation Store'
-    case PublishingPlatform.PLAY_STORE:
-      return 'Google Play Store'
-    case PublishingPlatform.STEAM:
-      return 'Steam'
-    default:
-      return platform
   }
 }
 
