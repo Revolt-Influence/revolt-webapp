@@ -132,7 +132,7 @@ const SubmitCollabRequest: React.FC<Props> = ({ brand, campaignId }) => {
       </Box>
       <CheckBox
         handleClick={() => setAcceptsTerms(!acceptsTerms)}
-        text={`By checking this box, you are contractually committing to publishing a review of the game if ${brand} accepts the collab`}
+        text={`By checking this box, you are contractually committing to publishing a review of the product if ${brand} accepts the collab`}
         isChecked={acceptsTerms}
       />
       {applyError && <ErrorCard message="Could not apply to the collab" />}

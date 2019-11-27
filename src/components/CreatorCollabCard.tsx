@@ -80,7 +80,7 @@ const CreatorCollabCard: React.FC<Props> = ({ collab }) => {
         }
       case CollabStatus.ACCEPTED:
         return {
-          name: 'game not sent yet',
+          name: 'Product not sent yet',
           color: 'blue',
         }
       case CollabStatus.SENT:
@@ -105,7 +105,7 @@ const CreatorCollabCard: React.FC<Props> = ({ collab }) => {
   const { campaign } = collab
 
   return (
-    <Link to={`/creator/games/${campaign._id}`} style={{ display: 'block' }}>
+    <Link to={`/creator/products/${campaign._id}`} style={{ display: 'block' }}>
       <Style mt={[0, 0, 0]} p={[0, 0, 0]}>
         <ImageWrapper
           src={campaign.product.pictures[0]}

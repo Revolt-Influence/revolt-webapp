@@ -244,10 +244,10 @@ const RouterSwitch: React.FC<RouteComponentProps> = () => {
     }
     return (
       <Switch>
-        <Route exact path="/creator" render={() => <Redirect to="/creator/games" />} />
-        <Route exact path="/creator/games" render={renderProductsList} />
+        <Route exact path="/creator" render={() => <Redirect to="/creator/products" />} />
+        <Route exact path="/creator/products" render={renderProductsList} />
         <Route exact path="/creator/collabs" render={renderCollabsList} />
-        <Route exact path="/creator/games/:campaignId" render={renderProduct} />
+        <Route exact path="/creator/products/:campaignId" render={renderProduct} />
         <Route exact path="/creator/ambassador" component={AmbassadorProgram} />
         <Route path="/creator/myAccount" render={renderCreatorAccount} />
         <Route path="/creator/messages/:conversationId" component={Conversation} />

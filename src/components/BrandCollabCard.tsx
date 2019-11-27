@@ -256,7 +256,7 @@ const BrandCollabCard: React.FC<Props> = ({ collab, isDummy }) => {
       case CollabStatus.ACCEPTED:
         return 'accepted'
       case CollabStatus.SENT:
-        return 'game sent'
+        return 'product sent'
       case CollabStatus.DONE:
         return 'review published'
       default:

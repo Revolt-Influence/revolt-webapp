@@ -51,7 +51,7 @@ const StripeConnectCreatorCallback: React.FC<{}> = () => {
           <Title>Congratulations!</Title>
           <p>You're now ready to get paid for your collabs.</p>
           {/* HTML link, not react-router, to prevent weird bug */}
-          <MainLinkExternal href="/creator/games">Send quotes</MainLinkExternal>
+          <MainLinkExternal href="/creator/products">Send quotes</MainLinkExternal>
         </>
       )}
     </ContainerBox>

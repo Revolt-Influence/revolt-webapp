@@ -240,11 +240,11 @@ const CampaignCollabs: React.FC<ICampaignCollabsProps> = ({ campaignId }) => {
             <Column status={CollabStatus.ACCEPTED}>
               <Row className="header" justify="space-between" verticalAlign="center">
                 <h2>
-                  Game not sent <span>({acceptedCollabs.length})</span>
+                  Product not sent <span>({acceptedCollabs.length})</span>
                 </h2>
               </Row>
               <p className="help">
-                You have accepted the collab, but haven't sent the game to the influencer
+                You have accepted the collab, but haven't sent the product to the influencer
               </p>
               {acceptedCollabs.length === 0 && <p className="darkText">No collabs.</p>}
               {acceptedCollabs.map(_collab => (
@@ -259,7 +259,9 @@ const CampaignCollabs: React.FC<ICampaignCollabsProps> = ({ campaignId }) => {
                   Review in production <span>({sentCollabs.length})</span>
                 </h2>
               </Row>
-              <p className="help">The influencer is now able to create his review of the game.</p>
+              <p className="help">
+                The influencer is now able to create his review of the product.
+              </p>
               {sentCollabs.length === 0 && <p className="darkText">No collabs.</p>}
               {sentCollabs.map(_collab => (
                 <BrandCollabCard collab={_collab} key={_collab._id} />

@@ -57,7 +57,7 @@ const ProductCard: React.FC<Props> = ({ campaign }) => {
   const { product, brand } = campaign
   return (
     <Link
-      to={`/creator/games/${campaign._id}`}
+      to={`/creator/products/${campaign._id}`}
       onClick={() => window.scrollTo(0, 0)}
       style={{ display: 'block' }}
     >
@@ -66,7 +66,7 @@ const ProductCard: React.FC<Props> = ({ campaign }) => {
           src={product.pictures[0]}
           alt={product.name}
           ratio={16 / 9}
-          placeholderText="No game picture"
+          placeholderText="No product picture"
         />
         <h3 className="title">{capitalizeFirstLetter(product.name)}</h3>
         <div className="brand">

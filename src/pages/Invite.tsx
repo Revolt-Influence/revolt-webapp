@@ -35,7 +35,7 @@ function useRedirectCreators(campaignId: string) {
   // If logged in, redirect to the regular product page
   useEffect(() => {
     if (session.isLoggedIn) {
-      history.push(`/creator/games/${campaignId}`)
+      history.push(`/creator/products/${campaignId}`)
     }
   }, [campaignId, history, session.isLoggedIn])
 }
@@ -49,7 +49,7 @@ const Invite: React.FC<{}> = () => {
   >(SIGNUP_CREATOR_WITH_YOUTUBE, {
     refetchQueries: [{ query: GET_SESSION }],
     awaitRefetchQueries: true,
-    onCompleted: () => history.push(`/creator/games/${campaignId}?tab=apply`),
+    onCompleted: () => history.push(`/creator/products/${campaignId}?tab=apply`),
   })
 
   // Read campaign id from URL

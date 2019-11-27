@@ -57,19 +57,19 @@ const PreCampaignForm: React.FC<{}> = () => {
   return (
     <ContainerBox>
       <PageHeader title="Create a campaign" />
-      <InfoCard message="Tell us about your game and we will create a campaign for you" />
+      <InfoCard message="Tell us about your product and we will create a campaign for you" />
       <Box width={[1, 10 / 12, 6 / 12]}>
         <FormInputLabel withMargin>
-          Game name
+          Product name
           <FormInput
             value={product}
             onChange={e => setProduct(e.target.value)}
-            placeholder="My game"
+            placeholder="My product"
             hasLabel
           />
         </FormInputLabel>
         <FormInputLabel>
-          Game landing page
+          Product landing page
           <FormInput
             value={website}
             onChange={e => setWebsite(e.target.value)}
@@ -78,7 +78,7 @@ const PreCampaignForm: React.FC<{}> = () => {
           />
         </FormInputLabel>
         <FormInputLabel>
-          Game publisher
+          Brand name
           <FormInput value={brand} onChange={e => setBrand(e.target.value)} hasLabel />
         </FormInputLabel>
         {error && <ErrorCard message="Could not create campaign" />}

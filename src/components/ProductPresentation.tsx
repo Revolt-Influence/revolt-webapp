@@ -17,7 +17,7 @@ import SplitView from './SplitView'
 import { BRAND_FRAGMENT } from './CampaignFormBrand'
 import { GetProduct, GetProductVariables } from '../__generated__/GetProduct'
 import { useDeviceType } from '../utils/hooks'
-import { showGameCategory } from '../utils/enums'
+import { showProductCategory } from '../utils/enums'
 import ProductCarousel from './ProductCarousel'
 
 const Styles = styled.div`
@@ -109,7 +109,7 @@ const ProductPresentation: React.FC<Props> = ({ campaignId, isInsideIframe }) =>
     return <Loader fullScreen />
   }
   if (error) {
-    return <ErrorCard message="Could not show game" />
+    return <ErrorCard message="Could not show product" />
   }
 
   const { brand, product, rules } = campaign
@@ -131,7 +131,7 @@ const ProductPresentation: React.FC<Props> = ({ campaignId, isInsideIframe }) =>
           <LabelText grey withMargin>
             Genres
           </LabelText>
-          <p>{product.categories.map(_cat => showGameCategory(_cat)).join(', ')}</p>
+          <p>{product.categories.map(_cat => showProductCategory(_cat)).join(', ')}</p>
           <Box>
             <LabelText grey withMargin>
               Website
@@ -161,7 +161,7 @@ const ProductPresentation: React.FC<Props> = ({ campaignId, isInsideIframe }) =>
         {/* Right column on desktop */}
         <Box width={[1, 1, 6 / 12]} mt={['2rem', '2rem', '-2rem']} pl={[0, 0, '5rem']}>
           <SplitView
-            title="About the game"
+            title="About the product"
             noBorder={deviceType === 'desktop'}
             ratio={3.5 / 12}
             stacked

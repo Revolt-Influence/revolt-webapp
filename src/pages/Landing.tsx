@@ -49,27 +49,23 @@ const FullPage = styled(Flex)`
 `
 
 const Landing: React.FC<{}> = () => {
-  usePageTitle('Gaming creators')
+  usePageTitle('Welcome')
   return (
     <Container>
       <FullPage flexDirection={['column', 'row', 'row']} justifyContent="space-between">
         <main>
-          <Title>Welcome to Revolt Gaming</Title>
+          <Title>Welcome to Revolt</Title>
           <p className="pitch">
-            The influencer marketing platform that allows creators and video game publishers to
-            create better, together.
+            The influencer marketing platform that allows creators and brands to create better,
+            together.
           </p>
           <Flex flexDirection={['column', 'row', 'row']}>
             {/* The Box is necessary for some weird CSS reason */}
             <Box>
-              <MainLink to="/userSignup">I'm a game publisher</MainLink>
+              <MainLink to="/userSignup">I'm a brand</MainLink>
             </Box>
             <Box ml={[0, '2rem', '2rem']}>
-              <MainLink
-                to="/creatorSignup"
-                inverted
-                // style={{ padding: 'calc(1.5rem - 2px) calc(2rem - 2px)' }}
-              >
+              <MainLink to="/creatorSignup" inverted>
                 I'm an influencer
               </MainLink>
             </Box>

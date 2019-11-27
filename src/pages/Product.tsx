@@ -75,7 +75,7 @@ const Product: React.FC<{}> = () => {
     variables: { campaignId },
   })
 
-  usePageTitle(campaign == null ? 'Game' : campaign.product.name)
+  usePageTitle(campaign == null ? 'Product' : campaign.product.name)
 
   if (loading) {
     return <Loader fullScreen />
@@ -83,7 +83,7 @@ const Product: React.FC<{}> = () => {
   if (error) {
     return (
       <ContainerBox>
-        <ErrorCard message="Could not show game" />
+        <ErrorCard message="Could not show product" />
       </ContainerBox>
     )
   }
@@ -96,7 +96,7 @@ const Product: React.FC<{}> = () => {
   if (campaign == null) {
     return (
       <ContainerBox>
-        <ErrorCard message="Could not show game" />
+        <ErrorCard message="Could not show product" />
       </ContainerBox>
     )
   }
@@ -105,7 +105,7 @@ const Product: React.FC<{}> = () => {
 
   const changeTab = (newTab: ProductTab) => {
     window.scrollTo(0, 0)
-    history.push(`/creator/games/${campaignId}?tab=${newTab}`)
+    history.push(`/creator/products/${campaignId}?tab=${newTab}`)
   }
 
   const showActionButton = () => {
@@ -163,7 +163,7 @@ const Product: React.FC<{}> = () => {
   }
 
   return (
-    <ErrorBoundary message="Could not show game">
+    <ErrorBoundary message="Could not show product">
       <ContainerBox>
         {/* Page header */}
         <Flex
@@ -173,7 +173,7 @@ const Product: React.FC<{}> = () => {
         >
           <PageHeader
             title={campaign.product.name}
-            destination={alreadyInCollab ? '/creator/collabs' : '/creator/games'}
+            destination={alreadyInCollab ? '/creator/collabs' : '/creator/products'}
           />
           {showActionButton()}
         </Flex>
@@ -182,7 +182,7 @@ const Product: React.FC<{}> = () => {
           <Box mt={['1rem', 0, 0]}>
             <NotificationCard
               nature="info"
-              message="Your profile hasn't been verified by our team. You can't apply to games yet"
+              message="Your profile hasn't been verified by our team. You can't apply to campaigns yet"
             />
           </Box>
         )}
@@ -196,7 +196,7 @@ const Product: React.FC<{}> = () => {
         {tab !== ProductTab.PRESENTATION && (
           <Flex mt="2rem">
             <TextButton onClick={() => changeTab(ProductTab.PRESENTATION)} noMargin>
-              Back to the game presentation
+              Back to the product presentation
             </TextButton>
           </Flex>
         )}

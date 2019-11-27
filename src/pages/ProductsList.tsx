@@ -34,7 +34,7 @@ const GET_PRODUCTS_PAGE = gql`
 `
 
 const ProductsList: React.FC<RouteComponentProps> = ({ location, history }) => {
-  usePageTitle('Games')
+  usePageTitle('Products')
 
   // Get current page from URL
   const parsedQuery = queryString.parse(location.search)
@@ -55,22 +55,22 @@ const ProductsList: React.FC<RouteComponentProps> = ({ location, history }) => {
   if (error) {
     return (
       <ContainerBox>
-        <ErrorCard message="Could not show games" />
+        <ErrorCard message="Could not show products" />
       </ContainerBox>
     )
   }
 
   return (
     <ContainerBox>
-      <ErrorBoundary message="Could not show games">
+      <ErrorBoundary message="Could not show products">
         <>
-          <Title isCentered={deviceType !== 'desktop'}>Games</Title>
+          <Title isCentered={deviceType !== 'desktop'}>Products</Title>
           <>
             {session.creator.status === CreatorStatus.BLOCKED && (
               <Box mb="2rem" px={['2rem', 0, 0]}>
                 <NotificationCard
                   nature="info"
-                  message="Your profile hasn't been verified by our team. You can't apply to receive games"
+                  message="Your profile hasn't been verified by our team. You can't apply to receive products"
                 />
               </Box>
             )}
@@ -79,7 +79,7 @@ const ProductsList: React.FC<RouteComponentProps> = ({ location, history }) => {
               <Box width={[1, 6 / 12, 4 / 12]} mt="3rem" mx={['auto', 'unset', 'unset']} px="2rem">
                 <AmbassadorProgramCard />
               </Box>
-              {/* List of games */}
+              {/* List of products */}
               {campaigns.items.map(_campaign => (
                 <Box
                   width={[1, 6 / 12, 4 / 12]}
@@ -93,8 +93,8 @@ const ProductsList: React.FC<RouteComponentProps> = ({ location, history }) => {
               ))}
               {campaigns.items.length === 0 && (
                 <ContainerBox mt="3rem">
-                  <NotificationCard message="No new game available" nature="info" />
-                  <Box mt="1rem">Looks like you've applied to all games. Come back later!</Box>
+                  <NotificationCard message="No new product available" nature="info" />
+                  <Box mt="1rem">Looks like you've applied to all products. Come back later!</Box>
                 </ContainerBox>
               )}
             </Flex>

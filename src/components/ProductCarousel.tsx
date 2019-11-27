@@ -59,14 +59,14 @@ const ProductCarousel: React.FC<Props> = ({ product, isInsideIframe }) => {
               width={frameWidth}
               height={(frameWidth * 9) / 16}
               src={getYoutubeEmbedLink(getVideoId(product.youtubeLink))}
-              title="Game demo"
+              title="Product demo"
             />
           </div>
         )}
         {product.pictures.map(_picture => (
           <ImageWrapper
             src={_picture}
-            alt={product.name || 'Game'}
+            alt={product.name || 'Product'}
             key={_picture}
             ratio={16 / 9}
             placeholderText="No image available"
@@ -86,7 +86,7 @@ const ProductCarousel: React.FC<Props> = ({ product, isInsideIframe }) => {
             <Box as="button" width={1 / 5} px="0.5rem" onClick={() => slider.current.slickGoTo(0)}>
               <ImageWrapper
                 src={getYoutubeThumbnail(product.youtubeLink)}
-                alt={product.name || 'Game'}
+                alt={product.name || 'Product'}
                 ratio={4 / 3}
                 placeholderText="No image available"
               />
@@ -102,7 +102,7 @@ const ProductCarousel: React.FC<Props> = ({ product, isInsideIframe }) => {
             >
               <ImageWrapper
                 src={_picture}
-                alt={product.name || 'Game'}
+                alt={product.name || 'Product'}
                 ratio={4 / 3}
                 placeholderText="No image available"
               />

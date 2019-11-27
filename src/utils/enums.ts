@@ -46,7 +46,7 @@ export function showAgeGroup(ageGroup: AgeGroup): string {
   }
 }
 
-export function showGameCategory(category: GameCategory): string {
+export function showProductCategory(category: GameCategory): string {
   switch (category) {
     case GameCategory.ACTION:
       return 'Action'

@@ -108,7 +108,7 @@ export function useOnClickOutside(
 
 export function usePageTitle(title: string) {
   useEffect(() => {
-    document.title = `${title} - Revolt Gaming`
+    document.title = `${title} - Revolt`
   }, [title])
 }
 

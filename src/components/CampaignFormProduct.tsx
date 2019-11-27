@@ -1,11 +1,9 @@
 import React, { useEffect, useState, useRef } from 'react'
-import moment from 'moment'
 import { Flex, Box } from '@rebass/grid'
 import gql from 'graphql-tag'
 import { FormInputLabel, FormInput, FormTextarea } from '../styles/Form'
 import DropImage from './DropImage'
 import SplitView from './SplitView'
-import CheckBox from './CheckBox'
 import { GetCampaign_campaign_product } from '../__generated__/GetCampaign'
 import { CAMPAIGN_SAVE_DEBOUNCE } from '../pages/CampaignForm'
 import { useDebouncedCallback } from 'use-debounce/lib'
@@ -16,7 +14,7 @@ import {
 } from '../__generated__/UpdateCampaignProduct'
 import { useMutation } from '@apollo/react-hooks'
 import Toast from './Toast'
-import GameCategoriesForm from './GameCategoriesForm'
+import ProductCategoriesForm from './ProductCategoriesForm'
 
 const UPDATE_CAMPAIGN_PRODUCT = gql`
   mutation UpdateCampaignProduct($campaignProduct: CampaignProductInput!, $campaignId: String!) {
@@ -45,7 +43,6 @@ const CampaignFormProduct: React.FC<Prop> = ({ product, campaignId }) => {
   // Update local form state
   const [productInput, setProductInput] = useState<CampaignProductInput>(productInputData)
   const [hasSaved, setHasSaved] = useState<boolean>(false)
-  const [wasLaunched, setWasLaunched] = useState<boolean>(!product.launchedAt)
 
   // Use a ref to prevent stale data in the event handle
   const productInputRef = useRef<CampaignProductInput>()
@@ -58,7 +55,6 @@ const CampaignFormProduct: React.FC<Prop> = ({ product, campaignId }) => {
   }, CAMPAIGN_SAVE_DEBOUNCE)
 
   const handleUpdateProduct = (update: Partial<CampaignProductInput>) => {
-    console.log(update)
     setHasSaved(false)
     // Treat update that come from callbacks separately as we need to ensure they have fresh data
     if (update.pictures || update.launchedAt || update.categories) {
@@ -78,7 +74,7 @@ const CampaignFormProduct: React.FC<Prop> = ({ product, campaignId }) => {
   })
 
   return (
-    <SplitView title="Your game" ratio={4 / 12} stacked noBorder>
+    <SplitView title="Your product" ratio={4 / 12} stacked noBorder>
       <>
         {/* Notifications */}
         {hasSaved && <Toast nature="success" text="Changes saved" disappear />}
@@ -88,17 +84,17 @@ const CampaignFormProduct: React.FC<Prop> = ({ product, campaignId }) => {
           <Box width={[1, 1, 6 / 12]} pr={[0, 0, '1rem']}>
             {/* Product name */}
             <FormInputLabel>
-              Game name
+              Product name
               <FormInput
                 value={productInput.name}
                 onChange={e => handleUpdateProduct({ name: e.target.value })}
-                placeholder="Your game"
+                placeholder="Your product"
                 hasLabel
               />
             </FormInputLabel>
             {/* Link to more details */}
             <FormInputLabel>
-              Game landing page
+              Product landing page
               <FormInput
                 value={productInput.website}
                 onChange={e => handleUpdateProduct({ website: e.target.value })}
@@ -110,7 +106,7 @@ const CampaignFormProduct: React.FC<Prop> = ({ product, campaignId }) => {
           {/* Photo upload */}
           <Box width={[1, 1, 6 / 12]} pl={[0, 0, '1rem']} mt={['15px', 0, 0]}>
             <FormInputLabel>
-              Game promo images
+              Product promo images
               <DropImage
                 handleDrop={newPhotos => handleUpdateProduct({ pictures: newPhotos })}
                 preset="campaign_product"
@@ -122,9 +118,9 @@ const CampaignFormProduct: React.FC<Prop> = ({ product, campaignId }) => {
             </FormInputLabel>
           </Box>
         </Flex>
-        {/* Game categories */}
-        <FormInputLabel>Game categories</FormInputLabel>
-        <GameCategoriesForm
+        {/* Product categories */}
+        <FormInputLabel>Product categories</FormInputLabel>
+        <ProductCategoriesForm
           selectedCategories={productInput.categories}
           handleNewSelectedCategories={newCategories =>
             handleUpdateProduct({ categories: newCategories })
@@ -132,7 +128,7 @@ const CampaignFormProduct: React.FC<Prop> = ({ product, campaignId }) => {
         />
         {/* Other info */}
         <FormInputLabel>
-          Game pitch
+          Description
           <FormTextarea
             value={productInput.pitch}
             rows={4}
@@ -150,35 +146,6 @@ const CampaignFormProduct: React.FC<Prop> = ({ product, campaignId }) => {
             hasLabel
           />
         </FormInputLabel>
-        {/* Launch date */}
-        <Box mt="2rem">
-          <CheckBox
-            isChecked={wasLaunched}
-            text="The game is already launched"
-            handleClick={() => {
-              if (wasLaunched) {
-                setWasLaunched(!wasLaunched)
-                handleUpdateProduct({ launchedAt: new Date() })
-              } else {
-                setWasLaunched(!wasLaunched)
-                handleUpdateProduct({ launchedAt: null })
-              }
-            }}
-          />
-        </Box>
-        {!wasLaunched && (
-          <Box width={[1, 1, 6 / 12]}>
-            <FormInputLabel withMargin>
-              Game launch date
-              <FormInput
-                type="date"
-                value={moment(productInput.launchedAt).format('YYYY-MM-DD')}
-                onChange={e => handleUpdateProduct({ launchedAt: e.target.value })}
-                hasLabel
-              />
-            </FormInputLabel>
-          </Box>
-        )}
       </>
     </SplitView>
   )

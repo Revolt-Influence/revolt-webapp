@@ -72,11 +72,11 @@ const CampaignFormBrand: React.FC<Props> = ({ brand }) => {
       {hasSaved && <Toast nature="success" text="Changes saved" disappear />}
       {error && <Toast nature="error" text="Could not save changes" disappear />}
       {/* Brand section */}
-      <SplitView title="Game publisher" stacked>
+      <SplitView title="The brand" stacked>
         <Flex flexDirection="row" alignItems="flex-start" flexWrap="wrap">
           <Box width={[1, 1, 6 / 12]} pr={[0, 0, '2rem']}>
             <FormInputLabel>
-              Publisher name
+              Brand name
               <FormInput
                 value={brandInput.name}
                 onChange={e => handleUpdateBrand({ name: e.target.value })}
@@ -86,7 +86,7 @@ const CampaignFormBrand: React.FC<Props> = ({ brand }) => {
           </Box>
           <Box width={[1, 1, 6 / 12]} pr={[0, 0, '2rem']} mt={['15px', 0, 0]}>
             <FormInputLabel>
-              Publisher logo
+              Brand logo
               <DropImage
                 handleDrop={newLogos => handleUpdateBrand({ logo: newLogos[0] })}
                 preset="brand_logo"

@@ -47,7 +47,7 @@ const BrandOnboarding: React.FC<{}> = () => {
     {
       title: 'Create your campaign',
       description:
-        'Tell us about your game and we will publish your campaign, so you can receive offers from streamers that would be a perfect match for your game.',
+        'Tell us about your product and we will publish your campaign, so you can receive offers from streamers that would be a perfect match for your product.',
       buttonText: 'Next step',
       handleButtonClick: () => slidesDispatch('NEXT_SLIDE'),
       image: landingIllustration,
@@ -55,7 +55,7 @@ const BrandOnboarding: React.FC<{}> = () => {
     {
       title: 'Send invites to influencers',
       description:
-        'Using the invite link we give you, you can send invites to any influencer that may be interested in your game. You will then receive requests on your campaign dashboard.',
+        'Using the invite link we give you, you can send invites to any influencer that may be interested in your product. You will then receive requests on your campaign dashboard.',
       buttonText: 'Next step',
       handleButtonClick: () => slidesDispatch('NEXT_SLIDE'),
       image: emailCampaignIllustration,
