@@ -60,7 +60,11 @@ const Banner: React.FC<Props> = ({ title, description, buttonText, handleClick }
         {title}
       </SubTitle>
       <Box mt="1.5rem">{description}</Box>
-      <MainButton inverted onClick={() => handleClick()}>
+      <MainButton
+        style={{ color: palette.blue._700, border: `2px solid ${palette.blue._700}` }}
+        inverted
+        onClick={() => handleClick()}
+      >
         {buttonText}
       </MainButton>
     </Styles>
